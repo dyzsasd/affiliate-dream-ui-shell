@@ -1,13 +1,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { Session, SignInCredentials, SignUpCredentials, User } from '../types/auth';
+import { supabase } from '@/integrations/supabase/client';
 
-// In a real implementation, these would be environment variables
-// For the mock phase, we'll use placeholders
-const SUPABASE_URL = 'https://your-supabase-url.supabase.co';
-const SUPABASE_ANON_KEY = 'your-supabase-anon-key';
-
-export const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Export the client that uses the proper configuration from the project
+export const supabaseClient = supabase;
 
 export const authService = {
   async signUp({ email, password, firstName, lastName }: SignUpCredentials): Promise<{ user: User | null; error: Error | null }> {
@@ -40,10 +37,10 @@ export const authService = {
     }
 
     return { 
-      session: {
-        user: data.user as User,
-        access_token: data.session?.access_token || null,
-      } || null, 
+      session: data.session ? {
+        user: data.session.user as User,
+        access_token: data.session.access_token,
+      } : null,
       error: null 
     };
   },
