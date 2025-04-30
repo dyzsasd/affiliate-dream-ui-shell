@@ -16,6 +16,7 @@ import Signup from "@/pages/auth/Signup";
 
 // App Pages
 import Dashboard from "@/pages/Dashboard";
+import Profile from "@/pages/Profile";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
@@ -27,7 +28,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
+      <AuthProvider mockMode={false}> {/* Set to false to use real Supabase auth */}
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -38,8 +39,9 @@ const App = () => (
             
             {/* App Routes - Protected by AppLayout */}
             <Route element={<AppLayout />}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/campaigns" element={<CampaignList />} />
               <Route path="/campaigns/:campaignId" element={<CampaignDetail />} />
               <Route path="/tracking-links" element={<TrackingLinkGenerator />} />

@@ -9,10 +9,12 @@ import {
   Link as LinkIcon,
   LogOut,
   Menu,
-  PieChart
+  PieChart,
+  User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -21,7 +23,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
-  const { signOut, user } = useAuth();
+  const { signOut, user, profile } = useAuth();
 
   const navItems = [
     {
@@ -48,6 +50,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       name: "Conversions",
       path: "/reporting/conversions",
       icon: <PieChart className="w-5 h-5" />
+    },
+    {
+      name: "My Profile",
+      path: "/profile",
+      icon: <User className="w-5 h-5" />
     }
   ];
 
@@ -84,6 +91,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         </Button>
       </div>
 
+      {/* User Info */}
+      {isOpen && profile && (
+        <div className="p-4 bg-sidebar-accent/30">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-sidebar-foreground">
+              {profile.first_name} {profile.last_name}
+            </span>
+            <span className="text-xs text-sidebar-foreground/70">
+              {user?.email}
+            </span>
+            <div className="mt-2">
+              <Badge variant="outline" className="text-xs bg-sidebar-accent text-sidebar-foreground border-sidebar-border">
+                {profile.role?.name || 'No Role'}
+              </Badge>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Navigation Items */}
       <div className="flex flex-col flex-grow py-4 overflow-y-auto">
         {navItems.map((item) => (
@@ -105,17 +131,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         ))}
       </div>
 
+      <Separator className="bg-sidebar-border" />
+      
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-sidebar-border">
-        {isOpen && user && (
-          <div className="mb-4">
-            <p className="text-xs text-sidebar-foreground/80">Signed in as:</p>
-            <p className="text-sm font-medium text-sidebar-foreground truncate">
-              {user.email}
-            </p>
-          </div>
-        )}
-
+      <div className="p-4">
         <Button 
           variant="ghost" 
           className={cn(

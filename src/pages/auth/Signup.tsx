@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Signup: React.FC = () => {
@@ -18,8 +18,10 @@ const Signup: React.FC = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    organizationName: "",
   });
   
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +67,7 @@ const Signup: React.FC = () => {
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
+        organizationName: formData.organizationName || undefined,
       });
     } catch (error) {
       console.error("Signup error:", error);
@@ -135,6 +138,24 @@ const Signup: React.FC = () => {
               </div>
 
               <div className="space-y-2">
+                <label htmlFor="organizationName" className="text-sm font-medium">
+                  Organization Name (Optional)
+                </label>
+                <Input
+                  id="organizationName"
+                  name="organizationName"
+                  placeholder="Your Company"
+                  value={formData.organizationName}
+                  onChange={handleChange}
+                  className="w-full"
+                  disabled={isSubmitting}
+                />
+                <p className="text-xs text-gray-500">
+                  If you're joining an existing organization, leave this blank. An admin will need to invite you.
+                </p>
+              </div>
+
+              <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">
                   Email
                 </label>
@@ -155,32 +176,60 @@ const Signup: React.FC = () => {
                 <label htmlFor="password" className="text-sm font-medium">
                   Password
                 </label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full"
-                  disabled={isSubmitting}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full"
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center px-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-500" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </div>
               
               <div className="space-y-2">
                 <label htmlFor="confirmPassword" className="text-sm font-medium">
                   Confirm Password
                 </label>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full"
-                  disabled={isSubmitting}
-                />
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full"
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center px-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-500" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </div>
               
               <Button
