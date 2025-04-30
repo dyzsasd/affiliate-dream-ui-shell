@@ -1,8 +1,18 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, SignInCredentials, SignUpCredentials, User, Profile, Permission } from '../types/auth';
 import { authService, mockSession } from '../services/supabase';
 import { useToast } from "@/hooks/use-toast";
+
+// Define the mockUser for development purposes
+const mockUser: User = {
+  id: 'mock-user-id',
+  email: 'demo@example.com',
+  created_at: '2023-01-01T00:00:00Z',
+  user_metadata: {
+    first_name: 'Demo',
+    last_name: 'User',
+  },
+};
 
 interface AuthContextType {
   session: Session | null;
