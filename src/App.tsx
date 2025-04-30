@@ -1,25 +1,57 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import NotFound from "./pages/NotFound";
+
+// Layouts
+import AppLayout from "@/components/layout/AppLayout";
+
+// Auth Pages
+import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/Signup";
+
+// App Pages
+import Dashboard from "@/pages/Dashboard";
+import CampaignList from "@/pages/campaigns/CampaignList";
+import CampaignDetail from "@/pages/campaigns/CampaignDetail";
+import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
+import PerformanceReport from "@/pages/reporting/PerformanceReport";
+import ConversionReport from "@/pages/reporting/ConversionReport";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            
+            {/* App Routes - Protected by AppLayout */}
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/campaigns" element={<CampaignList />} />
+              <Route path="/campaigns/:campaignId" element={<CampaignDetail />} />
+              <Route path="/tracking-links" element={<TrackingLinkGenerator />} />
+              <Route path="/reporting" element={<PerformanceReport />} />
+              <Route path="/reporting/conversions" element={<ConversionReport />} />
+            </Route>
+            
+            {/* Catch-all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
