@@ -474,6 +474,21 @@ definitions:
     required:
     - name
     type: object
+  handlers.UpsertProfileRequest:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      organization_id:
+        type: integer
+      role_id:
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -2011,6 +2026,43 @@ paths:
       security:
       - BearerAuth: []
       summary: Update a profile
+      tags:
+      - profile
+  /profiles/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new profile if it doesn't exist, or updates an existing
+        one
+      parameters:
+      - description: Profile information
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpsertProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Upserted profile
+          schema:
+            $ref: '#/definitions/domain.Profile'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Upsert a profile
       tags:
       - profile
   /public/webhooks/supabase/new-user:

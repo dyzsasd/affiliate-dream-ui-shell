@@ -25,3 +25,4 @@ export * from './HandlersUpdateAffiliateRequest';
 export * from './HandlersUpdateCampaignProviderOfferRequest';
 export * from './HandlersUpdateCampaignRequest';
 export * from './HandlersUpdateOrganizationRequest';
+export * from './HandlersUpsertProfileRequest';

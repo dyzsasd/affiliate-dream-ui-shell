@@ -17,12 +17,15 @@ import * as runtime from '../runtime';
 import type {
   DomainProfile,
   HandlersProfileRequest,
+  HandlersUpsertProfileRequest,
 } from '../models/index';
 import {
     DomainProfileFromJSON,
     DomainProfileToJSON,
     HandlersProfileRequestFromJSON,
     HandlersProfileRequestToJSON,
+    HandlersUpsertProfileRequestFromJSON,
+    HandlersUpsertProfileRequestToJSON,
 } from '../models/index';
 
 export interface ProfilesIdDeleteRequest {
@@ -36,6 +39,10 @@ export interface ProfilesIdPutRequest {
 
 export interface ProfilesPostRequest {
     profile: HandlersProfileRequest;
+}
+
+export interface ProfilesUpsertPostRequest {
+    profile: HandlersUpsertProfileRequest;
 }
 
 /**
@@ -169,6 +176,48 @@ export class ProfileApi extends runtime.BaseAPI {
      */
     async profilesPost(requestParameters: ProfilesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainProfile> {
         const response = await this.profilesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates a new profile if it doesn\'t exist, or updates an existing one
+     * Upsert a profile
+     */
+    async profilesUpsertPostRaw(requestParameters: ProfilesUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainProfile>> {
+        if (requestParameters['profile'] == null) {
+            throw new runtime.RequiredError(
+                'profile',
+                'Required parameter "profile" was null or undefined when calling profilesUpsertPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/profiles/upsert`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HandlersUpsertProfileRequestToJSON(requestParameters['profile']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a new profile if it doesn\'t exist, or updates an existing one
+     * Upsert a profile
+     */
+    async profilesUpsertPost(requestParameters: ProfilesUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainProfile> {
+        const response = await this.profilesUpsertPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

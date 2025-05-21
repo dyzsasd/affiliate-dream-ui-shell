@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 README.md
 package.json
 src/apis/AdvertisersApi.ts
@@ -37,6 +36,7 @@ src/models/HandlersUpdateAffiliateRequest.ts
 src/models/HandlersUpdateCampaignProviderOfferRequest.ts
 src/models/HandlersUpdateCampaignRequest.ts
 src/models/HandlersUpdateOrganizationRequest.ts
+src/models/HandlersUpsertProfileRequest.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.esm.json
