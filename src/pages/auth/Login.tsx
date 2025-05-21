@@ -1,37 +1,24 @@
 
-import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Eye, EyeOff, Globe } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "react-i18next";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const languages = [
-  { code: 'en', name: 'English' },
-  { code: 'fr', name: 'Français' },
-  { code: 'zh-CN', name: '简体中文' },
-  { code: 'zh-TW', name: '繁體中文' }
-];
+import { Link } from "react-router-dom";
+import AuthLayout from "@/components/auth/AuthLayout";
 
 const Login: React.FC = () => {
-  const { signIn, isAuthenticated, isLoading } = useAuth();
+  const { signIn, isAuthenticated, isLoading, isSubmitting } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +33,6 @@ const Login: React.FC = () => {
     }
     
     try {
-      setIsSubmitting(true);
       await signIn({ email, password });
       
       // Remember email if remember me is checked
@@ -58,18 +44,11 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error("Login error:", error);
       // Error is handled in the auth context
-    } finally {
-      setIsSubmitting(false);
     }
-  };
-  
-  const changeLanguage = (language: string) => {
-    i18n.changeLanguage(language);
-    localStorage.setItem('rolinko_language', language);
   };
 
   // Load remembered email
-  React.useEffect(() => {
+  useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberedEmail');
     if (rememberedEmail) {
       setEmail(rememberedEmail);
@@ -90,142 +69,102 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md px-4">
-        <div className="absolute top-4 right-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Globe className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {languages.map((language) => (
-                <DropdownMenuItem 
-                  key={language.code}
-                  onClick={() => changeLanguage(language.code)}
-                  className={i18n.language === language.code ? "bg-muted" : ""}
-                >
-                  {language.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-affiliate-primary">{t("appName")}</h1>
-          <p className="mt-2 text-gray-600">{t("appDescription")}</p>
+    <AuthLayout
+      title={t("auth.signIn")}
+      description={t("auth.enterCredentials")}
+      footerText={t("auth.dontHaveAccount")}
+      footerLinkText={t("auth.signUp")}
+      footerLinkTo="/signup"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-medium">
+            {t("auth.email")}
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full"
+            disabled={isSubmitting}
+            autoComplete="email"
+          />
         </div>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("auth.signIn")}</CardTitle>
-            <CardDescription>
-              {t("auth.enterCredentials")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  {t("auth.email")}
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full"
-                  disabled={isSubmitting}
-                  autoComplete="email"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-medium">
-                    {t("auth.password")}
-                  </label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-xs text-affiliate-primary hover:underline"
-                  >
-                    {t("auth.forgotPassword")}
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full"
-                    disabled={isSubmitting}
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 flex items-center px-3"
-                    onClick={() => setShowPassword(!showPassword)}
-                    tabIndex={-1}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-500" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-gray-500" />
-                    )}
-                  </button>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="rememberMe" 
-                  checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked === true)} 
-                />
-                <label
-                  htmlFor="rememberMe"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {t("auth.rememberMe")}
-                </label>
-              </div>
-              
-              <Button
-                type="submit"
-                className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("auth.signingIn")}
-                  </>
-                ) : (
-                  t("auth.signIn")
-                )}
-              </Button>
-              
-              <div className="mt-2 text-sm">
-                {t("auth.demoCredentials")}
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter>
-            <p className="text-center text-sm text-gray-600 w-full">
-              {t("auth.dontHaveAccount")}{" "}
-              <Link to="/signup" className="text-affiliate-primary hover:underline">
-                {t("auth.signUp")}
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
-      </div>
-    </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label htmlFor="password" className="text-sm font-medium">
+              {t("auth.password")}
+            </label>
+            <Link
+              to="/forgot-password"
+              className="text-xs text-affiliate-primary hover:underline"
+            >
+              {t("auth.forgotPassword")}
+            </Link>
+          </div>
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full"
+              disabled={isSubmitting}
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 flex items-center px-3"
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4 text-gray-500" />
+              ) : (
+                <Eye className="h-4 w-4 text-gray-500" />
+              )}
+            </button>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <Checkbox 
+            id="rememberMe" 
+            checked={rememberMe}
+            onCheckedChange={(checked) => setRememberMe(checked === true)} 
+          />
+          <label
+            htmlFor="rememberMe"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            {t("auth.rememberMe")}
+          </label>
+        </div>
+        
+        <Button
+          type="submit"
+          className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {t("auth.signingIn")}
+            </>
+          ) : (
+            t("auth.signIn")
+          )}
+        </Button>
+        
+        <div className="mt-2 text-sm">
+          {t("auth.demoCredentials")}
+        </div>
+      </form>
+    </AuthLayout>
   );
 };
 
