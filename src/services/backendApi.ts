@@ -1,53 +1,64 @@
-import { supabase } from '@/integrations/supabase/client';
-import { BASE_URL } from './api';
 
-// Create a TypeScript declaration file for the generated API
+import { supabase } from './supabase';
+import type { ApiError } from '../types/api';
 
-// Import the API - we'll try/catch to handle the case where it hasn't been generated yet
-let DefaultApi, OrganizationsApi, AdvertisersApi, AffiliatesApi, CampaignsApi;
-try {
-  const api = require('../generated-api/api');
-  DefaultApi = api.DefaultApi;
-  OrganizationsApi = api.OrganizationsApi;
-  AdvertisersApi = api.AdvertisersApi;
-  AffiliatesApi = api.AffiliatesApi;
-  CampaignsApi = api.CampaignsApi;
-} catch (error) {
-  console.error('API client not generated yet. Please run "npm run generate-api" first.');
-}
+// Fixing the imports since the generated API client might not exist yet
+// We'll use dynamic imports or placeholders to avoid TypeScript errors
+let ApiClient: any;
+let Models: any;
 
-// Define the API URL from environment variables or fallback to localhost
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+export const getApiBase = () => {
+  return import.meta.env.VITE_API_URL || 'http://localhost:8080';
+};
 
-// Create API client with auth
-const createApiClientWithAuth = async () => {
-  const { data } = await supabase.auth.getSession();
-  const token = data?.session?.access_token;
+// This function initializes the API clients with authentication
+export const initializeApiClients = async () => {
+  try {
+    // Dynamic import to handle case where files might not exist yet
+    const api = await import('../generated-api/api');
+    const models = await import('../generated-api/models');
+    
+    ApiClient = api;
+    Models = models;
+    
+    return { ApiClient, Models };
+  } catch (error) {
+    console.error('API client not generated yet. Please run "npm run generate-api" first.');
+    return { ApiClient: null, Models: null };
+  }
+};
+
+export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T): Promise<T> => {
+  const session = await supabase.auth.getSession();
+  const token = session?.data?.session?.access_token;
   
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  if (!ClientClass) {
+    throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
   
-  const requestOptions = {
-    headers,
-  };
+  const client = new ClientClass(getApiBase());
+  
+  // Add auth token to each request if available
+  if (token) {
+    // @ts-ignore - We know this might not be typed correctly until API is generated
+    client.accessToken = token;
+  }
+  
+  return client;
+};
+
+export const handleApiError = (error: unknown): ApiError => {
+  console.error('API Error:', error);
+  
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      status: 500,
+    };
+  }
   
   return {
-    organizations: OrganizationsApi ? new OrganizationsApi(undefined, API_URL, requestOptions) : null,
-    advertisers: AdvertisersApi ? new AdvertisersApi(undefined, API_URL, requestOptions) : null,
-    affiliates: AffiliatesApi ? new AffiliatesApi(undefined, API_URL, requestOptions) : null,
-    campaigns: CampaignsApi ? new CampaignsApi(undefined, API_URL, requestOptions) : null,
-    default: DefaultApi ? new DefaultApi(undefined, API_URL, requestOptions) : null,
+    message: 'Unknown API error occurred',
+    status: 500,
   };
 };
-
-// Export the backend API
-const backendApi = {
-  createApiClientWithAuth,
-};
-
-export default backendApi;

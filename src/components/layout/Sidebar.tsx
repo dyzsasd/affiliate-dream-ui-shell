@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -76,9 +75,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
         <div className="flex items-center">
           {isOpen ? (
-            <h1 className="text-xl font-bold text-sidebar-foreground">AffiliatePro</h1>
+            <h1 className="text-xl font-bold text-sidebar-foreground">rolinko</h1>
           ) : (
-            <span className="text-xl font-bold text-sidebar-foreground">AP</span>
+            <span className="text-xl font-bold text-sidebar-foreground">RL</span>
           )}
         </div>
         <Button

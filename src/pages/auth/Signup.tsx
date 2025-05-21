@@ -93,7 +93,7 @@ const Signup: React.FC = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-md px-4">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-affiliate-primary">AffiliatePro</h1>
+          <h1 className="text-3xl font-bold text-affiliate-primary">rolinko</h1>
           <p className="mt-2 text-gray-600">Create your affiliate marketing account</p>
         </div>
         
