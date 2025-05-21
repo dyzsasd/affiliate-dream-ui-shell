@@ -16,7 +16,7 @@ import Signup from "@/pages/auth/Signup";
 
 // App Pages
 import Dashboard from "@/pages/Dashboard";
-import Profile from "@/pages/Profile";
+import Profile from "@/pages/profile";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
