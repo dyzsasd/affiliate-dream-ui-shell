@@ -2,7 +2,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Campaign } from '../types/api';
 
-// This would be set via environment variable in a real application
+// Using the host provided by the user
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 // Define a simple ApiError interface here since it's not exported from types/api
@@ -63,3 +63,4 @@ export const handleApiError = (error: unknown): ApiError => {
     status: 500,
   };
 };
+
