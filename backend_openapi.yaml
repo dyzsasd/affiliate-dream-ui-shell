@@ -1,0 +1,1931 @@
+basePath: /api/v1
+definitions:
+  domain.Advertiser:
+    properties:
+      advertiser_id:
+        type: integer
+      billing_details:
+        description: JSONB stored as string
+        type: string
+      contact_email:
+        type: string
+      created_at:
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      status:
+        description: '''active'', ''pending'', ''inactive'', ''rejected'''
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.AdvertiserProviderMapping:
+    properties:
+      advertiser_id:
+        type: integer
+      created_at:
+        type: string
+      mapping_id:
+        type: integer
+      provider_advertiser_id:
+        description: e.g., Everflow's network_advertiser_id
+        type: string
+      provider_config:
+        description: JSONB stored as string
+        type: string
+      provider_type:
+        description: '''everflow'' for MVP'
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.Affiliate:
+    properties:
+      affiliate_id:
+        type: integer
+      contact_email:
+        type: string
+      created_at:
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      payment_details:
+        description: JSONB stored as string
+        type: string
+      status:
+        description: '''active'', ''pending'', ''rejected'', ''inactive'''
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.AffiliateProviderMapping:
+    properties:
+      affiliate_id:
+        type: integer
+      created_at:
+        type: string
+      mapping_id:
+        type: integer
+      provider_affiliate_id:
+        description: e.g., Everflow's network_affiliate_id
+        type: string
+      provider_config:
+        description: JSONB stored as string
+        type: string
+      provider_type:
+        description: '''everflow'' for MVP'
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.Campaign:
+    properties:
+      advertiser_id:
+        type: integer
+      campaign_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      end_date:
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      start_date:
+        type: string
+      status:
+        description: '''draft'', ''active'', ''paused'', ''archived'''
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.CampaignProviderOffer:
+    properties:
+      campaign_id:
+        type: integer
+      created_at:
+        type: string
+      is_active_on_provider:
+        type: boolean
+      last_synced_at:
+        type: string
+      provider_offer_config:
+        description: JSONB stored as string
+        type: string
+      provider_offer_id:
+        type: integer
+      provider_offer_ref:
+        description: Provider's Offer ID (e.g., Everflow's network_offer_id)
+        type: string
+      provider_type:
+        description: '''everflow'' for MVP'
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.Organization:
+    properties:
+      created_at:
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      status:
+        description: '''active'', ''inactive'', ''suspended'''
+        type: string
+      updated_at:
+        type: string
+    type: object
+  handlers.CreateAdvertiserProviderMappingRequest:
+    properties:
+      advertiser_id:
+        description: Advertiser ID
+        example: 1
+        type: integer
+      api_credentials:
+        description: |-
+          API credentials in JSON format
+          swagger:strfmt json
+        type: object
+      provider_advertiser_id:
+        description: Provider's advertiser ID
+        example: adv-12345
+        type: string
+      provider_config:
+        description: |-
+          Provider configuration in JSON format
+          swagger:strfmt json
+        type: object
+      provider_type:
+        description: Provider type (e.g., 'everflow')
+        example: everflow
+        type: string
+    required:
+    - advertiser_id
+    - provider_type
+    type: object
+  handlers.CreateAdvertiserRequest:
+    properties:
+      billing_details:
+        description: |-
+          Billing details in JSON format
+          swagger:strfmt json
+        type: object
+      contact_email:
+        description: Contact email address
+        example: contact@example.com
+        type: string
+      name:
+        description: Advertiser name
+        example: Example Advertiser
+        type: string
+      organization_id:
+        description: Organization ID
+        example: 1
+        type: integer
+      status:
+        description: Status of the advertiser (active, pending, inactive, rejected)
+        example: active
+        type: string
+    required:
+    - name
+    - organization_id
+    type: object
+  handlers.CreateAffiliateProviderMappingRequest:
+    properties:
+      affiliate_id:
+        description: Affiliate ID
+        example: 1
+        type: integer
+      provider_affiliate_id:
+        description: Provider's affiliate ID
+        example: aff-12345
+        type: string
+      provider_config:
+        description: |-
+          Provider configuration in JSON format
+          swagger:strfmt json
+        type: object
+      provider_type:
+        description: Provider type (e.g., 'everflow')
+        example: everflow
+        type: string
+    required:
+    - affiliate_id
+    - provider_type
+    type: object
+  handlers.CreateAffiliateRequest:
+    properties:
+      contact_email:
+        description: Contact email address
+        example: affiliate@example.com
+        type: string
+      name:
+        description: Affiliate name
+        example: Example Affiliate
+        type: string
+      organization_id:
+        description: Organization ID
+        example: 1
+        type: integer
+      payment_details:
+        description: |-
+          Payment details in JSON format
+          swagger:strfmt json
+        type: object
+      status:
+        description: Status of the affiliate (active, pending, inactive, rejected)
+        example: active
+        type: string
+    required:
+    - name
+    - organization_id
+    type: object
+  handlers.CreateCampaignProviderOfferRequest:
+    properties:
+      campaign_id:
+        description: Campaign ID
+        example: 1
+        type: integer
+      is_active_on_provider:
+        description: Whether the offer is active on the provider
+        example: true
+        type: boolean
+      provider_offer_config:
+        description: |-
+          Provider offer configuration in JSON format
+          swagger:strfmt json
+        type: object
+      provider_offer_ref:
+        description: Provider's offer reference
+        example: offer-12345
+        type: string
+      provider_type:
+        description: Provider type (e.g., 'everflow')
+        example: everflow
+        type: string
+    required:
+    - campaign_id
+    - provider_type
+    type: object
+  handlers.CreateCampaignRequest:
+    properties:
+      advertiser_id:
+        type: integer
+      description:
+        type: string
+      end_date:
+        description: 'Format: YYYY-MM-DD'
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      start_date:
+        description: 'Format: YYYY-MM-DD'
+        type: string
+      status:
+        type: string
+    required:
+    - advertiser_id
+    - name
+    - organization_id
+    type: object
+  handlers.CreateOrganizationRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  handlers.SupabaseUserWebhookPayload:
+    properties:
+      record:
+        properties:
+          email:
+            type: string
+          id:
+            type: string
+        type: object
+      table:
+        description: e.g., "users"
+        type: string
+      type:
+        description: e.g., "INSERT"
+        type: string
+    type: object
+  handlers.UpdateAdvertiserProviderMappingRequest:
+    properties:
+      api_credentials:
+        description: |-
+          API credentials in JSON format
+          swagger:strfmt json
+        type: object
+      provider_advertiser_id:
+        description: Provider's advertiser ID
+        example: adv-12345
+        type: string
+      provider_config:
+        description: |-
+          Provider configuration in JSON format
+          swagger:strfmt json
+        type: object
+    type: object
+  handlers.UpdateAdvertiserRequest:
+    properties:
+      billing_details:
+        description: |-
+          Billing details in JSON format
+          swagger:strfmt json
+        type: object
+      contact_email:
+        description: Contact email address
+        example: updated@example.com
+        type: string
+      name:
+        description: Advertiser name
+        example: Updated Advertiser
+        type: string
+      status:
+        description: Status of the advertiser (active, pending, inactive, rejected)
+        example: active
+        type: string
+    required:
+    - name
+    - status
+    type: object
+  handlers.UpdateAffiliateProviderMappingRequest:
+    properties:
+      provider_affiliate_id:
+        description: Provider's affiliate ID
+        example: aff-12345
+        type: string
+      provider_config:
+        description: |-
+          Provider configuration in JSON format
+          swagger:strfmt json
+        type: object
+    type: object
+  handlers.UpdateAffiliateRequest:
+    properties:
+      contact_email:
+        description: Contact email address
+        example: updated@example.com
+        type: string
+      name:
+        description: Affiliate name
+        example: Updated Affiliate
+        type: string
+      payment_details:
+        description: |-
+          Payment details in JSON format
+          swagger:strfmt json
+        type: object
+      status:
+        description: Status of the affiliate (active, pending, inactive, rejected)
+        example: active
+        type: string
+    required:
+    - name
+    - status
+    type: object
+  handlers.UpdateCampaignProviderOfferRequest:
+    properties:
+      is_active_on_provider:
+        description: Whether the offer is active on the provider
+        example: true
+        type: boolean
+      provider_offer_config:
+        description: |-
+          Provider offer configuration in JSON format
+          swagger:strfmt json
+        type: object
+      provider_offer_ref:
+        description: Provider's offer reference
+        example: offer-12345
+        type: string
+    type: object
+  handlers.UpdateCampaignRequest:
+    properties:
+      description:
+        type: string
+      end_date:
+        description: 'Format: YYYY-MM-DD'
+        type: string
+      name:
+        type: string
+      start_date:
+        description: 'Format: YYYY-MM-DD'
+        type: string
+      status:
+        type: string
+    required:
+    - name
+    - status
+    type: object
+  handlers.UpdateOrganizationRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: API Server for Affiliate Backend Application
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Affiliate Backend API
+  version: "1.0"
+paths:
+  /advertiser-provider-mappings:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new mapping between an advertiser and a provider
+      parameters:
+      - description: Mapping details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateAdvertiserProviderMappingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created mapping
+          schema:
+            $ref: '#/definitions/domain.AdvertiserProviderMapping'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new advertiser provider mapping
+      tags:
+      - advertisers
+  /advertiser-provider-mappings/{mappingId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a mapping between an advertiser and a provider
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid mapping ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete advertiser provider mapping
+      tags:
+      - advertisers
+    put:
+      consumes:
+      - application/json
+      description: Updates a mapping between an advertiser and a provider
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: integer
+      - description: Mapping details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateAdvertiserProviderMappingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated mapping
+          schema:
+            $ref: '#/definitions/domain.AdvertiserProviderMapping'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update advertiser provider mapping
+      tags:
+      - advertisers
+  /advertisers:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new advertiser with the given details
+      parameters:
+      - description: Advertiser details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateAdvertiserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created advertiser
+          schema:
+            $ref: '#/definitions/domain.Advertiser'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new advertiser
+      tags:
+      - advertisers
+  /advertisers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an advertiser by its ID
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete advertiser
+      tags:
+      - advertisers
+    get:
+      consumes:
+      - application/json
+      description: Retrieves an advertiser by its ID
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Advertiser details
+          schema:
+            $ref: '#/definitions/domain.Advertiser'
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get advertiser by ID
+      tags:
+      - advertisers
+    put:
+      consumes:
+      - application/json
+      description: Updates an advertiser with the given details
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Advertiser details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateAdvertiserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated advertiser
+          schema:
+            $ref: '#/definitions/domain.Advertiser'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update advertiser
+      tags:
+      - advertisers
+  /advertisers/{id}/campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of campaigns for an advertiser with pagination
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of campaigns
+          schema:
+            items:
+              $ref: '#/definitions/domain.Campaign'
+            type: array
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List campaigns by advertiser
+      tags:
+      - campaigns
+  /advertisers/{id}/provider-mappings/{providerType}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a mapping between an advertiser and a provider
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: advertiserId
+        required: true
+        type: integer
+      - description: Provider Type
+        in: path
+        name: providerType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mapping details
+          schema:
+            $ref: '#/definitions/domain.AdvertiserProviderMapping'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get advertiser provider mapping
+      tags:
+      - advertisers
+  /affiliate-provider-mappings:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new mapping between an affiliate and a provider
+      parameters:
+      - description: Mapping details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateAffiliateProviderMappingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created mapping
+          schema:
+            $ref: '#/definitions/domain.AffiliateProviderMapping'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new affiliate provider mapping
+      tags:
+      - affiliates
+  /affiliate-provider-mappings/{mappingId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a mapping between an affiliate and a provider
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid mapping ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete affiliate provider mapping
+      tags:
+      - affiliates
+    put:
+      consumes:
+      - application/json
+      description: Updates a mapping between an affiliate and a provider
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: integer
+      - description: Mapping details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateAffiliateProviderMappingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated mapping
+          schema:
+            $ref: '#/definitions/domain.AffiliateProviderMapping'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update affiliate provider mapping
+      tags:
+      - affiliates
+  /affiliates:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new affiliate with the given details
+      parameters:
+      - description: Affiliate details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateAffiliateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created affiliate
+          schema:
+            $ref: '#/definitions/domain.Affiliate'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new affiliate
+      tags:
+      - affiliates
+  /affiliates/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an affiliate by its ID
+      parameters:
+      - description: Affiliate ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid affiliate ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Affiliate not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete affiliate
+      tags:
+      - affiliates
+    get:
+      consumes:
+      - application/json
+      description: Retrieves an affiliate by its ID
+      parameters:
+      - description: Affiliate ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Affiliate details
+          schema:
+            $ref: '#/definitions/domain.Affiliate'
+        "400":
+          description: Invalid affiliate ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Affiliate not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get affiliate by ID
+      tags:
+      - affiliates
+    put:
+      consumes:
+      - application/json
+      description: Updates an affiliate with the given details
+      parameters:
+      - description: Affiliate ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Affiliate details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateAffiliateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated affiliate
+          schema:
+            $ref: '#/definitions/domain.Affiliate'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Affiliate not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update affiliate
+      tags:
+      - affiliates
+  /affiliates/{id}/provider-mappings/{providerType}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a mapping between an affiliate and a provider
+      parameters:
+      - description: Affiliate ID
+        in: path
+        name: affiliateId
+        required: true
+        type: integer
+      - description: Provider Type
+        in: path
+        name: providerType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mapping details
+          schema:
+            $ref: '#/definitions/domain.AffiliateProviderMapping'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get affiliate provider mapping
+      tags:
+      - affiliates
+  /campaign-provider-offers:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new offer for a campaign on a provider
+      parameters:
+      - description: Offer details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateCampaignProviderOfferRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created offer
+          schema:
+            $ref: '#/definitions/domain.CampaignProviderOffer'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new campaign provider offer
+      tags:
+      - campaigns
+  /campaign-provider-offers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a campaign provider offer by its ID
+      parameters:
+      - description: Offer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid offer ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Offer not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete campaign provider offer
+      tags:
+      - campaigns
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a campaign provider offer by its ID
+      parameters:
+      - description: Offer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Offer details
+          schema:
+            $ref: '#/definitions/domain.CampaignProviderOffer'
+        "400":
+          description: Invalid offer ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Offer not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get campaign provider offer by ID
+      tags:
+      - campaigns
+    put:
+      consumes:
+      - application/json
+      description: Updates a campaign provider offer with the given details
+      parameters:
+      - description: Offer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Offer details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateCampaignProviderOfferRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated offer
+          schema:
+            $ref: '#/definitions/domain.CampaignProviderOffer'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Offer not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update campaign provider offer
+      tags:
+      - campaigns
+  /campaigns:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new campaign with the given details
+      parameters:
+      - description: Campaign details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateCampaignRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created campaign
+          schema:
+            $ref: '#/definitions/domain.Campaign'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new campaign
+      tags:
+      - campaigns
+  /campaigns/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a campaign by its ID
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid campaign ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Campaign not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete campaign
+      tags:
+      - campaigns
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a campaign by its ID
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Campaign details
+          schema:
+            $ref: '#/definitions/domain.Campaign'
+        "400":
+          description: Invalid campaign ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Campaign not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get campaign by ID
+      tags:
+      - campaigns
+    put:
+      consumes:
+      - application/json
+      description: Updates a campaign with the given details
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Campaign details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateCampaignRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated campaign
+          schema:
+            $ref: '#/definitions/domain.Campaign'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Campaign not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update campaign
+      tags:
+      - campaigns
+  /campaigns/{id}/provider-offers:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of provider offers for a campaign
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of offers
+          schema:
+            items:
+              $ref: '#/definitions/domain.CampaignProviderOffer'
+            type: array
+        "400":
+          description: Invalid campaign ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List campaign provider offers by campaign
+      tags:
+      - campaigns
+  /health:
+    get:
+      description: Returns the health status of the API
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status UP
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health check endpoint
+      tags:
+      - system
+  /organizations:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of organizations with pagination
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of organizations
+          schema:
+            items:
+              $ref: '#/definitions/domain.Organization'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List organizations
+      tags:
+      - organizations
+    post:
+      consumes:
+      - application/json
+      description: Creates a new organization with the given name
+      parameters:
+      - description: Organization details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created organization
+          schema:
+            $ref: '#/definitions/domain.Organization'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new organization
+      tags:
+      - organizations
+  /organizations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an organization by its ID
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid organization ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Organization not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete organization
+      tags:
+      - organizations
+    get:
+      consumes:
+      - application/json
+      description: Retrieves an organization by its ID
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Organization details
+          schema:
+            $ref: '#/definitions/domain.Organization'
+        "400":
+          description: Invalid organization ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Organization not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get organization by ID
+      tags:
+      - organizations
+    put:
+      consumes:
+      - application/json
+      description: Updates an organization with the given details
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Organization details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated organization
+          schema:
+            $ref: '#/definitions/domain.Organization'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Organization not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update organization
+      tags:
+      - organizations
+  /organizations/{id}/advertisers:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of advertisers for an organization with pagination
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of advertisers
+          schema:
+            items:
+              $ref: '#/definitions/domain.Advertiser'
+            type: array
+        "400":
+          description: Invalid organization ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List advertisers by organization
+      tags:
+      - advertisers
+  /organizations/{id}/affiliates:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of affiliates for an organization with pagination
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of affiliates
+          schema:
+            items:
+              $ref: '#/definitions/domain.Affiliate'
+            type: array
+        "400":
+          description: Invalid organization ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List affiliates by organization
+      tags:
+      - affiliates
+  /organizations/{id}/campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of campaigns for an organization with pagination
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of campaigns
+          schema:
+            items:
+              $ref: '#/definitions/domain.Campaign'
+            type: array
+        "400":
+          description: Invalid organization ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List campaigns by organization
+      tags:
+      - campaigns
+  /public/webhooks/supabase/new-user:
+    post:
+      consumes:
+      - application/json
+      description: Process webhook from Supabase when a new user is created
+      parameters:
+      - description: Webhook payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SupabaseUserWebhookPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile created successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid webhook payload
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Handle Supabase new user webhook
+      tags:
+      - webhooks
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the profile of the currently authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid user ID format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Profile not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get current user profile
+      tags:
+      - profile
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
