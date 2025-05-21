@@ -13,11 +13,13 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Profile: React.FC = () => {
   const { user, profile, isProfileLoading, updateProfile, hasPermission } = useAuth();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const { t } = useTranslation();
   
   const [formData, setFormData] = useState({
     firstName: profile?.first_name || '',
@@ -66,26 +68,26 @@ const Profile: React.FC = () => {
 
   return (
     <div className="container max-w-4xl py-6">
-      <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("profile.title")}</h1>
 
       <div className="grid gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Account Information</CardTitle>
+            <CardTitle>{t("profile.accountInfo")}</CardTitle>
             <CardDescription>
-              Your account details and profile information
+              {t("profile.accountInfoDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Basic info */}
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Basic Information</h3>
+              <h3 className="text-lg font-medium">{t("profile.basicInfo")}</h3>
               {isEditingProfile ? (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label htmlFor="firstName" className="text-sm font-medium">
-                        First Name
+                        {t("auth.firstName")}
                       </label>
                       <Input
                         id="firstName"
@@ -96,7 +98,7 @@ const Profile: React.FC = () => {
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="lastName" className="text-sm font-medium">
-                        Last Name
+                        {t("auth.lastName")}
                       </label>
                       <Input
                         id="lastName"
@@ -111,10 +113,10 @@ const Profile: React.FC = () => {
                     <Button type="submit" disabled={isSaving}>
                       {isSaving ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("profile.saving")}
                         </>
                       ) : (
-                        'Save Changes'
+                        t("profile.saveChanges")
                       )}
                     </Button>
                     <Button 
@@ -123,22 +125,22 @@ const Profile: React.FC = () => {
                       onClick={() => setIsEditingProfile(false)}
                       disabled={isSaving}
                     >
-                      Cancel
+                      {t("common.cancel")}
                     </Button>
                   </div>
                 </form>
               ) : (
                 <div className="space-y-4">
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
-                    <dt className="text-sm font-medium text-muted-foreground">First Name</dt>
+                    <dt className="text-sm font-medium text-muted-foreground">{t("auth.firstName")}</dt>
                     <dd className="text-sm">{profile?.first_name || '-'}</dd>
                     
-                    <dt className="text-sm font-medium text-muted-foreground">Last Name</dt>
+                    <dt className="text-sm font-medium text-muted-foreground">{t("auth.lastName")}</dt>
                     <dd className="text-sm">{profile?.last_name || '-'}</dd>
                   </dl>
                   
                   <Button type="button" onClick={() => setIsEditingProfile(true)}>
-                    Edit Profile
+                    {t("profile.editProfile")}
                   </Button>
                 </div>
               )}
@@ -148,9 +150,9 @@ const Profile: React.FC = () => {
             
             {/* Contact info */}
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Contact Information</h3>
+              <h3 className="text-lg font-medium">{t("profile.contactInfo")}</h3>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
-                <dt className="text-sm font-medium text-muted-foreground">Email</dt>
+                <dt className="text-sm font-medium text-muted-foreground">{t("auth.email")}</dt>
                 <dd className="text-sm">{user?.email || '-'}</dd>
               </dl>
             </div>
@@ -159,12 +161,12 @@ const Profile: React.FC = () => {
             
             {/* Organization info */}
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Organization</h3>
+              <h3 className="text-lg font-medium">{t("profile.organizationInfo")}</h3>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
-                <dt className="text-sm font-medium text-muted-foreground">Organization</dt>
-                <dd className="text-sm">{profile?.organization?.name || 'Not assigned'}</dd>
+                <dt className="text-sm font-medium text-muted-foreground">{t("profile.organization")}</dt>
+                <dd className="text-sm">{profile?.organization?.name || t("profile.notAssigned")}</dd>
                 
-                <dt className="text-sm font-medium text-muted-foreground">Role</dt>
+                <dt className="text-sm font-medium text-muted-foreground">{t("profile.role")}</dt>
                 <dd className="text-sm">{profile?.role?.name || '-'}</dd>
               </dl>
             </div>
@@ -175,15 +177,15 @@ const Profile: React.FC = () => {
         {hasPermission('manage_users') && (
           <Card>
             <CardHeader>
-              <CardTitle>Administrative Options</CardTitle>
+              <CardTitle>{t("profile.adminOptions")}</CardTitle>
               <CardDescription>
-                Options available for administrators
+                {t("profile.adminOptionsDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm">As an administrator, you can manage users, organizations, and settings.</p>
+              <p className="text-sm">{t("profile.adminMessage")}</p>
               <Button variant="secondary">
-                Manage Users
+                {t("profile.manageUsers")}
               </Button>
             </CardContent>
           </Card>

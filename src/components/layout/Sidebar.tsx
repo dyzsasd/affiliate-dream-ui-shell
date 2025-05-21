@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import LanguageSelector from "@/components/common/LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -23,35 +26,36 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
   const { signOut, user, profile } = useAuth();
+  const { t } = useTranslation();
 
   const navItems = [
     {
-      name: "Dashboard",
+      name: t("sidebar.dashboard"),
       path: "/dashboard",
       icon: <LayoutDashboard className="w-5 h-5" />
     },
     {
-      name: "Campaigns",
+      name: t("sidebar.campaigns"),
       path: "/campaigns",
       icon: <LayoutDashboard className="w-5 h-5" />
     },
     {
-      name: "Tracking Links",
+      name: t("sidebar.trackingLinks"),
       path: "/tracking-links",
       icon: <LinkIcon className="w-5 h-5" />
     },
     {
-      name: "Reports",
+      name: t("sidebar.reports"),
       path: "/reporting",
       icon: <BarChart3 className="w-5 h-5" />
     },
     {
-      name: "Conversions",
+      name: t("sidebar.conversions"),
       path: "/reporting/conversions",
       icon: <PieChart className="w-5 h-5" />
     },
     {
-      name: "My Profile",
+      name: t("sidebar.myProfile"),
       path: "/profile",
       icon: <User className="w-5 h-5" />
     }
@@ -75,19 +79,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
         <div className="flex items-center">
           {isOpen ? (
-            <h1 className="text-xl font-bold text-sidebar-foreground">rolinko</h1>
+            <h1 className="text-xl font-bold text-sidebar-foreground">{t("appName")}</h1>
           ) : (
             <span className="text-xl font-bold text-sidebar-foreground">RL</span>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-sidebar-foreground hover:bg-sidebar-accent"
-          onClick={toggleSidebar}
-        >
-          <Menu className="w-5 h-5" />
-        </Button>
+        <div className="flex items-center">
+          <LanguageSelector />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-sidebar-foreground hover:bg-sidebar-accent"
+            onClick={toggleSidebar}
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
       {/* User Info */}
@@ -102,7 +109,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             </span>
             <div className="mt-2">
               <Badge variant="outline" className="text-xs bg-sidebar-accent text-sidebar-foreground border-sidebar-border">
-                {profile.role?.name || 'No Role'}
+                {profile.role?.name || t("profile.notAssigned")}
               </Badge>
             </div>
           </div>
@@ -143,7 +150,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           onClick={signOut}
         >
           <LogOut className="w-5 h-5 mr-2" />
-          {isOpen && "Sign Out"}
+          {isOpen && t("auth.signOut")}
         </Button>
       </div>
     </div>

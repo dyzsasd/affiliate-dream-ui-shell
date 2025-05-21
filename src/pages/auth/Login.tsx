@@ -5,9 +5,23 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const languages = [
+  { code: 'en', name: 'English' },
+  { code: 'fr', name: 'Français' },
+  { code: 'zh-CN', name: '简体中文' },
+  { code: 'zh-TW', name: '繁體中文' }
+];
 
 const Login: React.FC = () => {
   const { signIn, isAuthenticated, isLoading } = useAuth();
@@ -17,14 +31,15 @@ const Login: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
       toast({
-        title: "Error",
-        description: "Email and password are required",
+        title: t("common.error"),
+        description: t("auth.emailAndPasswordRequired"),
         variant: "destructive",
       });
       return;
@@ -48,6 +63,11 @@ const Login: React.FC = () => {
     }
   };
   
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language);
+    localStorage.setItem('rolinko_language', language);
+  };
+
   // Load remembered email
   React.useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberedEmail');
@@ -72,23 +92,44 @@ const Login: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-md px-4">
+        <div className="absolute top-4 right-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Globe className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {languages.map((language) => (
+                <DropdownMenuItem 
+                  key={language.code}
+                  onClick={() => changeLanguage(language.code)}
+                  className={i18n.language === language.code ? "bg-muted" : ""}
+                >
+                  {language.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-affiliate-primary">rolinko</h1>
-          <p className="mt-2 text-gray-600">Your affiliate marketing platform</p>
+          <h1 className="text-3xl font-bold text-affiliate-primary">{t("appName")}</h1>
+          <p className="mt-2 text-gray-600">{t("appDescription")}</p>
         </div>
         
         <Card>
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
+            <CardTitle>{t("auth.signIn")}</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              {t("auth.enterCredentials")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">
-                  Email
+                  {t("auth.email")}
                 </label>
                 <Input
                   id="email"
@@ -105,13 +146,13 @@ const Login: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="text-sm font-medium">
-                    Password
+                    {t("auth.password")}
                   </label>
                   <Link
                     to="/forgot-password"
                     className="text-xs text-affiliate-primary hover:underline"
                   >
-                    Forgot password?
+                    {t("auth.forgotPassword")}
                   </Link>
                 </div>
                 <div className="relative">
@@ -150,7 +191,7 @@ const Login: React.FC = () => {
                   htmlFor="rememberMe"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Remember me
+                  {t("auth.rememberMe")}
                 </label>
               </div>
               
@@ -162,23 +203,23 @@ const Login: React.FC = () => {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {t("auth.signingIn")}
                   </>
                 ) : (
-                  "Sign In"
+                  t("auth.signIn")
                 )}
               </Button>
               
               <div className="mt-2 text-sm">
-                For demo, use: <span className="font-semibold">demo@example.com</span> / <span className="font-semibold">password</span>
+                {t("auth.demoCredentials")}
               </div>
             </form>
           </CardContent>
           <CardFooter>
             <p className="text-center text-sm text-gray-600 w-full">
-              Don't have an account?{" "}
+              {t("auth.dontHaveAccount")}{" "}
               <Link to="/signup" className="text-affiliate-primary hover:underline">
-                Sign up
+                {t("auth.signUp")}
               </Link>
             </p>
           </CardFooter>

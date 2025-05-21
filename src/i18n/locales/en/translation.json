@@ -1,0 +1,83 @@
+
+{
+  "appName": "rolinko",
+  "appDescription": "Your affiliate marketing platform",
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "noResults": "No results found"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "organizationName": "Organization Name (Optional)",
+    "organizationNameHint": "If you're joining an existing organization, leave this blank. An admin will need to invite you.",
+    "demoCredentials": "For demo, use: demo@example.com / password",
+    "creatingAccount": "Creating account...",
+    "signingIn": "Signing in..."
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "campaigns": "Campaigns",
+    "trackingLinks": "Tracking Links",
+    "reports": "Reports",
+    "conversions": "Conversions",
+    "myProfile": "My Profile"
+  },
+  "campaigns": {
+    "title": "Campaigns",
+    "newCampaign": "New Campaign",
+    "searchCampaigns": "Search campaigns...",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "noEndDate": "No end date",
+    "actions": "Actions",
+    "noCampaigns": "No campaigns found",
+    "name": "Name",
+    "description": "Description"
+  },
+  "profile": {
+    "title": "My Profile",
+    "accountInfo": "Account Information",
+    "accountInfoDescription": "Your account details and profile information",
+    "basicInfo": "Basic Information",
+    "contactInfo": "Contact Information",
+    "organizationInfo": "Organization",
+    "saveChanges": "Save Changes",
+    "saving": "Saving",
+    "editProfile": "Edit Profile",
+    "organization": "Organization",
+    "role": "Role",
+    "notAssigned": "Not assigned",
+    "adminOptions": "Administrative Options",
+    "adminOptionsDescription": "Options available for administrators",
+    "adminMessage": "As an administrator, you can manage users, organizations, and settings.",
+    "manageUsers": "Manage Users"
+  },
+  "language": {
+    "title": "Language",
+    "en": "English",
+    "fr": "French",
+    "zh-CN": "Simplified Chinese",
+    "zh-TW": "Traditional Chinese"
+  }
+}

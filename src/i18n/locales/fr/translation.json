@@ -1,0 +1,83 @@
+
+{
+  "appName": "rolinko",
+  "appDescription": "Votre plateforme de marketing d'affiliation",
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "noResults": "Aucun résultat trouvé"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "signOut": "Se déconnecter",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "createAccount": "Créer un compte",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "organizationName": "Nom de l'organisation (Optionnel)",
+    "organizationNameHint": "Si vous rejoignez une organisation existante, laissez ce champ vide. Un administrateur devra vous inviter.",
+    "demoCredentials": "Pour la démo, utilisez: demo@example.com / password",
+    "creatingAccount": "Création du compte...",
+    "signingIn": "Connexion en cours..."
+  },
+  "sidebar": {
+    "dashboard": "Tableau de bord",
+    "campaigns": "Campagnes",
+    "trackingLinks": "Liens de suivi",
+    "reports": "Rapports",
+    "conversions": "Conversions",
+    "myProfile": "Mon profil"
+  },
+  "campaigns": {
+    "title": "Campagnes",
+    "newCampaign": "Nouvelle campagne",
+    "searchCampaigns": "Rechercher des campagnes...",
+    "status": "Statut",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "noEndDate": "Pas de date de fin",
+    "actions": "Actions",
+    "noCampaigns": "Aucune campagne trouvée",
+    "name": "Nom",
+    "description": "Description"
+  },
+  "profile": {
+    "title": "Mon profil",
+    "accountInfo": "Informations du compte",
+    "accountInfoDescription": "Vos détails de compte et informations de profil",
+    "basicInfo": "Informations de base",
+    "contactInfo": "Coordonnées",
+    "organizationInfo": "Organisation",
+    "saveChanges": "Enregistrer les modifications",
+    "saving": "Enregistrement",
+    "editProfile": "Modifier le profil",
+    "organization": "Organisation",
+    "role": "Rôle",
+    "notAssigned": "Non assigné",
+    "adminOptions": "Options administrateur",
+    "adminOptionsDescription": "Options disponibles pour les administrateurs",
+    "adminMessage": "En tant qu'administrateur, vous pouvez gérer les utilisateurs, les organisations et les paramètres.",
+    "manageUsers": "Gérer les utilisateurs"
+  },
+  "language": {
+    "title": "Langue",
+    "en": "Anglais",
+    "fr": "Français",
+    "zh-CN": "Chinois simplifié",
+    "zh-TW": "Chinois traditionnel"
+  }
+}

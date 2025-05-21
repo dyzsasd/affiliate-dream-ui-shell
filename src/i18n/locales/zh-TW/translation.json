@@ -1,0 +1,83 @@
+
+{
+  "appName": "rolinko",
+  "appDescription": "您的聯盟行銷平台",
+  "common": {
+    "loading": "載入中...",
+    "error": "錯誤",
+    "save": "儲存",
+    "cancel": "取消",
+    "delete": "刪除",
+    "edit": "編輯",
+    "view": "檢視",
+    "search": "搜尋",
+    "filter": "篩選",
+    "noResults": "未找到結果"
+  },
+  "auth": {
+    "signIn": "登入",
+    "signUp": "註冊",
+    "signOut": "登出",
+    "email": "電子郵件",
+    "password": "密碼",
+    "confirmPassword": "確認密碼",
+    "forgotPassword": "忘記密碼？",
+    "rememberMe": "記住我",
+    "createAccount": "建立帳戶",
+    "alreadyHaveAccount": "已有帳戶？",
+    "dontHaveAccount": "沒有帳戶？",
+    "firstName": "名",
+    "lastName": "姓",
+    "organizationName": "組織名稱（選填）",
+    "organizationNameHint": "如果您要加入現有組織，請留空。管理員需要邀請您。",
+    "demoCredentials": "演示帳戶：demo@example.com / password",
+    "creatingAccount": "建立帳戶中...",
+    "signingIn": "登入中..."
+  },
+  "sidebar": {
+    "dashboard": "儀表板",
+    "campaigns": "活動",
+    "trackingLinks": "追蹤連結",
+    "reports": "報表",
+    "conversions": "轉換",
+    "myProfile": "我的資料"
+  },
+  "campaigns": {
+    "title": "活動",
+    "newCampaign": "新建活動",
+    "searchCampaigns": "搜尋活動...",
+    "status": "狀態",
+    "startDate": "開始日期",
+    "endDate": "結束日期",
+    "noEndDate": "無結束日期",
+    "actions": "操作",
+    "noCampaigns": "未找到活動",
+    "name": "名稱",
+    "description": "描述"
+  },
+  "profile": {
+    "title": "我的資料",
+    "accountInfo": "帳戶資訊",
+    "accountInfoDescription": "您的帳戶詳情和個人資料",
+    "basicInfo": "基本資訊",
+    "contactInfo": "聯絡資訊",
+    "organizationInfo": "組織",
+    "saveChanges": "儲存變更",
+    "saving": "儲存中",
+    "editProfile": "編輯資料",
+    "organization": "組織",
+    "role": "角色",
+    "notAssigned": "未指派",
+    "adminOptions": "管理選項",
+    "adminOptionsDescription": "管理員可用的選項",
+    "adminMessage": "作為管理員，您可以管理使用者、組織和設定。",
+    "manageUsers": "管理使用者"
+  },
+  "language": {
+    "title": "語言",
+    "en": "英語",
+    "fr": "法語",
+    "zh-CN": "簡體中文",
+    "zh-TW": "繁體中文"
+  }
+}

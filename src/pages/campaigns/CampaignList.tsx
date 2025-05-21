@@ -22,10 +22,12 @@ import {
 } from "lucide-react";
 import { mockCampaigns } from "@/services/api";
 import { Campaign } from "@/types/api";
+import { useTranslation } from "react-i18next";
 
 const CampaignList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [campaigns, setCampaigns] = useState<Campaign[]>(mockCampaigns);
+  const { t } = useTranslation();
 
   // Filter campaigns based on search term
   const filteredCampaigns = campaigns.filter((campaign) =>
@@ -47,17 +49,17 @@ const CampaignList: React.FC = () => {
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "No end date";
+    if (!dateString) return t("campaigns.noEndDate");
     return new Date(dateString).toLocaleDateString();
   };
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight">Campaigns</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("campaigns.title")}</h1>
         <Button className="bg-affiliate-primary hover:bg-affiliate-primary/90">
           <Plus className="mr-2 h-4 w-4" />
-          New Campaign
+          {t("campaigns.newCampaign")}
         </Button>
       </div>
 
@@ -66,7 +68,7 @@ const CampaignList: React.FC = () => {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
           <Input
             type="search"
-            placeholder="Search campaigns..."
+            placeholder={t("campaigns.searchCampaigns")}
             className="w-full pl-9"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -74,7 +76,7 @@ const CampaignList: React.FC = () => {
         </div>
         <Button variant="outline" className="flex sm:w-auto">
           <Filter className="mr-2 h-4 w-4" />
-          Filter
+          {t("common.filter")}
         </Button>
       </div>
 
@@ -83,18 +85,18 @@ const CampaignList: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[300px]">Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Start Date</TableHead>
-                <TableHead>End Date</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[300px]">{t("campaigns.name")}</TableHead>
+                <TableHead>{t("campaigns.status")}</TableHead>
+                <TableHead>{t("campaigns.startDate")}</TableHead>
+                <TableHead>{t("campaigns.endDate")}</TableHead>
+                <TableHead className="text-right">{t("campaigns.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredCampaigns.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="h-24 text-center">
-                    No campaigns found
+                    {t("campaigns.noCampaigns")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -122,7 +124,7 @@ const CampaignList: React.FC = () => {
                     <TableCell className="text-right">
                       <Link to={`/campaigns/${campaign.id}`}>
                         <Button variant="ghost" size="sm">
-                          View
+                          {t("common.view")}
                         </Button>
                       </Link>
                     </TableCell>

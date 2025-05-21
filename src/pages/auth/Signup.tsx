@@ -5,12 +5,27 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const languages = [
+  { code: 'en', name: 'English' },
+  { code: 'fr', name: 'Français' },
+  { code: 'zh-CN', name: '简体中文' },
+  { code: 'zh-TW', name: '繁體中文' }
+];
 
 const Signup: React.FC = () => {
   const { signUp, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   
   const [formData, setFormData] = useState({
     firstName: "",
@@ -35,8 +50,8 @@ const Signup: React.FC = () => {
     // Basic validation
     if (!formData.email || !formData.password) {
       toast({
-        title: "Error",
-        description: "Email and password are required",
+        title: t("common.error"),
+        description: t("auth.emailAndPasswordRequired"),
         variant: "destructive",
       });
       return;
@@ -44,8 +59,8 @@ const Signup: React.FC = () => {
 
     if (formData.password !== formData.confirmPassword) {
       toast({
-        title: "Error",
-        description: "Passwords do not match",
+        title: t("common.error"),
+        description: t("auth.passwordsDoNotMatch"),
         variant: "destructive",
       });
       return;
@@ -53,8 +68,8 @@ const Signup: React.FC = () => {
 
     if (formData.password.length < 6) {
       toast({
-        title: "Error",
-        description: "Password must be at least 6 characters",
+        title: t("common.error"),
+        description: t("auth.passwordTooShort"),
         variant: "destructive",
       });
       return;
@@ -77,6 +92,11 @@ const Signup: React.FC = () => {
     }
   };
 
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language);
+    localStorage.setItem('rolinko_language', language);
+  };
+
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
@@ -92,16 +112,37 @@ const Signup: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-md px-4">
+        <div className="absolute top-4 right-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Globe className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {languages.map((language) => (
+                <DropdownMenuItem 
+                  key={language.code}
+                  onClick={() => changeLanguage(language.code)}
+                  className={i18n.language === language.code ? "bg-muted" : ""}
+                >
+                  {language.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-affiliate-primary">rolinko</h1>
-          <p className="mt-2 text-gray-600">Create your affiliate marketing account</p>
+          <h1 className="text-3xl font-bold text-affiliate-primary">{t("appName")}</h1>
+          <p className="mt-2 text-gray-600">{t("appDescription")}</p>
         </div>
         
         <Card>
           <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
+            <CardTitle>{t("auth.signUp")}</CardTitle>
             <CardDescription>
-              Create an account to get started
+              {t("auth.createAccountToGetStarted")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,7 +150,7 @@ const Signup: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label htmlFor="firstName" className="text-sm font-medium">
-                    First Name
+                    {t("auth.firstName")}
                   </label>
                   <Input
                     id="firstName"
@@ -123,7 +164,7 @@ const Signup: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="lastName" className="text-sm font-medium">
-                    Last Name
+                    {t("auth.lastName")}
                   </label>
                   <Input
                     id="lastName"
@@ -139,7 +180,7 @@ const Signup: React.FC = () => {
 
               <div className="space-y-2">
                 <label htmlFor="organizationName" className="text-sm font-medium">
-                  Organization Name (Optional)
+                  {t("auth.organizationName")}
                 </label>
                 <Input
                   id="organizationName"
@@ -151,13 +192,13 @@ const Signup: React.FC = () => {
                   disabled={isSubmitting}
                 />
                 <p className="text-xs text-gray-500">
-                  If you're joining an existing organization, leave this blank. An admin will need to invite you.
+                  {t("auth.organizationNameHint")}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">
-                  Email
+                  {t("auth.email")}
                 </label>
                 <Input
                   id="email"
@@ -174,7 +215,7 @@ const Signup: React.FC = () => {
               
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium">
-                  Password
+                  {t("auth.password")}
                 </label>
                 <div className="relative">
                   <Input
@@ -204,7 +245,7 @@ const Signup: React.FC = () => {
               
               <div className="space-y-2">
                 <label htmlFor="confirmPassword" className="text-sm font-medium">
-                  Confirm Password
+                  {t("auth.confirmPassword")}
                 </label>
                 <div className="relative">
                   <Input
@@ -240,19 +281,19 @@ const Signup: React.FC = () => {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account...
+                    {t("auth.creatingAccount")}
                   </>
                 ) : (
-                  "Create Account"
+                  t("auth.createAccount")
                 )}
               </Button>
             </form>
           </CardContent>
           <CardFooter>
             <p className="text-center text-sm text-gray-600 w-full">
-              Already have an account?{" "}
+              {t("auth.alreadyHaveAccount")}{" "}
               <Link to="/login" className="text-affiliate-primary hover:underline">
-                Sign in
+                {t("auth.signIn")}
               </Link>
             </p>
           </CardFooter>

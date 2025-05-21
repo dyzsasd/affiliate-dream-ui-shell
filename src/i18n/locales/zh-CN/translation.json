@@ -1,0 +1,83 @@
+
+{
+  "appName": "rolinko",
+  "appDescription": "您的联盟营销平台",
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "view": "查看",
+    "search": "搜索",
+    "filter": "筛选",
+    "noResults": "未找到结果"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signUp": "注册",
+    "signOut": "退出登录",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "forgotPassword": "忘记密码？",
+    "rememberMe": "记住我",
+    "createAccount": "创建账户",
+    "alreadyHaveAccount": "已有账户？",
+    "dontHaveAccount": "没有账户？",
+    "firstName": "名",
+    "lastName": "姓",
+    "organizationName": "组织名称（可选）",
+    "organizationNameHint": "如果您要加入现有组织，请留空。管理员需要邀请您。",
+    "demoCredentials": "演示账户：demo@example.com / password",
+    "creatingAccount": "创建账户中...",
+    "signingIn": "登录中..."
+  },
+  "sidebar": {
+    "dashboard": "仪表盘",
+    "campaigns": "活动",
+    "trackingLinks": "跟踪链接",
+    "reports": "报告",
+    "conversions": "转化",
+    "myProfile": "我的资料"
+  },
+  "campaigns": {
+    "title": "活动",
+    "newCampaign": "新建活动",
+    "searchCampaigns": "搜索活动...",
+    "status": "状态",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "noEndDate": "无结束日期",
+    "actions": "操作",
+    "noCampaigns": "未找到活动",
+    "name": "名称",
+    "description": "描述"
+  },
+  "profile": {
+    "title": "我的资料",
+    "accountInfo": "账户信息",
+    "accountInfoDescription": "您的账户详情和个人资料",
+    "basicInfo": "基本信息",
+    "contactInfo": "联系信息",
+    "organizationInfo": "组织",
+    "saveChanges": "保存更改",
+    "saving": "保存中",
+    "editProfile": "编辑资料",
+    "organization": "组织",
+    "role": "角色",
+    "notAssigned": "未分配",
+    "adminOptions": "管理选项",
+    "adminOptionsDescription": "管理员可用的选项",
+    "adminMessage": "作为管理员，您可以管理用户、组织和设置。",
+    "manageUsers": "管理用户"
+  },
+  "language": {
+    "title": "语言",
+    "en": "英语",
+    "fr": "法语",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁体中文"
+  }
+}
