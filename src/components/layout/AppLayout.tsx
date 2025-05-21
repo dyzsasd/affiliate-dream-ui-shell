@@ -1,19 +1,24 @@
 
 import React, { useState } from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/auth";
 import Sidebar from "./Sidebar";
 import { Loader2 } from "lucide-react";
 
 const AppLayout: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  console.log("AppLayout rendering - component start");
+  const auth = useAuth();
+  console.log("Authentication state:", auth);
+  const location = useLocation();
+  
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  if (isLoading) {
+  if (auth.isLoading) {
+    console.log("Loading spinner is showing - auth is still loading");
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-affiliate-primary" />
@@ -21,10 +26,13 @@ const AppLayout: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (!auth.isAuthenticated) {
+    console.log("User is not authenticated - redirecting to login");
+    // Pass the current location to redirect back after login
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  console.log("User is authenticated - rendering app layout");
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
