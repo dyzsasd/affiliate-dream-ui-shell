@@ -1,20 +1,13 @@
 
-import { Profile, Session, SignInCredentials, SignUpCredentials, User, Permission } from '@/types/auth';
+import { User, Session } from '@/types/auth';
 
 export interface AuthContextType {
   session: Session | null;
   user: User | null;
-  profile: Profile | null;
-  permissions: string[];
   isLoading: boolean;
   isSubmitting: boolean;
-  isProfileLoading: boolean;
   isAuthenticated: boolean;
-  signIn: (credentials: SignInCredentials) => Promise<void>;
-  signUp: (credentials: SignUpCredentials) => Promise<void>;
+  signIn: (credentials: { email: string; password: string }) => Promise<void>;
+  signUp: (credentials: { email: string; password: string; firstName?: string; lastName?: string }) => Promise<void>;
   signOut: () => Promise<void>;
-  createOrganization: (name: string) => Promise<void>;
-  updateProfile: (profile: Partial<Profile>) => Promise<void>;
-  hasPermission: (permission: string) => boolean;
-  refreshProfile: () => Promise<void>;
 }

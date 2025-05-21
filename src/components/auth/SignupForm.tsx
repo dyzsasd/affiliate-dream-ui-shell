@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Eye, EyeOff } from "lucide-react";
@@ -19,7 +18,6 @@ const SignupForm: React.FC = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    organizationName: "",
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +66,6 @@ const SignupForm: React.FC = () => {
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        organizationName: formData.organizationName || undefined,
       });
     } catch (error) {
       console.error("Signup error:", error);
@@ -109,24 +106,6 @@ const SignupForm: React.FC = () => {
             disabled={isSubmittingForm}
           />
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="organizationName" className="text-sm font-medium">
-          {t("auth.organizationName")}
-        </label>
-        <Input
-          id="organizationName"
-          name="organizationName"
-          placeholder="Your Company"
-          value={formData.organizationName}
-          onChange={handleChange}
-          className="w-full"
-          disabled={isSubmittingForm}
-        />
-        <p className="text-xs text-gray-500">
-          {t("auth.organizationNameHint")}
-        </p>
       </div>
 
       <div className="space-y-2">
