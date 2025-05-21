@@ -1,0 +1,11 @@
+
+{
+  "apiPackage": "api",
+  "modelPackage": "models",
+  "withSeparateModelsAndApi": true,
+  "supportingFiles": "api.ts",
+  "npmName": "@app/api-client",
+  "supportsES6": true,
+  "nullSafeAdditionalProps": true,
+  "ensureUniqueParams": true
+}
