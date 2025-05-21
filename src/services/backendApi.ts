@@ -1,15 +1,15 @@
 
-import { supabase } from './supabase';
-import type { ApiError } from '../types/api';
+import { supabase } from '@/integrations/supabase/client';
+import type { Campaign } from '../types/api';
 
-// Fixing the imports since the generated API client might not exist yet
-// We'll use dynamic imports or placeholders to avoid TypeScript errors
-let ApiClient: any;
-let Models: any;
+// This would be set via environment variable in a real application
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-export const getApiBase = () => {
-  return import.meta.env.VITE_API_URL || 'http://localhost:8080';
-};
+// Define a simple ApiError interface here since it's not exported from types/api
+interface ApiError {
+  message: string;
+  status: number;
+}
 
 // This function initializes the API clients with authentication
 export const initializeApiClients = async () => {
@@ -18,19 +18,20 @@ export const initializeApiClients = async () => {
     const api = await import('../generated-api/api');
     const models = await import('../generated-api/models');
     
-    ApiClient = api;
-    Models = models;
-    
-    return { ApiClient, Models };
+    return { ApiClient: api, Models: models };
   } catch (error) {
     console.error('API client not generated yet. Please run "npm run generate-api" first.');
     return { ApiClient: null, Models: null };
   }
 };
 
+export const getApiBase = () => {
+  return API_BASE_URL;
+};
+
 export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T): Promise<T> => {
-  const session = await supabase.auth.getSession();
-  const token = session?.data?.session?.access_token;
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
   
   if (!ClientClass) {
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
