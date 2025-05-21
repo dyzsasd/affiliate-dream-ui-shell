@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import AuthLayout from "@/components/auth/AuthLayout";
