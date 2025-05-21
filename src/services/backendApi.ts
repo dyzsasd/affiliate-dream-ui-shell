@@ -1,97 +1,53 @@
+import { supabase } from '@/integrations/supabase/client';
+import { BASE_URL } from './api';
 
-import { Configuration, ConfigurationParameters } from '../generated-api';
-import { supabase } from '../integrations/supabase/client';
+// Create a TypeScript declaration file for the generated API
 
-// Import all the API classes from the generated code
-// Note: These imports will work once the client is generated
-import {
-  AdvertisersApi,
-  AffiliatesApi,
-  CampaignsApi,
-  OrganizationsApi,
-  ProfileApi,
-  WebhooksApi
-} from '../generated-api/api';
-
-// Re-export models for convenience
-export * from '../generated-api/models';
-
-class BackendApiService {
-  private baseUrl: string;
-  private configuration: Configuration;
-  
-  // API instances
-  public advertisers: AdvertisersApi;
-  public affiliates: AffiliatesApi;
-  public campaigns: CampaignsApi;
-  public organizations: OrganizationsApi;
-  public profile: ProfileApi;
-  public webhooks: WebhooksApi;
-
-  constructor() {
-    // This would typically come from environment variables
-    this.baseUrl = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8080/api/v1';
-    
-    // Initialize configuration with auth handling
-    this.configuration = new Configuration({
-      basePath: this.baseUrl,
-      middleware: [
-        {
-          pre: async (context) => {
-            // Get current session
-            const { data } = await supabase.auth.getSession();
-            
-            // If we have a session, add the token to the request
-            if (data.session?.access_token) {
-              context.init.headers = {
-                ...context.init.headers,
-                Authorization: `Bearer ${data.session.access_token}`,
-              };
-            }
-            
-            return context;
-          },
-        },
-      ],
-    });
-
-    // Initialize API instances
-    this.advertisers = new AdvertisersApi(this.configuration);
-    this.affiliates = new AffiliatesApi(this.configuration);
-    this.campaigns = new CampaignsApi(this.configuration);
-    this.organizations = new OrganizationsApi(this.configuration);
-    this.profile = new ProfileApi(this.configuration);
-    this.webhooks = new WebhooksApi(this.configuration);
-  }
-
-  // Method to reinitialize the API client (e.g., after login/logout)
-  public reinitialize(): void {
-    this.configuration = new Configuration({
-      basePath: this.baseUrl,
-      middleware: [
-        {
-          pre: async (context) => {
-            const { data } = await supabase.auth.getSession();
-            if (data.session?.access_token) {
-              context.init.headers = {
-                ...context.init.headers,
-                Authorization: `Bearer ${data.session.access_token}`,
-              };
-            }
-            return context;
-          },
-        },
-      ],
-    });
-
-    this.advertisers = new AdvertisersApi(this.configuration);
-    this.affiliates = new AffiliatesApi(this.configuration);
-    this.campaigns = new CampaignsApi(this.configuration);
-    this.organizations = new OrganizationsApi(this.configuration);
-    this.profile = new ProfileApi(this.configuration);
-    this.webhooks = new WebhooksApi(this.configuration);
-  }
+// Import the API - we'll try/catch to handle the case where it hasn't been generated yet
+let DefaultApi, OrganizationsApi, AdvertisersApi, AffiliatesApi, CampaignsApi;
+try {
+  const api = require('../generated-api/api');
+  DefaultApi = api.DefaultApi;
+  OrganizationsApi = api.OrganizationsApi;
+  AdvertisersApi = api.AdvertisersApi;
+  AffiliatesApi = api.AffiliatesApi;
+  CampaignsApi = api.CampaignsApi;
+} catch (error) {
+  console.error('API client not generated yet. Please run "npm run generate-api" first.');
 }
 
-// Create and export a singleton instance
-export const backendApi = new BackendApiService();
+// Define the API URL from environment variables or fallback to localhost
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
+// Create API client with auth
+const createApiClientWithAuth = async () => {
+  const { data } = await supabase.auth.getSession();
+  const token = data?.session?.access_token;
+  
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  const requestOptions = {
+    headers,
+  };
+  
+  return {
+    organizations: OrganizationsApi ? new OrganizationsApi(undefined, API_URL, requestOptions) : null,
+    advertisers: AdvertisersApi ? new AdvertisersApi(undefined, API_URL, requestOptions) : null,
+    affiliates: AffiliatesApi ? new AffiliatesApi(undefined, API_URL, requestOptions) : null,
+    campaigns: CampaignsApi ? new CampaignsApi(undefined, API_URL, requestOptions) : null,
+    default: DefaultApi ? new DefaultApi(undefined, API_URL, requestOptions) : null,
+  };
+};
+
+// Export the backend API
+const backendApi = {
+  createApiClientWithAuth,
+};
+
+export default backendApi;
