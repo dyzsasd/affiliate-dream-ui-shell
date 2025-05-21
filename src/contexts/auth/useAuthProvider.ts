@@ -4,6 +4,8 @@ import { Session, User } from '@/types/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import { UserProfile } from './authTypes';
+import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
+import { createApiClient } from '@/services/backendApi';
 
 export const useAuthProvider = (mockMode = false) => {
   const [session, setSession] = useState<Session | null>(null);
@@ -108,6 +110,39 @@ export const useAuthProvider = (mockMode = false) => {
 
     initAuth();
   }, [mockMode]);
+
+  const fetchBackendProfile = async () => {
+    try {
+      if (mockMode) {
+        // In mock mode, return a mock profile
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return {
+          id: 'mock-id',
+          firstName: 'Demo',
+          lastName: 'User',
+          email: 'demo@example.com',
+          roleId: 1,
+          organizationId: 1
+        };
+      }
+
+      if (!session?.access_token) {
+        return null;
+      }
+
+      const profileApi = await createApiClient(ProfileApi);
+      const response = await profileApi.usersMeGet();
+      return response;
+    } catch (error) {
+      console.error('Error fetching backend profile:', error);
+      toast({
+        title: "Error loading profile",
+        description: "Could not load your profile from the server.",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
 
   const updateProfile = async (data: { first_name?: string; last_name?: string }) => {
     setIsProfileLoading(true);
@@ -330,6 +365,7 @@ export const useAuthProvider = (mockMode = false) => {
     isAuthenticated: !!session?.user,
     updateProfile,
     hasPermission,
+    fetchBackendProfile,
     signIn,
     signUp,
     signOut,

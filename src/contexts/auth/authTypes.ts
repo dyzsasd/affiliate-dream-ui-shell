@@ -1,5 +1,6 @@
 
 import { User, Session } from '@/types/auth';
+import { DomainProfile } from '@/generated-api/src/models';
 
 // Simple profile type since we don't have a database table anymore
 export interface UserProfile {
@@ -23,6 +24,7 @@ export interface AuthContextType {
   isProfileLoading: boolean;
   updateProfile: (data: { first_name?: string; last_name?: string }) => Promise<void>;
   hasPermission: (permission: string) => boolean;
+  fetchBackendProfile: () => Promise<DomainProfile | null>;
   signIn: (credentials: { email: string; password: string }) => Promise<void>;
   signUp: (credentials: { email: string; password: string; firstName?: string; lastName?: string }) => Promise<void>;
   signOut: () => Promise<void>;

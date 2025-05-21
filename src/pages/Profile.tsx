@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,9 +14,12 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { DomainProfile } from '@/generated-api/src/models';
 
 const Profile: React.FC = () => {
-  const { user, profile, isProfileLoading, updateProfile, hasPermission } = useAuth();
+  const { user, profile, isProfileLoading, updateProfile, hasPermission, fetchBackendProfile } = useAuth();
+  const [backendProfile, setBackendProfile] = useState<DomainProfile | null>(null);
+  const [isBackendLoading, setIsBackendLoading] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { t } = useTranslation();
@@ -34,6 +38,25 @@ const Profile: React.FC = () => {
       });
     }
   }, [profile]);
+
+  // Fetch backend profile
+  useEffect(() => {
+    const getBackendProfile = async () => {
+      setIsBackendLoading(true);
+      try {
+        const data = await fetchBackendProfile();
+        setBackendProfile(data);
+      } catch (error) {
+        console.error('Error fetching backend profile:', error);
+      } finally {
+        setIsBackendLoading(false);
+      }
+    };
+
+    if (user) {
+      getBackendProfile();
+    }
+  }, [user, fetchBackendProfile]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,7 +80,7 @@ const Profile: React.FC = () => {
     }
   };
   
-  if (isProfileLoading) {
+  if (isProfileLoading || isBackendLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -132,10 +155,10 @@ const Profile: React.FC = () => {
                 <div className="space-y-4">
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
                     <dt className="text-sm font-medium text-muted-foreground">{t("auth.firstName")}</dt>
-                    <dd className="text-sm">{profile?.first_name || '-'}</dd>
+                    <dd className="text-sm">{profile?.first_name || backendProfile?.firstName || '-'}</dd>
                     
                     <dt className="text-sm font-medium text-muted-foreground">{t("auth.lastName")}</dt>
-                    <dd className="text-sm">{profile?.last_name || '-'}</dd>
+                    <dd className="text-sm">{profile?.last_name || backendProfile?.lastName || '-'}</dd>
                   </dl>
                   
                   <Button type="button" onClick={() => setIsEditingProfile(true)}>
@@ -152,7 +175,7 @@ const Profile: React.FC = () => {
               <h3 className="text-lg font-medium">{t("profile.contactInfo")}</h3>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
                 <dt className="text-sm font-medium text-muted-foreground">{t("auth.email")}</dt>
-                <dd className="text-sm">{user?.email || '-'}</dd>
+                <dd className="text-sm">{user?.email || backendProfile?.email || '-'}</dd>
               </dl>
             </div>
             
@@ -163,12 +186,31 @@ const Profile: React.FC = () => {
               <h3 className="text-lg font-medium">{t("profile.organizationInfo")}</h3>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
                 <dt className="text-sm font-medium text-muted-foreground">{t("profile.organization")}</dt>
-                <dd className="text-sm">{profile?.organization?.name || t("profile.notAssigned")}</dd>
+                <dd className="text-sm">
+                  {profile?.organization?.name || 
+                   (backendProfile?.organizationId ? `Organization ID: ${backendProfile.organizationId}` : t("profile.notAssigned"))}
+                </dd>
                 
                 <dt className="text-sm font-medium text-muted-foreground">{t("profile.role")}</dt>
-                <dd className="text-sm">{profile?.role?.name || '-'}</dd>
+                <dd className="text-sm">
+                  {profile?.role?.name || 
+                   (backendProfile?.roleId ? `Role ID: ${backendProfile.roleId}` : '-')}
+                </dd>
               </dl>
             </div>
+
+            {/* Backend Profile Data */}
+            {backendProfile && (
+              <>
+                <Separator />
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium">Backend Profile Data</h3>
+                  <div className="bg-muted p-3 rounded-md overflow-auto max-h-80">
+                    <pre className="text-xs">{JSON.stringify(backendProfile, null, 2)}</pre>
+                  </div>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
         
