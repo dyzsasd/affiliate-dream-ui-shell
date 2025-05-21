@@ -144,6 +144,29 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.Profile:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        description: Pointer for NULLable
+        type: string
+      id:
+        description: Stores the auth.uid() from Supabase Auth
+        type: string
+      last_name:
+        description: Pointer for NULLable
+        type: string
+      organization_id:
+        description: Pointer for NULLable
+        type: integer
+      role_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   handlers.CreateAdvertiserProviderMappingRequest:
     properties:
       advertiser_id:
@@ -305,6 +328,19 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  handlers.ProfileRequest:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      organization_id:
+        type: integer
+      role_id:
+        type: integer
     type: object
   handlers.SupabaseUserWebhookPayload:
     properties:
@@ -787,7 +823,7 @@ paths:
       parameters:
       - description: Advertiser ID
         in: path
-        name: advertiserId
+        name: id
         required: true
         type: integer
       - description: Provider Type
@@ -1115,7 +1151,7 @@ paths:
       parameters:
       - description: Affiliate ID
         in: path
-        name: affiliateId
+        name: id
         required: true
         type: integer
       - description: Provider Type
@@ -1856,6 +1892,127 @@ paths:
       summary: List campaigns by organization
       tags:
       - campaigns
+  /profiles:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user profile
+      parameters:
+      - description: Profile information
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created profile
+          schema:
+            $ref: '#/definitions/domain.Profile'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new profile
+      tags:
+      - profile
+  /profiles/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an existing user profile
+      parameters:
+      - description: Profile ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Profile deleted successfully
+        "400":
+          description: Invalid profile ID format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Profile not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a profile
+      tags:
+      - profile
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing user profile
+      parameters:
+      - description: Profile ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated profile information
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.ProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated profile
+          schema:
+            $ref: '#/definitions/domain.Profile'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Profile not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update a profile
+      tags:
+      - profile
   /public/webhooks/supabase/new-user:
     post:
       consumes:
