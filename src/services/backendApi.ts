@@ -15,8 +15,8 @@ interface ApiError {
 export const initializeApiClients = async () => {
   try {
     // Dynamic import to handle case where files might not exist yet
-    const api = await import('../generated-api/api');
-    const models = await import('../generated-api/models');
+    const api = await import('../generated-api/src/apis');
+    const models = await import('../generated-api/src/models');
     
     return { ApiClient: api, Models: models };
   } catch (error) {
@@ -37,7 +37,15 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
   
+  // Create the client with proper configuration
   const client = new ClientClass(getApiBase());
+  
+  // Ensure middleware is initialized as an array
+  // @ts-ignore - We need to access the private property to fix the issue
+  if (!client.middleware || !Array.isArray(client.middleware)) {
+    // @ts-ignore - Setting middleware to an empty array if it doesn't exist
+    client.middleware = [];
+  }
   
   // Add auth token to each request if available
   if (token) {
@@ -63,4 +71,3 @@ export const handleApiError = (error: unknown): ApiError => {
     status: 500,
   };
 };
-

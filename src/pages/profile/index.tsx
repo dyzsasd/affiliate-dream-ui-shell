@@ -11,17 +11,22 @@ const Profile: React.FC = () => {
   const { user, profile, isProfileLoading, updateProfile, hasPermission, fetchBackendProfile } = useAuth();
   const [backendProfile, setBackendProfile] = useState<DomainProfile | null>(null);
   const [isBackendLoading, setIsBackendLoading] = useState(false);
+  const [backendError, setBackendError] = useState<string | null>(null);
   const { t } = useTranslation();
 
   // Fetch backend profile
   useEffect(() => {
     const getBackendProfile = async () => {
       setIsBackendLoading(true);
+      setBackendError(null);
       try {
         const data = await fetchBackendProfile();
-        setBackendProfile(data);
+        if (data) {
+          setBackendProfile(data);
+        }
       } catch (error) {
         console.error('Error fetching backend profile:', error);
+        setBackendError('Failed to load backend profile. Please try again later.');
       } finally {
         setIsBackendLoading(false);
       }
@@ -43,6 +48,11 @@ const Profile: React.FC = () => {
   return (
     <div className="container max-w-4xl py-6">
       <ProfileHeader />
+      {backendError && (
+        <div className="bg-red-50 border border-red-200 text-red-600 p-4 mb-6 rounded-md">
+          {backendError}
+        </div>
+      )}
       <ProfileContent 
         user={user}
         profile={profile} 

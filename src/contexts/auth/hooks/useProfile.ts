@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
-import { createApiClient } from '@/services/backendApi';
+import { createApiClient, handleApiError } from '@/services/backendApi';
 
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -14,8 +14,12 @@ export const useProfile = (user: User | null) => {
 
   const fetchBackendProfile = async () => {
     try {
+      console.log("Fetching backend profile...");
       const profileApi = await createApiClient(ProfileApi);
+      console.log("ProfileApi client created successfully");
+      
       const response = await profileApi.usersMeGet();
+      console.log("Backend profile fetched:", response);
       return response;
     } catch (error) {
       console.error('Error fetching backend profile:', error);
