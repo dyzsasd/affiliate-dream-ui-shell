@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth";
 import Sidebar from "./Sidebar";
 import { Loader2 } from "lucide-react";
 
