@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
@@ -6,6 +5,7 @@ import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { createApiClient, handleApiError } from '@/services/backendApi';
+import { HandlersProfileRequest } from '@/generated-api/src/models';
 
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -40,16 +40,39 @@ export const useProfile = (user: User | null) => {
         throw new Error("User not authenticated");
       }
 
-      // Update user metadata in Supabase Auth
-      const { error } = await supabase.auth.updateUser({
+      // Step 1: Update user metadata in Supabase Auth (keep this part for authentication)
+      const { error: authError } = await supabase.auth.updateUser({
         data: {
           first_name: data.first_name,
           last_name: data.last_name,
         }
       });
 
-      if (error) {
-        throw error;
+      if (authError) {
+        throw authError;
+      }
+
+      // Step 2: Update profile in backend service
+      try {
+        const profileApi = await createApiClient(ProfileApi);
+        
+        // Create profile update request
+        const profileRequest: HandlersProfileRequest = {
+          firstName: data.first_name,
+          lastName: data.last_name
+        };
+
+        if (user.id) {
+          // Update profile in backend - assumes the backend API has this functionality
+          await profileApi.profilesIdPut({
+            id: user.id,
+            profile: profileRequest
+          });
+        }
+      } catch (backendError) {
+        console.error('Error updating backend profile:', backendError);
+        // Continue with the local update even if the backend update fails
+        // We could add a retry mechanism or queue here for resilience
       }
 
       // Update local state
@@ -76,8 +99,8 @@ export const useProfile = (user: User | null) => {
   };
 
   const hasPermission = (permission: string) => {
-    // Simple permission check
-    // In a real app, you might check against a list of permissions
+    // Simple permission check based on profile roles
+    // In a real app, you might check against a list of permissions from the backend
     return user !== null && (
       permission === 'manage_users' && profile?.role?.name === 'Admin'
     );

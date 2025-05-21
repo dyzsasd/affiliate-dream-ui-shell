@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import { Session, User } from '@/types/auth';
+import { ProfileApi } from '@/generated-api/src/apis';
+import { createApiClient, handleApiError } from '@/services/backendApi';
+import { HandlersUpsertProfileRequest } from '@/generated-api/src/models';
 
 export const useAuthentication = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -67,6 +70,27 @@ export const useAuthentication = () => {
 
       if (error) {
         throw error;
+      }
+
+      // If sign-up is successful, make sure to sync the user profile with the backend
+      if (data.user) {
+        try {
+          const profileApi = await createApiClient(ProfileApi);
+          
+          // Create profile upsert request for backend
+          const profileRequest: HandlersUpsertProfileRequest = {
+            id: data.user.id,
+            email: data.user.email,
+            firstName: credentials.firstName,
+            lastName: credentials.lastName
+          };
+
+          // Upsert profile in backend - assumes the backend API has this functionality
+          await profileApi.profilesUpsertPost({ profile: profileRequest });
+        } catch (backendError) {
+          console.error('Could not sync profile with backend during signup:', backendError);
+          // Continue with sign-up even if backend sync fails
+        }
       }
 
       toast({

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,16 +18,45 @@ import {
   FileEdit,
   Plus,
   Search,
-  Filter
+  Filter,
+  Loader2
 } from "lucide-react";
-import { mockCampaigns } from "@/services/api";
+import { campaignService } from "@/services/campaignService";
 import { Campaign } from "@/types/api";
 import { useTranslation } from "react-i18next";
+import { useToast } from "@/hooks/use-toast";
 
 const CampaignList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [campaigns, setCampaigns] = useState<Campaign[]>(mockCampaigns);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
+  const { toast } = useToast();
+
+  // Fetch campaigns from backend API
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const data = await campaignService.getCampaigns();
+        setCampaigns(data);
+      } catch (err) {
+        console.error("Error fetching campaigns:", err);
+        setError("Failed to load campaigns. Please try again later.");
+        toast({
+          title: "Error",
+          description: "Failed to load campaigns. Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCampaigns();
+  }, [toast]);
 
   // Filter campaigns based on search term
   const filteredCampaigns = campaigns.filter((campaign) =>
@@ -52,6 +81,14 @@ const CampaignList: React.FC = () => {
     if (!dateString) return t("campaigns.noEndDate");
     return new Date(dateString).toLocaleDateString();
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -79,6 +116,12 @@ const CampaignList: React.FC = () => {
           {t("common.filter")}
         </Button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-md">
+          {error}
+        </div>
+      )}
 
       <Card>
         <div className="rounded-md border">
