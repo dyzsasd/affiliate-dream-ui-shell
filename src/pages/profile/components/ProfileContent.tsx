@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
   Card,
   CardContent,
@@ -16,6 +16,7 @@ import ContactInfoSection from './ContactInfoSection';
 import OrganizationInfoSection from './OrganizationInfoSection';
 import BackendProfileData from './BackendProfileData';
 import AdminSection from './AdminSection';
+import { useProfileForm } from '../hooks/useProfileForm';
 
 interface ProfileContentProps {
   user: User | null;
@@ -32,44 +33,14 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
   updateProfile,
   hasPermission
 }) => {
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: profile?.first_name || '',
-    lastName: profile?.last_name || '',
-  });
-
-  // Initialize form data when profile loads
-  React.useEffect(() => {
-    if (profile) {
-      setFormData({
-        firstName: profile.first_name || '',
-        lastName: profile.last_name || '',
-      });
-    }
-  }, [profile]);
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    
-    try {
-      await updateProfile({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-      });
-      setIsEditingProfile(false);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  const {
+    isEditingProfile,
+    setIsEditingProfile,
+    isSaving,
+    formData,
+    handleChange,
+    handleSubmit
+  } = useProfileForm({ profile, updateProfile });
 
   return (
     <div className="grid gap-6">
