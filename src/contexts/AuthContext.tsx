@@ -20,6 +20,7 @@ interface AuthContextType {
   profile: Profile | null;
   permissions: string[];
   isLoading: boolean;
+  isSubmitting: boolean;
   isProfileLoading: boolean;
   isAuthenticated: boolean;
   signIn: (credentials: SignInCredentials) => Promise<void>;
@@ -41,6 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
   const [profile, setProfile] = useState<Profile | null>(null);
   const [permissions, setPermissions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const { toast } = useToast();
 
@@ -155,6 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
 
   const signIn = async (credentials: SignInCredentials) => {
     setIsLoading(true);
+    setIsSubmitting(true);
     
     try {
       if (mockMode) {
@@ -229,11 +232,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
       throw error;
     } finally {
       setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const signUp = async (credentials: SignUpCredentials) => {
     setIsLoading(true);
+    setIsSubmitting(true);
     
     try {
       if (mockMode) {
@@ -278,11 +283,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
       throw error;
     } finally {
       setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const signOut = async () => {
     setIsLoading(true);
+    setIsSubmitting(true);
     
     try {
       if (mockMode) {
@@ -318,10 +325,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
       });
     } finally {
       setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
   
   const createOrganization = async (name: string) => {
+    setIsSubmitting(true);
     try {
       const { organization, error } = await authService.createOrganization(name);
       
@@ -347,10 +356,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
   const updateProfile = async (profileUpdate: Partial<Profile>) => {
+    setIsSubmitting(true);
     try {
       const { success, error } = await authService.updateProfile(profileUpdate);
       
@@ -373,6 +385,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
@@ -386,6 +400,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; mockMode?: bool
     profile,
     permissions,
     isLoading,
+    isSubmitting,
     isProfileLoading,
     isAuthenticated: !!session?.user,
     signIn,
