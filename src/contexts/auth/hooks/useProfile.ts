@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +14,12 @@ export const useProfile = (user: User | null) => {
   const { toast } = useToast();
 
   const fetchBackendProfile = async () => {
+    if (!user) {
+      console.log("Cannot fetch profile: No user is logged in");
+      return null;
+    }
+    
+    setIsProfileLoading(true);
     try {
       console.log("Fetching backend profile...");
       const profileApi = await createApiClient(ProfileApi);
@@ -20,6 +27,19 @@ export const useProfile = (user: User | null) => {
       
       const response = await profileApi.usersMeGet();
       console.log("Backend profile fetched:", response);
+      
+      // Update local profile state with fetched data
+      if (response) {
+        setProfile({
+          first_name: response.firstName || '',
+          last_name: response.lastName || '',
+          role: {
+            name: response.roleName || 'User',
+            permissions: []
+          }
+        });
+      }
+      
       return response;
     } catch (error) {
       console.error('Error fetching backend profile:', error);
@@ -29,6 +49,8 @@ export const useProfile = (user: User | null) => {
         variant: "destructive",
       });
       return null;
+    } finally {
+      setIsProfileLoading(false);
     }
   };
 
@@ -68,11 +90,13 @@ export const useProfile = (user: User | null) => {
             id: user.id,
             profile: profileRequest
           });
+          
+          // After successful update, fetch the latest profile
+          await fetchBackendProfile();
         }
       } catch (backendError) {
         console.error('Error updating backend profile:', backendError);
         // Continue with the local update even if the backend update fails
-        // We could add a retry mechanism or queue here for resilience
       }
 
       // Update local state

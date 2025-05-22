@@ -1,3 +1,4 @@
+
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -13,7 +14,7 @@
  */
 
 
-export const BASE_PATH = "http://localhost:8080/api/v1".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost:8080".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
@@ -133,6 +134,7 @@ export class BaseAPI {
 
     protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
         const { url, init } = await this.createFetchParams(context, initOverrides);
+        console.log(`Requesting: ${url}`, init);
         const response = await this.fetchApi(url, init);
         if (response && (response.status >= 200 && response.status < 300)) {
             return response;
@@ -141,10 +143,14 @@ export class BaseAPI {
     }
 
     private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
+        // Ensure the base path is properly set
         let url = this.configuration.basePath + context.path;
+        // Trim any double slashes that might occur when joining paths
+        url = url.replace(/([^:]\/)\/+/g, "$1");
+                
         if (context.query !== undefined && Object.keys(context.query).length !== 0) {
-            // only add the querystring to the URL if there are query parameters.
-            // this is done to avoid urls ending with a "?" character which buggy webservers
+            // Only add the querystring to the URL if there are query parameters.
+            // This is done to avoid urls ending with a "?" character which buggy webservers
             // do not handle correctly sometimes.
             url += '?' + this.configuration.queryParamsStringify(context.query);
         }

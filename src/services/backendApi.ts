@@ -2,7 +2,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Campaign } from '../types/api';
 
-// Using the host provided by the user
+// Using the host provided by environment variable with proper fallback
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 // Define a simple ApiError interface here since it's not exported from types/api
@@ -26,7 +26,8 @@ export const initializeApiClients = async () => {
 };
 
 export const getApiBase = () => {
-  return API_BASE_URL;
+  // Make sure the API_BASE_URL does not have trailing slash
+  return API_BASE_URL.replace(/\/+$/, '');
 };
 
 export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T): Promise<T> => {
@@ -36,6 +37,8 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
   if (!ClientClass) {
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
+  
+  console.log('Creating API client with base URL:', getApiBase());
   
   // Create the client with proper configuration
   const client = new ClientClass(getApiBase());

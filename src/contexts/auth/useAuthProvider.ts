@@ -63,13 +63,18 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
 
   useEffect(() => {
     if (auth.user && !profile) {
-      // If there's a user but no profile, try to fetch profile information
-      // This ensures we have profile data as soon as a user is authenticated
-      updateProfile({
-        first_name: auth.user.user_metadata?.first_name,
-        last_name: auth.user.user_metadata?.last_name
-      }).catch(error => {
-        console.error('Failed to initialize profile:', error);
+      // If there's a user but no profile, try to fetch profile from the backend
+      console.log("User exists but no profile, fetching from backend...");
+      fetchBackendProfile().catch(error => {
+        console.error('Failed to fetch backend profile:', error);
+        
+        // Fallback to initializing profile from user metadata if backend fetch fails
+        updateProfile({
+          first_name: auth.user.user_metadata?.first_name,
+          last_name: auth.user.user_metadata?.last_name
+        }).catch(error => {
+          console.error('Failed to initialize profile:', error);
+        });
       });
     }
   }, [auth.user, profile]);

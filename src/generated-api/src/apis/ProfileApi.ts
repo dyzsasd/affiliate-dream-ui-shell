@@ -1,3 +1,4 @@
+
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -225,7 +226,7 @@ export class ProfileApi extends runtime.BaseAPI {
      * Retrieves the profile of the currently authenticated user
      * Get current user profile
      */
-    async usersMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any | undefined; }>> {
+    async usersMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainProfile>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -234,6 +235,9 @@ export class ProfileApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
 
+        // Log the request being made for debugging
+        console.log("Making usersMeGet request to:", `${this.configuration.basePath}/users/me`);
+
         const response = await this.request({
             path: `/users/me`,
             method: 'GET',
@@ -241,16 +245,15 @@ export class ProfileApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
     }
 
     /**
      * Retrieves the profile of the currently authenticated user
      * Get current user profile
      */
-    async usersMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
+    async usersMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainProfile> {
         const response = await this.usersMeGetRaw(initOverrides);
         return await response.value();
     }
-
 }
