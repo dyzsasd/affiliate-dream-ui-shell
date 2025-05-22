@@ -1,11 +1,12 @@
 
 import { 
-  CampaignsApi, 
-  OffersApi 
+  CampaignsApi
 } from '@/generated-api/src/apis';
 import { 
   DomainCampaign, 
-  DomainCampaignProviderOffer 
+  DomainCampaignProviderOffer,
+  HandlersCreateCampaignRequest,
+  HandlersUpdateCampaignRequest
 } from '@/generated-api/src/models';
 import { createApiClient, handleApiError } from './backendApi';
 import { Campaign, CampaignDetail, Offer } from '@/types/api';
@@ -13,7 +14,7 @@ import { Campaign, CampaignDetail, Offer } from '@/types/api';
 // Map backend campaign model to frontend Campaign type
 const mapToCampaign = (domainCampaign: DomainCampaign): Campaign => {
   return {
-    id: domainCampaign.id || '',
+    id: String(domainCampaign.campaignId || ''),
     name: domainCampaign.name || '',
     description: domainCampaign.description || '',
     status: (domainCampaign.status as 'active' | 'paused' | 'draft') || 'draft',
@@ -26,12 +27,22 @@ const mapToCampaign = (domainCampaign: DomainCampaign): Campaign => {
 
 // Map backend offer model to frontend Offer type
 const mapToOffer = (domainOffer: DomainCampaignProviderOffer): Offer => {
+  // Extract data from the provider config if available
+  let providerConfig: any = {};
+  if (domainOffer.providerOfferConfig) {
+    try {
+      providerConfig = JSON.parse(domainOffer.providerOfferConfig);
+    } catch (e) {
+      console.error('Error parsing provider offer config:', e);
+    }
+  }
+
   return {
-    id: domainOffer.id || '',
-    name: domainOffer.name || '',
-    payoutType: (domainOffer.payoutType as 'CPA' | 'RevShare' | 'Hybrid') || 'CPA',
-    payoutAmount: domainOffer.payoutAmount || 0,
-    description: domainOffer.description,
+    id: String(domainOffer.providerOfferId || ''),
+    name: providerConfig?.name || 'Unnamed Offer',
+    payoutType: (providerConfig?.payout_type as 'CPA' | 'RevShare' | 'Hybrid') || 'CPA',
+    payoutAmount: providerConfig?.payout_amount || 0,
+    description: providerConfig?.description || '',
   };
 };
 
@@ -40,7 +51,9 @@ export const campaignService = {
   getCampaigns: async (): Promise<Campaign[]> => {
     try {
       const campaignsApi = await createApiClient(CampaignsApi);
-      const response = await campaignsApi.campaignsGet();
+      
+      // Using organization ID 1 as default for now - this should be dynamic in a real app
+      const response = await campaignsApi.organizationsIdCampaignsGet({ id: 1 });
       
       if (Array.isArray(response)) {
         return response.map(mapToCampaign);
@@ -57,15 +70,14 @@ export const campaignService = {
   getCampaign: async (id: string): Promise<CampaignDetail | null> => {
     try {
       const campaignsApi = await createApiClient(CampaignsApi);
-      const campaign = await campaignsApi.campaignsIdGet({ id });
+      const campaign = await campaignsApi.campaignsIdGet({ id: Number(id) });
       
       if (!campaign) {
         return null;
       }
       
       // Fetch offers for this campaign
-      const offersApi = await createApiClient(OffersApi);
-      const offers = await offersApi.campaignsCampaignIdOffersGet({ campaignId: id });
+      const offers = await campaignsApi.campaignsIdProviderOffersGet({ id: Number(id) });
       
       const mappedCampaign = mapToCampaign(campaign);
       const mappedOffers = Array.isArray(offers) ? offers.map(mapToOffer) : [];
@@ -85,15 +97,20 @@ export const campaignService = {
     try {
       const campaignsApi = await createApiClient(CampaignsApi);
       
-      const response = await campaignsApi.campaignsPost({
-        campaign: {
-          name: campaignData.name || '',
-          description: campaignData.description || '',
-          status: campaignData.status || 'draft',
-          startDate: campaignData.startDate,
-          endDate: campaignData.endDate
-        }
-      });
+      // Create a valid request object
+      const request: HandlersCreateCampaignRequest = {
+        name: campaignData.name || '',
+        description: campaignData.description || '',
+        status: campaignData.status || 'draft',
+        // Using default values for organization and advertiser IDs
+        // These should come from context in a real app
+        organizationId: 1,
+        advertiserId: 1,
+        startDate: campaignData.startDate,
+        endDate: campaignData.endDate
+      };
+      
+      const response = await campaignsApi.campaignsPost({ request });
       
       return mapToCampaign(response);
     } catch (error) {
@@ -107,15 +124,18 @@ export const campaignService = {
     try {
       const campaignsApi = await createApiClient(CampaignsApi);
       
+      // Create a valid request object
+      const request: HandlersUpdateCampaignRequest = {
+        name: campaignData.name,
+        description: campaignData.description,
+        status: campaignData.status,
+        startDate: campaignData.startDate,
+        endDate: campaignData.endDate
+      };
+      
       const response = await campaignsApi.campaignsIdPut({
-        id,
-        campaign: {
-          name: campaignData.name,
-          description: campaignData.description,
-          status: campaignData.status,
-          startDate: campaignData.startDate,
-          endDate: campaignData.endDate
-        }
+        id: Number(id),
+        request
       });
       
       return mapToCampaign(response);
@@ -129,7 +149,7 @@ export const campaignService = {
   deleteCampaign: async (id: string): Promise<void> => {
     try {
       const campaignsApi = await createApiClient(CampaignsApi);
-      await campaignsApi.campaignsIdDelete({ id });
+      await campaignsApi.campaignsIdDelete({ id: Number(id) });
     } catch (error) {
       console.error(`Error deleting campaign with id ${id}:`, error);
       throw handleApiError(error);
