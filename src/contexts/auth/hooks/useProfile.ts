@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
@@ -34,8 +33,7 @@ export const useProfile = (user: User | null) => {
           first_name: response.firstName || '',
           last_name: response.lastName || '',
           role: {
-            name: response.roleName || 'User',
-            permissions: []
+            name: String(response.roleId || 'User')
           }
         });
       }
