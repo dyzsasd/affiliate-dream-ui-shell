@@ -235,8 +235,9 @@ export class ProfileApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
 
-        // Log the request being made for debugging
-        console.log("Making usersMeGet request to:", `${this.configuration.basePath}/users/me`);
+        // Ensure we have a valid base path before making the request
+        const basePath = this.configuration.basePath || runtime.BASE_PATH;
+        console.log("Making usersMeGet request to:", `${basePath}/users/me`);
 
         const response = await this.request({
             path: `/users/me`,

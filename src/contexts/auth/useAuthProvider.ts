@@ -15,6 +15,7 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
   // Use real authentication with Supabase
   const auth = useAuthentication();
   const { profile, isProfileLoading, updateProfile, fetchBackendProfile, hasPermission } = useProfile(auth.user);
+  const [profileFetchAttempted, setProfileFetchAttempted] = useState(false);
   
   // Add initialization effect
   useEffect(() => {
@@ -62,22 +63,32 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
   }, []);
 
   useEffect(() => {
-    if (auth.user && !profile) {
-      // If there's a user but no profile, try to fetch profile from the backend
-      console.log("User exists but no profile, fetching from backend...");
-      fetchBackendProfile().catch(error => {
-        console.error('Failed to fetch backend profile:', error);
+    const initializeProfile = async () => {
+      if (auth.user && !profile && !profileFetchAttempted && !isProfileLoading) {
+        // If there's a user but no profile, try to fetch profile from the backend
+        console.log("User exists but no profile, fetching from backend...");
+        setProfileFetchAttempted(true);
         
-        // Fallback to initializing profile from user metadata if backend fetch fails
-        updateProfile({
-          first_name: auth.user.user_metadata?.first_name,
-          last_name: auth.user.user_metadata?.last_name
-        }).catch(error => {
-          console.error('Failed to initialize profile:', error);
-        });
-      });
-    }
-  }, [auth.user, profile]);
+        try {
+          await fetchBackendProfile();
+        } catch (error) {
+          console.error('Failed to fetch backend profile:', error);
+          
+          // Fallback to initializing profile from user metadata
+          if (auth.user?.user_metadata) {
+            updateProfile({
+              first_name: auth.user.user_metadata.first_name,
+              last_name: auth.user.user_metadata.last_name
+            }).catch(error => {
+              console.error('Failed to initialize profile:', error);
+            });
+          }
+        }
+      }
+    };
+    
+    initializeProfile();
+  }, [auth.user, profile, profileFetchAttempted, isProfileLoading]);
   
   return {
     ...auth,

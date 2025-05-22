@@ -38,10 +38,11 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
   
-  console.log('Creating API client with base URL:', getApiBase());
+  const baseUrl = getApiBase();
+  console.log('Creating API client with base URL:', baseUrl);
   
   // Create the client with proper configuration
-  const client = new ClientClass(getApiBase());
+  const client = new ClientClass(baseUrl);
   
   // Ensure middleware is initialized as an array
   // @ts-ignore - We need to access the private property to fix the issue

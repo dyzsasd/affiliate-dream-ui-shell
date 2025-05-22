@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
@@ -10,6 +11,7 @@ import { HandlersProfileRequest } from '@/generated-api/src/models';
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [backendFetchAttempted, setBackendFetchAttempted] = useState(false);
   const { toast } = useToast();
 
   const fetchBackendProfile = async () => {
@@ -18,7 +20,15 @@ export const useProfile = (user: User | null) => {
       return null;
     }
     
+    // Prevent multiple fetch attempts if the backend is not available
+    if (backendFetchAttempted) {
+      console.log("Already attempted to fetch backend profile, using local data");
+      return null;
+    }
+    
     setIsProfileLoading(true);
+    setBackendFetchAttempted(true);
+    
     try {
       console.log("Fetching backend profile...");
       const profileApi = await createApiClient(ProfileApi);
@@ -41,11 +51,24 @@ export const useProfile = (user: User | null) => {
       return response;
     } catch (error) {
       console.error('Error fetching backend profile:', error);
+      
+      // Initialize profile from user metadata as fallback
+      if (user?.user_metadata) {
+        setProfile({
+          first_name: user.user_metadata.first_name || '',
+          last_name: user.user_metadata.last_name || '',
+          role: {
+            name: 'User'
+          }
+        });
+      }
+      
       toast({
-        title: "Error loading profile",
-        description: "Could not load your profile from the server.",
-        variant: "destructive",
+        title: "Using local profile data",
+        description: "Could not connect to backend server. Using local profile data instead.",
+        variant: "default",
       });
+      
       return null;
     } finally {
       setIsProfileLoading(false);
@@ -98,10 +121,10 @@ export const useProfile = (user: User | null) => {
       }
 
       // Update local state
-      setProfile(prev => ({
-        ...prev!,
-        first_name: data.first_name || prev?.first_name,
-        last_name: data.last_name || prev?.last_name
+      setProfile(prev => prev && ({
+        ...prev,
+        first_name: data.first_name || prev.first_name,
+        last_name: data.last_name || prev.last_name
       }));
       
       toast({

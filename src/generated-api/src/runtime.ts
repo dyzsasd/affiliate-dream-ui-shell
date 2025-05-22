@@ -143,8 +143,13 @@ export class BaseAPI {
     }
 
     private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
-        // Ensure the base path is properly set
-        let url = this.configuration.basePath + context.path;
+        // Make sure basePath is properly set and not undefined
+        if (!this.configuration.basePath) {
+            console.error("Base path is undefined, falling back to default");
+        }
+        
+        let url = (this.configuration.basePath || BASE_PATH) + context.path;
+        
         // Trim any double slashes that might occur when joining paths
         url = url.replace(/([^:]\/)\/+/g, "$1");
                 
