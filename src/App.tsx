@@ -22,8 +22,18 @@ import CampaignDetail from "@/pages/campaigns/CampaignDetail";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
 import ConversionReport from "@/pages/reporting/ConversionReport";
+import Index from "./pages/Index";
 
-const queryClient = new QueryClient();
+// Create a query client with retry disabled to avoid infinite loading
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -37,9 +47,11 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             
+            {/* Index Route with proper loading handling */}
+            <Route path="/" element={<Index />} />
+            
             {/* App Routes - Protected by AppLayout */}
             <Route element={<AppLayout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/campaigns" element={<CampaignList />} />

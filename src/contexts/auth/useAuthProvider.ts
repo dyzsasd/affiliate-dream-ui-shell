@@ -15,6 +15,51 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
   // Use real authentication with Supabase
   const auth = useAuthentication();
   const { profile, isProfileLoading, updateProfile, fetchBackendProfile, hasPermission } = useProfile(auth.user);
+  
+  // Add initialization effect
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        // Get session from Supabase
+        const { data } = await auth.supabase.auth.getSession();
+        if (data?.session) {
+          auth.setSession({
+            user: data.session.user as User,
+            access_token: data.session.access_token,
+          });
+          auth.setUser(data.session.user as User);
+        }
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+      } finally {
+        // Important: Always set loading to false even if there's an error
+        auth.setIsLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    // Subscribe to auth changes
+    const { data: { subscription } } = auth.supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session) {
+          auth.setSession({
+            user: session.user as User,
+            access_token: session.access_token,
+          });
+          auth.setUser(session.user as User);
+        } else {
+          auth.setSession(null);
+          auth.setUser(null);
+        }
+        auth.setIsLoading(false);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (auth.user && !profile) {

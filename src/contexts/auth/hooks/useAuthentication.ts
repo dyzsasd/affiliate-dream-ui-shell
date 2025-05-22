@@ -33,6 +33,7 @@ export const useAuthentication = () => {
           user: data.session.user as User,
           access_token: data.session.access_token,
         });
+        setUser(data.session.user as User);
         
         toast({
           title: "Signed in successfully",
@@ -149,6 +150,7 @@ export const useAuthentication = () => {
     isAuthenticated: !!session?.user,
     signIn,
     signUp,
-    signOut
+    signOut,
+    supabase // Expose the supabase client
   };
 };
