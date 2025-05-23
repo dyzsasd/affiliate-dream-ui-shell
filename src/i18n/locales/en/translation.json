@@ -15,7 +15,9 @@
     "actions": "Actions",
     "tryAgain": "Try Again",
     "errorOccurred": "An error occurred",
-    "back": "Back"
+    "back": "Back",
+    "saveChanges": "Save Changes",
+    "create": "Create"
   },
   "auth": {
     "signIn": "Sign In",
@@ -91,6 +93,9 @@
     "noAdvertisers": "No advertisers yet",
     "createYourFirst": "Create your first advertiser to get started",
     "createAdvertiser": "Create Advertiser",
+    "editAdvertiser": "Edit Advertiser",
+    "createAdvertiserDescription": "Enter the details to create a new advertiser",
+    "editAdvertiserDescription": "Update the advertiser's information",
     "list": "Advertiser List",
     "total": "{{count}} Total Advertisers",
     "nameColumn": "Name",
@@ -112,7 +117,30 @@
     "deleteConfirmTitle": "Delete Advertiser",
     "deleteConfirmMessage": "Are you sure you want to delete this advertiser? This action cannot be undone.",
     "backToList": "Back to Advertisers",
-    "notFound": "Advertiser not found"
+    "notFound": "Advertiser not found",
+    "createSuccess": "Advertiser created successfully",
+    "createError": "Error creating advertiser",
+    "updateSuccess": "Advertiser updated successfully",
+    "updateError": "Error updating advertiser",
+    "nameLabel": "Advertiser Name",
+    "namePlaceholder": "Enter advertiser name",
+    "emailPlaceholder": "Enter contact email",
+    "statusLabel": "Status",
+    "selectStatus": "Select status",
+    "statusActive": "Active",
+    "statusPending": "Pending",
+    "statusInactive": "Inactive",
+    "statusRejected": "Rejected",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Enter billing address",
+    "cityLabel": "City",
+    "cityPlaceholder": "Enter city",
+    "stateLabel": "State/Province",
+    "statePlaceholder": "Enter state or province",
+    "countryLabel": "Country",
+    "countryPlaceholder": "Enter country",
+    "postalCodeLabel": "Postal Code",
+    "postalCodePlaceholder": "Enter postal code"
   },
   "organization": {
     "noOrganization": "No organization available"

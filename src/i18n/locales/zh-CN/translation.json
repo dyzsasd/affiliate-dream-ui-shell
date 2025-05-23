@@ -15,7 +15,9 @@
     "actions": "操作",
     "tryAgain": "重试",
     "errorOccurred": "发生错误",
-    "back": "返回"
+    "back": "返回",
+    "saveChanges": "保存更改",
+    "create": "创建"
   },
   "auth": {
     "signIn": "登录",
@@ -91,6 +93,9 @@
     "noAdvertisers": "暂无广告账户",
     "createYourFirst": "创建您的第一个广告账户以开始使用",
     "createAdvertiser": "创建广告账户",
+    "editAdvertiser": "编辑广告账户",
+    "createAdvertiserDescription": "输入详细信息以创建新的广告账户",
+    "editAdvertiserDescription": "更新广告账户信息",
     "list": "广告账户列表",
     "total": "共 {{count}} 个广告账户",
     "nameColumn": "名称",
@@ -112,7 +117,30 @@
     "deleteConfirmTitle": "删除广告账户",
     "deleteConfirmMessage": "确定要删除此广告账户吗？此操作无法撤销。",
     "backToList": "返回广告账户列表",
-    "notFound": "未找到广告账户"
+    "notFound": "未找到广告账户",
+    "createSuccess": "广告账户创建成功",
+    "createError": "创建广告账户时出错",
+    "updateSuccess": "广告账户更新成功",
+    "updateError": "更新广告账户时出错",
+    "nameLabel": "广告账户名称",
+    "namePlaceholder": "输入广告账户名称",
+    "emailPlaceholder": "输入联系邮箱",
+    "statusLabel": "状态",
+    "selectStatus": "选择状态",
+    "statusActive": "活跃",
+    "statusPending": "待处理",
+    "statusInactive": "非活跃",
+    "statusRejected": "已拒绝",
+    "addressLabel": "地址",
+    "addressPlaceholder": "输入账单地址",
+    "cityLabel": "城市",
+    "cityPlaceholder": "输入城市",
+    "stateLabel": "省/州",
+    "statePlaceholder": "输入省或州",
+    "countryLabel": "国家",
+    "countryPlaceholder": "输入国家",
+    "postalCodeLabel": "邮政编码",
+    "postalCodePlaceholder": "输入邮政编码"
   },
   "organization": {
     "noOrganization": "没有可用的组织"

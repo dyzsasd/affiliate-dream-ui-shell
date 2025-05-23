@@ -15,7 +15,9 @@
     "actions": "Actions",
     "tryAgain": "Réessayer",
     "errorOccurred": "Une erreur est survenue",
-    "back": "Retour"
+    "back": "Retour",
+    "saveChanges": "Enregistrer les modifications",
+    "create": "Créer"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -91,6 +93,9 @@
     "noAdvertisers": "Pas encore d'annonceurs",
     "createYourFirst": "Créez votre premier annonceur pour commencer",
     "createAdvertiser": "Créer un Annonceur",
+    "editAdvertiser": "Modifier l'Annonceur",
+    "createAdvertiserDescription": "Entrez les détails pour créer un nouvel annonceur",
+    "editAdvertiserDescription": "Mettre à jour les informations de l'annonceur",
     "list": "Liste des Annonceurs",
     "total": "{{count}} Annonceurs au Total",
     "nameColumn": "Nom",
@@ -112,7 +117,30 @@
     "deleteConfirmTitle": "Supprimer l'annonceur",
     "deleteConfirmMessage": "Êtes-vous sûr de vouloir supprimer cet annonceur ? Cette action ne peut pas être annulée.",
     "backToList": "Retour aux annonceurs",
-    "notFound": "Annonceur non trouvé"
+    "notFound": "Annonceur non trouvé",
+    "createSuccess": "Annonceur créé avec succès",
+    "createError": "Erreur lors de la création de l'annonceur",
+    "updateSuccess": "Annonceur mis à jour avec succès",
+    "updateError": "Erreur lors de la mise à jour de l'annonceur",
+    "nameLabel": "Nom de l'annonceur",
+    "namePlaceholder": "Entrez le nom de l'annonceur",
+    "emailPlaceholder": "Entrez l'email de contact",
+    "statusLabel": "Statut",
+    "selectStatus": "Sélectionnez le statut",
+    "statusActive": "Actif",
+    "statusPending": "En attente",
+    "statusInactive": "Inactif",
+    "statusRejected": "Rejeté",
+    "addressLabel": "Adresse",
+    "addressPlaceholder": "Entrez l'adresse de facturation",
+    "cityLabel": "Ville",
+    "cityPlaceholder": "Entrez la ville",
+    "stateLabel": "État/Province",
+    "statePlaceholder": "Entrez l'état ou la province",
+    "countryLabel": "Pays",
+    "countryPlaceholder": "Entrez le pays",
+    "postalCodeLabel": "Code postal",
+    "postalCodePlaceholder": "Entrez le code postal"
   },
   "organization": {
     "noOrganization": "Aucune organisation disponible"

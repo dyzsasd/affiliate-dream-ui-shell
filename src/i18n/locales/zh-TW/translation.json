@@ -15,7 +15,9 @@
     "actions": "操作",
     "tryAgain": "重試",
     "errorOccurred": "發生錯誤",
-    "back": "返回"
+    "back": "返回",
+    "saveChanges": "儲存變更",
+    "create": "創建"
   },
   "auth": {
     "signIn": "登入",
@@ -91,6 +93,9 @@
     "noAdvertisers": "暫無廣告賬戶",
     "createYourFirst": "建立您的第一個廣告賬戶以開始使用",
     "createAdvertiser": "建立廣告賬戶",
+    "editAdvertiser": "編輯廣告賬戶",
+    "createAdvertiserDescription": "輸入詳細信息以創建新的廣告賬戶",
+    "editAdvertiserDescription": "更新廣告賬戶信息",
     "list": "廣告賬戶清單",
     "total": "共 {{count}} 個廣告賬戶",
     "nameColumn": "名稱",
@@ -112,7 +117,30 @@
     "deleteConfirmTitle": "刪除廣告賬戶",
     "deleteConfirmMessage": "確定要刪除此廣告賬戶嗎？此操作無法撤銷。",
     "backToList": "返回廣告賬戶清單",
-    "notFound": "未找到廣告賬戶"
+    "notFound": "未找到廣告賬戶",
+    "createSuccess": "廣告賬戶創建成功",
+    "createError": "創建廣告賬戶時出錯",
+    "updateSuccess": "廣告賬戶更新成功",
+    "updateError": "更新廣告賬戶時出錯",
+    "nameLabel": "廣告賬戶名稱",
+    "namePlaceholder": "輸入廣告賬戶名稱",
+    "emailPlaceholder": "輸入聯絡郵箱",
+    "statusLabel": "狀態",
+    "selectStatus": "選擇狀態",
+    "statusActive": "活躍",
+    "statusPending": "待處理",
+    "statusInactive": "非活躍",
+    "statusRejected": "已拒絕",
+    "addressLabel": "地址",
+    "addressPlaceholder": "輸入帳單地址",
+    "cityLabel": "城市",
+    "cityPlaceholder": "輸入城市",
+    "stateLabel": "省/州",
+    "statePlaceholder": "輸入省或州",
+    "countryLabel": "國家",
+    "countryPlaceholder": "輸入國家",
+    "postalCodeLabel": "郵政編碼",
+    "postalCodePlaceholder": "輸入郵政編碼"
   },
   "organization": {
     "noOrganization": "沒有可用的組織"
