@@ -7,7 +7,7 @@ import { UserProfile } from '../authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 import { createApiClient, handleApiError, getAuthTokens } from '@/services/backendApi';
-import { HandlersProfileRequest } from '@/generated-api/src/models';
+import { HandlersProfileRequest, HandlersUpsertProfileRequest } from '@/generated-api/src/models';
 import { DomainOrganization } from '@/generated-api/src/models';
 
 export const useProfile = (user: User | null) => {
@@ -182,7 +182,7 @@ export const useProfile = (user: User | null) => {
         throw authError;
       }
 
-      // Step 2: Update profile in backend service
+      // Step 2: Update profile in backend service using upsert method
       try {
         // Get a fresh session with possibly refreshed token
         const session = await getAuthTokens();
@@ -198,22 +198,22 @@ export const useProfile = (user: User | null) => {
         
         const profileApi = await createApiClient(ProfileApi);
         
-        // Create profile update request
-        const profileRequest: HandlersProfileRequest = {
+        // Create profile upsert request
+        const profileRequest: HandlersUpsertProfileRequest = {
+          id: user.id,
+          email: user.email,
           firstName: data.first_name,
-          lastName: data.last_name
+          lastName: data.last_name,
+          organizationId: profile?.organization?.id
         };
 
-        if (user.id) {
-          // Update profile in backend - assumes the backend API has this functionality
-          await profileApi.profilesIdPut({
-            id: user.id,
-            profile: profileRequest
-          });
-          
-          // After successful update, fetch the latest profile
-          await fetchBackendProfile();
-        }
+        // Use upsertPost method instead of profilesIdPut
+        await profileApi.profilesUpsertPost({
+          profile: profileRequest
+        });
+        
+        // After successful update, fetch the latest profile
+        await fetchBackendProfile();
       } catch (backendError) {
         console.error('Error updating backend profile:', backendError);
         // Continue with the local update even if the backend update fails
