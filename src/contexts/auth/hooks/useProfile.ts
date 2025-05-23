@@ -48,50 +48,23 @@ export const useProfile = (user: User | null) => {
       const profileApi = await createApiClient(ProfileApi);
       console.log("ProfileApi client created successfully");
       
-      // Make the API request with proper CORS and credentials
-      try {
-        console.log("Making users/me API call...");
-        const response = await profileApi.usersMeGet({
-          mode: 'cors',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
+      const response = await profileApi.usersMeGet();
+      console.log("Backend profile fetched successfully:", response);
+      
+      // Update local profile state with fetched data
+      if (response) {
+        setProfile({
+          first_name: response.firstName || '',
+          last_name: response.lastName || '',
+          role: {
+            name: String(response.roleId || 'User')
           }
         });
-        
-        console.log("Backend profile fetched successfully:", response);
-        
-        // Update local profile state with fetched data
-        if (response) {
-          setProfile({
-            first_name: response.firstName || '',
-            last_name: response.lastName || '',
-            role: {
-              name: String(response.roleId || 'User')
-            }
-          });
-        }
-        
-        return response;
-      } catch (apiError) {
-        console.error("API Error in usersMeGet:", apiError);
-        throw apiError;
       }
+      
+      return response;
     } catch (error) {
       console.error('Error fetching backend profile:', error);
-      
-      // Show more helpful error message
-      if (error instanceof Response) {
-        console.error('Response status:', error.status, error.statusText);
-        // Try to read the error response body
-        try {
-          const errorData = await error.json();
-          console.error('Error response:', errorData);
-        } catch (e) {
-          console.error('Could not parse error response');
-        }
-      }
       
       // Initialize profile from user metadata as fallback
       if (user?.user_metadata) {

@@ -1,4 +1,3 @@
-
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -14,9 +13,288 @@
  */
 
 
+export const BASE_PATH = "http://localhost:8080/api/v1".replace(/\/+$/, "");
+
+export interface ConfigurationParameters {
+    basePath?: string; // override base path
+    fetchApi?: FetchAPI; // override for fetch implementation
+    middleware?: Middleware[]; // middleware to apply before/after fetch requests
+    queryParamsStringify?: (params: HTTPQuery) => string; // stringify function for query strings
+    username?: string; // parameter for basic security
+    password?: string; // parameter for basic security
+    apiKey?: string | Promise<string> | ((name: string) => string | Promise<string>); // parameter for apiKey security
+    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string | Promise<string>); // parameter for oauth2 security
+    headers?: HTTPHeaders; //header params we want to use on every request
+    credentials?: RequestCredentials; //value for the credentials param we want to use on each request
+}
+
+export class Configuration {
+    constructor(private configuration: ConfigurationParameters = {}) {}
+
+    set config(configuration: Configuration) {
+        this.configuration = configuration;
+    }
+
+    get basePath(): string {
+        return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH;
+    }
+
+    get fetchApi(): FetchAPI | undefined {
+        return this.configuration.fetchApi;
+    }
+
+    get middleware(): Middleware[] {
+        return this.configuration.middleware || [];
+    }
+
+    get queryParamsStringify(): (params: HTTPQuery) => string {
+        return this.configuration.queryParamsStringify || querystring;
+    }
+
+    get username(): string | undefined {
+        return this.configuration.username;
+    }
+
+    get password(): string | undefined {
+        return this.configuration.password;
+    }
+
+    get apiKey(): ((name: string) => string | Promise<string>) | undefined {
+        const apiKey = this.configuration.apiKey;
+        if (apiKey) {
+            return typeof apiKey === 'function' ? apiKey : () => apiKey;
+        }
+        return undefined;
+    }
+
+    get accessToken(): ((name?: string, scopes?: string[]) => string | Promise<string>) | undefined {
+        const accessToken = this.configuration.accessToken;
+        if (accessToken) {
+            return typeof accessToken === 'function' ? accessToken : async () => accessToken;
+        }
+        return undefined;
+    }
+
+    get headers(): HTTPHeaders | undefined {
+        return this.configuration.headers;
+    }
+
+    get credentials(): RequestCredentials | undefined {
+        return this.configuration.credentials;
+    }
+}
+
+export const DefaultConfig = new Configuration();
+
 /**
- * @export
+ * This is the base class for all generated API classes.
  */
+export class BaseAPI {
+
+    private static readonly jsonRegex = new RegExp('^(:?application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(:?;.*)?$', 'i');
+    private middleware: Middleware[];
+
+    constructor(protected configuration = DefaultConfig) {
+        this.middleware = configuration.middleware || [];
+    }
+
+    withMiddleware<T extends BaseAPI>(this: T, ...middlewares: Middleware[]) {
+        const next = this.clone<T>();
+        next.middleware = next.middleware.concat(...middlewares);
+        return next;
+    }
+
+    withPreMiddleware<T extends BaseAPI>(this: T, ...preMiddlewares: Array<Middleware['pre']>) {
+        const middlewares = preMiddlewares.map((pre) => ({ pre }));
+        return this.withMiddleware<T>(...middlewares);
+    }
+
+    withPostMiddleware<T extends BaseAPI>(this: T, ...postMiddlewares: Array<Middleware['post']>) {
+        const middlewares = postMiddlewares.map((post) => ({ post }));
+        return this.withMiddleware<T>(...middlewares);
+    }
+
+    /**
+     * Check if the given MIME is a JSON MIME.
+     * JSON MIME examples:
+     *   application/json
+     *   application/json; charset=UTF8
+     *   APPLICATION/JSON
+     *   application/vnd.company+json
+     * @param mime - MIME (Multipurpose Internet Mail Extensions)
+     * @return True if the given MIME is JSON, false otherwise.
+     */
+    protected isJsonMime(mime: string | null | undefined): boolean {
+        if (!mime) {
+            return false;
+        }
+        return BaseAPI.jsonRegex.test(mime);
+    }
+
+    protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
+        const { url, init } = await this.createFetchParams(context, initOverrides);
+        console.log(`Requesting: ${url}`, init);
+        const response = await this.fetchApi(url, init);
+        if (response.status >= 200 && response.status < 300) {
+            return response;
+        }
+        console.error(`API Error - Status: ${response.status}, URL: ${url}`);
+        try {
+            const errorBody = await response.text();
+            console.error("Error response body:", errorBody);
+        } catch (e) {
+            console.error("Could not read error response body");
+        }
+        throw new ResponseError(response, 'Response returned an error code');
+    }
+
+    private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
+        // Make sure basePath is properly set and not undefined
+        if (!this.configuration.basePath) {
+            console.error("Base path is undefined, falling back to default");
+        }
+        
+        let url = (this.configuration.basePath || BASE_PATH) + context.path;
+        
+        // Trim any double slashes that might occur when joining paths
+        url = url.replace(/([^:]\/)\/+/g, "$1");
+                
+        if (context.query !== undefined && Object.keys(context.query).length !== 0) {
+            // Only add the querystring to the URL if there are query parameters.
+            // This is done to avoid urls ending with a "?" character which buggy webservers
+            // do not handle correctly sometimes.
+            url += '?' + this.configuration.queryParamsStringify(context.query);
+        }
+
+        const headers = Object.assign({}, this.configuration.headers, context.headers);
+        Object.keys(headers).forEach(key => headers[key] === undefined ? delete headers[key] : {});
+
+        const initOverrideFn =
+            typeof initOverrides === "function"
+                ? initOverrides
+                : async () => initOverrides;
+
+        const initParams = {
+            method: context.method,
+            headers,
+            body: context.body,
+            credentials: this.configuration.credentials,
+        };
+
+        const overriddenInit: RequestInit = {
+            ...initParams,
+            ...(await initOverrideFn({
+                init: initParams,
+                context,
+            }))
+        };
+
+        let body: any;
+        if (isFormData(overriddenInit.body)
+            || (overriddenInit.body instanceof URLSearchParams)
+            || isBlob(overriddenInit.body)) {
+          body = overriddenInit.body;
+        } else if (this.isJsonMime(headers['Content-Type'])) {
+          body = JSON.stringify(overriddenInit.body);
+        } else {
+          body = overriddenInit.body;
+        }
+
+        const init: RequestInit = {
+            ...overriddenInit,
+            body
+        };
+
+        return { url, init };
+    }
+
+    private fetchApi = async (url: string, init: RequestInit) => {
+        let fetchParams = { url, init };
+        for (const middleware of this.middleware) {
+            if (middleware.pre) {
+                fetchParams = await middleware.pre({
+                    fetch: this.fetchApi,
+                    ...fetchParams,
+                }) || fetchParams;
+            }
+        }
+        let response: Response | undefined = undefined;
+        try {
+            response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
+        } catch (e) {
+            for (const middleware of this.middleware) {
+                if (middleware.onError) {
+                    response = await middleware.onError({
+                        fetch: this.fetchApi,
+                        url: fetchParams.url,
+                        init: fetchParams.init,
+                        error: e,
+                        response: response ? response.clone() : undefined,
+                    }) || response;
+                }
+            }
+            if (response === undefined) {
+              if (e instanceof Error) {
+                throw new FetchError(e, 'The request failed and the interceptors did not return an alternative response');
+              } else {
+                throw e;
+              }
+            }
+        }
+        for (const middleware of this.middleware) {
+            if (middleware.post) {
+                response = await middleware.post({
+                    fetch: this.fetchApi,
+                    url: fetchParams.url,
+                    init: fetchParams.init,
+                    response: response.clone(),
+                }) || response;
+            }
+        }
+        return response;
+    }
+
+    /**
+     * Create a shallow clone of `this` by constructing a new instance
+     * and then shallow cloning data members.
+     */
+    private clone<T extends BaseAPI>(this: T): T {
+        const constructor = this.constructor as any;
+        const next = new constructor(this.configuration);
+        next.middleware = this.middleware.slice();
+        return next;
+    }
+};
+
+function isBlob(value: any): value is Blob {
+    return typeof Blob !== 'undefined' && value instanceof Blob;
+}
+
+function isFormData(value: any): value is FormData {
+    return typeof FormData !== "undefined" && value instanceof FormData;
+}
+
+export class ResponseError extends Error {
+    override name: "ResponseError" = "ResponseError";
+    constructor(public response: Response, msg?: string) {
+        super(msg);
+    }
+}
+
+export class FetchError extends Error {
+    override name: "FetchError" = "FetchError";
+    constructor(public cause: Error, msg?: string) {
+        super(msg);
+    }
+}
+
+export class RequiredError extends Error {
+    override name: "RequiredError" = "RequiredError";
+    constructor(public field: string, msg?: string) {
+        super(msg);
+    }
+}
+
 export const COLLECTION_FORMATS = {
     csv: ",",
     ssv: " ",
@@ -24,434 +302,148 @@ export const COLLECTION_FORMATS = {
     pipes: "|",
 };
 
-/**
- * @export
- * @enum {string}
- */
-export enum FetchError {
-    UNKNOWN = 'UNKNOWN',
-    HTTP_ERROR = 'HTTP_ERROR',
-    PARSING = 'PARSING',
-    REQUEST_FAILED = 'REQUEST_FAILED',
-}
+export type FetchAPI = WindowOrWorkerGlobalScope['fetch'];
 
-/**
- * @export
- */
-export type HTTPMethod =
-    | 'GET'
-    | 'POST'
-    | 'PUT'
-    | 'PATCH'
-    | 'DELETE'
-    | 'HEAD'
-    | 'OPTIONS';
-
-/**
- * @export
- */
+export type Json = any;
+export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD';
 export type HTTPHeaders = { [key: string]: string };
+export type HTTPQuery = { [key: string]: string | number | null | boolean | Array<string | number | null | boolean> | Set<string | number | null | boolean> | HTTPQuery };
+export type HTTPBody = Json | FormData | URLSearchParams;
+export type HTTPRequestInit = { headers?: HTTPHeaders; method: HTTPMethod; credentials?: RequestCredentials; body?: HTTPBody };
+export type ModelPropertyNaming = 'camelCase' | 'snake_case' | 'PascalCase' | 'original';
 
-/**
- * @export
- */
-export type HTTPQuery = { [key: string]: any };
+export type InitOverrideFunction = (requestContext: { init: HTTPRequestInit, context: RequestOpts }) => Promise<RequestInit>
 
-/**
- * @export
- */
-export interface ConfigurationParameters {
-    apiKey?: string | ((name: string) => string);
-    username?: string;
-    password?: string;
-    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string | Promise<string>);
-    basePath?: string;
-    baseOptions?: any;
-    formDataCtor?: new () => any;
-    credentials?: RequestCredentials; // can be 'same-origin', 'include', 'omit', etc.
-    headers?: HTTPHeaders; //header params we want to use on every request
-    middleware?: Middleware[];
-    queryParamsStringify?: (params: HTTPQuery) => string;
-    mode?: 'cors' | 'no-cors' | 'same-origin'; // CORS setting for the Fetch API
-    securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestInit | void> | RequestInit | void;
+export interface FetchParams {
+    url: string;
+    init: RequestInit;
 }
 
-/**
- * @export
- */
-export class Configuration {
-    /**
-     * parameter for apiKey security
-     * @param name name of the api key parameter in the request
-     * @param apiKey api key string
-     */
-    apiKey?: string | ((name: string) => string);
-    /**
-     * parameter for basic security
-     * @param username username
-     * @param password password
-     */
-    username?: string;
-    password?: string;
-    /**
-     * parameter for oauth2 security
-     * @param accessToken access token string
-     */
-    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string | Promise<string>);
-    /**
-     * override base path
-     *
-     * @param basePath base path
-     */
-    basePath?: string;
-
-    /**
-     * base options for fetch calls
-     *
-     * @param baseOptions base options
-     */
-    baseOptions?: any;
-
-    /**
-     * The FormData constructor that will be used to create request bodies of the 'multipart/form-data' media type.
-     *
-     * @param formDataCtor The FormData constructor.
-     */
-    formDataCtor?: new () => any;
-
-    /**
-     * CORS credentials setting
-     */
-    credentials?: RequestCredentials;
-
-    /**
-     * CORS mode
-     */
-    mode?: 'cors' | 'no-cors' | 'same-origin';
-
-    /**
-     * Default headers for all requests
-     */
-    headers?: HTTPHeaders;
-
-    /**
-     * Middleware for request/response processing
-     */
-    middleware?: Middleware[];
-
-    constructor(configuration: ConfigurationParameters = {}) {
-        this.apiKey = configuration.apiKey;
-        this.username = configuration.username;
-        this.password = configuration.password;
-        this.accessToken = configuration.accessToken;
-        this.basePath = configuration.basePath;
-        this.baseOptions = configuration.baseOptions;
-        this.formDataCtor = configuration.formDataCtor;
-        this.credentials = configuration.credentials;
-        this.mode = configuration.mode;
-        this.headers = configuration.headers;
-        this.middleware = configuration.middleware;
-    }
-
-    /**
-     * Check if the given MIME type is JSON
-     * @param mime - MIME type
-     * @return True if the given MIME is JSON, false otherwise.
-     */
-    isJsonMime(mime: string): boolean {
-        const jsonMime: RegExp = new RegExp('^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[^;/ \t]*$', 'i');
-        return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
-    }
-}
-
-/**
- * @export
- */
 export interface RequestOpts {
     path: string;
-    method: string;
-    query?: string;
-    body?: any;
+    method: HTTPMethod;
     headers: HTTPHeaders;
-    base?: string;
+    query?: HTTPQuery;
+    body?: HTTPBody;
 }
 
-/**
- * @export
- */
-export type SecurityDataType = { [key: string]: SecurityScheme };
-
-/**
- * @export
- */
-export type SecurityScheme = {
-    type: string;
-    apiKey?: string;
-    bearerFormat?: string;
-    scheme?: string;
-};
-
-/**
- * @export
- */
-export type Middleware = {
-    pre?: (context: RequestContext) => Promise<void> | void;
-    post?: (context: ResponseContext) => Promise<void> | void;
+export function querystring(params: HTTPQuery, prefix: string = ''): string {
+    return Object.keys(params)
+        .map(key => querystringSingleKey(key, params[key], prefix))
+        .filter(part => part.length > 0)
+        .join('&');
 }
 
-/**
- * @export
- */
+function querystringSingleKey(key: string, value: string | number | null | undefined | boolean | Array<string | number | null | boolean> | Set<string | number | null | boolean> | HTTPQuery, keyPrefix: string = ''): string {
+    const fullKey = keyPrefix + (keyPrefix.length ? `[${key}]` : key);
+    if (value instanceof Array) {
+        const multiValue = value.map(singleValue => encodeURIComponent(String(singleValue)))
+            .join(`&${encodeURIComponent(fullKey)}=`);
+        return `${encodeURIComponent(fullKey)}=${multiValue}`;
+    }
+    if (value instanceof Set) {
+        const valueAsArray = Array.from(value);
+        return querystringSingleKey(key, valueAsArray, keyPrefix);
+    }
+    if (value instanceof Date) {
+        return `${encodeURIComponent(fullKey)}=${encodeURIComponent(value.toISOString())}`;
+    }
+    if (value instanceof Object) {
+        return querystring(value as HTTPQuery, fullKey);
+    }
+    return `${encodeURIComponent(fullKey)}=${encodeURIComponent(String(value))}`;
+}
+
+export function exists(json: any, key: string) {
+    const value = json[key];
+    return value !== null && value !== undefined;
+}
+
+export function mapValues(data: any, fn: (item: any) => any) {
+    const result: { [key: string]: any } = {};
+    for (const key of Object.keys(data)) {
+        result[key] = fn(data[key]);
+    }
+    return result;
+}
+
+export function canConsumeForm(consumes: Consume[]): boolean {
+    for (const consume of consumes) {
+        if ('multipart/form-data' === consume.contentType) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export interface Consume {
+    contentType: string;
+}
+
 export interface RequestContext {
-    httpMethod: HTTPMethod;
+    fetch: FetchAPI;
     url: string;
-    headers: HTTPHeaders;
-    body: any;
-    credentials?: RequestCredentials;
+    init: RequestInit;
 }
 
-/**
- * @export
- */
 export interface ResponseContext {
-    httpMethod: HTTPMethod;
+    fetch: FetchAPI;
     url: string;
-    headers: HTTPHeaders;
-    body: any;
-    statusCode: number;
-    credentials?: RequestCredentials;
+    init: RequestInit;
+    response: Response;
 }
 
-/**
- * @export
- * @function
- */
-export type InitOverrideFunction = (requestContext: { init: RequestInit, context: RequestOpts }) => Promise<RequestInit>
-
-/**
- *
- * @export
- * @namespace
- */
-export const RequiredErrorParam = {
-    /**
-     *
-     * @param paramName The name of the missing parameter.
-     * @param context The path of the API endpoint that is missing the parameter.
-     * @returns An error describing that the parameter is missing.
-     */
-    construct: (paramName: string, context: string) => {
-        return new Error(`Required parameter ${paramName} was null or undefined when calling ${context}.`);
-    }
+export interface ErrorContext {
+    fetch: FetchAPI;
+    url: string;
+    init: RequestInit;
+    error: unknown;
+    response?: Response;
 }
 
-/**
- * @export
- * @class RequiredError extends Error
- */
-export class RequiredError extends Error {
-    name: "RequiredError" = "RequiredError";
-    constructor(public field: string, msg?: string) {
-        super(msg);
-    }
+export interface Middleware {
+    pre?(context: RequestContext): Promise<FetchParams | void>;
+    post?(context: ResponseContext): Promise<Response | void>;
+    onError?(context: ErrorContext): Promise<Response | void>;
 }
 
-/**
- * @import fetch from 'node-fetch';
- *
- * @export
- */
-const globalFetch = globalThis.fetch || (
-    (typeof window !== 'undefined') ? window.fetch : undefined
-);
-
-/**
- * @export
- */
-export const DefaultFetch = globalFetch ? globalFetch.bind(globalThis) : (() => {
-    throw new Error("fetch is not available in current environment. Please add a fetch implementation (e.g. node-fetch, isomorphic-fetch) to your environment.");
-});
-
-/**
- * @export
- */
-export const BASE_PATH = "/api/v1".replace(/\/+$/, "");
-
-/**
- * API Response classes for handling different response types
- */
-export class ApiResponse<T> {
+export interface ApiResponse<T> {
     raw: Response;
-    constructor(raw: Response) {
-        this.raw = raw;
+    value(): Promise<T>;
+}
+
+export interface ResponseTransformer<T> {
+    (json: any): T;
+}
+
+export class JSONApiResponse<T> {
+    constructor(public raw: Response, private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue) {}
+
+    async value(): Promise<T> {
+        return this.transformer(await this.raw.json());
     }
 }
 
-export class VoidApiResponse extends ApiResponse<void> {
-    constructor(raw: Response) {
-        super(raw);
-    }
-    
+export class VoidApiResponse {
+    constructor(public raw: Response) {}
+
     async value(): Promise<void> {
         return undefined;
     }
 }
 
-export class JSONApiResponse<T> extends ApiResponse<T> {
-    constructor(raw: Response) {
-        super(raw);
-    }
-    
-    async value(): Promise<T> {
-        return await this.raw.json();
-    }
-}
+export class BlobApiResponse {
+    constructor(public raw: Response) {}
 
-export class TextApiResponse extends ApiResponse<string> {
-    constructor(raw: Response) {
-        super(raw);
-    }
-    
-    async value(): Promise<string> {
-        return await this.raw.text();
-    }
-}
-
-export class BlobApiResponse extends ApiResponse<Blob> {
-    constructor(raw: Response) {
-        super(raw);
-    }
-    
     async value(): Promise<Blob> {
         return await this.raw.blob();
-    }
+    };
 }
 
-/**
- * @export
- * Base API class
- */
-export class BaseAPI {
-    protected configuration: Configuration | undefined;
+export class TextApiResponse {
+    constructor(public raw: Response) {}
 
-    constructor(configuration?: Configuration) {
-        this.configuration = configuration;
-    }
-
-    protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
-        const { base, path, query, body, method, headers } = context;
-        
-        // Ensure path has api/v1 prefix
-        const apiPath = path.startsWith('/api/v1') ? path : path.startsWith('/') ? `/api/v1${path}` : `/api/v1/${path}`;
-        
-        const baseUrl = (this.configuration?.basePath || BASE_PATH).replace(/\/+$/, "");
-        const endpoint = `${baseUrl}${apiPath}${query ? `?${query}` : ''}`;
-        
-        // Log the full URL for debugging
-        console.log(`Making ${method} request to: ${endpoint}`);
-        
-        const auth = this.configuration?.apiKey 
-            ? await this.configuration?.apiKey("Authorization") 
-            : undefined;
-            
-        if (auth) {
-            console.log(`Using auth: ${auth.substring(0, 15)}...`);
-        } else {
-            console.log("No auth token provided");
-        }
-        
-        // Always include proper CORS headers and credentials
-        const corsHeaders: HeadersInit = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        };
-        
-        if (auth) {
-            corsHeaders['Authorization'] = auth;
-        }
-        
-        const init: RequestInit = {
-            method,
-            headers: { ...corsHeaders, ...headers },
-            body,
-            mode: 'cors',
-            credentials: 'include',
-        };
-        
-        // Apply any overrides
-        const overridden = typeof initOverrides === 'function' 
-            ? { ...init, ...await initOverrides({ init, context }) } 
-            : { ...init, ...initOverrides };
-        
-        // Additional debug logging
-        console.log(`Final request config for ${method} ${endpoint}:`, {
-            method: overridden.method,
-            mode: overridden.mode,
-            credentials: overridden.credentials,
-            headers: overridden.headers,
-            bodyLength: overridden.body ? 'present' : 'none'
-        });
-        
-        try {
-            const response = await fetch(endpoint, overridden);
-            console.log(`Response from ${method} ${endpoint}:`, {
-                status: response.status,
-                statusText: response.statusText,
-                type: response.type,
-                ok: response.ok
-            });
-            return response;
-        } catch (error) {
-            console.error(`Error in ${method} ${endpoint}:`, error);
-            throw error;
-        }
-    }
-}
-
-/**
- * @throws {FetchError}
- * @export
- */
-export const assertParamExists = function (functionName: string, paramName: string, paramValue: any) {
-    if (paramValue === null || paramValue === undefined) {
-        throw new FetchError(`Missing required parameter ${paramName} in ${functionName}.`, FetchError.PARSING);
-    }
-}
-
-/**
- * @export
- */
-export const setSearchParams = (url: URL, ...params: any[]) => {
-    const flattenedParams = params.reduce(
-        (acc, param) => acc.concat(param),
-        []
-    );
-    for (const param of flattenedParams) {
-        if (param instanceof URLSearchParams) {
-            for (const key of param.keys()) {
-                url.searchParams.append(key, param.get(key) as string);
-            }
-        } else if (typeof param === 'object' && param !== null) {
-            for (const key of Object.keys(param)) {
-                const value = param[key];
-                if (value !== undefined) {
-                    url.searchParams.append(key, value);
-                }
-            }
-        }
-    }
-}
-
-/**
- * @export
- */
-export const toPathString = function (url: URL) {
-    return url.pathname + url.search + url.hash
-}
-
-/**
- * @export
- */
-export const encodeURI = function (str: string) {
-    return encodeURIComponent(str);
+    async value(): Promise<string> {
+        return await this.raw.text();
+    };
 }

@@ -67,25 +67,16 @@ export class ProfileApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        // Ensure we add authorization header
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        // Add CORS headers
-        const requestInit: RequestInit = {
-            method: 'DELETE',
-            headers: headerParameters,
-            mode: 'cors',
-            credentials: 'include',
-        };
 
         const response = await this.request({
             path: `/profiles/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        }, { ...requestInit, ...initOverrides });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
@@ -123,19 +114,9 @@ export class ProfileApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        // Ensure we add authorization header
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        // Add CORS headers
-        const requestInit: RequestInit = {
-            method: 'PUT',
-            headers: headerParameters,
-            body: JSON.stringify(HandlersProfileRequestToJSON(requestParameters['profile'])),
-            mode: 'cors',
-            credentials: 'include',
-        };
 
         const response = await this.request({
             path: `/profiles/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -143,7 +124,7 @@ export class ProfileApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: HandlersProfileRequestToJSON(requestParameters['profile']),
-        }, { ...requestInit, ...initOverrides });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
     }
@@ -175,19 +156,9 @@ export class ProfileApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        // Ensure we add authorization header
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        // Add CORS headers
-        const requestInit: RequestInit = {
-            method: 'POST',
-            headers: headerParameters,
-            body: JSON.stringify(HandlersProfileRequestToJSON(requestParameters['profile'])),
-            mode: 'cors',
-            credentials: 'include',
-        };
 
         const response = await this.request({
             path: `/profiles`,
@@ -195,7 +166,7 @@ export class ProfileApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: HandlersProfileRequestToJSON(requestParameters['profile']),
-        }, { ...requestInit, ...initOverrides });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
     }
@@ -227,19 +198,9 @@ export class ProfileApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        // Ensure we add authorization header
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        // Add CORS headers
-        const requestInit: RequestInit = {
-            method: 'POST',
-            headers: headerParameters,
-            body: JSON.stringify(HandlersUpsertProfileRequestToJSON(requestParameters['profile'])),
-            mode: 'cors',
-            credentials: 'include',
-        };
 
         const response = await this.request({
             path: `/profiles/upsert`,
@@ -247,7 +208,7 @@ export class ProfileApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: HandlersUpsertProfileRequestToJSON(requestParameters['profile']),
-        }, { ...requestInit, ...initOverrides });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
     }
@@ -283,28 +244,13 @@ export class ProfileApi extends runtime.BaseAPI {
         const basePath = this.configuration?.basePath || runtime.BASE_PATH;
         const fullPath = `${basePath}/users/me`;
         console.log("Making usersMeGet request to:", fullPath);
-        
-        // Add CORS headers and mode
-        const requestInit: RequestInit = {
-            method: 'GET',
-            headers: headerParameters,
-            mode: 'cors',
-            credentials: 'include',
-        };
-
-        console.log("Request init for usersMeGet:", JSON.stringify({
-            method: requestInit.method,
-            headers: headerParameters,
-            mode: requestInit.mode,
-            credentials: requestInit.credentials
-        }));
 
         const response = await this.request({
             path: `/users/me`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, { ...requestInit, ...initOverrides });
+        }, initOverrides);
 
         console.log("usersMeGet response status:", response.status);
 

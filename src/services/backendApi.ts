@@ -3,11 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Campaign } from '../types/api';
 
 // Using the host provided by environment variable with proper fallback
-// In production, we should use relative URLs to avoid CORS issues
-const isLocalDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const API_BASE_URL = isLocalDevelopment 
-  ? (import.meta.env.VITE_API_URL || 'http://localhost:8080') + '/api/v1'
-  : '/api/v1'; // Use relative URL in production
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080') + '/api/v1';
 
 // Define a simple ApiError interface here since it's not exported from types/api
 interface ApiError {
@@ -108,13 +104,7 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
     // We'll configure it to be used as a Bearer token
     const configuration = new Configuration({
       basePath: baseUrl,
-      accessToken: token,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      credentials: 'include',
-      mode: 'cors',
+      accessToken: token
     });
     
     // @ts-ignore - Setting the configuration for the client
@@ -129,17 +119,6 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
       pre: async (context) => {
         console.log('API Request:', context.url);
         console.log('Headers:', context.init.headers);
-        
-        // Ensure the Authorization header is set correctly
-        if (token && (!context.init.headers || !context.init.headers['Authorization'])) {
-          context.init.headers = context.init.headers || {};
-          context.init.headers['Authorization'] = `Bearer ${token}`;
-        }
-        
-        // Add CORS mode to every request
-        context.init.mode = 'cors';
-        context.init.credentials = 'include';
-        
         return context;
       }
     });
@@ -154,22 +133,10 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
 class Configuration {
   basePath?: string;
   accessToken?: string;
-  headers?: Record<string, string>;
-  credentials?: RequestCredentials;
-  mode?: RequestMode;
   
-  constructor(config: { 
-    basePath?: string; 
-    accessToken?: string; 
-    headers?: Record<string, string>;
-    credentials?: RequestCredentials;
-    mode?: RequestMode;
-  }) {
+  constructor(config: { basePath?: string; accessToken?: string }) {
     this.basePath = config.basePath;
     this.accessToken = config.accessToken;
-    this.headers = config.headers || {};
-    this.credentials = config.credentials || 'same-origin';
-    this.mode = config.mode || 'cors';
   }
   
   // This function will be called by the generated API client to get the access token
@@ -178,19 +145,6 @@ class Configuration {
       return `Bearer ${this.accessToken}`;
     }
     return '';
-  }
-  
-  // Method to get headers for all requests
-  getHeaders = (): Record<string, string> => {
-    const headers: Record<string, string> = {
-      ...this.headers,
-    };
-    
-    if (this.accessToken) {
-      headers['Authorization'] = `Bearer ${this.accessToken}`;
-    }
-    
-    return headers;
   }
 }
 
