@@ -12,4 +12,6 @@ export interface User {
 export interface Session {
   user: User | null;
   access_token: string | null;
+  refresh_token?: string | null;
+  expires_at?: number;
 }

@@ -252,6 +252,8 @@ export class ProfileApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
+        console.log("usersMeGet response status:", response.status);
+
         return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
     }
 

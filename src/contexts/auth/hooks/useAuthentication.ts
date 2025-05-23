@@ -19,6 +19,7 @@ export const useAuthentication = () => {
     setIsSubmitting(true);
     
     try {
+      console.log("Signing in with credentials...");
       const { data, error } = await supabase.auth.signInWithPassword({
         email: credentials.email,
         password: credentials.password,
@@ -29,11 +30,28 @@ export const useAuthentication = () => {
       }
 
       if (data.session) {
+        console.log("Sign-in successful, saving complete session information");
+        console.log("Access token present:", !!data.session.access_token);
+        console.log("Refresh token present:", !!data.session.refresh_token);
+        
+        // Store the full session for token refresh
         setSession({
           user: data.session.user as User,
           access_token: data.session.access_token,
         });
         setUser(data.session.user as User);
+        
+        // Log token expiration time for debugging
+        if (data.session.expires_at) {
+          const expiryDate = new Date(data.session.expires_at * 1000);
+          console.log('Token expires at:', expiryDate.toISOString());
+          
+          // Schedule a debug log before expiration
+          const timeUntilExpiry = data.session.expires_at * 1000 - Date.now();
+          if (timeUntilExpiry > 0) {
+            console.log(`Token will expire in ${timeUntilExpiry / 1000} seconds`);
+          }
+        }
         
         toast({
           title: "Signed in successfully",

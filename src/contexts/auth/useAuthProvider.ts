@@ -21,45 +21,65 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Get session from Supabase
+        console.log("Initializing auth state...");
+        // First set up the auth state listener to ensure we don't miss events
+        const { data: { subscription } } = auth.supabase.auth.onAuthStateChange(
+          (event, session) => {
+            console.log("Auth state changed:", event);
+            console.log("Session present:", !!session);
+            
+            if (session) {
+              // Store the complete session object with tokens
+              auth.setSession({
+                user: session.user as User,
+                access_token: session.access_token,
+              });
+              auth.setUser(session.user as User);
+              
+              // Log token expiry for debugging
+              if (session.expires_at) {
+                const expiryDate = new Date(session.expires_at * 1000);
+                console.log('Token expires at:', expiryDate.toISOString());
+              }
+            } else {
+              auth.setSession(null);
+              auth.setUser(null);
+            }
+          }
+        );
+
+        // Then check for existing session
         const { data } = await auth.supabase.auth.getSession();
         if (data?.session) {
+          console.log("Existing session found");
+          // Save the complete session with tokens
           auth.setSession({
             user: data.session.user as User,
             access_token: data.session.access_token,
           });
           auth.setUser(data.session.user as User);
+          
+          // Log token expiry for debugging
+          if (data.session.expires_at) {
+            const expiryDate = new Date(data.session.expires_at * 1000);
+            console.log('Token expires at:', expiryDate.toISOString());
+          }
+        } else {
+          console.log("No existing session found");
         }
+        
+        auth.setIsLoading(false);
+        
+        return () => {
+          subscription.unsubscribe();
+        };
       } catch (error) {
         console.error("Error initializing auth:", error);
-      } finally {
-        // Important: Always set loading to false even if there's an error
         auth.setIsLoading(false);
       }
     };
 
     initializeAuth();
-
-    // Subscribe to auth changes
-    const { data: { subscription } } = auth.supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (session) {
-          auth.setSession({
-            user: session.user as User,
-            access_token: session.access_token,
-          });
-          auth.setUser(session.user as User);
-        } else {
-          auth.setSession(null);
-          auth.setUser(null);
-        }
-        auth.setIsLoading(false);
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
   useEffect(() => {

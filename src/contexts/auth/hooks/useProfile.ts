@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
-import { createApiClient, handleApiError } from '@/services/backendApi';
+import { createApiClient, handleApiError, getAuthTokens } from '@/services/backendApi';
 import { HandlersProfileRequest } from '@/generated-api/src/models';
 
 export const useProfile = (user: User | null) => {
@@ -30,15 +30,21 @@ export const useProfile = (user: User | null) => {
     setBackendFetchAttempted(true);
     
     try {
-      // Log the auth state for debugging
-      const { data: sessionData } = await supabase.auth.getSession();
-      console.log("Current auth session:", sessionData?.session ? {
-        hasAccessToken: !!sessionData.session.access_token,
-        tokenExpiry: new Date((sessionData.session.expires_at || 0) * 1000).toISOString(),
-        user: sessionData.session.user?.id
-      } : 'No session');
+      // Get a fresh session with possibly refreshed token
+      const session = await getAuthTokens();
       
-      console.log("Fetching backend profile...");
+      if (!session) {
+        console.log("No valid session found for profile fetch");
+        throw new Error("Authentication required");
+      }
+      
+      console.log("Session for profile fetch:", {
+        userId: session.user?.id,
+        hasAccessToken: !!session.access_token,
+        tokenExpiry: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : 'unknown'
+      });
+      
+      console.log("Fetching backend profile with authenticated session...");
       const profileApi = await createApiClient(ProfileApi);
       console.log("ProfileApi client created successfully");
       
@@ -105,11 +111,17 @@ export const useProfile = (user: User | null) => {
 
       // Step 2: Update profile in backend service
       try {
-        const { data: sessionData } = await supabase.auth.getSession();
-        console.log("Current auth session for update:", sessionData?.session ? {
-          hasAccessToken: !!sessionData.session.access_token,
-          tokenExpiry: new Date((sessionData.session.expires_at || 0) * 1000).toISOString()
-        } : 'No session');
+        // Get a fresh session with possibly refreshed token
+        const session = await getAuthTokens();
+        
+        if (!session) {
+          throw new Error("No valid session for profile update");
+        }
+        
+        console.log("Session for profile update:", {
+          hasAccessToken: !!session.access_token,
+          tokenExpiry: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : 'unknown'
+        });
         
         const profileApi = await createApiClient(ProfileApi);
         
