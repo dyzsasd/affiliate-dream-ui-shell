@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +34,7 @@ const AdvertiserForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const isEditMode = !!advertiserId;
-  const organizationId = organization?.id;
+  const organizationId = organization?.organizationId; // Fixed property name
 
   const { data: advertiser, isLoading: isAdvertiserLoading } = useQuery({
     queryKey: ['advertiser', advertiserId],

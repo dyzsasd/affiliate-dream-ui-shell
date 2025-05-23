@@ -29,7 +29,7 @@ const AdvertiserList: React.FC = () => {
   const { organization, isOrganizationLoading } = useAuth();
   const [advertisers, setAdvertisers] = useState<DomainAdvertiser[]>([]);
 
-  const organizationId = organization?.id;
+  const organizationId = organization?.organizationId; // Fixed property name
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['advertisers', organizationId],
