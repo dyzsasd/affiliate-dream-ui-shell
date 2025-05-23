@@ -21,6 +21,11 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Derive organization ID from various sources
+  const organizationId = organization?.id || 
+                         profile?.organization?.id || 
+                         backendProfile?.organizationId;
+
   return (
     <div className="space-y-2">
       <h3 className="text-lg font-medium">{t("profile.organizationInfo")}</h3>
@@ -46,10 +51,15 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
           )}
         </dd>
         
+        <dt className="text-sm font-medium text-muted-foreground">ID</dt>
+        <dd className="text-sm">
+          {organizationId || t("profile.notAssigned")}
+        </dd>
+        
         <dt className="text-sm font-medium text-muted-foreground">{t("profile.role")}</dt>
         <dd className="text-sm">
           {profile?.role?.name || 
-           (backendProfile?.roleId ? `Role ID: ${backendProfile.roleId}` : '-')}
+           (backendProfile?.roleId ? `Role ID: ${backendProfile.roleId}` : t("profile.notAssigned"))}
         </dd>
       </dl>
     </div>

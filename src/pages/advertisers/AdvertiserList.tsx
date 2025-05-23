@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -26,9 +26,17 @@ const AdvertiserList: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { organization, isOrganizationLoading } = useAuth();
+  const { organization, profile, isOrganizationLoading } = useAuth();
 
-  const organizationId = organization?.organizationId;
+  console.log("Auth organization:", organization);
+  console.log("Auth profile:", profile);
+  
+  // Get the organization ID from the auth context
+  const organizationId = organization?.id || 
+                         profile?.organization?.id || 
+                         (organization?.organizationId as number | undefined);
+
+  console.log("Using organization ID for advertisers fetch:", organizationId);
 
   // Use React Query to fetch advertisers
   const { data: advertisers = [], isLoading, isError, error, refetch } = useQuery({
@@ -39,7 +47,7 @@ const AdvertiserList: React.FC = () => {
       }
       return fetchAdvertisers(organizationId);
     },
-    enabled: !!organizationId,
+    enabled: !!organizationId, // Only fetch if organizationId is available
   });
 
   const handleCreateAdvertiser = () => {
@@ -69,6 +77,7 @@ const AdvertiserList: React.FC = () => {
     return (
       <div className="flex justify-center items-center h-64">
         <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+        <span className="ml-2">Loading advertisers...</span>
       </div>
     );
   }

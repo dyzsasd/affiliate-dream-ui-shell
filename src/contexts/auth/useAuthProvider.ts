@@ -91,6 +91,7 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
     initializeAuth();
   }, []);
 
+  // Enhanced profile initialization effect
   useEffect(() => {
     const initializeProfile = async () => {
       if (auth.user && !profile && !profileFetchAttempted && !isProfileLoading) {
@@ -99,7 +100,14 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
         setProfileFetchAttempted(true);
         
         try {
-          await fetchBackendProfile();
+          const backendProfile = await fetchBackendProfile();
+          console.log("Backend profile fetched:", backendProfile);
+          
+          // If profile has organizationId, automatically fetch organization details
+          if (backendProfile?.organizationId) {
+            console.log("Organization ID found in profile, fetching organization details...");
+            await fetchOrganization(backendProfile.organizationId);
+          }
         } catch (error) {
           console.error('Failed to fetch backend profile:', error);
           
