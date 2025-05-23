@@ -1,10 +1,10 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   BarChart3, 
+  Building2,
   LayoutDashboard,
   Link as LinkIcon,
   LogOut,
@@ -33,6 +33,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       name: t("sidebar.dashboard"),
       path: "/dashboard",
       icon: <LayoutDashboard className="w-5 h-5" />
+    },
+    {
+      name: t("sidebar.advertisers"),
+      path: "/advertisers",
+      icon: <Building2 className="w-5 h-5" />
     },
     {
       name: t("sidebar.campaigns"),

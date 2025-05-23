@@ -23,6 +23,7 @@ import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
 import ConversionReport from "@/pages/reporting/ConversionReport";
 import Index from "./pages/Index";
+import AdvertisersRoutes from "./pages/advertisers";
 
 // Create a query client with retry disabled to avoid infinite loading
 const queryClient = new QueryClient({
@@ -59,6 +60,7 @@ const App = () => (
               <Route path="/tracking-links" element={<TrackingLinkGenerator />} />
               <Route path="/reporting" element={<PerformanceReport />} />
               <Route path="/reporting/conversions" element={<ConversionReport />} />
+              <Route path="/advertisers/*" element={<AdvertisersRoutes />} />
             </Route>
             
             {/* Catch-all route */}
