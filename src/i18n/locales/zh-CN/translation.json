@@ -14,7 +14,8 @@
     "noResults": "未找到结果",
     "actions": "操作",
     "tryAgain": "重试",
-    "errorOccurred": "发生错误"
+    "errorOccurred": "发生错误",
+    "back": "返回"
   },
   "auth": {
     "signIn": "登录",
@@ -96,7 +97,22 @@
     "contactColumn": "联系邮箱",
     "statusColumn": "状态",
     "createdAtColumn": "创建日期",
-    "tableCaption": "您组织中的所有广告账户列表"
+    "tableCaption": "您组织中的所有广告账户列表",
+    "advertiserDetails": "广告账户详情",
+    "basicInfo": "基本信息",
+    "contactInfo": "联系信息",
+    "billingDetailsLabel": "账单信息",
+    "idLabel": "广告账户ID",
+    "orgIdLabel": "组织ID",
+    "createdLabel": "创建时间",
+    "updatedLabel": "更新时间",
+    "emailLabel": "邮箱",
+    "deleteSuccess": "广告账户删除成功",
+    "deleteError": "删除广告账户时出错",
+    "deleteConfirmTitle": "删除广告账户",
+    "deleteConfirmMessage": "确定要删除此广告账户吗？此操作无法撤销。",
+    "backToList": "返回广告账户列表",
+    "notFound": "未找到广告账户"
   },
   "organization": {
     "noOrganization": "没有可用的组织"

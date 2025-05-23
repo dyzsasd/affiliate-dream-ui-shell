@@ -117,7 +117,7 @@ const AdvertiserDetail: React.FC = () => {
       );
     } catch (e) {
       formattedBillingDetails = (
-        <p className="text-destructive">Invalid JSON format</p>
+        <p className="text-destructive">{t('common.error')}: {t('common.errorOccurred')}</p>
       );
     }
   }

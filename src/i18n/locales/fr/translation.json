@@ -14,7 +14,8 @@
     "noResults": "Aucun résultat trouvé",
     "actions": "Actions",
     "tryAgain": "Réessayer",
-    "errorOccurred": "Une erreur est survenue"
+    "errorOccurred": "Une erreur est survenue",
+    "back": "Retour"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -96,7 +97,22 @@
     "contactColumn": "Email de Contact",
     "statusColumn": "Statut",
     "createdAtColumn": "Créé le",
-    "tableCaption": "Liste de tous les annonceurs de votre organisation"
+    "tableCaption": "Liste de tous les annonceurs de votre organisation",
+    "advertiserDetails": "Détails de l'annonceur",
+    "basicInfo": "Informations de base",
+    "contactInfo": "Coordonnées",
+    "billingDetailsLabel": "Détails de facturation",
+    "idLabel": "ID d'annonceur",
+    "orgIdLabel": "ID d'organisation",
+    "createdLabel": "Créé le",
+    "updatedLabel": "Mis à jour le",
+    "emailLabel": "Email",
+    "deleteSuccess": "Annonceur supprimé avec succès",
+    "deleteError": "Erreur lors de la suppression de l'annonceur",
+    "deleteConfirmTitle": "Supprimer l'annonceur",
+    "deleteConfirmMessage": "Êtes-vous sûr de vouloir supprimer cet annonceur ? Cette action ne peut pas être annulée.",
+    "backToList": "Retour aux annonceurs",
+    "notFound": "Annonceur non trouvé"
   },
   "organization": {
     "noOrganization": "Aucune organisation disponible"

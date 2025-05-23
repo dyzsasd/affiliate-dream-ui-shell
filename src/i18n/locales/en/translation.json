@@ -14,7 +14,8 @@
     "noResults": "No results found",
     "actions": "Actions",
     "tryAgain": "Try Again",
-    "errorOccurred": "An error occurred"
+    "errorOccurred": "An error occurred",
+    "back": "Back"
   },
   "auth": {
     "signIn": "Sign In",
@@ -96,7 +97,22 @@
     "contactColumn": "Contact Email",
     "statusColumn": "Status",
     "createdAtColumn": "Created",
-    "tableCaption": "List of all advertisers in your organization"
+    "tableCaption": "List of all advertisers in your organization",
+    "advertiserDetails": "Advertiser Details",
+    "basicInfo": "Basic Information",
+    "contactInfo": "Contact Information",
+    "billingDetailsLabel": "Billing Details",
+    "idLabel": "Advertiser ID",
+    "orgIdLabel": "Organization ID",
+    "createdLabel": "Created",
+    "updatedLabel": "Updated",
+    "emailLabel": "Email",
+    "deleteSuccess": "Advertiser deleted successfully",
+    "deleteError": "Error deleting advertiser",
+    "deleteConfirmTitle": "Delete Advertiser",
+    "deleteConfirmMessage": "Are you sure you want to delete this advertiser? This action cannot be undone.",
+    "backToList": "Back to Advertisers",
+    "notFound": "Advertiser not found"
   },
   "organization": {
     "noOrganization": "No organization available"
