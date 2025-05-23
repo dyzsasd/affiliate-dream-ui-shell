@@ -236,8 +236,9 @@ export class ProfileApi extends runtime.BaseAPI {
         }
 
         // Ensure we have a valid base path before making the request
-        const basePath = this.configuration.basePath || runtime.BASE_PATH;
-        console.log("Making usersMeGet request to:", `${basePath}/users/me`);
+        const basePath = this.configuration?.basePath || runtime.BASE_PATH;
+        const fullPath = `${basePath}/users/me`;
+        console.log("Making usersMeGet request to:", fullPath);
 
         const response = await this.request({
             path: `/users/me`,

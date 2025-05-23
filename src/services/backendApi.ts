@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Campaign } from '../types/api';
 
 // Using the host provided by environment variable with proper fallback
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080') + '/api/v1';
 
 // Define a simple ApiError interface here since it's not exported from types/api
 interface ApiError {
