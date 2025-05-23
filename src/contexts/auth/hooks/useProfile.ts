@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
@@ -182,7 +181,7 @@ export const useProfile = (user: User | null) => {
         throw authError;
       }
 
-      // Step 2: Update profile in backend service using upsert method
+      // Step 2: Update profile in backend service using profilesIdPut instead of upsert
       try {
         // Get a fresh session with possibly refreshed token
         const session = await getAuthTokens();
@@ -198,17 +197,17 @@ export const useProfile = (user: User | null) => {
         
         const profileApi = await createApiClient(ProfileApi);
         
-        // Create profile upsert request
-        const profileRequest: HandlersUpsertProfileRequest = {
-          id: user.id,
+        // Create profile request
+        const profileRequest: HandlersProfileRequest = {
           email: user.email,
           firstName: data.first_name,
           lastName: data.last_name,
           organizationId: profile?.organization?.id
         };
 
-        // Use upsertPost method instead of profilesIdPut
-        await profileApi.profilesUpsertPost({
+        // Use profilesIdPut method instead of profilesUpsertPost
+        await profileApi.profilesIdPut({
+          id: user.id,
           profile: profileRequest
         });
         
