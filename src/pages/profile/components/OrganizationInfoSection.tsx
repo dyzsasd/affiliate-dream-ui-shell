@@ -21,8 +21,8 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Derive organization ID from various sources
-  const organizationId = organization?.id || 
+  // Derive organization ID from various sources - fixed to use organizationId instead of id
+  const organizationId = organization?.organizationId || 
                          profile?.organization?.id || 
                          backendProfile?.organizationId;
 

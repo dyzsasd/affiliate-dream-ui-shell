@@ -31,8 +31,8 @@ const AdvertiserList: React.FC = () => {
   console.log("Auth organization:", organization);
   console.log("Auth profile:", profile);
   
-  // Get the organization ID from the auth context
-  const organizationId = organization?.id || 
+  // Get the organization ID from the auth context - fixed to use organizationId instead of id
+  const organizationId = organization?.organizationId || 
                          profile?.organization?.id || 
                          (organization?.organizationId as number | undefined);
 
