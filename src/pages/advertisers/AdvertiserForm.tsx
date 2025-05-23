@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,16 +12,19 @@ import { fetchAdvertiser, createAdvertiser, updateAdvertiser } from '@/services/
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Loader2, Save } from 'lucide-react';
+import { ArrowLeft, CreditCard, Loader2, Save } from 'lucide-react';
 
 const advertiserSchema = z.object({
   name: z.string().min(1, { message: "Advertiser name is required" }),
   contactEmail: z.string().email({ message: "Invalid email address" }).optional().or(z.literal('')),
-  billingDetails: z.string().optional(),
   status: z.enum(['active', 'pending', 'inactive', 'rejected']),
+  billingAddress: z.string().optional().or(z.literal('')),
+  billingCity: z.string().optional().or(z.literal('')),
+  billingState: z.string().optional().or(z.literal('')),
+  billingCountry: z.string().optional().or(z.literal('')),
+  billingPostalCode: z.string().optional().or(z.literal('')),
 });
 
 type AdvertiserFormData = z.infer<typeof advertiserSchema>;
@@ -34,7 +38,7 @@ const AdvertiserForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const isEditMode = !!advertiserId;
-  const organizationId = organization?.organizationId; // Fixed property name
+  const organizationId = organization?.organizationId;
 
   const { data: advertiser, isLoading: isAdvertiserLoading } = useQuery({
     queryKey: ['advertiser', advertiserId],
@@ -47,19 +51,37 @@ const AdvertiserForm: React.FC = () => {
     defaultValues: {
       name: '',
       contactEmail: '',
-      billingDetails: '',
       status: 'active',
+      billingAddress: '',
+      billingCity: '',
+      billingState: '',
+      billingCountry: '',
+      billingPostalCode: '',
     },
   });
 
   // Update form when advertiser data is loaded
   React.useEffect(() => {
     if (advertiser && isEditMode) {
+      let billingDetails = advertiser.billingDetails || {};
+      
+      if (typeof billingDetails === 'string') {
+        try {
+          billingDetails = JSON.parse(billingDetails);
+        } catch (e) {
+          billingDetails = {};
+        }
+      }
+      
       form.reset({
         name: advertiser.name || '',
         contactEmail: advertiser.contactEmail || '',
-        billingDetails: advertiser.billingDetails ? JSON.stringify(advertiser.billingDetails, null, 2) : '',
         status: (advertiser.status as 'active' | 'pending' | 'inactive' | 'rejected') || 'active',
+        billingAddress: billingDetails.address || '',
+        billingCity: billingDetails.city || '',
+        billingState: billingDetails.state || '',
+        billingCountry: billingDetails.country || '',
+        billingPostalCode: billingDetails.postalCode || '',
       });
     }
   }, [advertiser, form, isEditMode]);
@@ -70,20 +92,22 @@ const AdvertiserForm: React.FC = () => {
         throw new Error("No organization ID available");
       }
       
-      // Parse billing details if provided
-      let billingDetailsObj = undefined;
-      if (data.billingDetails) {
-        try {
-          billingDetailsObj = JSON.parse(data.billingDetails);
-        } catch (e) {
-          throw new Error("Invalid billing details format. Must be valid JSON.");
-        }
-      }
+      // Structure billing details into an object
+      const billingDetailsObj = {
+        address: data.billingAddress || undefined,
+        city: data.billingCity || undefined,
+        state: data.billingState || undefined,
+        country: data.billingCountry || undefined,
+        postalCode: data.billingPostalCode || undefined,
+      };
+      
+      // Only include billing details if at least one field is populated
+      const hasBillingInfo = Object.values(billingDetailsObj).some(val => !!val);
       
       return createAdvertiser(organizationId, {
         name: data.name,
         contactEmail: data.contactEmail || undefined,
-        billingDetails: billingDetailsObj,
+        billingDetails: hasBillingInfo ? billingDetailsObj : undefined,
         status: data.status,
       });
     },
@@ -108,20 +132,22 @@ const AdvertiserForm: React.FC = () => {
         throw new Error("No advertiser ID available");
       }
       
-      // Parse billing details if provided
-      let billingDetailsObj = undefined;
-      if (data.billingDetails) {
-        try {
-          billingDetailsObj = JSON.parse(data.billingDetails);
-        } catch (e) {
-          throw new Error("Invalid billing details format. Must be valid JSON.");
-        }
-      }
+      // Structure billing details into an object
+      const billingDetailsObj = {
+        address: data.billingAddress || undefined,
+        city: data.billingCity || undefined,
+        state: data.billingState || undefined,
+        country: data.billingCountry || undefined,
+        postalCode: data.billingPostalCode || undefined,
+      };
+      
+      // Only include billing details if at least one field is populated
+      const hasBillingInfo = Object.values(billingDetailsObj).some(val => !!val);
       
       return updateAdvertiser(Number(advertiserId), {
         name: data.name,
         contactEmail: data.contactEmail || undefined,
-        billingDetails: billingDetailsObj,
+        billingDetails: hasBillingInfo ? billingDetailsObj : undefined,
         status: data.status,
       });
     },
@@ -249,28 +275,83 @@ const AdvertiserForm: React.FC = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="billingDetails"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('advertisers.billingDetailsLabel')}</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder='{
-  "address": "123 Main St",
-  "city": "New York",
-  "country": "USA",
-  "postalCode": "10001"
-}' 
-                        className="font-mono h-32"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="pt-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <CreditCard className="h-5 w-5" />
+                  <h3 className="text-lg font-medium">{t('advertisers.billingDetailsLabel')}</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="billingAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('advertisers.addressLabel')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('advertisers.addressPlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="billingCity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('advertisers.cityLabel')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('advertisers.cityPlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="billingState"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('advertisers.stateLabel')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('advertisers.statePlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="billingCountry"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('advertisers.countryLabel')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('advertisers.countryPlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="billingPostalCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('advertisers.postalCodeLabel')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('advertisers.postalCodePlaceholder')} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button 
