@@ -1,3 +1,4 @@
+
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -37,17 +38,27 @@ export enum FetchError {
 /**
  * @export
  */
-export class BaseAPI {
-    protected configuration: Configuration | undefined;
-
-    constructor(configuration?: Configuration) {
-        this.configuration = configuration;
-    }
-}
+export type HTTPMethod =
+    | 'GET'
+    | 'POST'
+    | 'PUT'
+    | 'PATCH'
+    | 'DELETE'
+    | 'HEAD'
+    | 'OPTIONS';
 
 /**
  * @export
- * @interface
+ */
+export type HTTPHeaders = { [key: string]: string };
+
+/**
+ * @export
+ */
+export type HTTPQuery = { [key: string]: any };
+
+/**
+ * @export
  */
 export interface ConfigurationParameters {
     apiKey?: string | ((name: string) => string);
@@ -57,6 +68,12 @@ export interface ConfigurationParameters {
     basePath?: string;
     baseOptions?: any;
     formDataCtor?: new () => any;
+    credentials?: RequestCredentials; // can be 'same-origin', 'include', 'omit', etc.
+    headers?: HTTPHeaders; //header params we want to use on every request
+    middleware?: Middleware[];
+    queryParamsStringify?: (params: HTTPQuery) => string;
+    mode?: 'cors' | 'no-cors' | 'same-origin'; // CORS setting for the Fetch API
+    securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestInit | void> | RequestInit | void;
 }
 
 /**
@@ -102,6 +119,26 @@ export class Configuration {
      */
     formDataCtor?: new () => any;
 
+    /**
+     * CORS credentials setting
+     */
+    credentials?: RequestCredentials;
+
+    /**
+     * CORS mode
+     */
+    mode?: 'cors' | 'no-cors' | 'same-origin';
+
+    /**
+     * Default headers for all requests
+     */
+    headers?: HTTPHeaders;
+
+    /**
+     * Middleware for request/response processing
+     */
+    middleware?: Middleware[];
+
     constructor(configuration: ConfigurationParameters = {}) {
         this.apiKey = configuration.apiKey;
         this.username = configuration.username;
@@ -110,6 +147,10 @@ export class Configuration {
         this.basePath = configuration.basePath;
         this.baseOptions = configuration.baseOptions;
         this.formDataCtor = configuration.formDataCtor;
+        this.credentials = configuration.credentials;
+        this.mode = configuration.mode;
+        this.headers = configuration.headers;
+        this.middleware = configuration.middleware;
     }
 
     /**
@@ -122,6 +163,70 @@ export class Configuration {
         return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
     }
 }
+
+/**
+ * @export
+ */
+export interface RequestOpts {
+    path: string;
+    method: string;
+    query?: string;
+    body?: any;
+    headers: HTTPHeaders;
+    base?: string;
+}
+
+/**
+ * @export
+ */
+export type SecurityDataType = { [key: string]: SecurityScheme };
+
+/**
+ * @export
+ */
+export type SecurityScheme = {
+    type: string;
+    apiKey?: string;
+    bearerFormat?: string;
+    scheme?: string;
+};
+
+/**
+ * @export
+ */
+export type Middleware = {
+    pre?: (context: RequestContext) => Promise<void> | void;
+    post?: (context: ResponseContext) => Promise<void> | void;
+}
+
+/**
+ * @export
+ */
+export interface RequestContext {
+    httpMethod: HTTPMethod;
+    url: string;
+    headers: HTTPHeaders;
+    body: any;
+    credentials?: RequestCredentials;
+}
+
+/**
+ * @export
+ */
+export interface ResponseContext {
+    httpMethod: HTTPMethod;
+    url: string;
+    headers: HTTPHeaders;
+    body: any;
+    statusCode: number;
+    credentials?: RequestCredentials;
+}
+
+/**
+ * @export
+ * @function
+ */
+export type InitOverrideFunction = (requestContext: { init: RequestInit, context: RequestOpts }) => Promise<RequestInit>
 
 /**
  *
@@ -172,108 +277,60 @@ export const DefaultFetch = globalFetch ? globalFetch.bind(globalThis) : (() => 
  */
 export const BASE_PATH = "/api/v1".replace(/\/+$/, "");
 
-export interface ConfigurationParameters {
-    basePath?: string; // override base path
-    credentials?: RequestCredentials; // can be 'same-origin', 'include', 'omit', etc.
-    headers?: HTTPHeaders; //header params we want to use on every request
-    middleware?: Middleware[];
-    queryParamsStringify?: (params: HTTPQuery) => string;
-    username?: string; // parameter for basic security
-    password?: string; // parameter for basic security
-    apiKey?: string | ((name: string) => string); // parameter for api key security
-    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string | Promise<string>); // parameter for oauth2 security
-    mode?: 'cors' | 'no-cors' | 'same-origin'; // CORS setting for the Fetch API
-    securityWorker?: (securityData: SecurityDataType | null) => Promise<RequestInit | void> | RequestInit | void;
-    basePath?: string; // override base path
-    baseOptions?: any; // override base options
+/**
+ * API Response classes for handling different response types
+ */
+export class ApiResponse<T> {
+    raw: Response;
+    constructor(raw: Response) {
+        this.raw = raw;
+    }
+}
+
+export class VoidApiResponse extends ApiResponse<void> {
+    constructor(raw: Response) {
+        super(raw);
+    }
+    
+    async value(): Promise<void> {
+        return undefined;
+    }
+}
+
+export class JSONApiResponse<T> extends ApiResponse<T> {
+    constructor(raw: Response) {
+        super(raw);
+    }
+    
+    async value(): Promise<T> {
+        return await this.raw.json();
+    }
+}
+
+export class TextApiResponse extends ApiResponse<string> {
+    constructor(raw: Response) {
+        super(raw);
+    }
+    
+    async value(): Promise<string> {
+        return await this.raw.text();
+    }
+}
+
+export class BlobApiResponse extends ApiResponse<Blob> {
+    constructor(raw: Response) {
+        super(raw);
+    }
+    
+    async value(): Promise<Blob> {
+        return await this.raw.blob();
+    }
 }
 
 /**
  * @export
+ * Base API class
  */
-export interface RequestOpts {
-    path: string;
-    method: string;
-    query?: string;
-    body?: any;
-    headers: HTTPHeaders;
-    base?: string;
-}
-
-/**
- * @export
- */
-export type SecurityDataType = { [key: string]: SecurityScheme };
-
-/**
- * @export
- */
-export type SecurityScheme = {
-    type: string;
-    apiKey?: string;
-    bearerFormat?: string;
-    scheme?: string;
-};
-
-/**
- * @export
- */
-export type HTTPMethod =
-    | 'GET'
-    | 'POST'
-    | 'PUT'
-    | 'PATCH'
-    | 'DELETE'
-    | 'HEAD'
-    | 'OPTIONS';
-
-/**
- * @export
- */
-export type HTTPHeaders = { [key: string]: string };
-
-/**
- * @export
- */
-export type HTTPQuery = { [key: string]: any };
-
-/**
- * @export
- */
-export type Middleware = {
-    pre?: (context: RequestContext) => Promise<void> | void;
-    post?: (context: ResponseContext) => Promise<void> | void;
-}
-
-/**
- * @export
- */
-export interface RequestContext {
-    httpMethod: HTTPMethod;
-    url: string;
-    headers: HTTPHeaders;
-    body: any;
-    credentials?: RequestCredentials;
-}
-
-/**
- * @export
- */
-export interface ResponseContext {
-    httpMethod: HTTPMethod;
-    url: string;
-    headers: HTTPHeaders;
-    body: any;
-    statusCode: number;
-    credentials?: RequestCredentials;
-}
-
-/**
- * @export
- * @function
- */
-export type InitOverrideFunction = (requestContext: { init: RequestInit, context: RequestOpts }) => Promise<RequestInit>
-
 export class BaseAPI {
     protected configuration: Configuration | undefined;
 
