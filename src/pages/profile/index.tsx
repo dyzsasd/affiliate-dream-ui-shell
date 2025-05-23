@@ -8,7 +8,16 @@ import ProfileHeader from './components/ProfileHeader';
 import ProfileContent from './components/ProfileContent';
 
 const Profile: React.FC = () => {
-  const { user, profile, isProfileLoading, updateProfile, hasPermission, fetchBackendProfile } = useAuth();
+  const { 
+    user, 
+    profile, 
+    organization,
+    isProfileLoading, 
+    isOrganizationLoading,
+    updateProfile, 
+    hasPermission, 
+    fetchBackendProfile 
+  } = useAuth();
   const [backendProfile, setBackendProfile] = useState<DomainProfile | null>(null);
   const [isBackendLoading, setIsBackendLoading] = useState(false);
   const [backendError, setBackendError] = useState<string | null>(null);
@@ -57,6 +66,8 @@ const Profile: React.FC = () => {
         user={user}
         profile={profile} 
         backendProfile={backendProfile}
+        organization={organization}
+        isOrganizationLoading={isOrganizationLoading}
         updateProfile={updateProfile}
         hasPermission={hasPermission}
       />

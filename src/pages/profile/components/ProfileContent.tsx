@@ -10,7 +10,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { UserProfile } from '@/contexts/auth/authTypes';
 import { User } from '@/types/auth';
-import { DomainProfile } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
 import BasicInfoSection from './BasicInfoSection';
 import ContactInfoSection from './ContactInfoSection';
 import OrganizationInfoSection from './OrganizationInfoSection';
@@ -22,6 +22,8 @@ interface ProfileContentProps {
   user: User | null;
   profile: UserProfile | null;
   backendProfile: DomainProfile | null;
+  organization: DomainOrganization | null;
+  isOrganizationLoading: boolean;
   updateProfile: (data: { first_name?: string; last_name?: string }) => Promise<void>;
   hasPermission: (permission: string) => boolean;
 }
@@ -30,6 +32,8 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
   user,
   profile,
   backendProfile,
+  organization,
+  isOrganizationLoading,
   updateProfile,
   hasPermission
 }) => {
@@ -72,13 +76,21 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
           <Separator />
           
           {/* Organization info */}
-          <OrganizationInfoSection profile={profile} backendProfile={backendProfile} />
+          <OrganizationInfoSection 
+            profile={profile} 
+            backendProfile={backendProfile}
+            organization={organization}
+            isOrganizationLoading={isOrganizationLoading}
+          />
 
           {/* Backend Profile Data */}
           {backendProfile && (
             <>
               <Separator />
-              <BackendProfileData backendProfile={backendProfile} />
+              <BackendProfileData 
+                backendProfile={backendProfile} 
+                organization={organization}
+              />
             </>
           )}
         </CardContent>

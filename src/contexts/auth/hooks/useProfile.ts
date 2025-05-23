@@ -1,16 +1,20 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
+import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 import { createApiClient, handleApiError, getAuthTokens } from '@/services/backendApi';
 import { HandlersProfileRequest } from '@/generated-api/src/models';
+import { DomainOrganization } from '@/generated-api/src/models';
 
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [organization, setOrganization] = useState<DomainOrganization | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [isOrganizationLoading, setIsOrganizationLoading] = useState(false);
   const [backendFetchAttempted, setBackendFetchAttempted] = useState(false);
   const { toast } = useToast();
 
@@ -58,8 +62,17 @@ export const useProfile = (user: User | null) => {
           last_name: response.lastName || '',
           role: {
             name: String(response.roleId || 'User')
+          },
+          organization: {
+            id: response.organizationId || undefined,
+            name: '' // Will be populated by fetchOrganization
           }
         });
+        
+        // If we have an organization ID, fetch the organization details
+        if (response.organizationId) {
+          await fetchOrganization(response.organizationId);
+        }
       }
       
       return response;
@@ -73,6 +86,9 @@ export const useProfile = (user: User | null) => {
           last_name: user.user_metadata.last_name || '',
           role: {
             name: 'User'
+          },
+          organization: {
+            name: ''
           }
         });
       }
@@ -86,6 +102,63 @@ export const useProfile = (user: User | null) => {
       return null;
     } finally {
       setIsProfileLoading(false);
+    }
+  };
+
+  const fetchOrganization = async (organizationId: number) => {
+    if (!organizationId) {
+      console.log("Cannot fetch organization: No organization ID provided");
+      return null;
+    }
+
+    setIsOrganizationLoading(true);
+    
+    try {
+      // Get a fresh session with possibly refreshed token
+      const session = await getAuthTokens();
+      
+      if (!session) {
+        console.log("No valid session found for organization fetch");
+        throw new Error("Authentication required");
+      }
+      
+      console.log("Fetching organization data for ID:", organizationId);
+      const organizationsApi = await createApiClient(OrganizationsApi);
+      
+      const org = await organizationsApi.organizationsIdGet({
+        id: organizationId
+      });
+      
+      console.log("Organization fetched successfully:", org);
+      
+      // Update organization state
+      setOrganization(org);
+      
+      // Update the organization name in the profile
+      setProfile(prevProfile => {
+        if (!prevProfile) return null;
+        
+        return {
+          ...prevProfile,
+          organization: {
+            ...prevProfile.organization,
+            id: organizationId,
+            name: org.name || ''
+          }
+        };
+      });
+      
+      return org;
+    } catch (error) {
+      console.error('Error fetching organization:', error);
+      toast({
+        title: "Organization data unavailable",
+        description: "Could not fetch organization details from the server.",
+        variant: "default",
+      });
+      return null;
+    } finally {
+      setIsOrganizationLoading(false);
     }
   };
 
@@ -180,8 +253,11 @@ export const useProfile = (user: User | null) => {
   return {
     profile,
     setProfile,
+    organization,
     isProfileLoading,
+    isOrganizationLoading,
     fetchBackendProfile,
+    fetchOrganization,
     updateProfile,
     hasPermission
   };

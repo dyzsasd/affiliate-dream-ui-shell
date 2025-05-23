@@ -14,7 +14,16 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
 
   // Use real authentication with Supabase
   const auth = useAuthentication();
-  const { profile, isProfileLoading, updateProfile, fetchBackendProfile, hasPermission } = useProfile(auth.user);
+  const { 
+    profile, 
+    organization, 
+    isProfileLoading, 
+    isOrganizationLoading, 
+    updateProfile, 
+    fetchBackendProfile, 
+    fetchOrganization, 
+    hasPermission 
+  } = useProfile(auth.user);
   const [profileFetchAttempted, setProfileFetchAttempted] = useState(false);
   
   // Add initialization effect
@@ -113,9 +122,12 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
   return {
     ...auth,
     profile,
+    organization,
     isProfileLoading,
+    isOrganizationLoading,
     updateProfile,
     fetchBackendProfile,
+    fetchOrganization,
     hasPermission
   };
 };
