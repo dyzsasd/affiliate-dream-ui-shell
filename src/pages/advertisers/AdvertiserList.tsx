@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -26,17 +25,32 @@ const AdvertiserList: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { organization, profile, isOrganizationLoading } = useAuth();
+  const { organization, profile, isOrganizationLoading, fetchOrganization } = useAuth();
 
   console.log("Auth organization:", organization);
   console.log("Auth profile:", profile);
   
-  // Get the organization ID from the auth context - fixed to use organizationId instead of id
+  // Get the organization ID from the auth context
   const organizationId = organization?.organizationId || 
-                         profile?.organization?.id || 
-                         (organization?.organizationId as number | undefined);
+                         profile?.organization?.id;
 
   console.log("Using organization ID for advertisers fetch:", organizationId);
+
+  // Try to fetch organization if not available
+  useEffect(() => {
+    const loadOrgIfNeeded = async () => {
+      if (!organization && profile?.organization?.id && fetchOrganization) {
+        console.log("Organization not loaded but ID available, fetching...");
+        try {
+          await fetchOrganization(profile.organization.id);
+        } catch (error) {
+          console.error("Failed to fetch organization:", error);
+        }
+      }
+    };
+    
+    loadOrgIfNeeded();
+  }, [organization, profile, fetchOrganization]);
 
   // Use React Query to fetch advertisers
   const { data: advertisers = [], isLoading, isError, error, refetch } = useQuery({

@@ -30,26 +30,34 @@ export const useProfile = (user: User | null) => {
       return null;
     }
     
-    // Prevent multiple fetch attempts if the backend is not available
-    if (backendFetchAttempted) {
-      console.log("Already attempted to fetch backend profile, using local data");
-      return null;
-    }
-    
     setIsProfileLoading(true);
-    setBackendFetchAttempted(true);
     
     try {
+      console.log("Fetching backend profile for user:", user.id);
       const response = await fetchBackendProfile(user);
+      console.log("Backend profile response:", response);
       
       // Update local profile state with fetched data
       if (response) {
         const userProfile = mapBackendProfileToUserProfile(response);
         setProfile(userProfile);
+        console.log("Profile set from backend data:", userProfile);
         
         // If we have an organization ID, fetch the organization details
         if (response.organizationId) {
+          console.log("Found organizationId in profile:", response.organizationId);
           await handleFetchOrganization(response.organizationId);
+        } else {
+          console.log("No organizationId found in profile");
+        }
+      } else {
+        console.log("No profile data received from backend");
+        
+        // Initialize profile from user metadata as fallback
+        if (user?.user_metadata) {
+          const fallbackProfile = createFallbackProfile(user.user_metadata);
+          setProfile(fallbackProfile);
+          console.log("Created fallback profile from metadata:", fallbackProfile);
         }
       }
       
@@ -59,7 +67,9 @@ export const useProfile = (user: User | null) => {
       
       // Initialize profile from user metadata as fallback
       if (user?.user_metadata) {
-        setProfile(createFallbackProfile(user.user_metadata));
+        const fallbackProfile = createFallbackProfile(user.user_metadata);
+        setProfile(fallbackProfile);
+        console.log("Created fallback profile from metadata after error:", fallbackProfile);
       }
       
       toast({
@@ -71,23 +81,40 @@ export const useProfile = (user: User | null) => {
       return null;
     } finally {
       setIsProfileLoading(false);
+      setBackendFetchAttempted(true);
     }
   };
 
   const handleFetchOrganization = async (organizationId: number) => {
+    if (!organizationId) {
+      console.log("Cannot fetch organization: Invalid organization ID");
+      return null;
+    }
+    
     setIsOrganizationLoading(true);
     
     try {
+      console.log("Fetching organization data for ID:", organizationId);
       const org = await fetchOrganization(organizationId);
+      console.log("Organization data received:", org);
       
       if (org) {
         // Update organization state
         setOrganization(org);
+        console.log("Organization state updated:", org);
         
         // Update the organization name in the profile
-        setProfile(prevProfile => 
-          updateProfileWithOrganization(prevProfile, organizationId, org.name)
-        );
+        setProfile(prevProfile => {
+          const updatedProfile = updateProfileWithOrganization(
+            prevProfile, 
+            organizationId, 
+            org.name || 'Unknown Organization'
+          );
+          console.log("Updated profile with organization:", updatedProfile);
+          return updatedProfile;
+        });
+      } else {
+        console.log("No organization data received");
       }
       
       return org;

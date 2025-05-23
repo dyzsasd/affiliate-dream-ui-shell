@@ -24,13 +24,16 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
     fetchOrganization, 
     hasPermission 
   } = useProfile(auth.user);
+  
   const [profileFetchAttempted, setProfileFetchAttempted] = useState(false);
+  const [authInitialized, setAuthInitialized] = useState(false);
   
   // Add initialization effect
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         console.log("Initializing auth state...");
+        
         // First set up the auth state listener to ensure we don't miss events
         const { data: { subscription } } = auth.supabase.auth.onAuthStateChange(
           (event, session) => {
@@ -44,6 +47,9 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
                 access_token: session.access_token,
               });
               auth.setUser(session.user as User);
+              
+              // Reset profile fetch flag when auth state changes
+              setProfileFetchAttempted(false);
               
               // Log token expiry for debugging
               if (session.expires_at) {
@@ -78,6 +84,7 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
         }
         
         auth.setIsLoading(false);
+        setAuthInitialized(true);
         
         return () => {
           subscription.unsubscribe();
@@ -85,47 +92,49 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
       } catch (error) {
         console.error("Error initializing auth:", error);
         auth.setIsLoading(false);
+        setAuthInitialized(true);
       }
     };
 
     initializeAuth();
   }, []);
 
-  // Enhanced profile initialization effect
+  // Enhanced profile initialization effect with retry logic
   useEffect(() => {
-    const initializeProfile = async () => {
-      if (auth.user && !profile && !profileFetchAttempted && !isProfileLoading) {
-        // If there's a user but no profile, try to fetch profile from the backend
-        console.log("User exists but no profile, fetching from backend...");
+    if (!authInitialized || !auth.user || isProfileLoading) {
+      return; // Wait until auth is initialized and not already loading
+    }
+    
+    // If we have a user but no profile or organization, and haven't attempted to fetch yet
+    if (auth.user && (!profile || !organization) && !profileFetchAttempted) {
+      const loadProfileData = async () => {
+        console.log("Loading profile and organization data...");
         setProfileFetchAttempted(true);
         
         try {
+          // First try to fetch the profile
           const backendProfile = await fetchBackendProfile();
-          console.log("Backend profile fetched:", backendProfile);
+          console.log("Backend profile fetch result:", backendProfile);
           
-          // If profile has organizationId, automatically fetch organization details
+          // Then, if we have an organizationId, fetch the organization
           if (backendProfile?.organizationId) {
-            console.log("Organization ID found in profile, fetching organization details...");
-            await fetchOrganization(backendProfile.organizationId);
+            console.log("Organization ID found:", backendProfile.organizationId);
+            try {
+              await fetchOrganization(backendProfile.organizationId);
+            } catch (orgError) {
+              console.error("Failed to fetch organization:", orgError);
+            }
+          } else {
+            console.warn("No organization ID found in profile");
           }
         } catch (error) {
-          console.error('Failed to fetch backend profile:', error);
-          
-          // Fallback to initializing profile from user metadata
-          if (auth.user?.user_metadata) {
-            updateProfile({
-              first_name: auth.user.user_metadata.first_name,
-              last_name: auth.user.user_metadata.last_name
-            }).catch(error => {
-              console.error('Failed to initialize profile:', error);
-            });
-          }
+          console.error("Failed to fetch profile:", error);
         }
-      }
-    };
-    
-    initializeProfile();
-  }, [auth.user, profile, profileFetchAttempted, isProfileLoading]);
+      };
+      
+      loadProfileData();
+    }
+  }, [auth.user, profile, organization, profileFetchAttempted, authInitialized, isProfileLoading]);
   
   return {
     ...auth,

@@ -41,6 +41,7 @@ export const fetchBackendProfile = async (user: User): Promise<DomainProfile | n
     return response;
   } catch (error) {
     console.error('Error fetching backend profile:', error);
+    console.log('Will attempt to continue with fallback profile data');
     return null;
   }
 };
