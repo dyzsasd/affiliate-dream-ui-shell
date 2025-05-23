@@ -91,7 +91,6 @@ export const updateUserProfile = async (
       throw new Error("User not authenticated");
     }
 
-    // Step 1: Update user metadata in Supabase Auth (keep this part for authentication)
     const { error: authError } = await supabase.auth.updateUser({
       data: {
         first_name: data.first_name,
@@ -103,9 +102,7 @@ export const updateUserProfile = async (
       throw authError;
     }
 
-    // Step 2: Update profile in backend service using profilesIdPut instead of upsert
     try {
-      // Get a fresh session with possibly refreshed token
       const session = await getAuthTokens();
       
       if (!session) {
@@ -119,22 +116,17 @@ export const updateUserProfile = async (
       
       const profileApi = await createApiClient(ProfileApi);
       
-      // Create profile request
       const profileRequest: HandlersProfileRequest = {
-        email: user.email,
         firstName: data.first_name,
-        lastName: data.last_name,
-        organizationId: currentProfile?.organization?.id
+        lastName: data.last_name
       };
 
-      // Use profilesIdPut method instead of profilesUpsertPost
       await profileApi.profilesIdPut({
         id: user.id,
         profile: profileRequest
       });
     } catch (backendError) {
       console.error('Error updating backend profile:', backendError);
-      // Continue with the local update even if the backend update fails
     }
   } catch (error) {
     console.error('Error in updateUserProfile:', error);
@@ -150,8 +142,6 @@ export const checkPermission = (
   profile: UserProfile | null, 
   permission: string
 ): boolean => {
-  // Simple permission check based on profile roles
-  // In a real app, you might check against a list of permissions from the backend
   return user !== null && (
     permission === 'manage_users' && profile?.role?.name === 'Admin'
   );
