@@ -60,7 +60,7 @@ export const createAdvertiser = async (
       organizationId
     };
     
-    return await advertisersApi.advertisersPost({ handlersCreateAdvertiserRequest: createRequest });
+    return await advertisersApi.advertisersPost({ request: createRequest });
   } catch (error) {
     console.error('Error creating advertiser:', error);
     throw handleApiError(error);
@@ -79,7 +79,7 @@ export const updateAdvertiser = async (
     
     return await advertisersApi.advertisersIdPut({
       id: advertiserId,
-      handlersUpdateAdvertiserRequest: data as HandlersUpdateAdvertiserRequest
+      request: data as HandlersUpdateAdvertiserRequest
     });
   } catch (error) {
     console.error(`Error updating advertiser ${advertiserId}:`, error);
