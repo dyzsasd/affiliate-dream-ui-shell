@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "Your affiliate marketing platform",
@@ -12,7 +11,10 @@
     "view": "View",
     "search": "Search",
     "filter": "Filter",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "actions": "Actions",
+    "tryAgain": "Try Again",
+    "errorOccurred": "An error occurred"
   },
   "auth": {
     "signIn": "Sign In",
@@ -80,5 +82,23 @@
     "fr": "French",
     "zh-CN": "Simplified Chinese",
     "zh-TW": "Traditional Chinese"
+  },
+  "advertisers": {
+    "title": "Advertisers",
+    "description": "Manage your advertising partners",
+    "createNew": "New Advertiser",
+    "noAdvertisers": "No advertisers yet",
+    "createYourFirst": "Create your first advertiser to get started",
+    "createAdvertiser": "Create Advertiser",
+    "list": "Advertiser List",
+    "total": "{{count}} Total Advertisers",
+    "nameColumn": "Name",
+    "contactColumn": "Contact Email",
+    "statusColumn": "Status",
+    "createdAtColumn": "Created",
+    "tableCaption": "List of all advertisers in your organization"
+  },
+  "organization": {
+    "noOrganization": "No organization available"
   }
 }

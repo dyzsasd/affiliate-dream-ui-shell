@@ -27,11 +27,11 @@ const AdvertiserList: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { organization, isOrganizationLoading } = useAuth();
-  const [advertisers, setAdvertisers] = useState<DomainAdvertiser[]>([]);
 
-  const organizationId = organization?.organizationId; // Fixed property name
+  const organizationId = organization?.organizationId;
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  // Use React Query to fetch advertisers
+  const { data: advertisers = [], isLoading, isError, error, refetch } = useQuery({
     queryKey: ['advertisers', organizationId],
     queryFn: async () => {
       if (!organizationId) {
@@ -41,12 +41,6 @@ const AdvertiserList: React.FC = () => {
     },
     enabled: !!organizationId,
   });
-
-  useEffect(() => {
-    if (data) {
-      setAdvertisers(data);
-    }
-  }, [data]);
 
   const handleCreateAdvertiser = () => {
     navigate('/advertisers/create');

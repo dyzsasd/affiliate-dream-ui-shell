@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "您的聯盟行銷平台",
@@ -12,7 +11,10 @@
     "view": "檢視",
     "search": "搜尋",
     "filter": "篩選",
-    "noResults": "未找到結果"
+    "noResults": "未找到結果",
+    "actions": "操作",
+    "tryAgain": "重試",
+    "errorOccurred": "發生錯誤"
   },
   "auth": {
     "signIn": "登入",
@@ -80,5 +82,23 @@
     "fr": "法語",
     "zh-CN": "簡體中文",
     "zh-TW": "繁體中文"
+  },
+  "advertisers": {
+    "title": "廣告賬戶",
+    "description": "管理您的廣告合作夥伴",
+    "createNew": "新增廣告賬戶",
+    "noAdvertisers": "暫無廣告賬戶",
+    "createYourFirst": "建立您的第一個廣告賬戶以開始使用",
+    "createAdvertiser": "建立廣告賬戶",
+    "list": "廣告賬戶清單",
+    "total": "共 {{count}} 個廣告賬戶",
+    "nameColumn": "名稱",
+    "contactColumn": "聯絡郵箱",
+    "statusColumn": "狀態",
+    "createdAtColumn": "建立日期",
+    "tableCaption": "您組織中的所有廣告賬戶清單"
+  },
+  "organization": {
+    "noOrganization": "沒有可用的組織"
   }
 }

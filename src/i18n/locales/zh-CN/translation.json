@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "您的联盟营销平台",
@@ -12,7 +11,10 @@
     "view": "查看",
     "search": "搜索",
     "filter": "筛选",
-    "noResults": "未找到结果"
+    "noResults": "未找到结果",
+    "actions": "操作",
+    "tryAgain": "重试",
+    "errorOccurred": "发生错误"
   },
   "auth": {
     "signIn": "登录",
@@ -80,5 +82,23 @@
     "fr": "法语",
     "zh-CN": "简体中文",
     "zh-TW": "繁体中文"
+  },
+  "advertisers": {
+    "title": "广告账户",
+    "description": "管理您的广告合作伙伴",
+    "createNew": "新建广告账户",
+    "noAdvertisers": "暂无广告账户",
+    "createYourFirst": "创建您的第一个广告账户以开始使用",
+    "createAdvertiser": "创建广告账户",
+    "list": "广告账户列表",
+    "total": "共 {{count}} 个广告账户",
+    "nameColumn": "名称",
+    "contactColumn": "联系邮箱",
+    "statusColumn": "状态",
+    "createdAtColumn": "创建日期",
+    "tableCaption": "您组织中的所有广告账户列表"
+  },
+  "organization": {
+    "noOrganization": "没有可用的组织"
   }
 }

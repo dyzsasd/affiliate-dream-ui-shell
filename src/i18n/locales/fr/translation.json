@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "Votre plateforme de marketing d'affiliation",
@@ -12,7 +11,10 @@
     "view": "Voir",
     "search": "Rechercher",
     "filter": "Filtrer",
-    "noResults": "Aucun résultat trouvé"
+    "noResults": "Aucun résultat trouvé",
+    "actions": "Actions",
+    "tryAgain": "Réessayer",
+    "errorOccurred": "Une erreur est survenue"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -80,5 +82,23 @@
     "fr": "Français",
     "zh-CN": "Chinois simplifié",
     "zh-TW": "Chinois traditionnel"
+  },
+  "advertisers": {
+    "title": "Annonceurs",
+    "description": "Gérer vos partenaires publicitaires",
+    "createNew": "Nouvel Annonceur",
+    "noAdvertisers": "Pas encore d'annonceurs",
+    "createYourFirst": "Créez votre premier annonceur pour commencer",
+    "createAdvertiser": "Créer un Annonceur",
+    "list": "Liste des Annonceurs",
+    "total": "{{count}} Annonceurs au Total",
+    "nameColumn": "Nom",
+    "contactColumn": "Email de Contact",
+    "statusColumn": "Statut",
+    "createdAtColumn": "Créé le",
+    "tableCaption": "Liste de tous les annonceurs de votre organisation"
+  },
+  "organization": {
+    "noOrganization": "Aucune organisation disponible"
   }
 }
