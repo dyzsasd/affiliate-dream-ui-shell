@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Campaign } from '../types/api';
+import { querystring } from '@/generated-api/src/runtime';
 
 // Using the host provided by environment variable with proper fallback
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080') + '/api/v1';
@@ -104,7 +105,9 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
     // We'll configure it to be used as a Bearer token
     const configuration = new Configuration({
       basePath: baseUrl,
-      accessToken: token
+      accessToken: token,
+      // Add the queryParamsStringify function to the configuration
+      queryParamsStringify: querystring
     });
     
     // @ts-ignore - Setting the configuration for the client
@@ -133,10 +136,16 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
 class Configuration {
   basePath?: string;
   accessToken?: string;
+  queryParamsStringify?: (params: any) => string;
   
-  constructor(config: { basePath?: string; accessToken?: string }) {
+  constructor(config: { 
+    basePath?: string; 
+    accessToken?: string; 
+    queryParamsStringify?: (params: any) => string;
+  }) {
     this.basePath = config.basePath;
     this.accessToken = config.accessToken;
+    this.queryParamsStringify = config.queryParamsStringify;
   }
   
   // This function will be called by the generated API client to get the access token
