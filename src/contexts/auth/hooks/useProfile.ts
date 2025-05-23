@@ -30,12 +30,20 @@ export const useProfile = (user: User | null) => {
     setBackendFetchAttempted(true);
     
     try {
+      // Log the auth state for debugging
+      const { data: sessionData } = await supabase.auth.getSession();
+      console.log("Current auth session:", sessionData?.session ? {
+        hasAccessToken: !!sessionData.session.access_token,
+        tokenExpiry: new Date((sessionData.session.expires_at || 0) * 1000).toISOString(),
+        user: sessionData.session.user?.id
+      } : 'No session');
+      
       console.log("Fetching backend profile...");
       const profileApi = await createApiClient(ProfileApi);
       console.log("ProfileApi client created successfully");
       
       const response = await profileApi.usersMeGet();
-      console.log("Backend profile fetched:", response);
+      console.log("Backend profile fetched successfully:", response);
       
       // Update local profile state with fetched data
       if (response) {
@@ -97,6 +105,12 @@ export const useProfile = (user: User | null) => {
 
       // Step 2: Update profile in backend service
       try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        console.log("Current auth session for update:", sessionData?.session ? {
+          hasAccessToken: !!sessionData.session.access_token,
+          tokenExpiry: new Date((sessionData.session.expires_at || 0) * 1000).toISOString()
+        } : 'No session');
+        
         const profileApi = await createApiClient(ProfileApi);
         
         // Create profile update request

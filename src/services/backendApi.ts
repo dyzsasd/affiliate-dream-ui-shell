@@ -40,25 +40,60 @@ export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T)
   
   const baseUrl = getApiBase();
   console.log('Creating API client with base URL:', baseUrl);
+  console.log('Auth token available:', !!token);
   
   // Create the client with proper configuration
   const client = new ClientClass(baseUrl);
   
-  // Ensure middleware is initialized as an array
-  // @ts-ignore - We need to access the private property to fix the issue
-  if (!client.middleware || !Array.isArray(client.middleware)) {
-    // @ts-ignore - Setting middleware to an empty array if it doesn't exist
-    client.middleware = [];
-  }
-  
   // Add auth token to each request if available
   if (token) {
-    // @ts-ignore - We know this might not be typed correctly until API is generated
-    client.accessToken = token;
+    // Configure the client to use the token for authentication
+    // We'll configure it to be used as a Bearer token
+    const configuration = new Configuration({
+      basePath: baseUrl,
+      accessToken: token
+    });
+    
+    // @ts-ignore - Setting the configuration for the client
+    client.configuration = configuration;
+    
+    // Also add a middleware to log request details for debugging
+    // @ts-ignore - Ensure middleware is an array
+    client.middleware = client.middleware || [];
+    
+    // @ts-ignore - Add a middleware to log the request
+    client.middleware.push({
+      pre: async (context) => {
+        console.log('API Request:', context.url);
+        console.log('Headers:', context.init.headers);
+        return context;
+      }
+    });
+    
+    console.log('Auth token configured for API client');
   }
   
   return client;
 };
+
+// Add a proper Configuration class
+class Configuration {
+  basePath?: string;
+  accessToken?: string;
+  
+  constructor(config: { basePath?: string; accessToken?: string }) {
+    this.basePath = config.basePath;
+    this.accessToken = config.accessToken;
+  }
+  
+  // This function will be called by the generated API client to get the access token
+  apiKey = async (name: string): Promise<string> => {
+    if (name === 'Authorization' && this.accessToken) {
+      return `Bearer ${this.accessToken}`;
+    }
+    return '';
+  }
+}
 
 export const handleApiError = (error: unknown): ApiError => {
   console.error('API Error:', error);

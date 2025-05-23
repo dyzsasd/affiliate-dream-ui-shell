@@ -95,7 +95,7 @@ export class BaseAPI {
     private middleware: Middleware[];
 
     constructor(protected configuration = DefaultConfig) {
-        this.middleware = configuration.middleware;
+        this.middleware = configuration.middleware || [];
     }
 
     withMiddleware<T extends BaseAPI>(this: T, ...middlewares: Middleware[]) {
@@ -135,8 +135,15 @@ export class BaseAPI {
         const { url, init } = await this.createFetchParams(context, initOverrides);
         console.log(`Requesting: ${url}`, init);
         const response = await this.fetchApi(url, init);
-        if (response && (response.status >= 200 && response.status < 300)) {
+        if (response.status >= 200 && response.status < 300) {
             return response;
+        }
+        console.error(`API Error - Status: ${response.status}, URL: ${url}`);
+        try {
+            const errorBody = await response.text();
+            console.error("Error response body:", errorBody);
+        } catch (e) {
+            console.error("Could not read error response body");
         }
         throw new ResponseError(response, 'Response returned an error code');
     }

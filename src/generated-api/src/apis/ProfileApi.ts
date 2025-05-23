@@ -231,8 +231,13 @@ export class ProfileApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        // Ensure we add authorization header
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+            const authHeader = await this.configuration.apiKey("Authorization");
+            headerParameters["Authorization"] = authHeader;
+            console.log("Added auth header for usersMeGet:", authHeader.substring(0, 15) + "...");
+        } else {
+            console.warn("No auth configuration available for usersMeGet");
         }
 
         // Ensure we have a valid base path before making the request
