@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +14,15 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, CreditCard, Loader2, Save } from 'lucide-react';
+
+// Define the billing details interface
+interface BillingDetails {
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+}
 
 const advertiserSchema = z.object({
   name: z.string().min(1, { message: "Advertiser name is required" }),
@@ -63,14 +71,17 @@ const AdvertiserForm: React.FC = () => {
   // Update form when advertiser data is loaded
   React.useEffect(() => {
     if (advertiser && isEditMode) {
-      let billingDetails = advertiser.billingDetails || {};
+      let billingDetails: BillingDetails = {};
       
-      if (typeof billingDetails === 'string') {
+      if (typeof advertiser.billingDetails === 'string') {
         try {
-          billingDetails = JSON.parse(billingDetails);
+          billingDetails = JSON.parse(advertiser.billingDetails) as BillingDetails;
         } catch (e) {
           billingDetails = {};
         }
+      } else if (advertiser.billingDetails) {
+        // If it's already an object, cast it to BillingDetails
+        billingDetails = advertiser.billingDetails as unknown as BillingDetails;
       }
       
       form.reset({
@@ -93,7 +104,7 @@ const AdvertiserForm: React.FC = () => {
       }
       
       // Structure billing details into an object
-      const billingDetailsObj = {
+      const billingDetailsObj: BillingDetails = {
         address: data.billingAddress || undefined,
         city: data.billingCity || undefined,
         state: data.billingState || undefined,
@@ -133,7 +144,7 @@ const AdvertiserForm: React.FC = () => {
       }
       
       // Structure billing details into an object
-      const billingDetailsObj = {
+      const billingDetailsObj: BillingDetails = {
         address: data.billingAddress || undefined,
         city: data.billingCity || undefined,
         state: data.billingState || undefined,
