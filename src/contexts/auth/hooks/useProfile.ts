@@ -1,13 +1,20 @@
+
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from "@/hooks/use-toast";
 import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
-import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
-import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
-import { createApiClient, handleApiError, getAuthTokens } from '@/services/backendApi';
-import { HandlersProfileRequest, HandlersUpsertProfileRequest } from '@/generated-api/src/models';
-import { DomainOrganization } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
+import { 
+  fetchBackendProfile, 
+  fetchOrganization, 
+  updateUserProfile, 
+  checkPermission 
+} from '@/services/profileService';
+import {
+  mapBackendProfileToUserProfile,
+  createFallbackProfile,
+  updateProfileWithOrganization
+} from '../utils/profileMappers';
 
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -17,7 +24,7 @@ export const useProfile = (user: User | null) => {
   const [backendFetchAttempted, setBackendFetchAttempted] = useState(false);
   const { toast } = useToast();
 
-  const fetchBackendProfile = async () => {
+  const handleFetchBackendProfile = async () => {
     if (!user) {
       console.log("Cannot fetch profile: No user is logged in");
       return null;
@@ -33,44 +40,16 @@ export const useProfile = (user: User | null) => {
     setBackendFetchAttempted(true);
     
     try {
-      // Get a fresh session with possibly refreshed token
-      const session = await getAuthTokens();
-      
-      if (!session) {
-        console.log("No valid session found for profile fetch");
-        throw new Error("Authentication required");
-      }
-      
-      console.log("Session for profile fetch:", {
-        userId: session.user?.id,
-        hasAccessToken: !!session.access_token,
-        tokenExpiry: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : 'unknown'
-      });
-      
-      console.log("Fetching backend profile with authenticated session...");
-      const profileApi = await createApiClient(ProfileApi);
-      console.log("ProfileApi client created successfully");
-      
-      const response = await profileApi.usersMeGet();
-      console.log("Backend profile fetched successfully:", response);
+      const response = await fetchBackendProfile(user);
       
       // Update local profile state with fetched data
       if (response) {
-        setProfile({
-          first_name: response.firstName || '',
-          last_name: response.lastName || '',
-          role: {
-            name: String(response.roleId || 'User')
-          },
-          organization: {
-            id: response.organizationId || undefined,
-            name: '' // Will be populated by fetchOrganization
-          }
-        });
+        const userProfile = mapBackendProfileToUserProfile(response);
+        setProfile(userProfile);
         
         // If we have an organization ID, fetch the organization details
         if (response.organizationId) {
-          await fetchOrganization(response.organizationId);
+          await handleFetchOrganization(response.organizationId);
         }
       }
       
@@ -80,16 +59,7 @@ export const useProfile = (user: User | null) => {
       
       // Initialize profile from user metadata as fallback
       if (user?.user_metadata) {
-        setProfile({
-          first_name: user.user_metadata.first_name || '',
-          last_name: user.user_metadata.last_name || '',
-          role: {
-            name: 'User'
-          },
-          organization: {
-            name: ''
-          }
-        });
+        setProfile(createFallbackProfile(user.user_metadata));
       }
       
       toast({
@@ -104,48 +74,21 @@ export const useProfile = (user: User | null) => {
     }
   };
 
-  const fetchOrganization = async (organizationId: number) => {
-    if (!organizationId) {
-      console.log("Cannot fetch organization: No organization ID provided");
-      return null;
-    }
-
+  const handleFetchOrganization = async (organizationId: number) => {
     setIsOrganizationLoading(true);
     
     try {
-      // Get a fresh session with possibly refreshed token
-      const session = await getAuthTokens();
+      const org = await fetchOrganization(organizationId);
       
-      if (!session) {
-        console.log("No valid session found for organization fetch");
-        throw new Error("Authentication required");
-      }
-      
-      console.log("Fetching organization data for ID:", organizationId);
-      const organizationsApi = await createApiClient(OrganizationsApi);
-      
-      const org = await organizationsApi.organizationsIdGet({
-        id: organizationId
-      });
-      
-      console.log("Organization fetched successfully:", org);
-      
-      // Update organization state
-      setOrganization(org);
-      
-      // Update the organization name in the profile
-      setProfile(prevProfile => {
-        if (!prevProfile) return null;
+      if (org) {
+        // Update organization state
+        setOrganization(org);
         
-        return {
-          ...prevProfile,
-          organization: {
-            ...prevProfile.organization,
-            id: organizationId,
-            name: org.name || ''
-          }
-        };
-      });
+        // Update the organization name in the profile
+        setProfile(prevProfile => 
+          updateProfileWithOrganization(prevProfile, organizationId, org.name)
+        );
+      }
       
       return org;
     } catch (error) {
@@ -161,7 +104,7 @@ export const useProfile = (user: User | null) => {
     }
   };
 
-  const updateProfile = async (data: { first_name?: string; last_name?: string }) => {
+  const handleUpdateProfile = async (data: { first_name?: string; last_name?: string }) => {
     setIsProfileLoading(true);
     
     try {
@@ -169,56 +112,10 @@ export const useProfile = (user: User | null) => {
         throw new Error("User not authenticated");
       }
 
-      // Step 1: Update user metadata in Supabase Auth (keep this part for authentication)
-      const { error: authError } = await supabase.auth.updateUser({
-        data: {
-          first_name: data.first_name,
-          last_name: data.last_name,
-        }
-      });
-
-      if (authError) {
-        throw authError;
-      }
-
-      // Step 2: Update profile in backend service using profilesIdPut instead of upsert
-      try {
-        // Get a fresh session with possibly refreshed token
-        const session = await getAuthTokens();
-        
-        if (!session) {
-          throw new Error("No valid session for profile update");
-        }
-        
-        console.log("Session for profile update:", {
-          hasAccessToken: !!session.access_token,
-          tokenExpiry: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : 'unknown'
-        });
-        
-        const profileApi = await createApiClient(ProfileApi);
-        
-        // Create profile request
-        const profileRequest: HandlersProfileRequest = {
-          email: user.email,
-          firstName: data.first_name,
-          lastName: data.last_name,
-          organizationId: profile?.organization?.id
-        };
-
-        // Use profilesIdPut method instead of profilesUpsertPost
-        await profileApi.profilesIdPut({
-          id: user.id,
-          profile: profileRequest
-        });
-        
-        // After successful update, fetch the latest profile
-        await fetchBackendProfile();
-      } catch (backendError) {
-        console.error('Error updating backend profile:', backendError);
-        // Continue with the local update even if the backend update fails
-      }
-
-      // Update local state
+      // Update profile in both auth and backend services
+      await updateUserProfile(user, data, profile);
+      
+      // After successful update to backend, update local state
       setProfile(prev => prev && ({
         ...prev,
         first_name: data.first_name || prev.first_name,
@@ -241,12 +138,8 @@ export const useProfile = (user: User | null) => {
     }
   };
 
-  const hasPermission = (permission: string) => {
-    // Simple permission check based on profile roles
-    // In a real app, you might check against a list of permissions from the backend
-    return user !== null && (
-      permission === 'manage_users' && profile?.role?.name === 'Admin'
-    );
+  const handlePermissionCheck = (permission: string) => {
+    return checkPermission(user, profile, permission);
   };
 
   return {
@@ -255,9 +148,9 @@ export const useProfile = (user: User | null) => {
     organization,
     isProfileLoading,
     isOrganizationLoading,
-    fetchBackendProfile,
-    fetchOrganization,
-    updateProfile,
-    hasPermission
+    fetchBackendProfile: handleFetchBackendProfile,
+    fetchOrganization: handleFetchOrganization,
+    updateProfile: handleUpdateProfile,
+    hasPermission: handlePermissionCheck
   };
 };
