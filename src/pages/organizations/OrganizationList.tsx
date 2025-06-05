@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ import {
   Eye,
   Users
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/auth";
 import { OrganizationsApi } from "@/generated-api/src/apis/OrganizationsApi";
 import { DomainOrganization } from "@/generated-api/src/models";
@@ -23,6 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 const OrganizationList: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<DomainOrganization[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -73,6 +73,10 @@ const OrganizationList: React.FC = () => {
       case 'inactive': return 'outline';
       default: return 'outline';
     }
+  };
+
+  const handleEditOrganization = (orgId: number) => {
+    navigate(`/organizations/${orgId}/edit`);
   };
 
   if (isLoading) {
@@ -151,7 +155,11 @@ const OrganizationList: React.FC = () => {
                   <Button variant="outline" size="sm">
                     <Users className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleEditOrganization(org.organizationId!)}
+                  >
                     <Edit className="w-4 h-4" />
                   </Button>
                   <Button variant="outline" size="sm">
