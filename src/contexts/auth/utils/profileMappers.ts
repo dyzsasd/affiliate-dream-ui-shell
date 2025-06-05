@@ -1,64 +1,55 @@
 
-import { UserProfile } from '@/contexts/auth/authTypes';
-import { DomainProfile } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
+import { UserProfile } from '../authTypes';
 
-/**
- * Maps backend profile data to the frontend UserProfile format
- */
-export const mapBackendProfileToUserProfile = (
-  backendProfile: DomainProfile | null
-): UserProfile | null => {
-  if (!backendProfile) return null;
+export const mapBackendProfileToUserProfile = (backendProfile: DomainProfile): UserProfile => {
+  console.log("Mapping backend profile:", backendProfile);
   
   return {
+    id: backendProfile.id || '',
+    email: backendProfile.email || '',
     first_name: backendProfile.firstName || '',
     last_name: backendProfile.lastName || '',
     role: {
-      name: String(backendProfile.roleId || 'User')
+      id: backendProfile.roleId || 0,
+      name: backendProfile.roleName || 'User'
     },
     organization: {
-      id: backendProfile.organizationId || undefined,
-      name: '' // Organization name will be populated separately
+      id: backendProfile.organizationId || 0,
+      name: 'Loading...' // Will be updated when organization is fetched
     }
   };
 };
 
-/**
- * Creates a fallback profile from user metadata
- */
-export const createFallbackProfile = (
-  userMetadata: Record<string, any> | undefined
-): UserProfile | null => {
-  if (!userMetadata) return null;
-  
+export const createFallbackProfile = (userMetadata: any): UserProfile => {
   return {
+    id: userMetadata.sub || '',
+    email: userMetadata.email || '',
     first_name: userMetadata.first_name || '',
     last_name: userMetadata.last_name || '',
     role: {
+      id: 0,
       name: 'User'
     },
     organization: {
-      name: ''
+      id: 0,
+      name: 'No Organization'
     }
   };
 };
 
-/**
- * Updates organization information in a profile
- */
 export const updateProfileWithOrganization = (
   profile: UserProfile | null,
   organizationId: number,
-  organizationName: string | undefined
+  organizationName: string
 ): UserProfile | null => {
   if (!profile) return null;
   
   return {
     ...profile,
     organization: {
-      ...profile.organization,
       id: organizationId,
-      name: organizationName || ''
+      name: organizationName
     }
   };
 };

@@ -43,8 +43,16 @@ export const useProfile = (user: User | null) => {
         setProfile(userProfile);
         console.log("Profile set from backend data:", userProfile);
         
-        // Return the response so we can access organizationId in the calling code
-        return response;
+        // Check for organization_id in the raw response (snake_case from backend)
+        const organizationId = (response as any).organization_id || response.organizationId;
+        console.log("Looking for organization ID in response:", { 
+          organization_id: (response as any).organization_id,
+          organizationId: response.organizationId,
+          finalId: organizationId 
+        });
+        
+        // Return the response with the organization ID so calling code can use it
+        return { ...response, organizationId };
       } else {
         console.log("No profile data received from backend");
         
