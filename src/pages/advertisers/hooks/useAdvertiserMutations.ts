@@ -42,8 +42,8 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
         name: data.name,
         contactEmail: data.contactEmail,
         status: data.status,
-        // Map billingDetails to paymentDetails for affiliate backend
-        paymentDetails: billingDetailsObj ? JSON.stringify(billingDetailsObj) : undefined,
+        // Parse the JSON string to an object for the API
+        paymentDetails: billingDetailsObj,
       };
       
       return createAdvertiser(organizationId, transformedData);
@@ -67,8 +67,8 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
         name: data.name,
         contactEmail: data.contactEmail,
         status: data.status,
-        // Map billingDetails to paymentDetails for affiliate backend
-        paymentDetails: billingDetailsObj ? JSON.stringify(billingDetailsObj) : undefined,
+        // Parse the JSON string to an object for the API
+        paymentDetails: billingDetailsObj,
       };
       
       return updateAdvertiser(parseInt(advertiserId), transformedData);
