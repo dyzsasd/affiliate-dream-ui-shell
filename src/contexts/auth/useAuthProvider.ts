@@ -120,7 +120,8 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
           if (backendProfile?.organizationId) {
             console.log("Organization ID found:", backendProfile.organizationId);
             try {
-              await fetchOrganization(backendProfile.organizationId);
+              const orgData = await fetchOrganization(backendProfile.organizationId);
+              console.log("Organization fetch completed:", orgData);
             } catch (orgError) {
               console.error("Failed to fetch organization:", orgError);
             }

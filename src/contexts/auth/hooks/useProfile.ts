@@ -43,13 +43,8 @@ export const useProfile = (user: User | null) => {
         setProfile(userProfile);
         console.log("Profile set from backend data:", userProfile);
         
-        // If we have an organization ID, fetch the organization details
-        if (response.organizationId) {
-          console.log("Found organizationId in profile:", response.organizationId);
-          await handleFetchOrganization(response.organizationId);
-        } else {
-          console.log("No organizationId found in profile");
-        }
+        // Return the response so we can access organizationId in the calling code
+        return response;
       } else {
         console.log("No profile data received from backend");
         
