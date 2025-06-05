@@ -101,7 +101,7 @@ class Configuration {
   }
 }
 
-export const createApiClient = async <T>(ClientClass: new (basePath?: string, configuration?: any) => T): Promise<T> => {
+export const createApiClient = async <T>(ClientClass: new (configuration?: Configuration) => T): Promise<T> => {
   // Get fresh session with possibly refreshed token
   const session = await getAuthTokens();
   const token = session?.access_token;
@@ -128,7 +128,7 @@ export const createApiClient = async <T>(ClientClass: new (basePath?: string, co
   });
   
   // Create the client with proper configuration
-  const client = new ClientClass(baseUrl, configuration);
+  const client = new ClientClass(configuration);
   
   console.log('API client created successfully');
   

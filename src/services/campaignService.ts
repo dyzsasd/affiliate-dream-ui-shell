@@ -3,16 +3,15 @@ import {
   CampaignsApi
 } from '@/generated-api/src/apis';
 import { 
-  DomainCampaign, 
-  DomainCampaignProviderOffer,
-  HandlersCreateCampaignRequest,
-  HandlersUpdateCampaignRequest
+  ModelsCampaignResponse, 
+  ModelsCreateCampaignRequest,
+  ModelsUpdateCampaignRequest
 } from '@/generated-api/src/models';
 import { createApiClient, handleApiError } from './backendApi';
 import { Campaign, CampaignDetail, Offer } from '@/types/api';
 
 // Map backend campaign model to frontend Campaign type
-const mapToCampaign = (domainCampaign: DomainCampaign): Campaign => {
+const mapToCampaign = (domainCampaign: ModelsCampaignResponse): Campaign => {
   return {
     id: String(domainCampaign.campaignId || ''),
     name: domainCampaign.name || '',
@@ -25,24 +24,14 @@ const mapToCampaign = (domainCampaign: DomainCampaign): Campaign => {
   };
 };
 
-// Map backend offer model to frontend Offer type
-const mapToOffer = (domainOffer: DomainCampaignProviderOffer): Offer => {
-  // Extract data from the provider config if available
-  let providerConfig: any = {};
-  if (domainOffer.providerOfferConfig) {
-    try {
-      providerConfig = JSON.parse(domainOffer.providerOfferConfig);
-    } catch (e) {
-      console.error('Error parsing provider offer config:', e);
-    }
-  }
-
+// Map backend offer model to frontend Offer type - using placeholder since no offer model exists
+const mapToOffer = (domainOffer: any): Offer => {
   return {
-    id: String(domainOffer.providerOfferId || ''),
-    name: providerConfig?.name || 'Unnamed Offer',
-    payoutType: (providerConfig?.payout_type as 'CPA' | 'RevShare' | 'Hybrid') || 'CPA',
-    payoutAmount: providerConfig?.payout_amount || 0,
-    description: providerConfig?.description || '',
+    id: String(domainOffer.id || ''),
+    name: domainOffer.name || 'Unnamed Offer',
+    payoutType: 'CPA',
+    payoutAmount: domainOffer.payoutAmount || 0,
+    description: domainOffer.description || '',
   };
 };
 
@@ -53,10 +42,10 @@ export const campaignService = {
       const campaignsApi = await createApiClient(CampaignsApi);
       
       // Using organization ID 1 as default for now - this should be dynamic in a real app
-      const response = await campaignsApi.organizationsIdCampaignsGet({ id: 1 });
+      const response = await campaignsApi.organizationsOrganizationIdCampaignsGet({ organizationId: 1 });
       
-      if (Array.isArray(response)) {
-        return response.map(mapToCampaign);
+      if (response && response.campaigns && Array.isArray(response.campaigns)) {
+        return response.campaigns.map(mapToCampaign);
       }
       
       return [];
@@ -76,15 +65,11 @@ export const campaignService = {
         return null;
       }
       
-      // Fetch offers for this campaign
-      const offers = await campaignsApi.campaignsIdProviderOffersGet({ id: Number(id) });
-      
       const mappedCampaign = mapToCampaign(campaign);
-      const mappedOffers = Array.isArray(offers) ? offers.map(mapToOffer) : [];
       
       return {
         ...mappedCampaign,
-        offers: mappedOffers
+        offers: [] // No offers endpoint available in current API
       };
     } catch (error) {
       console.error(`Error fetching campaign with id ${id}:`, error);
@@ -98,7 +83,7 @@ export const campaignService = {
       const campaignsApi = await createApiClient(CampaignsApi);
       
       // Create a valid request object
-      const request: HandlersCreateCampaignRequest = {
+      const request: ModelsCreateCampaignRequest = {
         name: campaignData.name || '',
         description: campaignData.description || '',
         status: campaignData.status || 'draft',
@@ -110,7 +95,7 @@ export const campaignService = {
         endDate: campaignData.endDate
       };
       
-      const response = await campaignsApi.campaignsPost({ request });
+      const response = await campaignsApi.campaignsPost({ campaign: request });
       
       return mapToCampaign(response);
     } catch (error) {
@@ -125,17 +110,17 @@ export const campaignService = {
       const campaignsApi = await createApiClient(CampaignsApi);
       
       // Create a valid request object
-      const request: HandlersUpdateCampaignRequest = {
-        name: campaignData.name,
+      const request: ModelsUpdateCampaignRequest = {
+        name: campaignData.name || '',
         description: campaignData.description,
-        status: campaignData.status,
+        status: campaignData.status || 'draft',
         startDate: campaignData.startDate,
         endDate: campaignData.endDate
       };
       
       const response = await campaignsApi.campaignsIdPut({
         id: Number(id),
-        request
+        campaign: request
       });
       
       return mapToCampaign(response);
