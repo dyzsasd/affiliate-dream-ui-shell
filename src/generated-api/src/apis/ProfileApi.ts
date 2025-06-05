@@ -1,4 +1,3 @@
-
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -18,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   DomainProfile,
   HandlersProfileRequest,
+  HandlersUpdateProfileRequest,
   HandlersUpsertProfileRequest,
 } from '../models/index';
 import {
@@ -25,6 +25,8 @@ import {
     DomainProfileToJSON,
     HandlersProfileRequestFromJSON,
     HandlersProfileRequestToJSON,
+    HandlersUpdateProfileRequestFromJSON,
+    HandlersUpdateProfileRequestToJSON,
     HandlersUpsertProfileRequestFromJSON,
     HandlersUpsertProfileRequestToJSON,
 } from '../models/index';
@@ -35,7 +37,7 @@ export interface ProfilesIdDeleteRequest {
 
 export interface ProfilesIdPutRequest {
     id: string;
-    profile: HandlersProfileRequest;
+    profile: HandlersUpdateProfileRequest;
 }
 
 export interface ProfilesPostRequest {
@@ -90,7 +92,7 @@ export class ProfileApi extends runtime.BaseAPI {
     }
 
     /**
-     * Updates an existing user profile
+     * Updates an existing user profile with only the provided fields
      * Update a profile
      */
     async profilesIdPutRaw(requestParameters: ProfilesIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainProfile>> {
@@ -123,14 +125,14 @@ export class ProfileApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: HandlersProfileRequestToJSON(requestParameters['profile']),
+            body: HandlersUpdateProfileRequestToJSON(requestParameters['profile']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
     }
 
     /**
-     * Updates an existing user profile
+     * Updates an existing user profile with only the provided fields
      * Update a profile
      */
     async profilesIdPut(requestParameters: ProfilesIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainProfile> {
@@ -226,24 +228,14 @@ export class ProfileApi extends runtime.BaseAPI {
      * Retrieves the profile of the currently authenticated user
      * Get current user profile
      */
-    async usersMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainProfile>> {
+    async usersMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any | undefined; }>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        // Ensure we add authorization header
         if (this.configuration && this.configuration.apiKey) {
-            const authHeader = await this.configuration.apiKey("Authorization");
-            headerParameters["Authorization"] = authHeader;
-            console.log("Added auth header for usersMeGet:", authHeader.substring(0, 15) + "...");
-        } else {
-            console.warn("No auth configuration available for usersMeGet");
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        // Ensure we have a valid base path before making the request
-        const basePath = this.configuration?.basePath || runtime.BASE_PATH;
-        const fullPath = `${basePath}/users/me`;
-        console.log("Making usersMeGet request to:", fullPath);
 
         const response = await this.request({
             path: `/users/me`,
@@ -252,17 +244,16 @@ export class ProfileApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        console.log("usersMeGet response status:", response.status);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainProfileFromJSON(jsonValue));
+        return new runtime.JSONApiResponse<any>(response);
     }
 
     /**
      * Retrieves the profile of the currently authenticated user
      * Get current user profile
      */
-    async usersMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainProfile> {
+    async usersMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
         const response = await this.usersMeGetRaw(initOverrides);
         return await response.value();
     }
+
 }

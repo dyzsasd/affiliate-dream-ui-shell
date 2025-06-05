@@ -26,11 +26,23 @@ export interface DomainAffiliateProviderMapping {
      */
     affiliateId?: number;
     /**
+     * JSONB stored as string for API keys/tokens
+     * @type {string}
+     * @memberof DomainAffiliateProviderMapping
+     */
+    apiCredentials?: string;
+    /**
      * 
      * @type {string}
      * @memberof DomainAffiliateProviderMapping
      */
     createdAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainAffiliateProviderMapping
+     */
+    lastSyncAt?: string;
     /**
      * 
      * @type {number}
@@ -50,11 +62,29 @@ export interface DomainAffiliateProviderMapping {
      */
     providerConfig?: string;
     /**
+     * Provider-specific data (stored as JSONB) - contains all Everflow-specific fields
+     * @type {string}
+     * @memberof DomainAffiliateProviderMapping
+     */
+    providerData?: string;
+    /**
      * 'everflow' for MVP
      * @type {string}
      * @memberof DomainAffiliateProviderMapping
      */
     providerType?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainAffiliateProviderMapping
+     */
+    syncError?: string;
+    /**
+     * Synchronization metadata
+     * @type {string}
+     * @memberof DomainAffiliateProviderMapping
+     */
+    syncStatus?: string;
     /**
      * 
      * @type {string}
@@ -81,11 +111,16 @@ export function DomainAffiliateProviderMappingFromJSONTyped(json: any, ignoreDis
     return {
         
         'affiliateId': json['affiliate_id'] == null ? undefined : json['affiliate_id'],
+        'apiCredentials': json['api_credentials'] == null ? undefined : json['api_credentials'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
+        'lastSyncAt': json['last_sync_at'] == null ? undefined : json['last_sync_at'],
         'mappingId': json['mapping_id'] == null ? undefined : json['mapping_id'],
         'providerAffiliateId': json['provider_affiliate_id'] == null ? undefined : json['provider_affiliate_id'],
         'providerConfig': json['provider_config'] == null ? undefined : json['provider_config'],
+        'providerData': json['provider_data'] == null ? undefined : json['provider_data'],
         'providerType': json['provider_type'] == null ? undefined : json['provider_type'],
+        'syncError': json['sync_error'] == null ? undefined : json['sync_error'],
+        'syncStatus': json['sync_status'] == null ? undefined : json['sync_status'],
         'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
     };
 }
@@ -102,11 +137,16 @@ export function DomainAffiliateProviderMappingToJSONTyped(value?: DomainAffiliat
     return {
         
         'affiliate_id': value['affiliateId'],
+        'api_credentials': value['apiCredentials'],
         'created_at': value['createdAt'],
+        'last_sync_at': value['lastSyncAt'],
         'mapping_id': value['mappingId'],
         'provider_affiliate_id': value['providerAffiliateId'],
         'provider_config': value['providerConfig'],
+        'provider_data': value['providerData'],
         'provider_type': value['providerType'],
+        'sync_error': value['syncError'],
+        'sync_status': value['syncStatus'],
         'updated_at': value['updatedAt'],
     };
 }

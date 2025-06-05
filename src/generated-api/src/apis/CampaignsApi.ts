@@ -15,49 +15,29 @@
 
 import * as runtime from '../runtime';
 import type {
-  DomainCampaign,
-  DomainCampaignProviderOffer,
-  HandlersCreateCampaignProviderOfferRequest,
-  HandlersCreateCampaignRequest,
-  HandlersUpdateCampaignProviderOfferRequest,
-  HandlersUpdateCampaignRequest,
+  HandlersErrorResponse,
+  ModelsCampaignListResponse,
+  ModelsCampaignResponse,
+  ModelsCreateCampaignRequest,
+  ModelsUpdateCampaignRequest,
 } from '../models/index';
 import {
-    DomainCampaignFromJSON,
-    DomainCampaignToJSON,
-    DomainCampaignProviderOfferFromJSON,
-    DomainCampaignProviderOfferToJSON,
-    HandlersCreateCampaignProviderOfferRequestFromJSON,
-    HandlersCreateCampaignProviderOfferRequestToJSON,
-    HandlersCreateCampaignRequestFromJSON,
-    HandlersCreateCampaignRequestToJSON,
-    HandlersUpdateCampaignProviderOfferRequestFromJSON,
-    HandlersUpdateCampaignProviderOfferRequestToJSON,
-    HandlersUpdateCampaignRequestFromJSON,
-    HandlersUpdateCampaignRequestToJSON,
+    HandlersErrorResponseFromJSON,
+    HandlersErrorResponseToJSON,
+    ModelsCampaignListResponseFromJSON,
+    ModelsCampaignListResponseToJSON,
+    ModelsCampaignResponseFromJSON,
+    ModelsCampaignResponseToJSON,
+    ModelsCreateCampaignRequestFromJSON,
+    ModelsCreateCampaignRequestToJSON,
+    ModelsUpdateCampaignRequestFromJSON,
+    ModelsUpdateCampaignRequestToJSON,
 } from '../models/index';
 
-export interface AdvertisersIdCampaignsGetRequest {
-    id: number;
+export interface AdvertisersAdvertiserIdCampaignsGetRequest {
+    advertiserId: number;
     page?: number;
     pageSize?: number;
-}
-
-export interface CampaignProviderOffersIdDeleteRequest {
-    id: number;
-}
-
-export interface CampaignProviderOffersIdGetRequest {
-    id: number;
-}
-
-export interface CampaignProviderOffersIdPutRequest {
-    id: number;
-    request: HandlersUpdateCampaignProviderOfferRequest;
-}
-
-export interface CampaignProviderOffersPostRequest {
-    request: HandlersCreateCampaignProviderOfferRequest;
 }
 
 export interface CampaignsIdDeleteRequest {
@@ -68,21 +48,17 @@ export interface CampaignsIdGetRequest {
     id: number;
 }
 
-export interface CampaignsIdProviderOffersGetRequest {
-    id: number;
-}
-
 export interface CampaignsIdPutRequest {
     id: number;
-    request: HandlersUpdateCampaignRequest;
+    campaign: ModelsUpdateCampaignRequest;
 }
 
 export interface CampaignsPostRequest {
-    request: HandlersCreateCampaignRequest;
+    campaign: ModelsCreateCampaignRequest;
 }
 
-export interface OrganizationsIdCampaignsGetRequest {
-    id: number;
+export interface OrganizationsOrganizationIdCampaignsGetRequest {
+    organizationId: number;
     page?: number;
     pageSize?: number;
 }
@@ -93,14 +69,14 @@ export interface OrganizationsIdCampaignsGetRequest {
 export class CampaignsApi extends runtime.BaseAPI {
 
     /**
-     * Retrieves a list of campaigns for an advertiser with pagination
+     * Retrieve campaigns for a specific advertiser with pagination
      * List campaigns by advertiser
      */
-    async advertisersIdCampaignsGetRaw(requestParameters: AdvertisersIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainCampaign>>> {
-        if (requestParameters['id'] == null) {
+    async advertisersAdvertiserIdCampaignsGetRaw(requestParameters: AdvertisersAdvertiserIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignListResponse>> {
+        if (requestParameters['advertiserId'] == null) {
             throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling advertisersIdCampaignsGet().'
+                'advertiserId',
+                'Required parameter "advertiserId" was null or undefined when calling advertisersAdvertiserIdCampaignsGet().'
             );
         }
 
@@ -111,205 +87,33 @@ export class CampaignsApi extends runtime.BaseAPI {
         }
 
         if (requestParameters['pageSize'] != null) {
-            queryParameters['pageSize'] = requestParameters['pageSize'];
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/advertisers/{id}/campaigns`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/advertisers/{advertiser_id}/campaigns`.replace(`{${"advertiser_id"}}`, encodeURIComponent(String(requestParameters['advertiserId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainCampaignFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsCampaignListResponseFromJSON(jsonValue));
     }
 
     /**
-     * Retrieves a list of campaigns for an advertiser with pagination
+     * Retrieve campaigns for a specific advertiser with pagination
      * List campaigns by advertiser
      */
-    async advertisersIdCampaignsGet(requestParameters: AdvertisersIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainCampaign>> {
-        const response = await this.advertisersIdCampaignsGetRaw(requestParameters, initOverrides);
+    async advertisersAdvertiserIdCampaignsGet(requestParameters: AdvertisersAdvertiserIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignListResponse> {
+        const response = await this.advertisersAdvertiserIdCampaignsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Deletes a campaign provider offer by its ID
-     * Delete campaign provider offer
-     */
-    async campaignProviderOffersIdDeleteRaw(requestParameters: CampaignProviderOffersIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling campaignProviderOffersIdDelete().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaign-provider-offers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Deletes a campaign provider offer by its ID
-     * Delete campaign provider offer
-     */
-    async campaignProviderOffersIdDelete(requestParameters: CampaignProviderOffersIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.campaignProviderOffersIdDeleteRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Retrieves a campaign provider offer by its ID
-     * Get campaign provider offer by ID
-     */
-    async campaignProviderOffersIdGetRaw(requestParameters: CampaignProviderOffersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaignProviderOffer>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling campaignProviderOffersIdGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaign-provider-offers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainCampaignProviderOfferFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieves a campaign provider offer by its ID
-     * Get campaign provider offer by ID
-     */
-    async campaignProviderOffersIdGet(requestParameters: CampaignProviderOffersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaignProviderOffer> {
-        const response = await this.campaignProviderOffersIdGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Updates a campaign provider offer with the given details
-     * Update campaign provider offer
-     */
-    async campaignProviderOffersIdPutRaw(requestParameters: CampaignProviderOffersIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaignProviderOffer>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling campaignProviderOffersIdPut().'
-            );
-        }
-
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling campaignProviderOffersIdPut().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaign-provider-offers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: HandlersUpdateCampaignProviderOfferRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainCampaignProviderOfferFromJSON(jsonValue));
-    }
-
-    /**
-     * Updates a campaign provider offer with the given details
-     * Update campaign provider offer
-     */
-    async campaignProviderOffersIdPut(requestParameters: CampaignProviderOffersIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaignProviderOffer> {
-        const response = await this.campaignProviderOffersIdPutRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates a new offer for a campaign on a provider
-     * Create a new campaign provider offer
-     */
-    async campaignProviderOffersPostRaw(requestParameters: CampaignProviderOffersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaignProviderOffer>> {
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling campaignProviderOffersPost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaign-provider-offers`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: HandlersCreateCampaignProviderOfferRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainCampaignProviderOfferFromJSON(jsonValue));
-    }
-
-    /**
-     * Creates a new offer for a campaign on a provider
-     * Create a new campaign provider offer
-     */
-    async campaignProviderOffersPost(requestParameters: CampaignProviderOffersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaignProviderOffer> {
-        const response = await this.campaignProviderOffersPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Deletes a campaign by its ID
-     * Delete campaign
+     * Delete a campaign by its ID
+     * Delete a campaign
      */
     async campaignsIdDeleteRaw(requestParameters: CampaignsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -323,10 +127,6 @@ export class CampaignsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
             path: `/campaigns/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
@@ -338,18 +138,18 @@ export class CampaignsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Deletes a campaign by its ID
-     * Delete campaign
+     * Delete a campaign by its ID
+     * Delete a campaign
      */
     async campaignsIdDelete(requestParameters: CampaignsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.campaignsIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Retrieves a campaign by its ID
-     * Get campaign by ID
+     * Retrieve a campaign by its ID
+     * Get a campaign by ID
      */
-    async campaignsIdGetRaw(requestParameters: CampaignsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaign>> {
+    async campaignsIdGetRaw(requestParameters: CampaignsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignResponse>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -361,10 +161,6 @@ export class CampaignsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
             path: `/campaigns/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
@@ -372,62 +168,23 @@ export class CampaignsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainCampaignFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsCampaignResponseFromJSON(jsonValue));
     }
 
     /**
-     * Retrieves a campaign by its ID
-     * Get campaign by ID
+     * Retrieve a campaign by its ID
+     * Get a campaign by ID
      */
-    async campaignsIdGet(requestParameters: CampaignsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaign> {
+    async campaignsIdGet(requestParameters: CampaignsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignResponse> {
         const response = await this.campaignsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Retrieves a list of provider offers for a campaign
-     * List campaign provider offers by campaign
+     * Update an existing campaign with the provided details
+     * Update a campaign
      */
-    async campaignsIdProviderOffersGetRaw(requestParameters: CampaignsIdProviderOffersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainCampaignProviderOffer>>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling campaignsIdProviderOffersGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaigns/{id}/provider-offers`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainCampaignProviderOfferFromJSON));
-    }
-
-    /**
-     * Retrieves a list of provider offers for a campaign
-     * List campaign provider offers by campaign
-     */
-    async campaignsIdProviderOffersGet(requestParameters: CampaignsIdProviderOffersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainCampaignProviderOffer>> {
-        const response = await this.campaignsIdProviderOffersGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Updates a campaign with the given details
-     * Update campaign
-     */
-    async campaignsIdPutRaw(requestParameters: CampaignsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaign>> {
+    async campaignsIdPutRaw(requestParameters: CampaignsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignResponse>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -435,10 +192,10 @@ export class CampaignsApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['request'] == null) {
+        if (requestParameters['campaign'] == null) {
             throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling campaignsIdPut().'
+                'campaign',
+                'Required parameter "campaign" was null or undefined when calling campaignsIdPut().'
             );
         }
 
@@ -447,40 +204,36 @@ export class CampaignsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
 
         const response = await this.request({
             path: `/campaigns/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: HandlersUpdateCampaignRequestToJSON(requestParameters['request']),
+            body: ModelsUpdateCampaignRequestToJSON(requestParameters['campaign']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainCampaignFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsCampaignResponseFromJSON(jsonValue));
     }
 
     /**
-     * Updates a campaign with the given details
-     * Update campaign
+     * Update an existing campaign with the provided details
+     * Update a campaign
      */
-    async campaignsIdPut(requestParameters: CampaignsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaign> {
+    async campaignsIdPut(requestParameters: CampaignsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignResponse> {
         const response = await this.campaignsIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Creates a new campaign with the given details
+     * Create a new campaign with the provided details
      * Create a new campaign
      */
-    async campaignsPostRaw(requestParameters: CampaignsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaign>> {
-        if (requestParameters['request'] == null) {
+    async campaignsPostRaw(requestParameters: CampaignsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignResponse>> {
+        if (requestParameters['campaign'] == null) {
             throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling campaignsPost().'
+                'campaign',
+                'Required parameter "campaign" was null or undefined when calling campaignsPost().'
             );
         }
 
@@ -490,39 +243,35 @@ export class CampaignsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
             path: `/campaigns`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: HandlersCreateCampaignRequestToJSON(requestParameters['request']),
+            body: ModelsCreateCampaignRequestToJSON(requestParameters['campaign']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainCampaignFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsCampaignResponseFromJSON(jsonValue));
     }
 
     /**
-     * Creates a new campaign with the given details
+     * Create a new campaign with the provided details
      * Create a new campaign
      */
-    async campaignsPost(requestParameters: CampaignsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaign> {
+    async campaignsPost(requestParameters: CampaignsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignResponse> {
         const response = await this.campaignsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Retrieves a list of campaigns for an organization with pagination
+     * Retrieve campaigns for a specific organization with pagination
      * List campaigns by organization
      */
-    async organizationsIdCampaignsGetRaw(requestParameters: OrganizationsIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainCampaign>>> {
-        if (requestParameters['id'] == null) {
+    async organizationsOrganizationIdCampaignsGetRaw(requestParameters: OrganizationsOrganizationIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignListResponse>> {
+        if (requestParameters['organizationId'] == null) {
             throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling organizationsIdCampaignsGet().'
+                'organizationId',
+                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdCampaignsGet().'
             );
         }
 
@@ -533,31 +282,27 @@ export class CampaignsApi extends runtime.BaseAPI {
         }
 
         if (requestParameters['pageSize'] != null) {
-            queryParameters['pageSize'] = requestParameters['pageSize'];
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/organizations/{id}/campaigns`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organizations/{organization_id}/campaigns`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainCampaignFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsCampaignListResponseFromJSON(jsonValue));
     }
 
     /**
-     * Retrieves a list of campaigns for an organization with pagination
+     * Retrieve campaigns for a specific organization with pagination
      * List campaigns by organization
      */
-    async organizationsIdCampaignsGet(requestParameters: OrganizationsIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainCampaign>> {
-        const response = await this.organizationsIdCampaignsGetRaw(requestParameters, initOverrides);
+    async organizationsOrganizationIdCampaignsGet(requestParameters: OrganizationsOrganizationIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignListResponse> {
+        const response = await this.organizationsOrganizationIdCampaignsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

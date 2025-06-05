@@ -62,6 +62,12 @@ export interface DomainProfile {
      */
     roleId?: number;
     /**
+     * Mandatory role name
+     * @type {string}
+     * @memberof DomainProfile
+     */
+    roleName?: string;
+    /**
      * 
      * @type {string}
      * @memberof DomainProfile
@@ -93,6 +99,7 @@ export function DomainProfileFromJSONTyped(json: any, ignoreDiscriminator: boole
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
         'roleId': json['role_id'] == null ? undefined : json['role_id'],
+        'roleName': json['role_name'] == null ? undefined : json['role_name'],
         'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
     };
 }
@@ -115,6 +122,7 @@ export function DomainProfileToJSONTyped(value?: DomainProfile | null, ignoreDis
         'last_name': value['lastName'],
         'organization_id': value['organizationId'],
         'role_id': value['roleId'],
+        'role_name': value['roleName'],
         'updated_at': value['updatedAt'],
     };
 }

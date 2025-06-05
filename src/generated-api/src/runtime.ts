@@ -95,7 +95,7 @@ export class BaseAPI {
     private middleware: Middleware[];
 
     constructor(protected configuration = DefaultConfig) {
-        this.middleware = configuration.middleware || [];
+        this.middleware = configuration.middleware;
     }
 
     withMiddleware<T extends BaseAPI>(this: T, ...middlewares: Middleware[]) {
@@ -133,35 +133,18 @@ export class BaseAPI {
 
     protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
         const { url, init } = await this.createFetchParams(context, initOverrides);
-        console.log(`Requesting: ${url}`, init);
         const response = await this.fetchApi(url, init);
-        if (response.status >= 200 && response.status < 300) {
+        if (response && (response.status >= 200 && response.status < 300)) {
             return response;
-        }
-        console.error(`API Error - Status: ${response.status}, URL: ${url}`);
-        try {
-            const errorBody = await response.text();
-            console.error("Error response body:", errorBody);
-        } catch (e) {
-            console.error("Could not read error response body");
         }
         throw new ResponseError(response, 'Response returned an error code');
     }
 
     private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
-        // Make sure basePath is properly set and not undefined
-        if (!this.configuration.basePath) {
-            console.error("Base path is undefined, falling back to default");
-        }
-        
-        let url = (this.configuration.basePath || BASE_PATH) + context.path;
-        
-        // Trim any double slashes that might occur when joining paths
-        url = url.replace(/([^:]\/)\/+/g, "$1");
-                
+        let url = this.configuration.basePath + context.path;
         if (context.query !== undefined && Object.keys(context.query).length !== 0) {
-            // Only add the querystring to the URL if there are query parameters.
-            // This is done to avoid urls ending with a "?" character which buggy webservers
+            // only add the querystring to the URL if there are query parameters.
+            // this is done to avoid urls ending with a "?" character which buggy webservers
             // do not handle correctly sometimes.
             url += '?' + this.configuration.queryParamsStringify(context.query);
         }

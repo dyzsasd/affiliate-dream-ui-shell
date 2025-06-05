@@ -26,6 +26,18 @@ export interface DomainAffiliate {
      */
     affiliateId?: number;
     /**
+     * JSONB stored as string
+     * @type {string}
+     * @memberof DomainAffiliate
+     */
+    billingInfo?: string;
+    /**
+     * JSONB stored as string
+     * @type {string}
+     * @memberof DomainAffiliate
+     */
+    contactAddress?: string;
+    /**
      * 
      * @type {string}
      * @memberof DomainAffiliate
@@ -37,6 +49,36 @@ export interface DomainAffiliate {
      * @memberof DomainAffiliate
      */
     createdAt?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainAffiliate
+     */
+    defaultCurrencyId?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainAffiliate
+     */
+    defaultPaymentTerms?: number;
+    /**
+     * General purpose fields moved from EverflowProviderData
+     * @type {string}
+     * @memberof DomainAffiliate
+     */
+    internalNotes?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainAffiliate
+     */
+    invoiceAmountThreshold?: number;
+    /**
+     * JSONB stored as string (array of strings)
+     * @type {string}
+     * @memberof DomainAffiliate
+     */
+    labels?: string;
     /**
      * 
      * @type {string}
@@ -87,8 +129,15 @@ export function DomainAffiliateFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'affiliateId': json['affiliate_id'] == null ? undefined : json['affiliate_id'],
+        'billingInfo': json['billing_info'] == null ? undefined : json['billing_info'],
+        'contactAddress': json['contact_address'] == null ? undefined : json['contact_address'],
         'contactEmail': json['contact_email'] == null ? undefined : json['contact_email'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
+        'defaultCurrencyId': json['default_currency_id'] == null ? undefined : json['default_currency_id'],
+        'defaultPaymentTerms': json['default_payment_terms'] == null ? undefined : json['default_payment_terms'],
+        'internalNotes': json['internal_notes'] == null ? undefined : json['internal_notes'],
+        'invoiceAmountThreshold': json['invoice_amount_threshold'] == null ? undefined : json['invoice_amount_threshold'],
+        'labels': json['labels'] == null ? undefined : json['labels'],
         'name': json['name'] == null ? undefined : json['name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
         'paymentDetails': json['payment_details'] == null ? undefined : json['payment_details'],
@@ -109,8 +158,15 @@ export function DomainAffiliateToJSONTyped(value?: DomainAffiliate | null, ignor
     return {
         
         'affiliate_id': value['affiliateId'],
+        'billing_info': value['billingInfo'],
+        'contact_address': value['contactAddress'],
         'contact_email': value['contactEmail'],
         'created_at': value['createdAt'],
+        'default_currency_id': value['defaultCurrencyId'],
+        'default_payment_terms': value['defaultPaymentTerms'],
+        'internal_notes': value['internalNotes'],
+        'invoice_amount_threshold': value['invoiceAmountThreshold'],
+        'labels': value['labels'],
         'name': value['name'],
         'organization_id': value['organizationId'],
         'payment_details': value['paymentDetails'],
