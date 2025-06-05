@@ -1,10 +1,9 @@
-
 /* tslint:disable */
 /* eslint-disable */
-export * from './DomainAdvertiser';
 export * from './DomainAffiliate';
 export * from './DomainAffiliateProviderMapping';
 export * from './DomainOrganization';
+export * from './DomainOrganizationType';
 export * from './DomainProfile';
 export * from './HandlersCreateAffiliateProviderMappingRequest';
 export * from './HandlersCreateAffiliateRequest';

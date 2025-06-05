@@ -81,12 +81,21 @@ definitions:
         type: string
       organization_id:
         type: integer
-      status:
-        description: '''active'', ''inactive'', ''suspended'''
-        type: string
+      type:
+        $ref: '#/definitions/domain.OrganizationType'
       updated_at:
         type: string
     type: object
+  domain.OrganizationType:
+    enum:
+    - advertiser
+    - affiliate
+    - platform_owner
+    type: string
+    x-enum-varnames:
+    - OrganizationTypeAdvertiser
+    - OrganizationTypeAffiliate
+    - OrganizationTypePlatformOwner
   domain.Profile:
     properties:
       created_at:
@@ -167,8 +176,15 @@ definitions:
     properties:
       name:
         type: string
+      type:
+        enum:
+        - advertiser
+        - affiliate
+        - platform_owner
+        type: string
     required:
     - name
+    - type
     type: object
   handlers.ErrorResponse:
     properties:
@@ -245,8 +261,15 @@ definitions:
     properties:
       name:
         type: string
+      type:
+        enum:
+        - advertiser
+        - affiliate
+        - platform_owner
+        type: string
     required:
     - name
+    - type
     type: object
   handlers.UpdateProfileRequest:
     properties:

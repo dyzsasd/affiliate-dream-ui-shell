@@ -25,13 +25,32 @@ export interface HandlersCreateOrganizationRequest {
      * @memberof HandlersCreateOrganizationRequest
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HandlersCreateOrganizationRequest
+     */
+    type: HandlersCreateOrganizationRequestTypeEnum;
 }
+
+
+/**
+ * @export
+ */
+export const HandlersCreateOrganizationRequestTypeEnum = {
+    Advertiser: 'advertiser',
+    Affiliate: 'affiliate',
+    PlatformOwner: 'platform_owner'
+} as const;
+export type HandlersCreateOrganizationRequestTypeEnum = typeof HandlersCreateOrganizationRequestTypeEnum[keyof typeof HandlersCreateOrganizationRequestTypeEnum];
+
 
 /**
  * Check if a given object implements the HandlersCreateOrganizationRequest interface.
  */
 export function instanceOfHandlersCreateOrganizationRequest(value: object): value is HandlersCreateOrganizationRequest {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
     return true;
 }
 
@@ -46,6 +65,7 @@ export function HandlersCreateOrganizationRequestFromJSONTyped(json: any, ignore
     return {
         
         'name': json['name'],
+        'type': json['type'],
     };
 }
 
@@ -61,6 +81,7 @@ export function HandlersCreateOrganizationRequestToJSONTyped(value?: HandlersCre
     return {
         
         'name': value['name'],
+        'type': value['type'],
     };
 }
 

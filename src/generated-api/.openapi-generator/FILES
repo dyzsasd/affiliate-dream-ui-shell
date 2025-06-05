@@ -13,6 +13,7 @@ src/index.ts
 src/models/DomainAffiliate.ts
 src/models/DomainAffiliateProviderMapping.ts
 src/models/DomainOrganization.ts
+src/models/DomainOrganizationType.ts
 src/models/DomainProfile.ts
 src/models/HandlersCreateAffiliateProviderMappingRequest.ts
 src/models/HandlersCreateAffiliateRequest.ts
