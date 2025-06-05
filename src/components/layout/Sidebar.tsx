@@ -1,7 +1,8 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth";
 import { 
   BarChart3, 
   Building2,
@@ -10,7 +11,8 @@ import {
   LogOut,
   Menu,
   PieChart,
-  User
+  User,
+  Mail
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -59,6 +61,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           icon: <BarChart3 className="w-5 h-5" />
         },
         {
+          name: "Invitations",
+          path: "/invitations",
+          icon: <Mail className="w-5 h-5" />
+        },
+        {
           name: t("sidebar.myProfile"),
           path: "/profile",
           icon: <User className="w-5 h-5" />
@@ -88,6 +95,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           icon: <PieChart className="w-5 h-5" />
         },
         {
+          name: "Invitations",
+          path: "/invitations",
+          icon: <Mail className="w-5 h-5" />
+        },
+        {
           name: t("sidebar.myProfile"),
           path: "/profile",
           icon: <User className="w-5 h-5" />
@@ -107,6 +119,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           icon: <User className="w-5 h-5" />
         },
         {
+          name: "Invitations",
+          path: "/invitations",
+          icon: <Mail className="w-5 h-5" />
+        },
+        {
           name: t("sidebar.reports"),
           path: "/reporting",
           icon: <BarChart3 className="w-5 h-5" />
@@ -122,6 +139,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     // Default fallback
     return [
       ...baseItems,
+      {
+        name: "Invitations",
+        path: "/invitations",
+        icon: <Mail className="w-5 h-5" />
+      },
       {
         name: t("sidebar.myProfile"),
         path: "/profile",
