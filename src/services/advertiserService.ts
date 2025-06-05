@@ -2,7 +2,6 @@
 import { createApiClient } from '@/services/backendApi';
 import { AdvertisersApi } from '@/generated-api/src/apis/AdvertisersApi';
 import { DomainAdvertiser } from '@/generated-api/src/models';
-import { OrganizationsIdAdvertisersGetRequest } from '@/generated-api/src/apis/AdvertisersApi';
 import { handleApiError } from './backendApi';
 import { HandlersCreateAdvertiserRequest, HandlersUpdateAdvertiserRequest } from '@/generated-api/src/models';
 
@@ -15,17 +14,16 @@ export const fetchAdvertisers = async (organizationId: number): Promise<DomainAd
     
     const advertisersApi = await createApiClient(AdvertisersApi);
     
-    const params: OrganizationsIdAdvertisersGetRequest = {
+    console.log("Making API request to fetch advertisers");
+    const advertisers = await advertisersApi.organizationsIdAdvertisersGet({
       id: organizationId,
       page: 1,
-      pageSize: 100 // You may want to implement pagination in the future
-    };
+      pageSize: 100
+    });
     
-    console.log("Making API request with params:", params);
-    const advertisers = await advertisersApi.organizationsIdAdvertisersGet(params);
-    console.log(`Retrieved ${advertisers.length} advertisers:`, advertisers);
+    console.log(`Retrieved ${Array.isArray(advertisers) ? advertisers.length : 0} advertisers:`, advertisers);
     
-    return advertisers;
+    return Array.isArray(advertisers) ? advertisers : [];
   } catch (error) {
     console.error('Error fetching advertisers:', error);
     throw handleApiError(error);

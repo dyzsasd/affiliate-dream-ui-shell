@@ -1,10 +1,11 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@/types/auth';
 import { UserProfile } from '@/contexts/auth/authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 import { createApiClient, handleApiError, getAuthTokens } from '@/services/backendApi';
-import { HandlersProfileRequest } from '@/generated-api/src/models';
+import { HandlersUpdateProfileRequest } from '@/generated-api/src/models';
 import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
 
 /**
@@ -38,7 +39,7 @@ export const fetchBackendProfile = async (user: User): Promise<DomainProfile | n
     const response = await profileApi.usersMeGet();
     console.log("Backend profile fetched successfully:", response);
     
-    return response;
+    return response as DomainProfile;
   } catch (error) {
     console.error('Error fetching backend profile:', error);
     console.log('Will attempt to continue with fallback profile data');
@@ -117,7 +118,7 @@ export const updateUserProfile = async (
       
       const profileApi = await createApiClient(ProfileApi);
       
-      const profileRequest: HandlersProfileRequest = {
+      const profileRequest: HandlersUpdateProfileRequest = {
         firstName: data.first_name,
         lastName: data.last_name
       };

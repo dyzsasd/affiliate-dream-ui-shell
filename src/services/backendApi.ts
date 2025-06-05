@@ -1,12 +1,11 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import type { Campaign } from '../types/api';
 import { querystring } from '@/generated-api/src/runtime';
 
 // Using the host provided by environment variable with proper fallback
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080') + '/api/v1';
 
-// Define a simple ApiError interface here since it's not exported from types/api
+// Define a simple ApiError interface
 interface ApiError {
   message: string;
   status: number;
@@ -77,62 +76,7 @@ export const getAuthTokens = async () => {
   return session;
 };
 
-export const createApiClient = async <T>(ClientClass: new (...args: any[]) => T): Promise<T> => {
-  // Get fresh session with possibly refreshed token
-  const session = await getAuthTokens();
-  const token = session?.access_token;
-  
-  if (!ClientClass) {
-    throw new Error('API client not initialized. Please run "npm run generate-api" first.');
-  }
-  
-  const baseUrl = getApiBase();
-  console.log('Creating API client with base URL:', baseUrl);
-  console.log('Auth token available:', !!token);
-  
-  // Log token expiry if available
-  if (session?.expires_at) {
-    const expiryDate = new Date(session.expires_at * 1000);
-    console.log('Token expires at:', expiryDate.toISOString());
-  }
-  
-  // Create the client with proper configuration
-  const client = new ClientClass(baseUrl);
-  
-  // Add auth token to each request if available
-  if (token) {
-    // Configure the client to use the token for authentication
-    // We'll configure it to be used as a Bearer token
-    const configuration = new Configuration({
-      basePath: baseUrl,
-      accessToken: token,
-      // Add the queryParamsStringify function to the configuration
-      queryParamsStringify: querystring
-    });
-    
-    // @ts-ignore - Setting the configuration for the client
-    client.configuration = configuration;
-    
-    // Also add a middleware to log request details for debugging
-    // @ts-ignore - Ensure middleware is an array
-    client.middleware = client.middleware || [];
-    
-    // @ts-ignore - Add a middleware to log the request
-    client.middleware.push({
-      pre: async (context) => {
-        console.log('API Request:', context.url);
-        console.log('Headers:', context.init.headers);
-        return context;
-      }
-    });
-    
-    console.log('Auth token configured for API client');
-  }
-  
-  return client;
-};
-
-// Add a proper Configuration class
+// Configuration class for API clients
 class Configuration {
   basePath?: string;
   accessToken?: string;
@@ -156,6 +100,40 @@ class Configuration {
     return '';
   }
 }
+
+export const createApiClient = async <T>(ClientClass: new (basePath?: string, configuration?: any) => T): Promise<T> => {
+  // Get fresh session with possibly refreshed token
+  const session = await getAuthTokens();
+  const token = session?.access_token;
+  
+  if (!ClientClass) {
+    throw new Error('API client not initialized. Please run "npm run generate-api" first.');
+  }
+  
+  const baseUrl = getApiBase();
+  console.log('Creating API client with base URL:', baseUrl);
+  console.log('Auth token available:', !!token);
+  
+  // Log token expiry if available
+  if (session?.expires_at) {
+    const expiryDate = new Date(session.expires_at * 1000);
+    console.log('Token expires at:', expiryDate.toISOString());
+  }
+  
+  // Create configuration with proper authentication
+  const configuration = new Configuration({
+    basePath: baseUrl,
+    accessToken: token || undefined,
+    queryParamsStringify: querystring
+  });
+  
+  // Create the client with proper configuration
+  const client = new ClientClass(baseUrl, configuration);
+  
+  console.log('API client created successfully');
+  
+  return client;
+};
 
 export const handleApiError = (error: unknown): ApiError => {
   console.error('API Error:', error);
