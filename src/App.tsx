@@ -25,6 +25,7 @@ import ConversionReport from "@/pages/reporting/ConversionReport";
 import Index from "./pages/Index";
 import AdvertisersRoutes from "./pages/advertisers";
 import OrganizationsRoutes from "./pages/organizations";
+import UsersRoutes from "./pages/users";
 import CreateAffiliateAccount from "./pages/affiliate/CreateAffiliateAccount";
 
 // Create a query client with retry disabled to avoid infinite loading
