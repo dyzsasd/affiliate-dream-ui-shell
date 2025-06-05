@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const InvitationManagement: React.FC = () => {
   const { user, profile } = useAuth();
@@ -39,34 +38,20 @@ const InvitationManagement: React.FC = () => {
 
     try {
       // Create invitation URL with organization context
-      const inviteUrl = `${window.location.origin}/signup?invitation=true&org=${profile.organization.id}&email=${encodeURIComponent(email)}`;
+      const inviteUrl = `${window.location.origin}/signup?invitation=true&org=${profile.organization.id}&email=${encodeURIComponent(email)}&inviter=${encodeURIComponent(`${user?.user_metadata?.first_name || ''} ${user?.user_metadata?.last_name || ''}`.trim())}`;
       
-      // Use Supabase's invitation system
-      const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
-        redirectTo: inviteUrl,
-        data: {
-          organization_id: profile.organization.id,
-          organization_name: profile.organization.name,
-          invited_by: `${user?.user_metadata?.first_name || ''} ${user?.user_metadata?.last_name || ''}`.trim()
-        }
-      });
-
-      if (error) {
-        throw error;
-      }
-
       setInvitationLink(inviteUrl);
       setEmail("");
       
       toast({
-        title: "Invitation sent!",
-        description: `Invitation email has been sent to ${email}`,
+        title: "Invitation link generated!",
+        description: `Share this link with ${email} to invite them to join ${profile.organization.name}`,
       });
     } catch (error: any) {
-      console.error('Error sending invitation:', error);
+      console.error('Error generating invitation:', error);
       toast({
-        title: "Error sending invitation",
-        description: error.message || "Failed to send invitation",
+        title: "Error generating invitation",
+        description: error.message || "Failed to generate invitation",
         variant: "destructive",
       });
     } finally {
@@ -93,6 +78,19 @@ const InvitationManagement: React.FC = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const sendEmailInvitation = async () => {
+    if (!invitationLink) return;
+
+    // For now, we'll just copy the link. 
+    // To actually send emails, you'd need to implement an edge function with a service like Resend
+    await copyInvitationLink();
+    
+    toast({
+      title: "Link ready to share",
+      description: "The invitation link has been copied. You can now share it via email, messaging, or any other method.",
+    });
   };
 
   if (!profile?.organization) {
@@ -128,12 +126,12 @@ const InvitationManagement: React.FC = () => {
         </Badge>
       </div>
 
-      {/* Send Invitation Form */}
+      {/* Generate Invitation Form */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Mail className="w-5 h-5" />
-            Send Invitation
+            Generate Invitation Link
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -157,12 +155,12 @@ const InvitationManagement: React.FC = () => {
             {isLoading ? (
               <>
                 <Send className="w-4 h-4 mr-2 animate-pulse" />
-                Sending Invitation...
+                Generating Link...
               </>
             ) : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                Send Invitation
+                Generate Invitation Link
               </>
             )}
           </Button>
@@ -177,7 +175,7 @@ const InvitationManagement: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              The invitation email has been sent, but you can also share this link directly:
+              Share this link with the person you want to invite to your organization:
             </p>
             
             <div className="flex items-center space-x-2">
@@ -199,6 +197,21 @@ const InvitationManagement: React.FC = () => {
                 )}
                 {linkCopied ? "Copied!" : "Copy"}
               </Button>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={sendEmailInvitation}
+                className="flex-1"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Copy & Share
+              </Button>
+            </div>
+
+            <div className="text-xs text-muted-foreground">
+              <p><strong>Note:</strong> The invited person will need to use this link to sign up and will automatically be added to your organization.</p>
             </div>
           </CardContent>
         </Card>

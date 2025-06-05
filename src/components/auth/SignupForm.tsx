@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Eye, EyeOff, Users } from "lucide-react";
+import { Loader2, Eye, EyeOff, Users, UserCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
@@ -31,6 +31,7 @@ const SignupForm: React.FC = () => {
   const isInvitation = searchParams.get('invitation') === 'true';
   const organizationId = searchParams.get('org');
   const invitedEmail = searchParams.get('email');
+  const inviterName = searchParams.get('inviter');
 
   useEffect(() => {
     if (invitedEmail) {
@@ -97,12 +98,13 @@ const SignupForm: React.FC = () => {
       {isInvitation && (
         <Card className="border-green-200 bg-green-50">
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-green-800">
-              <Users className="w-5 h-5" />
-              <div>
-                <h3 className="font-semibold">You've been invited!</h3>
-                <p className="text-sm">
-                  Complete your registration to join the organization.
+            <div className="flex items-center gap-3">
+              <UserCheck className="w-6 h-6 text-green-600" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-green-800">You've been invited!</h3>
+                <p className="text-sm text-green-700">
+                  {inviterName ? `${decodeURIComponent(inviterName)} has invited you` : "You've been invited"} to join an organization.
+                  Complete your registration below.
                 </p>
               </div>
             </div>
@@ -235,7 +237,7 @@ const SignupForm: React.FC = () => {
               {t("auth.creatingAccount")}
             </>
           ) : (
-            t("auth.createAccount")
+            isInvitation ? "Join Organization" : t("auth.createAccount")
           )}
         </Button>
       </form>
