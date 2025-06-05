@@ -1,5 +1,7 @@
+
 /* tslint:disable */
 /* eslint-disable */
+export * from './DomainAdvertiser';
 export * from './DomainAffiliate';
 export * from './DomainAffiliateProviderMapping';
 export * from './DomainOrganization';

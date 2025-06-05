@@ -1,3 +1,4 @@
+
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -118,4 +119,3 @@ export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ign
         'updated_at': value['updatedAt'],
     };
 }
-

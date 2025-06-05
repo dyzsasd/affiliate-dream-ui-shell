@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { querystring } from '@/generated-api/src/runtime';
+import { Configuration } from '@/generated-api/src/runtime';
 
 // Using the host provided by environment variable with proper fallback
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080') + '/api/v1';
@@ -10,20 +10,6 @@ interface ApiError {
   message: string;
   status: number;
 }
-
-// This function initializes the API clients with authentication
-export const initializeApiClients = async () => {
-  try {
-    // Dynamic import to handle case where files might not exist yet
-    const api = await import('../generated-api/src/apis');
-    const models = await import('../generated-api/src/models');
-    
-    return { ApiClient: api, Models: models };
-  } catch (error) {
-    console.error('API client not generated yet. Please run "npm run generate-api" first.');
-    return { ApiClient: null, Models: null };
-  }
-};
 
 export const getApiBase = () => {
   // Make sure the API_BASE_URL does not have trailing slash
@@ -76,31 +62,6 @@ export const getAuthTokens = async () => {
   return session;
 };
 
-// Configuration class for API clients
-class Configuration {
-  basePath?: string;
-  accessToken?: string;
-  queryParamsStringify?: (params: any) => string;
-  
-  constructor(config: { 
-    basePath?: string; 
-    accessToken?: string; 
-    queryParamsStringify?: (params: any) => string;
-  }) {
-    this.basePath = config.basePath;
-    this.accessToken = config.accessToken;
-    this.queryParamsStringify = config.queryParamsStringify;
-  }
-  
-  // This function will be called by the generated API client to get the access token
-  apiKey = async (name: string): Promise<string> => {
-    if (name === 'Authorization' && this.accessToken) {
-      return `Bearer ${this.accessToken}`;
-    }
-    return '';
-  }
-}
-
 export const createApiClient = async <T>(ClientClass: new (configuration?: Configuration) => T): Promise<T> => {
   // Get fresh session with possibly refreshed token
   const session = await getAuthTokens();
@@ -123,8 +84,12 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   // Create configuration with proper authentication
   const configuration = new Configuration({
     basePath: baseUrl,
-    accessToken: token || undefined,
-    queryParamsStringify: querystring
+    apiKey: async (name: string) => {
+      if (name === 'Authorization' && token) {
+        return `Bearer ${token}`;
+      }
+      return '';
+    }
   });
   
   // Create the client with proper configuration

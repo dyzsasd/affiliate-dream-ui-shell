@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -73,6 +72,35 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
       });
     }
   }, [advertiser, form, isEditMode]);
+
+  const transformFormDataToBackend = (data: AdvertiserFormData) => {
+    return {
+      name: data.name,
+      contactEmail: data.contactEmail,
+      status: data.status,
+      // Map billingDetails to paymentDetails for the affiliate backend
+      paymentDetails: data.billingDetails ? JSON.parse(data.billingDetails) : undefined,
+    };
+  };
+
+  const transformBackendToFormData = (advertiser: DomainAffiliate): AdvertiserFormData => {
+    let billingDetails = '';
+    
+    // Try to get billing info from either billingInfo or paymentDetails
+    if (advertiser.billingInfo) {
+      billingDetails = advertiser.billingInfo;
+    } else if (advertiser.paymentDetails) {
+      billingDetails = advertiser.paymentDetails;
+    }
+
+    return {
+      name: advertiser.name || '',
+      contactEmail: advertiser.contactEmail || '',
+      status: (advertiser.status as 'active' | 'pending' | 'inactive' | 'rejected') || 'pending',
+      // Use the billing details we found
+      billingDetails: billingDetails
+    };
+  };
 
   const onSubmit = (data: AdvertiserFormData) => {
     submitForm(data);
