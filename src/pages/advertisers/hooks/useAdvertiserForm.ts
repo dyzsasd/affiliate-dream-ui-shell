@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +8,7 @@ import { useAuth } from '@/contexts/auth';
 import { fetchAdvertiser } from '@/services/advertiserService';
 import { advertiserSchema, AdvertiserFormData, BillingDetails } from '../types/advertiser';
 import { useAdvertiserMutations } from './useAdvertiserMutations';
+import { DomainAffiliate } from '@/generated-api/src/models';
 
 interface UseAdvertiserFormProps {
   advertiserId?: string;
@@ -41,6 +43,7 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
       billingState: '',
       billingCountry: '',
       billingPostalCode: '',
+      billingDetails: '',
     },
   });
 
@@ -69,6 +72,7 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
         billingState: billingDetails.state || '',
         billingCountry: billingDetails.country || '',
         billingPostalCode: billingDetails.postalCode || '',
+        billingDetails: advertiser.billingDetails || '',
       });
     }
   }, [advertiser, form, isEditMode]);
@@ -97,6 +101,11 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
       name: advertiser.name || '',
       contactEmail: advertiser.contactEmail || '',
       status: (advertiser.status as 'active' | 'pending' | 'inactive' | 'rejected') || 'pending',
+      billingAddress: '',
+      billingCity: '',
+      billingState: '',
+      billingCountry: '',
+      billingPostalCode: '',
       // Use the billing details we found
       billingDetails: billingDetails
     };

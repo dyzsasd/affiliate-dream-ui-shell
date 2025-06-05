@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -36,30 +37,24 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
 
   const createMutation = useMutation({
     mutationFn: async (data: AdvertiserFormData) => {
+      const billingDetailsObj = prepareBillingDetails(data);
       const transformedData = {
         name: data.name,
         contactEmail: data.contactEmail,
         status: data.status,
         // Map billingDetails to paymentDetails for affiliate backend
-        paymentDetails: data.billingDetails ? JSON.parse(data.billingDetails) : undefined,
+        paymentDetails: billingDetailsObj ? JSON.stringify(billingDetailsObj) : undefined,
       };
       
       return createAdvertiser(organizationId, transformedData);
     },
     onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Advertiser created successfully",
-      });
+      toast.success("Advertiser created successfully");
       queryClient.invalidateQueries({ queryKey: ['advertisers'] });
       navigate('/advertisers');
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create advertiser",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to create advertiser");
     },
   });
 
@@ -67,31 +62,25 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
     mutationFn: async (data: AdvertiserFormData) => {
       if (!advertiserId) throw new Error('Advertiser ID is required');
       
+      const billingDetailsObj = prepareBillingDetails(data);
       const transformedData = {
         name: data.name,
         contactEmail: data.contactEmail,
         status: data.status,
         // Map billingDetails to paymentDetails for affiliate backend
-        paymentDetails: data.billingDetails ? JSON.parse(data.billingDetails) : undefined,
+        paymentDetails: billingDetailsObj ? JSON.stringify(billingDetailsObj) : undefined,
       };
       
       return updateAdvertiser(parseInt(advertiserId), transformedData);
     },
     onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Advertiser updated successfully",
-      });
+      toast.success("Advertiser updated successfully");
       queryClient.invalidateQueries({ queryKey: ['advertisers'] });
       queryClient.invalidateQueries({ queryKey: ['advertiser', advertiserId] });
       navigate('/advertisers');
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update advertiser",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to update advertiser");
     },
   });
 
