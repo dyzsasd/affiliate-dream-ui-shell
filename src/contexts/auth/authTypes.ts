@@ -33,6 +33,12 @@ export interface AuthContextType {
   fetchBackendProfile: () => Promise<DomainProfile | null>;
   fetchOrganization: (organizationId: number) => Promise<DomainOrganization | null>;
   signIn: (credentials: { email: string; password: string }) => Promise<void>;
-  signUp: (credentials: { email: string; password: string; firstName?: string; lastName?: string }) => Promise<void>;
+  signUp: (credentials: { 
+    email: string; 
+    password: string; 
+    firstName?: string; 
+    lastName?: string; 
+    organizationId?: number;
+  }) => Promise<void>;
   signOut: () => Promise<void>;
 }

@@ -71,7 +71,13 @@ export const useAuthentication = () => {
     }
   };
 
-  const signUp = async (credentials: { email: string; password: string; firstName?: string; lastName?: string }) => {
+  const signUp = async (credentials: { 
+    email: string; 
+    password: string; 
+    firstName?: string; 
+    lastName?: string; 
+    organizationId?: number;
+  }) => {
     setIsLoading(true);
     setIsSubmitting(true);
     
@@ -83,6 +89,7 @@ export const useAuthentication = () => {
           data: {
             first_name: credentials.firstName,
             last_name: credentials.lastName,
+            organization_id: credentials.organizationId,
           },
         },
       });
@@ -101,11 +108,14 @@ export const useAuthentication = () => {
             id: data.user.id,
             email: data.user.email,
             firstName: credentials.firstName,
-            lastName: credentials.lastName
+            lastName: credentials.lastName,
+            organizationId: credentials.organizationId,
           };
 
           // Upsert profile in backend - assumes the backend API has this functionality
           await profileApi.profilesUpsertPost({ profile: profileRequest });
+          
+          console.log('Profile synced with backend successfully');
         } catch (backendError) {
           console.error('Could not sync profile with backend during signup:', backendError);
           // Continue with sign-up even if backend sync fails
@@ -114,7 +124,9 @@ export const useAuthentication = () => {
 
       toast({
         title: "Account created successfully",
-        description: "Please check your email for verification instructions.",
+        description: credentials.organizationId 
+          ? "Your account has been created and linked to the organization."
+          : "Please check your email for verification instructions.",
       });
     } catch (error: any) {
       toast({

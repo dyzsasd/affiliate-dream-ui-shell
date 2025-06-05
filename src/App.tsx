@@ -26,6 +26,7 @@ import Index from "./pages/Index";
 import AdvertisersRoutes from "./pages/advertisers";
 import OrganizationsRoutes from "./pages/organizations";
 import UsersRoutes from "./pages/users";
+import InvitationsRoutes from "./pages/invitations";
 import CreateAffiliateAccount from "./pages/affiliate/CreateAffiliateAccount";
 
 // Create a query client with retry disabled to avoid infinite loading
@@ -65,6 +66,8 @@ const App = () => (
               <Route path="/reporting/conversions" element={<ConversionReport />} />
               <Route path="/advertisers/*" element={<AdvertisersRoutes />} />
               <Route path="/organizations/*" element={<OrganizationsRoutes />} />
+              <Route path="/users/*" element={<UsersRoutes />} />
+              <Route path="/invitations/*" element={<InvitationsRoutes />} />
               <Route path="/affiliate/create" element={<CreateAffiliateAccount />} />
             </Route>
             
