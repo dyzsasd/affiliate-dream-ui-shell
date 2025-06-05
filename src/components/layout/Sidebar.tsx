@@ -25,46 +25,112 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
-  const { signOut, user, profile } = useAuth();
+  const { signOut, user, profile, organization } = useAuth();
   const { t } = useTranslation();
 
-  const navItems = [
-    {
-      name: t("sidebar.dashboard"),
-      path: "/dashboard",
-      icon: <LayoutDashboard className="w-5 h-5" />
-    },
-    {
-      name: t("sidebar.advertisers"),
-      path: "/advertisers",
-      icon: <Building2 className="w-5 h-5" />
-    },
-    {
-      name: t("sidebar.campaigns"),
-      path: "/campaigns",
-      icon: <LayoutDashboard className="w-5 h-5" />
-    },
-    {
-      name: t("sidebar.trackingLinks"),
-      path: "/tracking-links",
-      icon: <LinkIcon className="w-5 h-5" />
-    },
-    {
-      name: t("sidebar.reports"),
-      path: "/reporting",
-      icon: <BarChart3 className="w-5 h-5" />
-    },
-    {
-      name: t("sidebar.conversions"),
-      path: "/reporting/conversions",
-      icon: <PieChart className="w-5 h-5" />
-    },
-    {
-      name: t("sidebar.myProfile"),
-      path: "/profile",
-      icon: <User className="w-5 h-5" />
+  // Navigation items based on organization type
+  const getNavItems = () => {
+    const baseItems = [
+      {
+        name: t("sidebar.dashboard"),
+        path: "/dashboard",
+        icon: <LayoutDashboard className="w-5 h-5" />
+      },
+    ];
+
+    const organizationType = organization?.type;
+
+    if (organizationType === 'advertiser') {
+      return [
+        ...baseItems,
+        {
+          name: t("sidebar.advertisers"),
+          path: "/advertisers",
+          icon: <Building2 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.campaigns"),
+          path: "/campaigns",
+          icon: <LayoutDashboard className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.reports"),
+          path: "/reporting",
+          icon: <BarChart3 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.myProfile"),
+          path: "/profile",
+          icon: <User className="w-5 h-5" />
+        }
+      ];
+    } else if (organizationType === 'affiliate') {
+      return [
+        ...baseItems,
+        {
+          name: "Create Affiliate",
+          path: "/affiliate/create",
+          icon: <Building2 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.trackingLinks"),
+          path: "/tracking-links",
+          icon: <LinkIcon className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.reports"),
+          path: "/reporting",
+          icon: <BarChart3 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.conversions"),
+          path: "/reporting/conversions",
+          icon: <PieChart className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.myProfile"),
+          path: "/profile",
+          icon: <User className="w-5 h-5" />
+        }
+      ];
+    } else if (organizationType === 'platform_owner') {
+      return [
+        ...baseItems,
+        {
+          name: "Organizations",
+          path: "/organizations",
+          icon: <Building2 className="w-5 h-5" />
+        },
+        {
+          name: "Users",
+          path: "/users",
+          icon: <User className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.reports"),
+          path: "/reporting",
+          icon: <BarChart3 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.myProfile"),
+          path: "/profile",
+          icon: <User className="w-5 h-5" />
+        }
+      ];
     }
-  ];
+
+    // Default fallback
+    return [
+      ...baseItems,
+      {
+        name: t("sidebar.myProfile"),
+        path: "/profile",
+        icon: <User className="w-5 h-5" />
+      }
+    ];
+  };
+
+  const navItems = getNavItems();
 
   const isActive = (path: string) => {
     if (path === "/dashboard" && location.pathname === "/") {
@@ -112,10 +178,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             <span className="text-xs text-sidebar-foreground/70">
               {user?.email}
             </span>
-            <div className="mt-2">
+            <div className="mt-2 space-y-1">
               <Badge variant="outline" className="text-xs bg-sidebar-accent text-sidebar-foreground border-sidebar-border">
                 {profile.role?.name || t("profile.notAssigned")}
               </Badge>
+              {organization && (
+                <Badge variant="outline" className="text-xs bg-sidebar-accent text-sidebar-foreground border-sidebar-border">
+                  {organization.type || 'Unknown'}
+                </Badge>
+              )}
             </div>
           </div>
         </div>
