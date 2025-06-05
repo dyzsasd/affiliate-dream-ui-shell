@@ -4,9 +4,12 @@ import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
 
 // Simple profile type since we don't have a database table anymore
 export interface UserProfile {
+  id?: string;
+  email?: string;
   first_name?: string;
   last_name?: string;
   role?: {
+    id?: number;
     name: string;
   };
   organization?: {
