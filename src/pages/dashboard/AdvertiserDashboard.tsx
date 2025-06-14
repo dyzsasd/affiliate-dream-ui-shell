@@ -182,7 +182,7 @@ const AdvertiserDashboard: React.FC = () => {
             </div>
           </div>
         </CardContent>
-      </div>
+      </Card>
     </div>
   );
 };
