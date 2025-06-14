@@ -26,23 +26,26 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isOpen }) => {
 
   return (
     <div className="flex flex-col flex-grow py-4 overflow-y-auto">
-      {navItems.map((item) => (
-        <Link
-          key={item.path}
-          to={item.path}
-          className={cn(
-            "flex items-center h-12 px-4 text-sm font-medium transition-colors",
-            isActive(item.path)
-              ? "text-white bg-sidebar-accent"
-              : "text-sidebar-foreground hover:text-white hover:bg-sidebar-accent/70"
-          )}
-        >
-          <span className="flex items-center justify-center w-5 h-5 mr-3">
-            {item.icon}
-          </span>
-          {isOpen && <span>{item.name}</span>}
-        </Link>
-      ))}
+      {navItems.map((item) => {
+        const IconComponent = item.icon;
+        return (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={cn(
+              "flex items-center h-12 px-4 text-sm font-medium transition-colors",
+              isActive(item.path)
+                ? "text-white bg-sidebar-accent"
+                : "text-sidebar-foreground hover:text-white hover:bg-sidebar-accent/70"
+            )}
+          >
+            <span className="flex items-center justify-center w-5 h-5 mr-3">
+              <IconComponent className="w-5 h-5" />
+            </span>
+            {isOpen && <span>{item.name}</span>}
+          </Link>
+        );
+      })}
     </div>
   );
 };

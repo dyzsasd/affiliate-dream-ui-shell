@@ -14,7 +14,7 @@ import { TFunction } from "i18next";
 export interface NavItem {
   name: string;
   path: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<any>;
 }
 
 export const getNavItems = (organizationType: string | undefined, t: TFunction): NavItem[] => {
@@ -22,7 +22,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
     {
       name: t("sidebar.dashboard"),
       path: "/dashboard",
-      icon: <LayoutDashboard className="w-5 h-5" />
+      icon: LayoutDashboard
     },
   ];
 
@@ -32,32 +32,32 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       {
         name: t("sidebar.advertisers"),
         path: "/advertisers",
-        icon: <Building2 className="w-5 h-5" />
+        icon: Building2
       },
       {
         name: t("sidebar.campaigns"),
         path: "/campaigns",
-        icon: <LayoutDashboard className="w-5 h-5" />
+        icon: LayoutDashboard
       },
       {
         name: "Analytics",
         path: "/analytics/advertiser",
-        icon: <TrendingUp className="w-5 h-5" />
+        icon: TrendingUp
       },
       {
         name: t("sidebar.reports"),
         path: "/reporting",
-        icon: <BarChart3 className="w-5 h-5" />
+        icon: BarChart3
       },
       {
         name: t("sidebar.invitations"),
         path: "/invitations",
-        icon: <Mail className="w-5 h-5" />
+        icon: Mail
       },
       {
         name: t("sidebar.myProfile"),
         path: "/profile",
-        icon: <User className="w-5 h-5" />
+        icon: User
       }
     ];
   } else if (organizationType === 'affiliate') {
@@ -66,32 +66,32 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       {
         name: "Create Affiliate",
         path: "/affiliate/create",
-        icon: <Building2 className="w-5 h-5" />
+        icon: Building2
       },
       {
         name: t("sidebar.trackingLinks"),
         path: "/tracking-links",
-        icon: <LinkIcon className="w-5 h-5" />
+        icon: LinkIcon
       },
       {
         name: t("sidebar.reports"),
         path: "/reporting",
-        icon: <BarChart3 className="w-5 h-5" />
+        icon: BarChart3
       },
       {
         name: t("sidebar.conversions"),
         path: "/reporting/conversions",
-        icon: <PieChart className="w-5 h-5" />
+        icon: PieChart
       },
       {
         name: t("sidebar.invitations"),
         path: "/invitations",
-        icon: <Mail className="w-5 h-5" />
+        icon: Mail
       },
       {
         name: t("sidebar.myProfile"),
         path: "/profile",
-        icon: <User className="w-5 h-5" />
+        icon: User
       }
     ];
   } else if (organizationType === 'platform_owner') {
@@ -100,27 +100,27 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       {
         name: "Organizations",
         path: "/organizations",
-        icon: <Building2 className="w-5 h-5" />
+        icon: Building2
       },
       {
         name: "Users",
         path: "/users",
-        icon: <User className="w-5 h-5" />
+        icon: User
       },
       {
         name: t("sidebar.invitations"),
         path: "/invitations",
-        icon: <Mail className="w-5 h-5" />
+        icon: Mail
       },
       {
         name: t("sidebar.reports"),
         path: "/reporting",
-        icon: <BarChart3 className="w-5 h-5" />
+        icon: BarChart3
       },
       {
         name: t("sidebar.myProfile"),
         path: "/profile",
-        icon: <User className="w-5 h-5" />
+        icon: User
       }
     ];
   }
@@ -131,12 +131,12 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
     {
       name: t("sidebar.invitations"),
       path: "/invitations",
-      icon: <Mail className="w-5 h-5" />
+      icon: Mail
     },
     {
       name: t("sidebar.myProfile"),
       path: "/profile",
-      icon: <User className="w-5 h-5" />
+      icon: User
     }
   ];
 };
