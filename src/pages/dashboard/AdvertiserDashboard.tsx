@@ -4,30 +4,36 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, BarChart } from "lucide-react";
 import { mockPerformanceData } from "@/services/api";
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar, BarChart as RechartsBarChart } from "recharts";
+import { useTranslation } from "react-i18next";
 
 const AdvertiserDashboard: React.FC = () => {
-  // Format dates for display
+  const { t } = useTranslation();
+
+  // Multiply mock data by 10 and format dates for display
   const formattedData = mockPerformanceData.map(item => ({
     ...item,
+    clicks: item.clicks * 10,
+    conversions: item.conversions * 10,
+    revenue: item.revenue * 10,
     date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }));
 
-  const totalClicks = mockPerformanceData.reduce((sum, item) => sum + item.clicks, 0);
-  const totalConversions = mockPerformanceData.reduce((sum, item) => sum + item.conversions, 0);
-  const totalRevenue = mockPerformanceData.reduce((sum, item) => sum + item.revenue, 0);
+  const totalClicks = formattedData.reduce((sum, item) => sum + item.clicks, 0);
+  const totalConversions = formattedData.reduce((sum, item) => sum + item.conversions, 0);
+  const totalRevenue = formattedData.reduce((sum, item) => sum + item.revenue, 0);
   const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks * 100).toFixed(2) : "0";
 
   const stats = [
-    { title: "Total Clicks", value: totalClicks.toLocaleString(), change: "+12.5%" },
-    { title: "Conversions", value: totalConversions.toLocaleString(), change: "+7.2%" },
-    { title: "Revenue", value: `$${totalRevenue.toLocaleString()}`, change: "+15.3%" },
-    { title: "Conversion Rate", value: `${conversionRate}%`, change: "+2.4%" },
+    { title: t("dashboard.totalClicks"), value: totalClicks.toLocaleString(), change: "+12.5%" },
+    { title: t("dashboard.conversions"), value: totalConversions.toLocaleString(), change: "+7.2%" },
+    { title: t("dashboard.revenue"), value: `$${totalRevenue.toLocaleString()}`, change: "+15.3%" },
+    { title: t("dashboard.conversionRate"), value: `${conversionRate}%`, change: "+2.4%" },
   ];
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Advertiser Dashboard</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("dashboard.advertiserDashboard")}</h1>
         <div className="flex items-center space-x-2">
           <select className="h-9 rounded-md border border-input px-3 py-1 text-sm bg-background">
             <option>Last 7 days</option>
@@ -68,7 +74,7 @@ const AdvertiserDashboard: React.FC = () => {
               <AreaChart className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-lg">Campaign Performance</CardTitle>
+              <CardTitle className="text-lg">{t("dashboard.campaignPerformance")}</CardTitle>
               <p className="text-sm text-muted-foreground">
                 Daily clicks and conversions
               </p>
@@ -114,7 +120,7 @@ const AdvertiserDashboard: React.FC = () => {
               <BarChart className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-lg">Revenue</CardTitle>
+              <CardTitle className="text-lg">{t("dashboard.revenueChart")}</CardTitle>
               <p className="text-sm text-muted-foreground">
                 Daily revenue generated
               </p>
@@ -149,7 +155,7 @@ const AdvertiserDashboard: React.FC = () => {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Recent Campaign Activity</CardTitle>
+          <CardTitle className="text-lg">{t("dashboard.recentCampaignActivity")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -157,7 +163,7 @@ const AdvertiserDashboard: React.FC = () => {
               <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
               <div className="flex-1">
                 <p className="text-sm font-medium">New conversion from Campaign: Summer Promotion</p>
-                <p className="text-xs text-muted-foreground">2 hours ago • $15.00</p>
+                <p className="text-xs text-muted-foreground">2 hours ago • $150.00</p>
               </div>
             </div>
             <div className="flex items-center">
@@ -171,12 +177,12 @@ const AdvertiserDashboard: React.FC = () => {
               <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
               <div className="flex-1">
                 <p className="text-sm font-medium">New conversion from Campaign: Premium Subscription</p>
-                <p className="text-xs text-muted-foreground">Yesterday • $30.00</p>
+                <p className="text-xs text-muted-foreground">Yesterday • $300.00</p>
               </div>
             </div>
           </div>
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 };

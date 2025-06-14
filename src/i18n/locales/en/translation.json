@@ -47,7 +47,18 @@
     "reports": "Reports",
     "conversions": "Conversions",
     "myProfile": "My Profile",
-    "advertisers": "Advertisers"
+    "advertisers": "Advertisers",
+    "invitations": "Invitations"
+  },
+  "dashboard": {
+    "advertiserDashboard": "Advertiser Dashboard",
+    "totalClicks": "Total Clicks",
+    "conversions": "Conversions",
+    "revenue": "Revenue",
+    "conversionRate": "Conversion Rate",
+    "campaignPerformance": "Campaign Performance",
+    "revenueChart": "Revenue",
+    "recentCampaignActivity": "Recent Campaign Activity"
   },
   "campaigns": {
     "title": "Campaigns",

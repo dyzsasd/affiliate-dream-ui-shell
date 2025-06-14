@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -61,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           icon: <BarChart3 className="w-5 h-5" />
         },
         {
-          name: "Invitations",
+          name: t("sidebar.invitations"),
           path: "/invitations",
           icon: <Mail className="w-5 h-5" />
         },
@@ -95,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           icon: <PieChart className="w-5 h-5" />
         },
         {
-          name: "Invitations",
+          name: t("sidebar.invitations"),
           path: "/invitations",
           icon: <Mail className="w-5 h-5" />
         },
@@ -119,7 +118,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           icon: <User className="w-5 h-5" />
         },
         {
-          name: "Invitations",
+          name: t("sidebar.invitations"),
           path: "/invitations",
           icon: <Mail className="w-5 h-5" />
         },
@@ -140,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     return [
       ...baseItems,
       {
-        name: "Invitations",
+        name: t("sidebar.invitations"),
         path: "/invitations",
         icon: <Mail className="w-5 h-5" />
       },

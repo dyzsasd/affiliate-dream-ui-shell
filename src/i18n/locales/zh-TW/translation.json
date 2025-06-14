@@ -47,7 +47,18 @@
     "reports": "報表",
     "conversions": "轉換",
     "myProfile": "我的資料",
-    "advertisers": "廣告賬戶"
+    "advertisers": "廣告賬戶",
+    "invitations": "邀請"
+  },
+  "dashboard": {
+    "advertiserDashboard": "概覽",
+    "totalClicks": "總點擊",
+    "conversions": "轉化",
+    "revenue": "總收入",
+    "conversionRate": "轉化率",
+    "campaignPerformance": "營銷表現",
+    "revenueChart": "收入",
+    "recentCampaignActivity": "最近活動"
   },
   "campaigns": {
     "title": "活動",

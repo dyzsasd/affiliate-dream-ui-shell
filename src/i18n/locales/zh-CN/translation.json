@@ -47,7 +47,18 @@
     "reports": "报告",
     "conversions": "转化",
     "myProfile": "我的资料",
-    "advertisers": "广告账户"
+    "advertisers": "广告账户",
+    "invitations": "邀请"
+  },
+  "dashboard": {
+    "advertiserDashboard": "概览",
+    "totalClicks": "总点击",
+    "conversions": "转化",
+    "revenue": "总收入",
+    "conversionRate": "转化率",
+    "campaignPerformance": "营销表现",
+    "revenueChart": "收入",
+    "recentCampaignActivity": "最近活动"
   },
   "campaigns": {
     "title": "活动",
