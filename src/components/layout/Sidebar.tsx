@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -141,7 +140,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 key={item.href}
               >
                 <RouterLink to={item.href}>
-                  {React.createElement(item.icon, { className: "h-4 w-4" })}
+                  <item.icon className="h-4 w-4" />
                   <span>{item.label}</span>
                 </RouterLink>
               </Button>
@@ -176,4 +175,3 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 Sidebar.displayName = "Sidebar";
 
 export { Sidebar };
-
