@@ -1,177 +1,257 @@
-
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/auth";
+import { 
+  BarChart3, 
+  Building2,
+  LayoutDashboard,
+  Link as LinkIcon,
+  LogOut,
+  Menu,
+  PieChart,
+  User,
+  Mail
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  BarChart3,
-  Target,
-  Link,
-  TrendingUp,
-  DollarSign,
-  User,
-  Users,
-  Building2,
-  Mail,
-  UserPlus,
-  PieChart,
-} from "lucide-react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/auth";
+import LanguageSelector from "@/components/common/LanguageSelector";
 import { useTranslation } from "react-i18next";
-import { TFunction } from "i18next";
 
-interface NavItem {
-  href: string;
-  label: string;
-  icon: React.ComponentType<any>;
-  permission?: (userRole: string | undefined, organizationType: string | undefined) => boolean;
+interface SidebarProps {
+  isOpen: boolean;
+  toggleSidebar: () => void;
 }
 
-const getNavigationItems = (userRole: string | undefined, organizationType: string | undefined, t: TFunction): NavItem[] => {
-  const baseItems: NavItem[] = [
-    { href: "/dashboard", label: t("sidebar.dashboard"), icon: BarChart3 },
-    { href: "/campaigns", label: t("sidebar.campaigns"), icon: Target },
-    { href: "/tracking-links", label: t("sidebar.trackingLinks"), icon: Link },
-    { href: "/reporting", label: t("sidebar.reports"), icon: TrendingUp },
-    { href: "/reporting/conversions", label: t("sidebar.conversions"), icon: DollarSign },
-    { href: "/analytics/advertiser", label: "Advertiser Analytics", icon: PieChart },
-  ];
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
+  const location = useLocation();
+  const { signOut, user, profile, organization } = useAuth();
+  const { t } = useTranslation();
 
-  const adminItems: NavItem[] = [
-    {
-      href: "/advertisers",
-      label: t("sidebar.advertisers"),
-      icon: Building2,
-      permission: (userRole: string | undefined) => userRole === "admin",
-    },
-    {
-      href: "/organizations",
-      label: t("sidebar.organizations"),
-      icon: Users,
-      permission: (userRole: string | undefined) => userRole === "admin",
-    },
-    {
-      href: "/users",
-      label: t("sidebar.myProfile"),
-      icon: User,
-      permission: (userRole: string | undefined) => userRole === "admin",
-    },
-    {
-      href: "/invitations",
-      label: t("sidebar.invitations"),
-      icon: UserPlus,
-      permission: (userRole: string | undefined) => userRole === "admin",
-    },
-  ];
+  // Navigation items based on organization type
+  const getNavItems = () => {
+    const baseItems = [
+      {
+        name: t("sidebar.dashboard"),
+        path: "/dashboard",
+        icon: <LayoutDashboard className="w-5 h-5" />
+      },
+    ];
 
-  const affiliateItems: NavItem[] = [
-    {
-      href: "/affiliate/create",
-      label: "Create Affiliate Account",
-      icon: Mail,
-      permission: (userRole: string | undefined, organizationType: string | undefined) =>
-        userRole === "user" && organizationType === "affiliate",
-    },
-  ];
+    const organizationType = organization?.type;
 
-  let navigationItems = [...baseItems];
+    if (organizationType === 'advertiser') {
+      return [
+        ...baseItems,
+        {
+          name: t("sidebar.advertisers"),
+          path: "/advertisers",
+          icon: <Building2 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.campaigns"),
+          path: "/campaigns",
+          icon: <LayoutDashboard className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.reports"),
+          path: "/reporting",
+          icon: <BarChart3 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.invitations"),
+          path: "/invitations",
+          icon: <Mail className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.myProfile"),
+          path: "/profile",
+          icon: <User className="w-5 h-5" />
+        }
+      ];
+    } else if (organizationType === 'affiliate') {
+      return [
+        ...baseItems,
+        {
+          name: "Create Affiliate",
+          path: "/affiliate/create",
+          icon: <Building2 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.trackingLinks"),
+          path: "/tracking-links",
+          icon: <LinkIcon className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.reports"),
+          path: "/reporting",
+          icon: <BarChart3 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.conversions"),
+          path: "/reporting/conversions",
+          icon: <PieChart className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.invitations"),
+          path: "/invitations",
+          icon: <Mail className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.myProfile"),
+          path: "/profile",
+          icon: <User className="w-5 h-5" />
+        }
+      ];
+    } else if (organizationType === 'platform_owner') {
+      return [
+        ...baseItems,
+        {
+          name: "Organizations",
+          path: "/organizations",
+          icon: <Building2 className="w-5 h-5" />
+        },
+        {
+          name: "Users",
+          path: "/users",
+          icon: <User className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.invitations"),
+          path: "/invitations",
+          icon: <Mail className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.reports"),
+          path: "/reporting",
+          icon: <BarChart3 className="w-5 h-5" />
+        },
+        {
+          name: t("sidebar.myProfile"),
+          path: "/profile",
+          icon: <User className="w-5 h-5" />
+        }
+      ];
+    }
 
-  if (userRole === "admin") {
-    navigationItems = [...navigationItems, ...adminItems];
-  } else if (userRole === "user" && organizationType === "affiliate") {
-    navigationItems = [...navigationItems, ...affiliateItems];
-  }
+    // Default fallback
+    return [
+      ...baseItems,
+      {
+        name: t("sidebar.invitations"),
+        path: "/invitations",
+        icon: <Mail className="w-5 h-5" />
+      },
+      {
+        name: t("sidebar.myProfile"),
+        path: "/profile",
+        icon: <User className="w-5 h-5" />
+      }
+    ];
+  };
 
-  return navigationItems.filter(item => !item.permission || item.permission(userRole, organizationType));
-};
+  const navItems = getNavItems();
 
-interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
+  const isActive = (path: string) => {
+    if (path === "/dashboard" && location.pathname === "/") {
+      return true;
+    }
+    return location.pathname.startsWith(path);
+  };
 
-const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
-  ({ className, ...props }, ref) => {
-    const { pathname } = useLocation();
-    const { signOut, user, profile } = useAuth();
-    const { t } = useTranslation();
-
-    // Get user role and organization type from profile
-    const userRole = profile?.role?.name || (user?.user_metadata as any)?.role;
-    const organizationType = profile?.organization?.name || (user?.user_metadata as any)?.organization_type;
-
-    const navigationItems = React.useMemo(() => {
-      return getNavigationItems(userRole, organizationType, t);
-    }, [userRole, organizationType, t]);
-
-    // Get user display information from profile or user metadata
-    const firstName = profile?.first_name || user?.user_metadata?.first_name || '';
-    const lastName = profile?.last_name || user?.user_metadata?.last_name || '';
-    const organizationName = profile?.organization?.name || (user?.user_metadata as any)?.organization_name;
-
-    return (
-      <div
-        className={cn(
-          "flex h-full w-[280px] flex-col border-r bg-background py-4",
-          className
-        )}
-        ref={ref}
-        {...props}
-      >
-        <ScrollArea className="flex-1 space-y-4 px-3">
-          <div className="flex items-center justify-between px-2">
-            <Badge variant="secondary">
-              {t("appName")}
-            </Badge>
-          </div>
-          <Separator />
-          <div className="space-y-1">
-            {navigationItems.map((item) => (
-              <Button
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start gap-2",
-                  pathname === item.href
-                    ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    : "hover:bg-accent hover:text-accent-foreground"
-                )}
-                asChild
-                key={item.href}
-              >
-                <RouterLink to={item.href}>
-                  {React.createElement(item.icon, { className: "h-4 w-4" })}
-                  <span>{item.label}</span>
-                </RouterLink>
-              </Button>
-            ))}
-          </div>
-        </ScrollArea>
-        <div className="flex flex-col space-y-1 p-3">
-          <Separator />
-          <div className="px-2 text-sm text-muted-foreground">
-            {t("profile.organization")}
-          </div>
-          <div className="flex items-center space-x-2 px-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="/avatars/01.png" alt="Avatar" />
-              <AvatarFallback>{firstName?.charAt(0)}{lastName?.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col space-y-0.5">
-              <p className="text-sm font-medium">{firstName} {lastName}</p>
-              <p className="text-xs text-muted-foreground">
-                {organizationName || t("organization.noOrganization")}
-              </p>
-            </div>
-          </div>
-          <Button variant="outline" size="sm" className="mt-3" onClick={signOut}>
-            {t("auth.signOut")}
+  return (
+    <div
+      className={cn(
+        "h-screen flex flex-col bg-sidebar transition-all duration-300 ease-in-out",
+        isOpen ? "w-64" : "w-20"
+      )}
+    >
+      {/* Sidebar Header */}
+      <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
+        <div className="flex items-center">
+          {isOpen ? (
+            <h1 className="text-xl font-bold text-sidebar-foreground">{t("appName")}</h1>
+          ) : (
+            <span className="text-xl font-bold text-sidebar-foreground">RL</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <LanguageSelector />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-sidebar-foreground hover:bg-sidebar-accent"
+            onClick={toggleSidebar}
+          >
+            <Menu className="w-5 h-5" />
           </Button>
         </div>
       </div>
-    );
-  }
-);
-Sidebar.displayName = "Sidebar";
 
-export { Sidebar };
+      {/* User Info */}
+      {isOpen && profile && (
+        <div className="p-4 bg-sidebar-accent/30">
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-sidebar-foreground">
+              {profile.first_name} {profile.last_name}
+            </span>
+            <span className="text-xs text-sidebar-foreground/70">
+              {user?.email}
+            </span>
+            <div className="mt-2 space-y-1">
+              <Badge variant="outline" className="text-xs bg-sidebar-accent text-sidebar-foreground border-sidebar-border">
+                {profile.role?.name || t("profile.notAssigned")}
+              </Badge>
+              {organization && (
+                <Badge variant="outline" className="text-xs bg-sidebar-accent text-sidebar-foreground border-sidebar-border">
+                  {organization.type || 'Unknown'}
+                </Badge>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Items */}
+      <div className="flex flex-col flex-grow py-4 overflow-y-auto">
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={cn(
+              "flex items-center h-12 px-4 text-sm font-medium transition-colors",
+              isActive(item.path)
+                ? "text-white bg-sidebar-accent"
+                : "text-sidebar-foreground hover:text-white hover:bg-sidebar-accent/70"
+            )}
+          >
+            <span className="flex items-center justify-center w-5 h-5 mr-3">
+              {item.icon}
+            </span>
+            {isOpen && <span>{item.name}</span>}
+          </Link>
+        ))}
+      </div>
+
+      <Separator className="bg-sidebar-border" />
+      
+      {/* Sidebar Footer */}
+      <div className="p-4">
+        <Button 
+          variant="ghost" 
+          className={cn(
+            "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent",
+            !isOpen && "px-2 justify-center"
+          )}
+          onClick={signOut}
+        >
+          <LogOut className="w-5 h-5 mr-2" />
+          {isOpen && t("auth.signOut")}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;

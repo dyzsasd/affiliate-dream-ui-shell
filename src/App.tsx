@@ -28,7 +28,6 @@ import OrganizationsRoutes from "./pages/organizations";
 import UsersRoutes from "./pages/users";
 import InvitationsRoutes from "./pages/invitations";
 import CreateAffiliateAccount from "./pages/affiliate/CreateAffiliateAccount";
-import AdvertiserAnalytics from "./pages/analytics/AdvertiserAnalytics";
 
 // Create a query client with retry disabled to avoid infinite loading
 const queryClient = new QueryClient({
@@ -70,7 +69,6 @@ const App = () => (
               <Route path="/users/*" element={<UsersRoutes />} />
               <Route path="/invitations/*" element={<InvitationsRoutes />} />
               <Route path="/affiliate/create" element={<CreateAffiliateAccount />} />
-              <Route path="/analytics/advertiser" element={<AdvertiserAnalytics />} />
             </Route>
             
             {/* Catch-all route */}
