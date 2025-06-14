@@ -27,7 +27,7 @@ import { TFunction } from "i18next";
 interface NavItem {
   href: string;
   label: string;
-  icon: React.ComponentType;
+  icon: React.ComponentType<any>;
   permission?: (userRole: string | undefined, organizationType: string | undefined) => boolean;
 }
 
@@ -140,7 +140,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
                 key={item.href}
               >
                 <RouterLink to={item.href}>
-                  <item.icon className="h-4 w-4" />
+                  {React.createElement(item.icon, { className: "h-4 w-4" })}
                   <span>{item.label}</span>
                 </RouterLink>
               </Button>
