@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "您的联盟营销平台",
@@ -59,6 +58,24 @@
     "campaignPerformance": "营销表现",
     "revenueChart": "收入",
     "recentCampaignActivity": "最近活动"
+  },
+  "analytics": {
+    "advertiserAnalytics": "广告主分析",
+    "totalPartners": "合作伙伴总数",
+    "partnersGainedOrLost": "30天内增减的合作伙伴",
+    "newPartners": "新增合作伙伴",
+    "lostPartners": "流失合作伙伴",
+    "viewPartners": "查看合作伙伴",
+    "showMe": "显示详情",
+    "affiliateMixChart": "联盟组合图表",
+    "affiliateNetworks": "联盟网络",
+    "viewMore": "查看更多",
+    "topKeywords": "热门关键词TOP20",
+    "noKeywordsFound": "未找到关键词",
+    "verticalPositioning": "垂直定位",
+    "type": "类型",
+    "rank": "排名",
+    "topPublishersInVertical": "该垂直领域前5名发布商"
   },
   "campaigns": {
     "title": "活动",

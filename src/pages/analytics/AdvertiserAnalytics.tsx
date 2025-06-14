@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { ArrowUp, ArrowDown, Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Mock data based on the provided JSON
 const mockData = {
@@ -50,6 +51,8 @@ const COLORS = {
 };
 
 const AdvertiserAnalytics: React.FC = () => {
+  const { t } = useTranslation();
+  
   const chartData = mockData.advertiser.partnerInformation.promotypeMix.value.map(item => ({
     name: item.promotype,
     value: item.count,
@@ -58,42 +61,53 @@ const AdvertiserAnalytics: React.FC = () => {
 
   return (
     <div className="space-y-6 p-6">
+      {/* Header with Anker name and logo */}
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+          <span className="text-white text-2xl font-bold">A</span>
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Anker</h1>
+          <p className="text-gray-600">{t('analytics.advertiserAnalytics')}</p>
+        </div>
+      </div>
+
       {/* Partner Statistics */}
       <Card>
         <CardContent className="p-6">
           <div className="grid grid-cols-3 gap-8">
             {/* Total Partners */}
             <div className="text-center">
-              <div className="text-sm text-gray-500 mb-2">TOTAL PARTNERS</div>
+              <div className="text-sm text-gray-500 mb-2">{t('analytics.totalPartners')}</div>
               <div className="flex items-center justify-center gap-2">
                 <ArrowUp className="w-4 h-4 text-green-500" />
                 <span className="text-3xl font-bold text-green-500">1379</span>
               </div>
               <Button variant="link" className="text-sm text-gray-600 mt-2">
-                View partners
+                {t('analytics.viewPartners')}
               </Button>
             </div>
 
             {/* New Partners */}
             <div className="text-center border-l border-r border-gray-200 px-8">
-              <div className="text-sm text-gray-500 mb-2">Partners gained or lost in 30 days</div>
-              <div className="text-sm text-gray-600 mb-2">NEW PARTNERS</div>
+              <div className="text-sm text-gray-500 mb-2">{t('analytics.partnersGainedOrLost')}</div>
+              <div className="text-sm text-gray-600 mb-2">{t('analytics.newPartners')}</div>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-2xl font-bold text-green-500">+153</span>
               </div>
               <Button variant="link" className="text-sm text-gray-600 mt-2">
-                Show me
+                {t('analytics.showMe')}
               </Button>
             </div>
 
             {/* Lost Partners */}
             <div className="text-center">
-              <div className="text-sm text-gray-600 mb-6">LOST PARTNERS</div>
+              <div className="text-sm text-gray-600 mb-6">{t('analytics.lostPartners')}</div>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-2xl font-bold text-purple-500">-133</span>
               </div>
               <Button variant="link" className="text-sm text-gray-600 mt-2">
-                Show me
+                {t('analytics.showMe')}
               </Button>
             </div>
           </div>
@@ -104,7 +118,7 @@ const AdvertiserAnalytics: React.FC = () => {
         {/* Affiliate Mix Chart */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">Affiliate Mix Chart</CardTitle>
+            <CardTitle className="text-xl font-semibold">{t('analytics.affiliateMixChart')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-8">
@@ -144,7 +158,7 @@ const AdvertiserAnalytics: React.FC = () => {
         {/* Affiliate Networks */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">Affiliate Networks</CardTitle>
+            <CardTitle className="text-xl font-semibold">{t('analytics.affiliateNetworks')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -157,7 +171,7 @@ const AdvertiserAnalytics: React.FC = () => {
                 </div>
               ))}
               <Button variant="link" className="text-sm text-gray-600 p-0 mt-4">
-                View more
+                {t('analytics.viewMore')}
               </Button>
             </div>
           </CardContent>
@@ -169,13 +183,13 @@ const AdvertiserAnalytics: React.FC = () => {
         <Card className="bg-gray-50">
           <CardHeader>
             <CardTitle className="text-xl font-semibold flex items-center gap-2">
-              Top 20 Keywords
+              {t('analytics.topKeywords')}
               <Info className="w-4 h-4 text-gray-400" />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-center text-gray-500 py-8">
-              No keywords found
+              {t('analytics.noKeywordsFound')}
             </div>
           </CardContent>
         </Card>
@@ -184,22 +198,22 @@ const AdvertiserAnalytics: React.FC = () => {
         <Card className="bg-gray-50">
           <CardHeader>
             <CardTitle className="text-xl font-semibold flex items-center gap-2">
-              Vertical Positioning
+              {t('analytics.verticalPositioning')}
               <Info className="w-4 h-4 text-gray-400" />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <span className="font-semibold">Type: </span>
+                <span className="font-semibold">{t('analytics.type')}: </span>
                 <span className="text-gray-600">{mockData.advertiser.verticals.sampleValue.name}</span>
               </div>
               <div>
-                <span className="font-semibold">Rank: </span>
+                <span className="font-semibold">{t('analytics.rank')}: </span>
                 <span className="text-gray-600">#{mockData.advertiser.verticals.sampleValue.rank}</span>
               </div>
               <div className="mt-6">
-                <div className="font-semibold text-gray-700 mb-2">Top 5 publishers in this vertical</div>
+                <div className="font-semibold text-gray-700 mb-2">{t('analytics.topPublishersInVertical')}</div>
               </div>
             </div>
           </CardContent>

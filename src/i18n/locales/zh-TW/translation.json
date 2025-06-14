@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "您的聯盟行銷平台",
@@ -59,6 +58,24 @@
     "campaignPerformance": "營銷表現",
     "revenueChart": "收入",
     "recentCampaignActivity": "最近活動"
+  },
+  "analytics": {
+    "advertiserAnalytics": "廣告主分析",
+    "totalPartners": "合作夥伴總數",
+    "partnersGainedOrLost": "30天內增減的合作夥伴",
+    "newPartners": "新增合作夥伴",
+    "lostPartners": "流失合作夥伴",
+    "viewPartners": "檢視合作夥伴",
+    "showMe": "顯示詳情",
+    "affiliateMixChart": "聯盟組合圖表",
+    "affiliateNetworks": "聯盟網路",
+    "viewMore": "檢視更多",
+    "topKeywords": "熱門關鍵詞TOP20",
+    "noKeywordsFound": "未找到關鍵詞",
+    "verticalPositioning": "垂直定位",
+    "type": "類型",
+    "rank": "排名",
+    "topPublishersInVertical": "該垂直領域前5名發布商"
   },
   "campaigns": {
     "title": "活動",
