@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -90,7 +89,6 @@ const AdvertiserAnalytics: React.FC = () => {
 
             {/* New Partners */}
             <div className="text-center border-l border-r border-gray-200 px-8">
-              <div className="text-sm text-gray-500 mb-2">{t('analytics.partnersGainedOrLost')}</div>
               <div className="text-sm text-gray-600 mb-2">{t('analytics.newPartners')}</div>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-2xl font-bold text-green-500">+153</span>
