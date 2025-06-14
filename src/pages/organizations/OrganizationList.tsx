@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,13 @@ import { OrganizationsApi } from "@/generated-api/src/apis/OrganizationsApi";
 import { DomainOrganization } from "@/generated-api/src/models";
 import { createApiClient } from "@/services/backendApi";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "@/components/common/LanguageSelector";
 
 const OrganizationList: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<DomainOrganization[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,8 +47,8 @@ const OrganizationList: React.FC = () => {
     } catch (error) {
       console.error('Error fetching organizations:', error);
       toast({
-        title: "Error",
-        description: "Failed to fetch organizations",
+        title: t("common.error"),
+        description: t("organizations.fetchError"),
         variant: "destructive",
       });
     } finally {
@@ -75,6 +79,24 @@ const OrganizationList: React.FC = () => {
     }
   };
 
+  const getTypeLabel = (type: string | undefined) => {
+    switch (type) {
+      case 'advertiser': return t("organizations.typeAdvertiser");
+      case 'affiliate': return t("organizations.typeAffiliate");
+      case 'platform_owner': return t("organizations.typePlatformOwner");
+      default: return type;
+    }
+  };
+
+  const getStatusLabel = (status: string | undefined) => {
+    switch (status) {
+      case 'active': return t("organizations.statusActive");
+      case 'pending': return t("organizations.statusPending");
+      case 'inactive': return t("organizations.statusInactive");
+      default: return t("organizations.statusUnknown");
+    }
+  };
+
   const handleEditOrganization = (orgId: number) => {
     navigate(`/organizations/${orgId}/edit`);
   };
@@ -84,7 +106,7 @@ const OrganizationList: React.FC = () => {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-affiliate-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading organizations...</p>
+          <p className="mt-2 text-muted-foreground">{t("common.loading")}</p>
         </div>
       </div>
     );
@@ -94,15 +116,18 @@ const OrganizationList: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Organizations</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("organizations.title")}</h1>
           <p className="text-muted-foreground">
-            Manage all organizations on the platform
+            {t("organizations.description")}
           </p>
         </div>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Create Organization
-        </Button>
+        <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            {t("organizations.createNew")}
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filter */}
@@ -111,7 +136,7 @@ const OrganizationList: React.FC = () => {
           <div className="flex items-center space-x-2">
             <Search className="w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search organizations..."
+              placeholder={t("organizations.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -138,14 +163,14 @@ const OrganizationList: React.FC = () => {
                   </div>
                   <div className="mt-3 flex items-center space-x-2">
                     <Badge className={getTypeColor(org.type)}>
-                      {org.type}
+                      {getTypeLabel(org.type)}
                     </Badge>
                     <Badge variant={getStatusColor(org.status)}>
-                      {org.status || 'unknown'}
+                      {getStatusLabel(org.status)}
                     </Badge>
                   </div>
                   <div className="mt-2 text-sm text-muted-foreground">
-                    Created: {org.createdAt ? new Date(org.createdAt).toLocaleDateString() : 'Unknown'}
+                    {t("organizations.created")}: {org.createdAt ? new Date(org.createdAt).toLocaleDateString() : t("organizations.statusUnknown")}
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -177,9 +202,9 @@ const OrganizationList: React.FC = () => {
           <CardContent className="pt-6">
             <div className="text-center py-8">
               <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No organizations found</h3>
+              <h3 className="text-lg font-semibold mb-2">{t("organizations.noOrganizations")}</h3>
               <p className="text-muted-foreground">
-                {searchTerm ? 'No organizations match your search.' : 'No organizations have been created yet.'}
+                {searchTerm ? t("organizations.noOrganizationsMessage") : t("organizations.noOrganizationsYet")}
               </p>
             </div>
           </CardContent>

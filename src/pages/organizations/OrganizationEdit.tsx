@@ -21,12 +21,15 @@ import { useToast } from "@/hooks/use-toast";
 import { OrganizationsApi } from "@/generated-api/src/apis/OrganizationsApi";
 import { DomainOrganization } from "@/generated-api/src/models";
 import { createApiClient } from "@/services/backendApi";
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "@/components/common/LanguageSelector";
 
 const OrganizationEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   
   const [organization, setOrganization] = useState<DomainOrganization | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,8 +66,8 @@ const OrganizationEdit: React.FC = () => {
     } catch (error) {
       console.error('Error fetching organization:', error);
       toast({
-        title: "Error",
-        description: "Failed to fetch organization details",
+        title: t("common.error"),
+        description: t("organizations.fetchError"),
         variant: "destructive",
       });
     } finally {
@@ -91,14 +94,14 @@ const OrganizationEdit: React.FC = () => {
       
       setOrganization(updatedOrg);
       toast({
-        title: "Success",
-        description: "Organization updated successfully",
+        title: t("common.save"),
+        description: t("organizations.updateSuccess"),
       });
     } catch (error) {
       console.error('Error updating organization:', error);
       toast({
-        title: "Error",
-        description: "Failed to update organization",
+        title: t("common.error"),
+        description: t("organizations.updateError"),
         variant: "destructive",
       });
     } finally {
@@ -109,8 +112,8 @@ const OrganizationEdit: React.FC = () => {
   const generateInvitationLink = async () => {
     if (!email || !organization?.organizationId) {
       toast({
-        title: "Error",
-        description: "Please enter an email address",
+        title: t("common.error"),
+        description: t("organizations.invitationError"),
         variant: "destructive",
       });
       return;
@@ -126,14 +129,14 @@ const OrganizationEdit: React.FC = () => {
       setEmail("");
       
       toast({
-        title: "Invitation link generated!",
-        description: `Share this link with ${email} to invite them to join ${organization.name}`,
+        title: t("organizations.invitationGenerated"),
+        description: t("organizations.shareLink", { name: organization.name }),
       });
     } catch (error: any) {
       console.error('Error generating invitation:', error);
       toast({
-        title: "Error generating invitation",
-        description: error.message || "Failed to generate invitation",
+        title: t("common.error"),
+        description: error.message || t("organizations.generateInvitationError"),
         variant: "destructive",
       });
     } finally {
@@ -148,17 +151,26 @@ const OrganizationEdit: React.FC = () => {
       await navigator.clipboard.writeText(invitationLink);
       setLinkCopied(true);
       toast({
-        title: "Link copied!",
-        description: "Invitation link has been copied to clipboard",
+        title: t("organizations.linkCopied"),
+        description: t("organizations.linkCopiedDescription"),
       });
       
       setTimeout(() => setLinkCopied(false), 2000);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to copy link to clipboard",
+        title: t("common.error"),
+        description: t("organizations.copyError"),
         variant: "destructive",
       });
+    }
+  };
+
+  const getStatusLabel = (status: string | undefined) => {
+    switch (status) {
+      case 'active': return t("organizations.statusActive");
+      case 'pending': return t("organizations.statusPending");
+      case 'inactive': return t("organizations.statusInactive");
+      default: return t("organizations.statusUnknown");
     }
   };
 
@@ -167,7 +179,7 @@ const OrganizationEdit: React.FC = () => {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-affiliate-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading organization...</p>
+          <p className="mt-2 text-muted-foreground">{t("common.loading")}</p>
         </div>
       </div>
     );
@@ -180,15 +192,15 @@ const OrganizationEdit: React.FC = () => {
           <CardContent className="pt-6">
             <div className="text-center py-8">
               <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Organization Not Found</h3>
+              <h3 className="text-lg font-semibold mb-2">{t("organizations.notFound")}</h3>
               <p className="text-muted-foreground">
-                The organization you're looking for doesn't exist.
+                {t("organizations.notFoundMessage")}
               </p>
               <Button 
                 className="mt-4" 
                 onClick={() => navigate('/organizations')}
               >
-                Back to Organizations
+                {t("organizations.backToOrganizations")}
               </Button>
             </div>
           </CardContent>
@@ -207,19 +219,22 @@ const OrganizationEdit: React.FC = () => {
             onClick={() => navigate('/organizations')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+            {t("common.back")}
           </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Edit Organization</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{t("organizations.editOrganization")}</h1>
             <p className="text-muted-foreground">
-              Update organization details and manage invitations
+              {t("organizations.editDescription")}
             </p>
           </div>
         </div>
-        <Badge variant="outline" className="flex items-center gap-2">
-          <Building2 className="w-4 h-4" />
-          ID: {organization.organizationId}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <LanguageSelector />
+          <Badge variant="outline" className="flex items-center gap-2">
+            <Building2 className="w-4 h-4" />
+            ID: {organization.organizationId}
+          </Badge>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -228,43 +243,43 @@ const OrganizationEdit: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="w-5 h-5" />
-              Organization Details
+              {t("organizations.organizationDetails")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Organization Name</Label>
+              <Label htmlFor="name">{t("organizations.organizationName")}</Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="Organization name"
+                placeholder={t("organizations.organizationName")}
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="type">Organization Type</Label>
+              <Label htmlFor="type">{t("organizations.organizationType")}</Label>
               <Input
                 id="type"
                 name="type"
                 value={formData.type}
                 onChange={handleInputChange}
-                placeholder="Organization type"
+                placeholder={t("organizations.organizationType")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Current Status</Label>
+              <Label>{t("organizations.currentStatus")}</Label>
               <Badge variant="outline">
-                {organization.status || 'unknown'}
+                {getStatusLabel(organization.status)}
               </Badge>
             </div>
 
             <div className="space-y-2">
-              <Label>Created</Label>
+              <Label>{t("organizations.created")}</Label>
               <p className="text-sm text-muted-foreground">
-                {organization.createdAt ? new Date(organization.createdAt).toLocaleDateString() : 'Unknown'}
+                {organization.createdAt ? new Date(organization.createdAt).toLocaleDateString() : t("organizations.statusUnknown")}
               </p>
             </div>
             
@@ -276,12 +291,12 @@ const OrganizationEdit: React.FC = () => {
               {isSaving ? (
                 <>
                   <Save className="w-4 h-4 mr-2 animate-pulse" />
-                  Saving...
+                  {t("organizations.saving")}
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
-                  Save Changes
+                  {t("common.saveChanges")}
                 </>
               )}
             </Button>
@@ -293,16 +308,16 @@ const OrganizationEdit: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Mail className="w-5 h-5" />
-              Generate Invitation
+              {t("organizations.generateInvitation")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">{t("organizations.emailAddress")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="colleague@example.com"
+                placeholder={t("organizations.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isGeneratingLink}
@@ -317,12 +332,12 @@ const OrganizationEdit: React.FC = () => {
               {isGeneratingLink ? (
                 <>
                   <Send className="w-4 h-4 mr-2 animate-pulse" />
-                  Generating Link...
+                  {t("organizations.generatingLink")}
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4 mr-2" />
-                  Generate Invitation Link
+                  {t("organizations.generateInvitationLink")}
                 </>
               )}
             </Button>
@@ -330,7 +345,7 @@ const OrganizationEdit: React.FC = () => {
             {invitationLink && (
               <div className="space-y-3 pt-4 border-t">
                 <p className="text-sm text-muted-foreground">
-                  Share this link to invite someone to {organization.name}:
+                  {t("organizations.shareLink", { name: organization.name })}
                 </p>
                 
                 <div className="flex items-center space-x-2">

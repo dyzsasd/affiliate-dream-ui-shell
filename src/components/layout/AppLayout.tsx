@@ -4,6 +4,7 @@ import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/auth";
 import Sidebar from "./Sidebar";
 import { Loader2 } from "lucide-react";
+import LanguageSelector from "@/components/common/LanguageSelector";
 
 const AppLayout: React.FC = () => {
   console.log("AppLayout rendering - component start");
