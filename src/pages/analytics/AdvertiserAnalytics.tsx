@@ -3,9 +3,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, Activity, DollarSign, Percent } from "lucide-react";
+import { TrendingUp, Activity, DollarSign, Percent, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 // Mock data for the dashboard
@@ -90,16 +89,12 @@ const AdvertiserAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">概览</h1>
-        <Select defaultValue="last7days">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select period" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="last7days">Last 7 days</SelectItem>
-            <SelectItem value="last30days">Last 30 days</SelectItem>
-            <SelectItem value="last3months">Last 3 months</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="relative">
+          <Button variant="outline" className="justify-between w-[180px]">
+            Last 7 days
+            <ChevronDown className="h-4 w-4 opacity-50" />
+          </Button>
+        </div>
       </div>
 
       {/* Metrics Grid */}
