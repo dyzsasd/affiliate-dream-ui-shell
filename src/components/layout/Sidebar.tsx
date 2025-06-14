@@ -1,3 +1,4 @@
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,8 +31,8 @@ interface NavItem {
   permission?: (userRole: string | undefined, organizationType: string | undefined) => boolean;
 }
 
-const getNavigationItems = (userRole: string | undefined, organizationType: string | undefined, t: TFunction) => {
-  const baseItems = [
+const getNavigationItems = (userRole: string | undefined, organizationType: string | undefined, t: TFunction): NavItem[] => {
+  const baseItems: NavItem[] = [
     { href: "/dashboard", label: t("sidebar.dashboard"), icon: BarChart3 },
     { href: "/campaigns", label: t("sidebar.campaigns"), icon: Target },
     { href: "/tracking-links", label: t("sidebar.trackingLinks"), icon: Link },
@@ -93,12 +94,21 @@ interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ className, ...props }, ref) => {
     const { pathname } = useLocation();
-    const { signOut, authentication, user } = useAuth();
+    const { signOut, user, profile } = useAuth();
     const { t } = useTranslation();
 
+    // Get user role and organization type from profile
+    const userRole = profile?.role || user?.user_metadata?.role;
+    const organizationType = profile?.organizationType || user?.user_metadata?.organization_type;
+
     const navigationItems = React.useMemo(() => {
-      return getNavigationItems(user?.role, user?.organizationType, t);
-    }, [user?.role, user?.organizationType, t]);
+      return getNavigationItems(userRole, organizationType, t);
+    }, [userRole, organizationType, t]);
+
+    // Get user display information from profile or user metadata
+    const firstName = profile?.first_name || user?.user_metadata?.first_name || '';
+    const lastName = profile?.last_name || user?.user_metadata?.last_name || '';
+    const organizationName = profile?.organizationName || user?.user_metadata?.organization_name;
 
     return (
       <div
@@ -114,9 +124,6 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
             <Badge variant="secondary">
               {t("appName")}
             </Badge>
-            {authentication?.isDemo && (
-              <Badge variant="destructive">Demo Account</Badge>
-            )}
           </div>
           <Separator />
           <div className="space-y-1">
@@ -148,12 +155,12 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
           <div className="flex items-center space-x-2 px-3">
             <Avatar className="h-8 w-8">
               <AvatarImage src="/avatars/01.png" alt="Avatar" />
-              <AvatarFallback>{user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{firstName?.charAt(0)}{lastName?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col space-y-0.5">
-              <p className="text-sm font-medium">{user?.firstName} {user?.lastName}</p>
+              <p className="text-sm font-medium">{firstName} {lastName}</p>
               <p className="text-xs text-muted-foreground">
-                {user?.organizationName || t("organization.noOrganization")}
+                {organizationName || t("organization.noOrganization")}
               </p>
             </div>
           </div>

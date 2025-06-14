@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/auth";
-import Sidebar from "./Sidebar";
+import { Sidebar } from "./Sidebar";
 import { Loader2 } from "lucide-react";
 import LanguageSelector from "@/components/common/LanguageSelector";
 
@@ -36,7 +36,7 @@ const AppLayout: React.FC = () => {
   console.log("User is authenticated - rendering app layout");
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
