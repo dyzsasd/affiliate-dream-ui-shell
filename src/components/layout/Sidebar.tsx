@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -11,7 +12,8 @@ import {
   Menu,
   PieChart,
   User,
-  Mail
+  Mail,
+  TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -53,6 +55,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           name: t("sidebar.campaigns"),
           path: "/campaigns",
           icon: <LayoutDashboard className="w-5 h-5" />
+        },
+        {
+          name: "Analytics",
+          path: "/analytics/advertiser",
+          icon: <TrendingUp className="w-5 h-5" />
         },
         {
           name: t("sidebar.reports"),
