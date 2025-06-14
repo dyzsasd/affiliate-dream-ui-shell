@@ -112,69 +112,46 @@ const AdvertiserAnalytics: React.FC = () => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 gap-6">
-        {/* Affiliate Mix Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">{t('analytics.affiliateMixChart')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-8">
-              <div className="w-48 h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={chartData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      dataKey="value"
-                    >
-                      {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="space-y-2">
-                {chartData.map((item) => (
-                  <div key={item.name} className="flex items-center gap-2">
-                    <div 
-                      className="w-3 h-3 rounded" 
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="text-sm text-gray-600">{item.name}</span>
-                  </div>
-                ))}
-              </div>
+      {/* Single row with Affiliate Mix Chart taking full width */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold">{t('analytics.affiliateMixChart')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center gap-12">
+            <div className="w-64 h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={80}
+                    outerRadius={120}
+                    dataKey="value"
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Affiliate Networks */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">{t('analytics.affiliateNetworks')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {mockData.advertiser.affiliateNetworks.sampleValue.map((network, index) => (
-                <div key={network} className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-sm font-bold">
-                    {network.charAt(0)}
-                  </div>
-                  <span className="text-gray-700">{network}</span>
+            <div className="space-y-3">
+              {chartData.map((item) => (
+                <div key={item.name} className="flex items-center gap-3">
+                  <div 
+                    className="w-4 h-4 rounded" 
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-base text-gray-700 capitalize">{item.name}</span>
+                  <span className="text-sm text-gray-500 ml-2">({item.value})</span>
                 </div>
               ))}
-              <Button variant="link" className="text-sm text-gray-600 p-0 mt-4">
-                {t('analytics.viewMore')}
-              </Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-2 gap-6">
         {/* Top 20 Keywords */}
