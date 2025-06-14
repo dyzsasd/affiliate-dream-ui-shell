@@ -3,295 +3,266 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { ExternalLink, TrendingUp, TrendingDown, Users, Globe, Mail, Eye } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { TrendingUp, Activity, DollarSign, Percent } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-// Mock data based on the provided JSON
-const mockAdvertiserData = {
-  advertiser: {
-    domain: "anker.com",
-    partnerInformation: {
-      partners: { count: 1379 },
-      partnersAdded: { count: 153 },
-      partnersRemoved: { count: 133 },
-      promotypeMix: {
-        value: [
-          { promotype: "student", count: 103 },
-          { promotype: "blog", count: 308 },
-          { promotype: "incentive", count: 46 },
-          { promotype: "content", count: 31 },
-          { promotype: "forum", count: 6 }
-        ]
-      }
-    },
-    socialMedia: {
-      count: 4,
-      value: {
-        twitter: "https://twitter.com/ankerofficial",
-        youtube: "https://youtube.com/user/ankeroceanwing",
-        facebook: "https://facebook.com/anker_fans",
-        instagram: "https://instagram.com/anker_official"
-      }
-    },
-    verticals: {
-      value: [
-        { name: "Technology / Electronics", rank: 2, score: 95 },
-        { name: "Technology / Computers", rank: 2, score: 70 },
-        { name: "Technology / Mobile & Broadband", rank: 2, score: 60 }
-      ]
-    },
-    affiliateNetworks: {
-      value: ["Admitad", "Avantlink", "Awin", "Business Insider", "CJ Affiliate", "Impact", "Rakuten"],
-      count: 22
-    },
-    metaData: {
-      description: "Discover Anker and shop chargers, batteries, hubs, docks, portable power stations, conferencing gear, and more.",
-      faviconImageUrl: "https://storage.googleapis.com/pd-meta/logos/anker.com.png"
-    },
-    contactEmails: {
-      value: [
-        { value: "ecommerce@anker.com", department: "management" },
-        { value: "support@anker.com", department: "support" },
-        { value: "pr@anker.com", department: "support" }
-      ],
-      count: 9
-    }
+// Mock data for the dashboard
+const metricsData = [
+  {
+    title: "总点击",
+    value: "190,800",
+    change: "+12.5%",
+    changeType: "positive",
+    icon: Activity,
+    subtitle: "compared to previous period"
+  },
+  {
+    title: "转化",
+    value: "10,200",
+    change: "+7.2%",
+    changeType: "positive",
+    icon: TrendingUp,
+    subtitle: "compared to previous period"
+  },
+  {
+    title: "总收入",
+    value: "$153,000",
+    change: "+15.3%",
+    changeType: "positive",
+    icon: DollarSign,
+    subtitle: "compared to previous period"
+  },
+  {
+    title: "转化率",
+    value: "5.35%",
+    change: "+2.4%",
+    changeType: "positive",
+    icon: Percent,
+    subtitle: "compared to previous period"
   }
-};
+];
 
-const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+const performanceData = [
+  { date: "Jul 1", clicks: 22000, conversions: 1200 },
+  { date: "Jul 2", clicks: 32000, conversions: 1800 },
+  { date: "Jul 3", clicks: 15000, conversions: 900 },
+  { date: "Jul 4", clicks: 28000, conversions: 1600 },
+  { date: "Jul 5", clicks: 31000, conversions: 1900 },
+  { date: "Jul 6", clicks: 25000, conversions: 1500 },
+  { date: "Jul 7", clicks: 27000, conversions: 1700 }
+];
+
+const revenueData = [
+  { date: "Jul 1", revenue: 18000 },
+  { date: "Jul 2", revenue: 28000 },
+  { date: "Jul 3", revenue: 12000 },
+  { date: "Jul 4", revenue: 22000 },
+  { date: "Jul 5", revenue: 30000 },
+  { date: "Jul 6", revenue: 20000 },
+  { date: "Jul 7", revenue: 25000 }
+];
+
+const recentActivities = [
+  {
+    title: "New conversion from Campaign: Summer Promotion",
+    time: "2 hours ago",
+    amount: "$150.00"
+  },
+  {
+    title: "Click from Campaign: Back to School",
+    time: "4 hours ago",
+    amount: "$25.00"
+  },
+  {
+    title: "Conversion from Campaign: Holiday Sale",
+    time: "6 hours ago",
+    amount: "$200.00"
+  }
+];
 
 const AdvertiserAnalytics: React.FC = () => {
   const { t } = useTranslation();
-  const { advertiser } = mockAdvertiserData;
-
-  // Prepare pie chart data
-  const pieChartData = advertiser.partnerInformation.promotypeMix.value.map((item, index) => ({
-    name: item.promotype,
-    value: item.count,
-    color: COLORS[index % COLORS.length]
-  }));
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <img 
-            src={advertiser.metaData.faviconImageUrl} 
-            alt={advertiser.domain}
-            className="w-12 h-12 rounded-lg"
-          />
-          <div>
-            <h1 className="text-3xl font-bold">{advertiser.domain}</h1>
-            <p className="text-muted-foreground">{advertiser.metaData.description}</p>
-          </div>
-        </div>
-        <Button variant="outline" size="sm">
-          <Eye className="w-4 h-4 mr-2" />
-          Follow
-        </Button>
+        <h1 className="text-2xl font-bold">概览</h1>
+        <Select defaultValue="last7days">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select period" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="last7days">Last 7 days</SelectItem>
+            <SelectItem value="last30days">Last 30 days</SelectItem>
+            <SelectItem value="last3months">Last 3 months</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Partner Statistics */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">TOTAL PARTNERS</p>
-                <p className="text-3xl font-bold text-green-500">
-                  <TrendingUp className="w-6 h-6 inline mr-2" />
-                  {advertiser.partnerInformation.partners.count.toLocaleString()}
+      {/* Metrics Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {metricsData.map((metric, index) => (
+          <Card key={index}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between space-y-0 pb-2">
+                <p className="text-sm font-medium text-muted-foreground">
+                  {metric.title}
                 </p>
-                <Button variant="link" className="p-0 h-auto text-sm">
-                  View partners
-                </Button>
+                <metric.icon className="h-4 w-4 text-muted-foreground" />
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">Partners gained or lost in 30 days</p>
-              <div className="flex justify-between">
-                <div>
-                  <p className="text-sm font-medium">NEW PARTNERS</p>
-                  <p className="text-2xl font-bold text-green-500">
-                    +{advertiser.partnerInformation.partnersAdded.count}
+              <div className="space-y-1">
+                <p className="text-2xl font-bold">{metric.value}</p>
+                <div className="flex items-center space-x-2">
+                  <Badge 
+                    variant="secondary" 
+                    className={`text-xs ${
+                      metric.changeType === 'positive' 
+                        ? 'text-green-600 bg-green-50' 
+                        : 'text-red-600 bg-red-50'
+                    }`}
+                  >
+                    {metric.change}
+                  </Badge>
+                  <p className="text-xs text-muted-foreground">
+                    {metric.subtitle}
                   </p>
-                  <Button variant="link" className="p-0 h-auto text-xs">
-                    Show me
-                  </Button>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">LOST PARTNERS</p>
-                  <p className="text-2xl font-bold text-purple-500">
-                    -{advertiser.partnerInformation.partnersRemoved.count}
-                  </p>
-                  <Button variant="link" className="p-0 h-auto text-xs">
-                    Show me
-                  </Button>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">Social Media</p>
-              <div className="flex space-x-2 mb-2">
-                <Badge variant="secondary">
-                  <Globe className="w-3 h-3 mr-1" />
-                  {advertiser.socialMedia.count} platforms
-                </Badge>
-              </div>
-              <div className="flex space-x-2">
-                {Object.entries(advertiser.socialMedia.value).slice(0, 4).map(([platform, url]) => (
-                  <Button key={platform} variant="outline" size="sm" asChild>
-                    <a href={url} target="_blank" rel="noopener noreferrer">
-                      {platform}
-                    </a>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Charts Section */}
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Affiliate Mix Chart */}
+        {/* Performance Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Affiliate Mix Chart</CardTitle>
+            <CardTitle className="flex items-center space-x-2">
+              <Activity className="h-5 w-5" />
+              <span>营销表现</span>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">Daily clicks and conversions</p>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center space-x-8">
-              <div className="h-[200px] w-[200px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieChartData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {pieChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex-1">
-                <div className="space-y-2">
-                  {pieChartData.map((item, index) => (
-                    <div key={item.name} className="flex items-center space-x-2">
-                      <div 
-                        className="w-3 h-3 rounded-sm" 
-                        style={{ backgroundColor: item.color }}
-                      />
-                      <span className="text-sm">{item.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={performanceData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis 
+                    dataKey="date" 
+                    className="text-xs"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    yAxisId="left"
+                    className="text-xs"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    yAxisId="right" 
+                    orientation="right"
+                    className="text-xs"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '6px'
+                    }}
+                  />
+                  <Line 
+                    yAxisId="left"
+                    type="monotone" 
+                    dataKey="clicks" 
+                    stroke="#6366f1" 
+                    strokeWidth={2}
+                    dot={{ fill: '#6366f1', strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    yAxisId="right"
+                    type="monotone" 
+                    dataKey="conversions" 
+                    stroke="#8b5cf6" 
+                    strokeWidth={2}
+                    dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Affiliate Networks */}
+        {/* Revenue Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Affiliate Networks</CardTitle>
+            <CardTitle className="flex items-center space-x-2">
+              <DollarSign className="h-5 w-5" />
+              <span>收入</span>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">Daily revenue generated</p>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {advertiser.affiliateNetworks.value.slice(0, 3).map((network, index) => (
-                <div key={network} className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center">
-                    <span className="text-xs font-medium">{network.charAt(0)}</span>
-                  </div>
-                  <span className="text-sm font-medium">{network}</span>
-                </div>
-              ))}
-              <Button variant="link" className="p-0 h-auto text-sm">
-                View more
-              </Button>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis 
+                    dataKey="date" 
+                    className="text-xs"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    className="text-xs"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '6px'
+                    }}
+                  />
+                  <Bar 
+                    dataKey="revenue" 
+                    fill="#6366f1"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Bottom Section */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Vertical Positioning */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              Vertical Positioning
-              <Badge variant="outline" className="ml-2">
-                <TrendingUp className="w-3 h-3 mr-1" />
-                Technology / Electronics
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Type: Technology / Electronics</p>
-                <p className="text-sm text-muted-foreground">Rank: #2</p>
-                <p className="text-sm font-medium">Top 5 publishers in this vertical</p>
+      {/* Recent Activities */}
+      <Card>
+        <CardHeader>
+          <CardTitle>最近活动</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {recentActivities.map((activity, index) => (
+              <div key={index} className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm font-medium">{activity.title}</p>
+                  <p className="text-xs text-muted-foreground">{activity.time} • {activity.amount}</p>
+                </div>
               </div>
-              {advertiser.verticals.value.slice(0, 3).map((vertical, index) => (
-                <div key={vertical.name} className="flex justify-between items-center">
-                  <span className="text-sm">{vertical.name}</span>
-                  <Badge variant="secondary">#{vertical.rank}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Contact Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Mail className="w-5 h-5 mr-2" />
-              Contact Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                {advertiser.contactEmails.count} contact emails available
-              </p>
-              {advertiser.contactEmails.value.slice(0, 3).map((contact, index) => (
-                <div key={contact.value} className="flex justify-between items-center">
-                  <span className="text-sm font-mono">{contact.value}</span>
-                  <Badge variant="outline" className="text-xs">
-                    {contact.department}
-                  </Badge>
-                </div>
-              ))}
-              <Button variant="outline" size="sm" className="w-full">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                View all contacts
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
