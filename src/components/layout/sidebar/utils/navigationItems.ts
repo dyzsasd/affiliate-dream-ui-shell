@@ -40,7 +40,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: LayoutDashboard
       },
       {
-        name: "Analytics",
+        name: t("sidebar.analytics"),
         path: "/analytics/advertiser",
         icon: TrendingUp
       },

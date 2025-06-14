@@ -47,7 +47,8 @@
     "conversions": "Conversions",
     "myProfile": "My Profile",
     "advertisers": "Advertisers",
-    "invitations": "Invitations"
+    "invitations": "Invitations",
+    "analytics": "Analytics"
   },
   "dashboard": {
     "advertiserDashboard": "Advertiser Dashboard",
