@@ -99,8 +99,8 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     const { t } = useTranslation();
 
     // Get user role and organization type from profile
-    const userRole = profile?.role?.name || user?.user_metadata?.role;
-    const organizationType = profile?.organization?.name || user?.user_metadata?.organization_type;
+    const userRole = profile?.role?.name || (user?.user_metadata as any)?.role;
+    const organizationType = profile?.organization?.name || (user?.user_metadata as any)?.organization_type;
 
     const navigationItems = React.useMemo(() => {
       return getNavigationItems(userRole, organizationType, t);
@@ -109,7 +109,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     // Get user display information from profile or user metadata
     const firstName = profile?.first_name || user?.user_metadata?.first_name || '';
     const lastName = profile?.last_name || user?.user_metadata?.last_name || '';
-    const organizationName = profile?.organization?.name || user?.user_metadata?.organization_name;
+    const organizationName = profile?.organization?.name || (user?.user_metadata as any)?.organization_name;
 
     return (
       <div
