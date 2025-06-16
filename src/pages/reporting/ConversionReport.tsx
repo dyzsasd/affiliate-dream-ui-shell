@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { 
   Card, 
   CardContent, 
@@ -30,6 +31,7 @@ import { mockConversions, mockPaginatedConversions } from "@/services/api";
 import { Conversion } from "@/types/api";
 
 const ConversionReport: React.FC = () => {
+  const { t } = useTranslation();
   const [dateRange, setDateRange] = useState("7days");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,19 +82,19 @@ const ConversionReport: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <h1 className="text-2xl font-bold tracking-tight">Conversion Report</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("reports.conversions.title")}</h1>
         
         <div className="flex flex-col sm:flex-row gap-4">
           <Select value={dateRange} onValueChange={setDateRange}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select date range" />
+              <SelectValue placeholder={t("reports.performance.selectDateRange")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="7days">Last 7 days</SelectItem>
-                <SelectItem value="30days">Last 30 days</SelectItem>
-                <SelectItem value="90days">Last 3 months</SelectItem>
-                <SelectItem value="year">Last 12 months</SelectItem>
+                <SelectItem value="7days">{t("reports.performance.last7Days")}</SelectItem>
+                <SelectItem value="30days">{t("reports.performance.last30Days")}</SelectItem>
+                <SelectItem value="90days">{t("reports.performance.last3Months")}</SelectItem>
+                <SelectItem value="year">{t("reports.performance.last12Months")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -104,9 +106,9 @@ const ConversionReport: React.FC = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="approved">{t("reports.conversions.approved")}</SelectItem>
+                <SelectItem value="pending">{t("reports.conversions.pending")}</SelectItem>
+                <SelectItem value="rejected">{t("reports.conversions.rejected")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -118,7 +120,7 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4">
             <div className="space-y-1">
-              <div className="text-sm text-gray-500">Total Conversions</div>
+              <div className="text-sm text-gray-500">{t("reports.conversions.totalConversions")}</div>
               <div className="text-2xl font-bold">{filteredConversions.length}</div>
             </div>
           </CardContent>
@@ -127,7 +129,7 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex justify-between items-center">
             <div className="space-y-1">
-              <div className="text-sm text-gray-500">Approved</div>
+              <div className="text-sm text-gray-500">{t("reports.conversions.approved")}</div>
               <div className="text-2xl font-bold">{approvedConversions.length}</div>
             </div>
             <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
@@ -139,7 +141,7 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex justify-between items-center">
             <div className="space-y-1">
-              <div className="text-sm text-gray-500">Pending</div>
+              <div className="text-sm text-gray-500">{t("reports.conversions.pending")}</div>
               <div className="text-2xl font-bold">{pendingConversions.length}</div>
             </div>
             <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
@@ -151,7 +153,7 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex justify-between items-center">
             <div className="space-y-1">
-              <div className="text-sm text-gray-500">Rejected</div>
+              <div className="text-sm text-gray-500">{t("reports.conversions.rejected")}</div>
               <div className="text-2xl font-bold">{rejectedConversions.length}</div>
             </div>
             <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
@@ -165,21 +167,21 @@ const ConversionReport: React.FC = () => {
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Earnings Summary</CardTitle>
-            <CardDescription>Approved and pending payouts</CardDescription>
+            <CardTitle>{t("reports.conversions.earningsSummary")}</CardTitle>
+            <CardDescription>{t("reports.conversions.approvedAndPendingPayouts")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-sm">Approved Payouts:</span>
+                <span className="text-sm">{t("reports.conversions.approvedPayouts")}</span>
                 <span className="font-semibold text-green-600">${totalPayout.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm">Pending Payouts:</span>
+                <span className="text-sm">{t("reports.conversions.pendingPayouts")}</span>
                 <span className="font-semibold text-yellow-600">${pendingPayout.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm">Total Potential:</span>
+                <span className="text-sm">{t("reports.conversions.totalPotential")}</span>
                 <span className="font-bold">${(totalPayout + pendingPayout).toFixed(2)}</span>
               </div>
             </div>
@@ -188,14 +190,14 @@ const ConversionReport: React.FC = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Conversion Rate</CardTitle>
-            <CardDescription>Approval rate over time</CardDescription>
+            <CardTitle>{t("reports.conversions.conversionRate")}</CardTitle>
+            <CardDescription>{t("reports.conversions.approvalRateOverTime")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
-                  <span className="text-sm">Approval Rate:</span>
+                  <span className="text-sm">{t("reports.conversions.approvalRate")}</span>
                   <div className="font-semibold text-xl">
                     {filteredConversions.length > 0 
                       ? `${((approvedConversions.length / filteredConversions.length) * 100).toFixed(1)}%`
@@ -203,7 +205,7 @@ const ConversionReport: React.FC = () => {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm">Rejection Rate:</span>
+                  <span className="text-sm">{t("reports.conversions.rejectionRate")}</span>
                   <div className="font-semibold text-xl">
                     {filteredConversions.length > 0
                       ? `${((rejectedConversions.length / filteredConversions.length) * 100).toFixed(1)}%`
@@ -211,7 +213,7 @@ const ConversionReport: React.FC = () => {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm">Pending Rate:</span>
+                  <span className="text-sm">{t("reports.conversions.pendingRate")}</span>
                   <div className="font-semibold text-xl">
                     {filteredConversions.length > 0
                       ? `${((pendingConversions.length / filteredConversions.length) * 100).toFixed(1)}%`
@@ -227,12 +229,12 @@ const ConversionReport: React.FC = () => {
       {/* Conversions Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Conversion Details</CardTitle>
+          <CardTitle>{t("reports.conversions.conversionDetails")}</CardTitle>
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
               <Input
-                placeholder="Search by transaction ID..."
+                placeholder={t("reports.conversions.searchByTransactionId")}
                 className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -245,18 +247,18 @@ const ConversionReport: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date & Time</TableHead>
-                  <TableHead>Transaction ID</TableHead>
-                  <TableHead>Campaign</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Payout</TableHead>
+                  <TableHead>{t("reports.conversions.dateTime")}</TableHead>
+                  <TableHead>{t("reports.conversions.transactionId")}</TableHead>
+                  <TableHead>{t("reports.conversions.campaign")}</TableHead>
+                  <TableHead>{t("reports.conversions.status")}</TableHead>
+                  <TableHead className="text-right">{t("reports.conversions.payout")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredConversions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="h-24 text-center">
-                      No conversions found
+                      {t("reports.conversions.noConversionsFound")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -290,9 +292,9 @@ const ConversionReport: React.FC = () => {
           {/* Pagination */}
           <div className="flex items-center justify-between py-4">
             <div className="text-sm text-gray-500">
-              Showing <span className="font-medium">{Math.min(1, filteredConversions.length)}</span> to{" "}
-              <span className="font-medium">{Math.min(10, filteredConversions.length)}</span> of{" "}
-              <span className="font-medium">{filteredConversions.length}</span> results
+              {t("reports.conversions.showingResults")} <span className="font-medium">{Math.min(1, filteredConversions.length)}</span> {t("reports.conversions.to")}{" "}
+              <span className="font-medium">{Math.min(10, filteredConversions.length)}</span> {t("reports.conversions.of")}{" "}
+              <span className="font-medium">{filteredConversions.length}</span> {t("reports.conversions.results")}
             </div>
             <div className="flex items-center space-x-2">
               <Button
@@ -301,7 +303,7 @@ const ConversionReport: React.FC = () => {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               >
-                Previous
+                {t("reports.conversions.previous")}
               </Button>
               <Button
                 variant="outline"
@@ -309,7 +311,7 @@ const ConversionReport: React.FC = () => {
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               >
-                Next
+                {t("reports.conversions.next")}
               </Button>
             </div>
           </div>

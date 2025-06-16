@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Select, 
@@ -25,6 +26,7 @@ import {
 import { mockPerformanceData, mockCampaigns } from "@/services/api";
 
 const PerformanceReport: React.FC = () => {
+  const { t } = useTranslation();
   const [dateRange, setDateRange] = useState("7days");
   const [campaignFilter, setCampaignFilter] = useState("all");
   
@@ -49,41 +51,41 @@ const PerformanceReport: React.FC = () => {
     : "0";
 
   const stats = [
-    { title: "Impressions", value: totalImpressions.toLocaleString() },
-    { title: "Clicks", value: totalClicks.toLocaleString() },
-    { title: "CTR", value: `${ctr}%` },
-    { title: "Conversions", value: totalConversions.toLocaleString() },
-    { title: "Conv. Rate", value: `${conversionRate}%` },
-    { title: "Revenue", value: `$${totalRevenue.toLocaleString()}` },
+    { title: t("reports.performance.impressions"), value: totalImpressions.toLocaleString() },
+    { title: t("reports.performance.clicks"), value: totalClicks.toLocaleString() },
+    { title: t("reports.performance.ctr"), value: `${ctr}%` },
+    { title: t("reports.performance.conversions"), value: totalConversions.toLocaleString() },
+    { title: t("reports.performance.conversionRate"), value: `${conversionRate}%` },
+    { title: t("reports.performance.revenue"), value: `$${totalRevenue.toLocaleString()}` },
   ];
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <h1 className="text-2xl font-bold tracking-tight">Performance Report</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("reports.performance.title")}</h1>
         
         <div className="flex flex-col sm:flex-row gap-4">
           <Select value={dateRange} onValueChange={setDateRange}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select date range" />
+              <SelectValue placeholder={t("reports.performance.selectDateRange")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="7days">Last 7 days</SelectItem>
-                <SelectItem value="30days">Last 30 days</SelectItem>
-                <SelectItem value="90days">Last 3 months</SelectItem>
-                <SelectItem value="year">Last 12 months</SelectItem>
+                <SelectItem value="7days">{t("reports.performance.last7Days")}</SelectItem>
+                <SelectItem value="30days">{t("reports.performance.last30Days")}</SelectItem>
+                <SelectItem value="90days">{t("reports.performance.last3Months")}</SelectItem>
+                <SelectItem value="year">{t("reports.performance.last12Months")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
           
           <Select value={campaignFilter} onValueChange={setCampaignFilter}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by campaign" />
+              <SelectValue placeholder={t("reports.performance.filterByCampaign")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="all">All Campaigns</SelectItem>
+                <SelectItem value="all">{t("reports.performance.allCampaigns")}</SelectItem>
                 {mockCampaigns.map(campaign => (
                   <SelectItem key={campaign.id} value={campaign.id}>
                     {campaign.name}
@@ -110,15 +112,15 @@ const PerformanceReport: React.FC = () => {
       {/* Charts */}
       <Card>
         <CardHeader>
-          <CardTitle>Performance Metrics</CardTitle>
+          <CardTitle>{t("reports.performance.performanceMetrics")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="traffic" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="traffic">Traffic</TabsTrigger>
-              <TabsTrigger value="conversions">Conversions</TabsTrigger>
-              <TabsTrigger value="revenue">Revenue</TabsTrigger>
-              <TabsTrigger value="rates">Rates</TabsTrigger>
+              <TabsTrigger value="traffic">{t("reports.performance.traffic")}</TabsTrigger>
+              <TabsTrigger value="conversions">{t("reports.performance.conversions")}</TabsTrigger>
+              <TabsTrigger value="revenue">{t("reports.performance.revenue")}</TabsTrigger>
+              <TabsTrigger value="rates">{t("reports.performance.rates")}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="traffic" className="py-4">
@@ -138,7 +140,7 @@ const PerformanceReport: React.FC = () => {
                       yAxisId="left"
                       type="monotone"
                       dataKey="impressions"
-                      name="Impressions"
+                      name={t("reports.performance.impressions")}
                       stroke="#8884d8"
                       strokeWidth={2}
                     />
@@ -146,7 +148,7 @@ const PerformanceReport: React.FC = () => {
                       yAxisId="right"
                       type="monotone"
                       dataKey="clicks"
-                      name="Clicks"
+                      name={t("reports.performance.clicks")}
                       stroke="#4338ca"
                       strokeWidth={2}
                     />
@@ -170,7 +172,7 @@ const PerformanceReport: React.FC = () => {
                     <Line
                       type="monotone"
                       dataKey="conversions"
-                      name="Conversions"
+                      name={t("reports.performance.conversions")}
                       stroke="#4338ca"
                       strokeWidth={2}
                     />
@@ -189,11 +191,11 @@ const PerformanceReport: React.FC = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
-                    <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
+                    <Tooltip formatter={(value) => [`$${value}`, t("reports.performance.revenue")]} />
                     <Legend />
                     <Bar
                       dataKey="revenue"
-                      name="Revenue"
+                      name={t("reports.performance.revenue")}
                       fill="#4338ca"
                       radius={[4, 4, 0, 0]}
                     />
@@ -221,14 +223,14 @@ const PerformanceReport: React.FC = () => {
                     <Line
                       type="monotone"
                       dataKey="ctr"
-                      name="Click-Through Rate"
+                      name={t("reports.performance.clickThroughRate")}
                       stroke="#6366f1"
                       strokeWidth={2}
                     />
                     <Line
                       type="monotone"
                       dataKey="convRate"
-                      name="Conversion Rate"
+                      name={t("reports.performance.conversionRate")}
                       stroke="#4338ca"
                       strokeWidth={2}
                     />
@@ -243,7 +245,7 @@ const PerformanceReport: React.FC = () => {
       {/* Data Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Daily Performance Data</CardTitle>
+          <CardTitle>{t("reports.performance.dailyPerformanceData")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -251,13 +253,13 @@ const PerformanceReport: React.FC = () => {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-muted/50">
-                    <th className="h-10 px-4 text-left font-medium">Date</th>
-                    <th className="h-10 px-4 text-right font-medium">Impressions</th>
-                    <th className="h-10 px-4 text-right font-medium">Clicks</th>
-                    <th className="h-10 px-4 text-right font-medium">CTR</th>
-                    <th className="h-10 px-4 text-right font-medium">Conversions</th>
-                    <th className="h-10 px-4 text-right font-medium">Conv. Rate</th>
-                    <th className="h-10 px-4 text-right font-medium">Revenue</th>
+                    <th className="h-10 px-4 text-left font-medium">{t("reports.performance.date")}</th>
+                    <th className="h-10 px-4 text-right font-medium">{t("reports.performance.impressions")}</th>
+                    <th className="h-10 px-4 text-right font-medium">{t("reports.performance.clicks")}</th>
+                    <th className="h-10 px-4 text-right font-medium">{t("reports.performance.ctr")}</th>
+                    <th className="h-10 px-4 text-right font-medium">{t("reports.performance.conversions")}</th>
+                    <th className="h-10 px-4 text-right font-medium">{t("reports.performance.conversionRate")}</th>
+                    <th className="h-10 px-4 text-right font-medium">{t("reports.performance.revenue")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -280,7 +282,7 @@ const PerformanceReport: React.FC = () => {
                 </tbody>
                 <tfoot>
                   <tr className="border-t">
-                    <th className="h-10 px-4 text-left font-medium">Total</th>
+                    <th className="h-10 px-4 text-left font-medium">{t("reports.performance.total")}</th>
                     <th className="h-10 px-4 text-right font-medium">
                       {totalImpressions.toLocaleString()}
                     </th>
