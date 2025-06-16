@@ -1,4 +1,3 @@
-
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -48,12 +47,6 @@ export interface DomainOrganization {
     organizationId?: number;
     /**
      * 
-     * @type {string}
-     * @memberof DomainOrganization
-     */
-    status?: string;
-    /**
-     * 
      * @type {DomainOrganizationType}
      * @memberof DomainOrganization
      */
@@ -88,7 +81,6 @@ export function DomainOrganizationFromJSONTyped(json: any, ignoreDiscriminator: 
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
         'name': json['name'] == null ? undefined : json['name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
-        'status': json['status'] == null ? undefined : json['status'],
         'type': json['type'] == null ? undefined : DomainOrganizationTypeFromJSON(json['type']),
         'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
     };
@@ -108,8 +100,8 @@ export function DomainOrganizationToJSONTyped(value?: DomainOrganization | null,
         'created_at': value['createdAt'],
         'name': value['name'],
         'organization_id': value['organizationId'],
-        'status': value['status'],
         'type': DomainOrganizationTypeToJSON(value['type']),
         'updated_at': value['updatedAt'],
     };
 }
+

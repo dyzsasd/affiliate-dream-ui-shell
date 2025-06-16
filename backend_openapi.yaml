@@ -39,6 +39,19 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.AffiliateNetworkData:
+    properties:
+      count:
+        type: integer
+      sampleValue:
+        items:
+          type: string
+        type: array
+      value:
+        items:
+          type: string
+        type: array
+    type: object
   domain.AffiliateProviderMapping:
     properties:
       affiliate_id:
@@ -71,6 +84,201 @@ definitions:
         description: Synchronization metadata
         type: string
       updated_at:
+        type: string
+    type: object
+  domain.AnalyticsAdvertiser:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      domain:
+        type: string
+      favicon_image_url:
+        type: string
+      id:
+        type: integer
+      screenshot_image_url:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.AnalyticsAdvertiserResponse:
+    properties:
+      advertiser:
+        properties:
+          affiliateNetworks:
+            $ref: '#/definitions/domain.AffiliateNetworkData'
+          backlinks: {}
+          contactEmails:
+            $ref: '#/definitions/domain.ContactEmailData'
+          domain:
+            type: string
+          keywords:
+            $ref: '#/definitions/domain.KeywordData'
+          metaData:
+            $ref: '#/definitions/domain.MetaData'
+          partnerInformation: {}
+          relatedAdvertisers: {}
+          socialMedia:
+            $ref: '#/definitions/domain.SocialMediaData'
+          verticals:
+            $ref: '#/definitions/domain.VerticalData'
+        type: object
+    type: object
+  domain.AnalyticsPublisher:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      domain:
+        type: string
+      favicon_image_url:
+        type: string
+      id:
+        type: integer
+      known:
+        type: boolean
+      promotype:
+        type: string
+      relevance:
+        type: number
+      screenshot_image_url:
+        type: string
+      traffic_score:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  domain.AnalyticsPublisherResponse:
+    properties:
+      publisher:
+        properties:
+          affiliateNetworks:
+            $ref: '#/definitions/domain.AffiliateNetworkData'
+          countryRankings:
+            $ref: '#/definitions/domain.CountryRankingData'
+          domain:
+            type: string
+          keywords:
+            $ref: '#/definitions/domain.KeywordData'
+          known:
+            properties:
+              value:
+                type: boolean
+            type: object
+          liveUrls: {}
+          metaData:
+            $ref: '#/definitions/domain.MetaData'
+          partnerInformation: {}
+          partners: {}
+          promotype:
+            properties:
+              value:
+                type: string
+            type: object
+          relatedPublishers: {}
+          relevance:
+            type: number
+          socialMedia:
+            $ref: '#/definitions/domain.SocialMediaData'
+          trafficScore:
+            type: number
+          verticals: {}
+          verticalsV2:
+            $ref: '#/definitions/domain.VerticalData'
+        type: object
+    type: object
+  domain.AutocompleteResult:
+    properties:
+      domain:
+        type: string
+      id:
+        type: integer
+      name:
+        description: Display name (domain for now)
+        type: string
+      type:
+        description: '"advertiser" or "publisher"'
+        type: string
+    type: object
+  domain.ContactEmailData:
+    properties:
+      count:
+        type: integer
+      error:
+        type: boolean
+      value:
+        items:
+          properties:
+            department:
+              type: string
+            value:
+              type: string
+          type: object
+        type: array
+    type: object
+  domain.CountryRankingData:
+    properties:
+      count:
+        type: integer
+      highestValue:
+        properties:
+          countryCode:
+            type: string
+          score:
+            type: number
+        type: object
+      sampleValue:
+        items:
+          properties:
+            countryCode:
+              type: string
+            score:
+              type: number
+          type: object
+        type: array
+      value:
+        items:
+          properties:
+            countryCode:
+              type: string
+            score:
+              type: number
+          type: object
+        type: array
+    type: object
+  domain.KeywordData:
+    properties:
+      count:
+        type: integer
+      sampleValue:
+        items:
+          properties:
+            score:
+              type: number
+            value:
+              type: string
+          type: object
+        type: array
+      value:
+        items:
+          properties:
+            score:
+              type: number
+            value:
+              type: string
+          type: object
+        type: array
+    type: object
+  domain.MetaData:
+    properties:
+      description:
+        type: string
+      faviconImageUrl:
+        type: string
+      screenshotImageUrl:
         type: string
     type: object
   domain.Organization:
@@ -121,6 +329,55 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  domain.SocialMediaData:
+    properties:
+      count:
+        type: integer
+      socialsAvailable:
+        items:
+          type: string
+        type: array
+      value:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
+  domain.VerticalData:
+    properties:
+      count:
+        type: integer
+      sampleValue:
+        properties:
+          name:
+            type: string
+          rank:
+            type: integer
+          score:
+            type: integer
+        type: object
+      value:
+        items:
+          properties:
+            name:
+              type: string
+            rank:
+              type: integer
+            score:
+              type: integer
+          type: object
+        type: array
+    type: object
+  handlers.CreateAdvertiserRequest:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      domain:
+        type: string
+    required:
+    - data
+    - domain
     type: object
   handlers.CreateAffiliateProviderMappingRequest:
     properties:
@@ -186,6 +443,17 @@ definitions:
     - name
     - type
     type: object
+  handlers.CreatePublisherRequest:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      domain:
+        type: string
+    required:
+    - data
+    - domain
+    type: object
   handlers.ErrorResponse:
     properties:
       details:
@@ -205,6 +473,12 @@ definitions:
         type: integer
       role_id:
         type: integer
+    type: object
+  handlers.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
     type: object
   handlers.SupabaseUserWebhookPayload:
     properties:
@@ -945,6 +1219,206 @@ paths:
       summary: Get affiliate provider mapping
       tags:
       - affiliates
+  /api/v1/analytics/advertisers:
+    post:
+      consumes:
+      - application/json
+      description: Create a new advertiser analytics entry
+      parameters:
+      - description: Advertiser data
+        in: body
+        name: advertiser
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateAdvertiserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Advertiser created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.AnalyticsAdvertiser'
+              type: object
+        "400":
+          description: Bad request - invalid data
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create advertiser analytics data
+      tags:
+      - Analytics
+  /api/v1/analytics/advertisers/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve detailed analytics data for a specific advertiser
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Advertiser analytics data
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.AnalyticsAdvertiserResponse'
+              type: object
+        "400":
+          description: Bad request - invalid ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Advertiser not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get advertiser analytics data
+      tags:
+      - Analytics
+  /api/v1/analytics/affiliates:
+    post:
+      consumes:
+      - application/json
+      description: Create a new publisher analytics entry
+      parameters:
+      - description: Publisher data
+        in: body
+        name: publisher
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreatePublisherRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Publisher created successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.AnalyticsPublisher'
+              type: object
+        "400":
+          description: Bad request - invalid data
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create publisher analytics data
+      tags:
+      - Analytics
+  /api/v1/analytics/affiliates/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve detailed analytics data for a specific publisher (affiliate)
+      parameters:
+      - description: Publisher ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Publisher analytics data
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.AnalyticsPublisherResponse'
+              type: object
+        "400":
+          description: Bad request - invalid ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Publisher not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get publisher analytics data
+      tags:
+      - Analytics
+  /api/v1/analytics/autocomplete:
+    get:
+      consumes:
+      - application/json
+      description: Search advertisers and/or publishers by domain name for autocompletion
+        (minimum 3 characters)
+      parameters:
+      - description: Search query (minimum 3 characters)
+        in: query
+        minLength: 3
+        name: q
+        required: true
+        type: string
+      - default: both
+        description: Organization type filter
+        enum:
+        - advertiser
+        - publisher
+        - both
+        in: query
+        name: type
+        type: string
+      - default: 10
+        description: Maximum number of results
+        in: query
+        maximum: 50
+        minimum: 1
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Autocompletion results
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.AutocompleteResult'
+                  type: array
+              type: object
+        "400":
+          description: Bad request - invalid parameters
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Search organizations for autocompletion
+      tags:
+      - Analytics
   /campaigns:
     post:
       consumes:

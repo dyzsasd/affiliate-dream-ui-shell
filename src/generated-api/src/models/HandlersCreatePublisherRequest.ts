@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface HandlersCreateAdvertiserRequest
+ * @interface HandlersCreatePublisherRequest
  */
-export interface HandlersCreateAdvertiserRequest {
+export interface HandlersCreatePublisherRequest {
     /**
      * 
      * @type {{ [key: string]: any | undefined; }}
-     * @memberof HandlersCreateAdvertiserRequest
+     * @memberof HandlersCreatePublisherRequest
      */
     data: { [key: string]: any | undefined; };
     /**
      * 
      * @type {string}
-     * @memberof HandlersCreateAdvertiserRequest
+     * @memberof HandlersCreatePublisherRequest
      */
     domain: string;
 }
 
 /**
- * Check if a given object implements the HandlersCreateAdvertiserRequest interface.
+ * Check if a given object implements the HandlersCreatePublisherRequest interface.
  */
-export function instanceOfHandlersCreateAdvertiserRequest(value: object): value is HandlersCreateAdvertiserRequest {
+export function instanceOfHandlersCreatePublisherRequest(value: object): value is HandlersCreatePublisherRequest {
     if (!('data' in value) || value['data'] === undefined) return false;
     if (!('domain' in value) || value['domain'] === undefined) return false;
     return true;
 }
 
-export function HandlersCreateAdvertiserRequestFromJSON(json: any): HandlersCreateAdvertiserRequest {
-    return HandlersCreateAdvertiserRequestFromJSONTyped(json, false);
+export function HandlersCreatePublisherRequestFromJSON(json: any): HandlersCreatePublisherRequest {
+    return HandlersCreatePublisherRequestFromJSONTyped(json, false);
 }
 
-export function HandlersCreateAdvertiserRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): HandlersCreateAdvertiserRequest {
+export function HandlersCreatePublisherRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): HandlersCreatePublisherRequest {
     if (json == null) {
         return json;
     }
@@ -57,11 +57,11 @@ export function HandlersCreateAdvertiserRequestFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function HandlersCreateAdvertiserRequestToJSON(json: any): HandlersCreateAdvertiserRequest {
-    return HandlersCreateAdvertiserRequestToJSONTyped(json, false);
+export function HandlersCreatePublisherRequestToJSON(json: any): HandlersCreatePublisherRequest {
+    return HandlersCreatePublisherRequestToJSONTyped(json, false);
 }
 
-export function HandlersCreateAdvertiserRequestToJSONTyped(value?: HandlersCreateAdvertiserRequest | null, ignoreDiscriminator: boolean = false): any {
+export function HandlersCreatePublisherRequestToJSONTyped(value?: HandlersCreatePublisherRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
