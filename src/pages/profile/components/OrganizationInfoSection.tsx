@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserProfile } from '@/contexts/auth/authTypes';
@@ -40,11 +41,6 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
                (backendProfile?.organizationId ? (
                  <>
                    <span>ID: {backendProfile.organizationId}</span>
-                   {organization?.status && (
-                     <Badge variant={organization.status === 'active' ? 'default' : 'outline'}>
-                       {organization.status}
-                     </Badge>
-                   )}
                  </>
                ) : t("profile.notAssigned"))}
             </>
@@ -67,3 +63,4 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
 };
 
 export default OrganizationInfoSection;
+

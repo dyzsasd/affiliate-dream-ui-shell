@@ -1,4 +1,5 @@
 
+
 import { User, Session } from '@/types/auth';
 import { UserProfile } from '../../authTypes';
 import { DomainOrganization } from '@/generated-api/src/models';
@@ -50,11 +51,10 @@ export const useMockAuthOperations = (
         }
       });
       
-      // Set up a mock organization
+      // Set up a mock organization - removed status property
       setOrganization({
         organizationId: 123,
         name: 'Mock Organization',
-        status: 'active',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
@@ -105,11 +105,10 @@ export const useMockAuthOperations = (
         }
       });
       
-      // Set up a mock organization
+      // Set up a mock organization - removed status property
       setOrganization({
         organizationId: 123,
         name: 'Mock Organization',
-        status: 'active',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
@@ -143,3 +142,4 @@ export const useMockAuthOperations = (
     signOut
   };
 };
+

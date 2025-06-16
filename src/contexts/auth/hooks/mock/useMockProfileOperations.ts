@@ -1,4 +1,5 @@
 
+
 import { User } from '@/types/auth';
 import { UserProfile } from '../../authTypes';
 import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
@@ -80,11 +81,10 @@ export const useMockProfileOperations = (
   const fetchOrganization = async (organizationId: number) => {
     setIsOrganizationLoading(true);
     try {
-      // Create a mock organization
+      // Create a mock organization - removed status property
       const mockOrganization: DomainOrganization = {
         organizationId: organizationId,
         name: `Mock Organization ${organizationId}`,
-        status: 'active',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -115,3 +115,4 @@ export const useMockProfileOperations = (
     hasPermission
   };
 };
+

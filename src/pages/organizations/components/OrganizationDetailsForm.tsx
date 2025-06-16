@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,15 +29,6 @@ const OrganizationDetailsForm: React.FC<OrganizationDetailsFormProps> = ({
   isSaving,
 }) => {
   const { t } = useTranslation();
-
-  const getStatusLabel = (status: string | undefined) => {
-    switch (status) {
-      case 'active': return t("organizations.statusActive");
-      case 'pending': return t("organizations.statusPending");
-      case 'inactive': return t("organizations.statusInactive");
-      default: return t("organizations.statusUnknown");
-    }
-  };
 
   return (
     <Card>
@@ -70,13 +62,6 @@ const OrganizationDetailsForm: React.FC<OrganizationDetailsFormProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label>{t("organizations.currentStatus")}</Label>
-          <Badge variant="outline">
-            {getStatusLabel(organization.status)}
-          </Badge>
-        </div>
-
-        <div className="space-y-2">
           <Label>{t("organizations.created")}</Label>
           <p className="text-sm text-muted-foreground">
             {organization.createdAt ? new Date(organization.createdAt).toLocaleDateString() : t("organizations.statusUnknown")}
@@ -106,3 +91,4 @@ const OrganizationDetailsForm: React.FC<OrganizationDetailsFormProps> = ({
 };
 
 export default OrganizationDetailsForm;
+

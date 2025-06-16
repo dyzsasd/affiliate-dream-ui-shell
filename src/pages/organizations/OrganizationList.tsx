@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -70,30 +71,12 @@ const OrganizationList: React.FC = () => {
     }
   };
 
-  const getStatusColor = (status: string | undefined) => {
-    switch (status) {
-      case 'active': return 'default';
-      case 'pending': return 'secondary';
-      case 'inactive': return 'outline';
-      default: return 'outline';
-    }
-  };
-
   const getTypeLabel = (type: string | undefined) => {
     switch (type) {
       case 'advertiser': return t("organizations.typeAdvertiser");
       case 'affiliate': return t("organizations.typeAffiliate");
       case 'platform_owner': return t("organizations.typePlatformOwner");
       default: return type;
-    }
-  };
-
-  const getStatusLabel = (status: string | undefined) => {
-    switch (status) {
-      case 'active': return t("organizations.statusActive");
-      case 'pending': return t("organizations.statusPending");
-      case 'inactive': return t("organizations.statusInactive");
-      default: return t("organizations.statusUnknown");
     }
   };
 
@@ -165,9 +148,6 @@ const OrganizationList: React.FC = () => {
                     <Badge className={getTypeColor(org.type)}>
                       {getTypeLabel(org.type)}
                     </Badge>
-                    <Badge variant={getStatusColor(org.status)}>
-                      {getStatusLabel(org.status)}
-                    </Badge>
                   </div>
                   <div className="mt-2 text-sm text-muted-foreground">
                     {t("organizations.created")}: {org.createdAt ? new Date(org.createdAt).toLocaleDateString() : t("organizations.statusUnknown")}
@@ -215,3 +195,4 @@ const OrganizationList: React.FC = () => {
 };
 
 export default OrganizationList;
+
