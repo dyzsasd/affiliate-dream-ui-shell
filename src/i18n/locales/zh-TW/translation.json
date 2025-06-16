@@ -1,3 +1,4 @@
+
 {
   "appName": "rolinko",
   "appDescription": "您的聯盟行銷平台",
@@ -271,5 +272,41 @@
   },
   "organization": {
     "noOrganization": "沒有可用的組織"
+  },
+  "trackingLinks": {
+    "title": "追蹤連結產生器",
+    "description": "為您的推廣活動建立追蹤連結",
+    "generateLink": "產生連結",
+    "campaign": "活動",
+    "selectCampaign": "選擇活動",
+    "campaigns": "活動",
+    "affiliate": "聯盟夥伴",
+    "selectAffiliate": "選擇聯盟夥伴",
+    "affiliates": "聯盟夥伴",
+    "subId1": "子ID 1（選填）",
+    "subId1Placeholder": "例如：來源、管道",
+    "subId2": "子ID 2（選填）",
+    "subId2Placeholder": "例如：活動、橫幅尺寸",
+    "subId3": "子ID 3（選填）",
+    "subId3Placeholder": "例如：位置、廣告版本",
+    "deepLink": "深度連結URL（選填）",
+    "deepLinkPlaceholder": "https://example.com/specific-page",
+    "deepLinkDescription": "用於在轉化後將使用者引導到特定頁面。",
+    "generating": "產生中...",
+    "yourTrackingLink": "您的追蹤連結",
+    "linkFor": "{{campaign}} - {{affiliate}} 的連結",
+    "generateLinkToSee": "產生連結以在此處檢視",
+    "trackingUrl": "追蹤URL",
+    "copyToClipboard": "複製到剪貼簿",
+    "linkDetails": "連結詳情",
+    "noLinkGenerated": "尚未產生連結",
+    "fillFormToGenerate": "填寫表單並產生追蹤連結以在此處檢視。",
+    "errorSelectBoth": "請同時選擇活動和聯盟夥伴",
+    "linkGenerated": "連結已產生",
+    "linkGeneratedSuccess": "您的追蹤連結已成功產生。",
+    "linkGenerationError": "產生追蹤連結失敗",
+    "copied": "已複製！",
+    "linkCopied": "追蹤連結已複製到剪貼簿",
+    "copyError": "複製連結失敗"
   }
 }

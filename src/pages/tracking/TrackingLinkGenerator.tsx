@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -55,6 +56,7 @@ const mockAffiliates = [
 const TrackingLinkGenerator: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { t } = useTranslation();
   
   // Get campaign ID and affiliate ID from URL if they exist
   const urlCampaignId = searchParams.get("campaignId");
@@ -79,8 +81,8 @@ const TrackingLinkGenerator: React.FC = () => {
   const handleGenerateLink = async () => {
     if (!campaignId || !affiliateId) {
       toast({
-        title: "Error",
-        description: "Please select both a campaign and an affiliate",
+        title: t("common.error"),
+        description: t("trackingLinks.errorSelectBoth"),
         variant: "destructive",
       });
       return;
@@ -109,14 +111,14 @@ const TrackingLinkGenerator: React.FC = () => {
       
       setGeneratedLink(trackingUrl);
       toast({
-        title: "Link Generated",
-        description: "Your tracking link has been generated successfully.",
+        title: t("trackingLinks.linkGenerated"),
+        description: t("trackingLinks.linkGeneratedSuccess"),
       });
     } catch (error) {
       console.error("Error generating link:", error);
       toast({
-        title: "Error",
-        description: "Failed to generate tracking link",
+        title: t("common.error"),
+        description: t("trackingLinks.linkGenerationError"),
         variant: "destructive",
       });
     } finally {
@@ -128,15 +130,15 @@ const TrackingLinkGenerator: React.FC = () => {
     navigator.clipboard.writeText(generatedLink)
       .then(() => {
         toast({
-          title: "Copied!",
-          description: "Tracking link copied to clipboard",
+          title: t("trackingLinks.copied"),
+          description: t("trackingLinks.linkCopied"),
         });
       })
       .catch((error) => {
         console.error("Error copying text:", error);
         toast({
-          title: "Error",
-          description: "Failed to copy link",
+          title: t("common.error"),
+          description: t("trackingLinks.copyError"),
           variant: "destructive",
         });
       });
@@ -154,31 +156,31 @@ const TrackingLinkGenerator: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Tracking Link Generator</h1>
+      <h1 className="text-2xl font-bold tracking-tight">{t("trackingLinks.title")}</h1>
       
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Generate Link</CardTitle>
+            <CardTitle>{t("trackingLinks.generateLink")}</CardTitle>
             <CardDescription>
-              Create a tracking link for your promotional campaigns
+              {t("trackingLinks.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Campaign</label>
+                <label className="text-sm font-medium">{t("trackingLinks.campaign")}</label>
                 <Select
                   value={campaignId}
                   onValueChange={setCampaignId}
                   disabled={isGenerating}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a campaign" />
+                    <SelectValue placeholder={t("trackingLinks.selectCampaign")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Campaigns</SelectLabel>
+                      <SelectLabel>{t("trackingLinks.campaigns")}</SelectLabel>
                       {campaigns.map((campaign) => (
                         <SelectItem key={campaign.id} value={campaign.id}>
                           {campaign.name}
@@ -190,18 +192,18 @@ const TrackingLinkGenerator: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Affiliate</label>
+                <label className="text-sm font-medium">{t("trackingLinks.affiliate")}</label>
                 <Select
                   value={affiliateId}
                   onValueChange={setAffiliateId}
                   disabled={isGenerating}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select an affiliate" />
+                    <SelectValue placeholder={t("trackingLinks.selectAffiliate")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Affiliates</SelectLabel>
+                      <SelectLabel>{t("trackingLinks.affiliates")}</SelectLabel>
                       {affiliates.map((affiliate) => (
                         <SelectItem key={affiliate.id} value={affiliate.id}>
                           {affiliate.name} - {affiliate.email}
@@ -215,9 +217,9 @@ const TrackingLinkGenerator: React.FC = () => {
               <Separator />
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Sub ID 1 (Optional)</label>
+                <label className="text-sm font-medium">{t("trackingLinks.subId1")}</label>
                 <Input
-                  placeholder="e.g., source, channel"
+                  placeholder={t("trackingLinks.subId1Placeholder")}
                   value={sub1}
                   onChange={(e) => setSub1(e.target.value)}
                   disabled={isGenerating}
@@ -225,9 +227,9 @@ const TrackingLinkGenerator: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Sub ID 2 (Optional)</label>
+                <label className="text-sm font-medium">{t("trackingLinks.subId2")}</label>
                 <Input
-                  placeholder="e.g., campaign, banner size"
+                  placeholder={t("trackingLinks.subId2Placeholder")}
                   value={sub2}
                   onChange={(e) => setSub2(e.target.value)}
                   disabled={isGenerating}
@@ -235,9 +237,9 @@ const TrackingLinkGenerator: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Sub ID 3 (Optional)</label>
+                <label className="text-sm font-medium">{t("trackingLinks.subId3")}</label>
                 <Input
-                  placeholder="e.g., placement, ad version"
+                  placeholder={t("trackingLinks.subId3Placeholder")}
                   value={sub3}
                   onChange={(e) => setSub3(e.target.value)}
                   disabled={isGenerating}
@@ -245,15 +247,15 @@ const TrackingLinkGenerator: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Deep Link URL (Optional)</label>
+                <label className="text-sm font-medium">{t("trackingLinks.deepLink")}</label>
                 <Input
-                  placeholder="https://example.com/specific-page"
+                  placeholder={t("trackingLinks.deepLinkPlaceholder")}
                   value={deepLink}
                   onChange={(e) => setDeepLink(e.target.value)}
                   disabled={isGenerating}
                 />
                 <p className="text-xs text-gray-500">
-                  Used to direct users to a specific page after conversion.
+                  {t("trackingLinks.deepLinkDescription")}
                 </p>
               </div>
               
@@ -265,12 +267,12 @@ const TrackingLinkGenerator: React.FC = () => {
                 {isGenerating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
+                    {t("trackingLinks.generating")}
                   </>
                 ) : (
                   <>
                     <LinkIcon className="mr-2 h-4 w-4" />
-                    Generate Link
+                    {t("trackingLinks.generateLink")}
                   </>
                 )}
               </Button>
@@ -280,11 +282,11 @@ const TrackingLinkGenerator: React.FC = () => {
         
         <Card className={`${!generatedLink && "opacity-60"}`}>
           <CardHeader>
-            <CardTitle>Your Tracking Link</CardTitle>
+            <CardTitle>{t("trackingLinks.yourTrackingLink")}</CardTitle>
             <CardDescription>
               {generatedLink
-                ? `Link for ${getSelectedCampaignName()} - ${getSelectedAffiliateName()}`
-                : "Generate a link to see it here"}
+                ? t("trackingLinks.linkFor", { campaign: getSelectedCampaignName(), affiliate: getSelectedAffiliateName() })
+                : t("trackingLinks.generateLinkToSee")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -293,7 +295,7 @@ const TrackingLinkGenerator: React.FC = () => {
                 <div className="bg-gray-50 p-4 rounded-md border border-gray-100 break-all">
                   <div className="flex items-center mb-2">
                     <Link className="h-4 w-4 text-affiliate-primary mr-2" />
-                    <span className="text-sm font-medium">Tracking URL</span>
+                    <span className="text-sm font-medium">{t("trackingLinks.trackingUrl")}</span>
                   </div>
                   <p className="text-sm">{generatedLink}</p>
                 </div>
@@ -304,44 +306,44 @@ const TrackingLinkGenerator: React.FC = () => {
                   className="w-full"
                 >
                   <Copy className="mr-2 h-4 w-4" />
-                  Copy to Clipboard
+                  {t("trackingLinks.copyToClipboard")}
                 </Button>
                 
                 <Separator />
                 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Link Details</h3>
+                  <h3 className="text-sm font-medium">{t("trackingLinks.linkDetails")}</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-gray-500">Campaign:</div>
+                    <div className="text-gray-500">{t("trackingLinks.campaign")}:</div>
                     <div>{getSelectedCampaignName()}</div>
                     
-                    <div className="text-gray-500">Affiliate:</div>
+                    <div className="text-gray-500">{t("trackingLinks.affiliate")}:</div>
                     <div>{getSelectedAffiliateName()}</div>
                     
                     {sub1 && (
                       <>
-                        <div className="text-gray-500">Sub ID 1:</div>
+                        <div className="text-gray-500">{t("trackingLinks.subId1")}:</div>
                         <div>{sub1}</div>
                       </>
                     )}
                     
                     {sub2 && (
                       <>
-                        <div className="text-gray-500">Sub ID 2:</div>
+                        <div className="text-gray-500">{t("trackingLinks.subId2")}:</div>
                         <div>{sub2}</div>
                       </>
                     )}
                     
                     {sub3 && (
                       <>
-                        <div className="text-gray-500">Sub ID 3:</div>
+                        <div className="text-gray-500">{t("trackingLinks.subId3")}:</div>
                         <div>{sub3}</div>
                       </>
                     )}
                     
                     {deepLink && (
                       <>
-                        <div className="text-gray-500">Deep Link:</div>
+                        <div className="text-gray-500">{t("trackingLinks.deepLink")}:</div>
                         <div className="truncate">{deepLink}</div>
                       </>
                     )}
@@ -354,9 +356,9 @@ const TrackingLinkGenerator: React.FC = () => {
                   <Link className="h-8 w-8 text-gray-400" />
                 </div>
                 <div className="text-center">
-                  <h3 className="font-medium">No Link Generated Yet</h3>
+                  <h3 className="font-medium">{t("trackingLinks.noLinkGenerated")}</h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Fill out the form and generate a tracking link to see it here.
+                    {t("trackingLinks.fillFormToGenerate")}
                   </p>
                 </div>
               </div>

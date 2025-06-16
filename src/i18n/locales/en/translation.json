@@ -1,3 +1,4 @@
+
 {
   "appName": "rolinko",
   "appDescription": "Your affiliate marketing platform",
@@ -271,5 +272,41 @@
   },
   "organization": {
     "noOrganization": "No organization available"
+  },
+  "trackingLinks": {
+    "title": "Tracking Link Generator",
+    "description": "Create a tracking link for your promotional campaigns",
+    "generateLink": "Generate Link",
+    "campaign": "Campaign",
+    "selectCampaign": "Select a campaign",
+    "campaigns": "Campaigns",
+    "affiliate": "Affiliate",
+    "selectAffiliate": "Select an affiliate",
+    "affiliates": "Affiliates",
+    "subId1": "Sub ID 1 (Optional)",
+    "subId1Placeholder": "e.g., source, channel",
+    "subId2": "Sub ID 2 (Optional)",
+    "subId2Placeholder": "e.g., campaign, banner size",
+    "subId3": "Sub ID 3 (Optional)",
+    "subId3Placeholder": "e.g., placement, ad version",
+    "deepLink": "Deep Link URL (Optional)",
+    "deepLinkPlaceholder": "https://example.com/specific-page",
+    "deepLinkDescription": "Used to direct users to a specific page after conversion.",
+    "generating": "Generating...",
+    "yourTrackingLink": "Your Tracking Link",
+    "linkFor": "Link for {{campaign}} - {{affiliate}}",
+    "generateLinkToSee": "Generate a link to see it here",
+    "trackingUrl": "Tracking URL",
+    "copyToClipboard": "Copy to Clipboard",
+    "linkDetails": "Link Details",
+    "noLinkGenerated": "No Link Generated Yet",
+    "fillFormToGenerate": "Fill out the form and generate a tracking link to see it here.",
+    "errorSelectBoth": "Please select both a campaign and an affiliate",
+    "linkGenerated": "Link Generated",
+    "linkGeneratedSuccess": "Your tracking link has been generated successfully.",
+    "linkGenerationError": "Failed to generate tracking link",
+    "copied": "Copied!",
+    "linkCopied": "Tracking link copied to clipboard",
+    "copyError": "Failed to copy link"
   }
 }

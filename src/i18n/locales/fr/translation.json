@@ -1,3 +1,4 @@
+
 {
   "appName": "rolinko",
   "appDescription": "Votre plateforme de marketing d'affiliation",
@@ -260,5 +261,41 @@
   },
   "organization": {
     "noOrganization": "Aucune organisation disponible"
+  },
+  "trackingLinks": {
+    "title": "Générateur de Liens de Suivi",
+    "description": "Créez un lien de suivi pour vos campagnes promotionnelles",
+    "generateLink": "Générer un Lien",
+    "campaign": "Campagne",
+    "selectCampaign": "Sélectionnez une campagne",
+    "campaigns": "Campagnes",
+    "affiliate": "Affilié",
+    "selectAffiliate": "Sélectionnez un affilié",
+    "affiliates": "Affiliés",
+    "subId1": "Sous ID 1 (Optionnel)",
+    "subId1Placeholder": "ex., source, canal",
+    "subId2": "Sous ID 2 (Optionnel)",
+    "subId2Placeholder": "ex., campagne, taille de bannière",
+    "subId3": "Sous ID 3 (Optionnel)",
+    "subId3Placeholder": "ex., placement, version publicitaire",
+    "deepLink": "URL de Lien Profond (Optionnel)",
+    "deepLinkPlaceholder": "https://exemple.com/page-specifique",
+    "deepLinkDescription": "Utilisé pour diriger les utilisateurs vers une page spécifique après conversion.",
+    "generating": "Génération...",
+    "yourTrackingLink": "Votre Lien de Suivi",
+    "linkFor": "Lien pour {{campaign}} - {{affiliate}}",
+    "generateLinkToSee": "Générez un lien pour le voir ici",
+    "trackingUrl": "URL de Suivi",
+    "copyToClipboard": "Copier dans le Presse-papiers",
+    "linkDetails": "Détails du Lien",
+    "noLinkGenerated": "Aucun Lien Généré Pour le Moment",
+    "fillFormToGenerate": "Remplissez le formulaire et générez un lien de suivi pour le voir ici.",
+    "errorSelectBoth": "Veuillez sélectionner à la fois une campagne et un affilié",
+    "linkGenerated": "Lien Généré",
+    "linkGeneratedSuccess": "Votre lien de suivi a été généré avec succès.",
+    "linkGenerationError": "Échec de la génération du lien de suivi",
+    "copied": "Copié !",
+    "linkCopied": "Lien de suivi copié dans le presse-papiers",
+    "copyError": "Échec de la copie du lien"
   }
 }
