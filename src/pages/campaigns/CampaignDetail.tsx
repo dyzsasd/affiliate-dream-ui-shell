@@ -14,6 +14,12 @@ import {
   Clock,
   Calendar,
   Link2,
+  DollarSign,
+  Eye,
+  Globe,
+  Target,
+  Settings,
+  BarChart3,
 } from "lucide-react";
 import { campaignService } from "@/services/campaignService";
 import { CampaignDetail as CampaignDetailType, Offer } from "@/types/api";
@@ -77,9 +83,26 @@ const CampaignDetail: React.FC = () => {
     }
   };
 
+  const getVisibilityBadge = (visibility?: string) => {
+    if (!visibility) return null;
+    
+    const isPublic = visibility === "public";
+    return (
+      <Badge variant="outline" className={`${isPublic ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-gray-50 text-gray-700 border-gray-200"}`}>
+        {isPublic ? <Globe className="mr-1 h-3 w-3" /> : <Eye className="mr-1 h-3 w-3" />}
+        {t(isPublic ? "campaignDetail.visibilityPublic" : "campaignDetail.visibilityPrivate")}
+      </Badge>
+    );
+  };
+
   const formatDate = (dateString?: string) => {
-    if (!dateString) return t("campaignDetail.noStartDate");
+    if (!dateString) return t("campaignDetail.noDate");
     return new Date(dateString).toLocaleDateString();
+  };
+
+  const formatCurrency = (amount?: number, currency?: string) => {
+    if (amount === undefined) return t("campaignDetail.notSet");
+    return `${currency || "USD"} ${amount.toFixed(2)}`;
   };
 
   if (loading) {
@@ -107,7 +130,7 @@ const CampaignDetail: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <Link to="/campaigns">
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
             <ArrowLeft className="h-4 w-4" />
@@ -115,45 +138,173 @@ const CampaignDetail: React.FC = () => {
         </Link>
         <h1 className="text-2xl font-bold tracking-tight">{campaign.name}</h1>
         {getStatusBadge(campaign.status)}
+        {getVisibilityBadge(campaign.visibility)}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>{t("campaignDetail.campaignDetails")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">{t("campaigns.description")}</h3>
-                <p className="mt-1">{campaign.description}</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          {/* Basic Information Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                {t("campaignDetail.basicInformation")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.campaignPeriod")}</h3>
-                  <div className="mt-1 flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-gray-500" />
-                    <p>
-                      {campaign.startDate ? formatDate(campaign.startDate) : t("campaignDetail.noStartDate")} -{" "}
-                      {campaign.endDate ? formatDate(campaign.endDate) : t("campaignDetail.noEndDate")}
-                    </p>
+                  <h3 className="text-sm font-medium text-gray-500">{t("campaigns.description")}</h3>
+                  <p className="mt-1">{campaign.description || t("campaignDetail.noDescription")}</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.campaignId")}</h3>
+                    <p className="mt-1 font-mono text-sm">{campaign.campaignId}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.advertiserId")}</h3>
+                    <p className="mt-1 font-mono text-sm">{campaign.advertiserId}</p>
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.created")}</h3>
-                  <div className="mt-1 flex items-center gap-1">
-                    <Clock className="h-4 w-4 text-gray-500" />
-                    <p>{new Date(campaign.createdAt).toLocaleString()}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.campaignPeriod")}</h3>
+                    <div className="mt-1 flex items-center gap-1">
+                      <Calendar className="h-4 w-4 text-gray-500" />
+                      <p>
+                        {formatDate(campaign.startDate)} - {formatDate(campaign.endDate)}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.created")}</h3>
+                    <div className="mt-1 flex items-center gap-1">
+                      <Clock className="h-4 w-4 text-gray-500" />
+                      <p>{new Date(campaign.createdAt).toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {campaign.destinationUrl && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.destinationUrl")}</h3>
+                    <a href={campaign.destinationUrl} target="_blank" rel="noopener noreferrer" 
+                       className="mt-1 text-blue-600 hover:text-blue-800 break-all">
+                      {campaign.destinationUrl}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Payout & Revenue Information */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5" />
+                {t("campaignDetail.payoutRevenue")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="font-medium text-green-700">{t("campaignDetail.payoutInformation")}</h4>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutType")}</h3>
+                    <p className="mt-1 uppercase">{campaign.payoutType || t("campaignDetail.notSet")}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutAmount")}</h3>
+                    <p className="mt-1 font-semibold">{formatCurrency(campaign.payoutAmount, campaign.currencyId)}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="font-medium text-blue-700">{t("campaignDetail.revenueInformation")}</h4>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueType")}</h3>
+                    <p className="mt-1 uppercase">{campaign.revenueType || t("campaignDetail.notSet")}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueAmount")}</h3>
+                    <p className="mt-1 font-semibold">{formatCurrency(campaign.revenueAmount, campaign.currencyId)}</p>
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              <Separator />
+          {/* Tracking & Conversion */}
+          {(campaign.conversionMethod || campaign.sessionDefinition || campaign.sessionDuration) && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="h-5 w-5" />
+                  {t("campaignDetail.trackingConversion")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {campaign.conversionMethod && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.conversionMethod")}</h3>
+                      <p className="mt-1">{campaign.conversionMethod}</p>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {campaign.sessionDefinition && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.sessionDefinition")}</h3>
+                        <p className="mt-1">{campaign.sessionDefinition}</p>
+                      </div>
+                    )}
+                    {campaign.sessionDuration && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.sessionDuration")}</h3>
+                        <p className="mt-1">{campaign.sessionDuration} {t("campaignDetail.minutes")}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-              <div>
-                <h3 className="text-base font-medium mb-2">{t("campaignDetail.providerOffers")}</h3>
+          {/* Additional Information */}
+          {(campaign.termsAndConditions || campaign.internalNotes) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("campaignDetail.additionalInformation")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {campaign.termsAndConditions && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.termsAndConditions")}</h3>
+                      <p className="mt-1 text-sm">{campaign.termsAndConditions}</p>
+                    </div>
+                  )}
+                  {campaign.internalNotes && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.internalNotes")}</h3>
+                      <p className="mt-1 text-sm text-gray-600">{campaign.internalNotes}</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Provider Offers */}
+          {campaign.offers && campaign.offers.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("campaignDetail.providerOffers")}</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-4">
                   {campaign.offers.map((offer: Offer) => (
                     <div
@@ -195,15 +346,19 @@ const CampaignDetail: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
+        {/* Sidebar */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t("campaignDetail.performanceOverview")}</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                {t("campaignDetail.performanceOverview")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -241,7 +396,7 @@ const CampaignDetail: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <Link to={`/tracking-links?campaignId=${campaign.id}`}>
+                <Link to={`/tracking-links?campaignId=${campaign.campaignId}`}>
                   <Button className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90">
                     {t("campaignDetail.generateTrackingLink")}
                   </Button>
@@ -263,6 +418,35 @@ const CampaignDetail: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Campaign URLs */}
+          {(campaign.previewUrl || campaign.thumbnailUrl) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t("campaignDetail.campaignAssets")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {campaign.previewUrl && (
+                    <a href={campaign.previewUrl} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" className="w-full">
+                        <Eye className="mr-2 h-4 w-4" />
+                        {t("campaignDetail.viewPreview")}
+                      </Button>
+                    </a>
+                  )}
+                  {campaign.thumbnailUrl && (
+                    <a href={campaign.thumbnailUrl} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" className="w-full">
+                        <Eye className="mr-2 h-4 w-4" />
+                        {t("campaignDetail.viewThumbnail")}
+                      </Button>
+                    </a>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
