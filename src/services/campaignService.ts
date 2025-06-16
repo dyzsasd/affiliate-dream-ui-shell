@@ -10,17 +10,107 @@ import {
 import { createApiClient, handleApiError } from './backendApi';
 import { Campaign, CampaignDetail, Offer } from '@/types/api';
 
+// Mock data as provided
+const mockCampaignsResponse = {
+  "campaigns": [
+    {
+      "campaign_id": 6,
+      "organization_id": 5,
+      "advertiser_id": 1,
+      "name": "Full Test Campaign",
+      "description": "A comprehensive test campaign with all available fields",
+      "status": "active",
+      "start_date": "2025-07-01T00:00:00Z",
+      "end_date": "2025-08-31T00:00:00Z",
+      "destination_url": "https://example.com/landing",
+      "thumbnail_url": "https://example.com/thumb.jpg",
+      "preview_url": "https://example.com/preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "cpa",
+      "payout_amount": 25.5,
+      "revenue_type": "rpa",
+      "revenue_amount": 30,
+      "created_at": "2025-06-16T23:58:51.831539+02:00",
+      "updated_at": "2025-06-16T23:58:51.831539+02:00"
+    },
+    {
+      "campaign_id": 5,
+      "organization_id": 5,
+      "advertiser_id": 1,
+      "name": "Full Test Campaign",
+      "description": "A comprehensive test campaign with all available fields",
+      "status": "active",
+      "start_date": "2025-07-01T00:00:00Z",
+      "end_date": "2025-08-31T00:00:00Z",
+      "destination_url": "https://example.com/landing",
+      "thumbnail_url": "https://example.com/thumb.jpg",
+      "preview_url": "https://example.com/preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "cpa",
+      "payout_amount": 25.5,
+      "revenue_type": "rpa",
+      "revenue_amount": 30,
+      "created_at": "2025-06-16T23:58:51.104544+02:00",
+      "updated_at": "2025-06-16T23:58:51.104544+02:00"
+    },
+    {
+      "campaign_id": 4,
+      "organization_id": 5,
+      "advertiser_id": 1,
+      "name": "Full Test Campaign",
+      "description": "A comprehensive test campaign with all available fields",
+      "status": "active",
+      "start_date": "2025-07-01T00:00:00Z",
+      "end_date": "2025-08-31T00:00:00Z",
+      "destination_url": "https://example.com/landing",
+      "thumbnail_url": "https://example.com/thumb.jpg",
+      "preview_url": "https://example.com/preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "cpa",
+      "payout_amount": 25.5,
+      "revenue_type": "rpa",
+      "revenue_amount": 30,
+      "created_at": "2025-06-16T23:58:49.107926+02:00",
+      "updated_at": "2025-06-16T23:58:49.107926+02:00"
+    },
+    {
+      "campaign_id": 3,
+      "organization_id": 5,
+      "advertiser_id": 1,
+      "name": "Test Campaign via curl",
+      "status": "draft",
+      "created_at": "2025-06-16T23:41:40.185959+02:00",
+      "updated_at": "2025-06-16T23:41:40.185959+02:00"
+    },
+    {
+      "campaign_id": 2,
+      "organization_id": 5,
+      "advertiser_id": 1,
+      "name": "Test Campaign via curl",
+      "status": "draft",
+      "created_at": "2025-06-16T23:41:36.800493+02:00",
+      "updated_at": "2025-06-16T23:41:36.800493+02:00"
+    }
+  ],
+  "total": 5,
+  "page": 1,
+  "page_size": 20
+};
+
 // Map backend campaign model to frontend Campaign type
-const mapToCampaign = (domainCampaign: ModelsCampaignResponse): Campaign => {
+const mapToCampaign = (domainCampaign: any): Campaign => {
   return {
-    id: String(domainCampaign.campaignId || ''),
+    id: String(domainCampaign.campaign_id || ''),
     name: domainCampaign.name || '',
     description: domainCampaign.description || '',
     status: (domainCampaign.status as 'active' | 'paused' | 'draft') || 'draft',
-    startDate: domainCampaign.startDate,
-    endDate: domainCampaign.endDate,
-    createdAt: domainCampaign.createdAt || new Date().toISOString(),
-    updatedAt: domainCampaign.updatedAt || new Date().toISOString(),
+    startDate: domainCampaign.start_date,
+    endDate: domainCampaign.end_date,
+    createdAt: domainCampaign.created_at || new Date().toISOString(),
+    updatedAt: domainCampaign.updated_at || new Date().toISOString(),
   };
 };
 
@@ -36,19 +126,13 @@ const mapToOffer = (domainOffer: any): Offer => {
 };
 
 export const campaignService = {
-  // Get all campaigns
+  // Get all campaigns - using mock data for now
   getCampaigns: async (): Promise<Campaign[]> => {
     try {
-      const campaignsApi = await createApiClient(CampaignsApi);
+      console.log('Fetching campaigns with mock data');
       
-      // Using organization ID 1 as default for now - this should be dynamic in a real app
-      const response = await campaignsApi.organizationsOrganizationIdCampaignsGet({ organizationId: 1 });
-      
-      if (response && response.campaigns && Array.isArray(response.campaigns)) {
-        return response.campaigns.map(mapToCampaign);
-      }
-      
-      return [];
+      // Return mock campaigns mapped to our Campaign type
+      return mockCampaignsResponse.campaigns.map(mapToCampaign);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
       throw handleApiError(error);
@@ -58,8 +142,9 @@ export const campaignService = {
   // Get a single campaign with details
   getCampaign: async (id: string): Promise<CampaignDetail | null> => {
     try {
-      const campaignsApi = await createApiClient(CampaignsApi);
-      const campaign = await campaignsApi.campaignsIdGet({ id: Number(id) });
+      console.log(`Fetching campaign with id ${id} from mock data`);
+      
+      const campaign = mockCampaignsResponse.campaigns.find(c => String(c.campaign_id) === id);
       
       if (!campaign) {
         return null;
