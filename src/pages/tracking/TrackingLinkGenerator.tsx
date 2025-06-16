@@ -21,20 +21,48 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { mockCampaigns, mockCampaignDetail } from "@/services/api";
+import { mockCampaigns } from "@/services/api";
 import { Copy, Link, LinkIcon, Loader2 } from "lucide-react";
+
+// Mock affiliates data
+const mockAffiliates = [
+  {
+    id: "1",
+    name: "Digital Marketing Pro",
+    email: "contact@digitalmarketingpro.com",
+    status: "active"
+  },
+  {
+    id: "2", 
+    name: "Performance Network",
+    email: "partners@performancenetwork.com",
+    status: "active"
+  },
+  {
+    id: "3",
+    name: "Global Affiliates Inc",
+    email: "team@globalaffiliates.com", 
+    status: "active"
+  },
+  {
+    id: "4",
+    name: "Traffic Masters",
+    email: "hello@trafficmasters.com",
+    status: "active"
+  }
+];
 
 const TrackingLinkGenerator: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   
-  // Get campaign ID and offer ID from URL if they exist
+  // Get campaign ID and affiliate ID from URL if they exist
   const urlCampaignId = searchParams.get("campaignId");
-  const urlOfferId = searchParams.get("offerId");
+  const urlAffiliateId = searchParams.get("affiliateId");
   
   // Form state
   const [campaignId, setCampaignId] = useState<string>(urlCampaignId || "");
-  const [offerId, setOfferId] = useState<string>(urlOfferId || "");
+  const [affiliateId, setAffiliateId] = useState<string>(urlAffiliateId || "");
   const [sub1, setSub1] = useState<string>("");
   const [sub2, setSub2] = useState<string>("");
   const [sub3, setSub3] = useState<string>("");
@@ -44,26 +72,15 @@ const TrackingLinkGenerator: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generatedLink, setGeneratedLink] = useState<string>("");
   
-  // Campaigns data
+  // Data
   const campaigns = mockCampaigns;
-  const [selectedCampaignOffers, setSelectedCampaignOffers] = useState(mockCampaignDetail.offers);
-  
-  useEffect(() => {
-    if (campaignId) {
-      // In a real app, we would fetch campaign details to get the offers
-      // For now, we'll just use our mock data
-      setSelectedCampaignOffers(mockCampaignDetail.offers);
-    } else {
-      setSelectedCampaignOffers([]);
-      setOfferId("");
-    }
-  }, [campaignId]);
+  const affiliates = mockAffiliates;
 
   const handleGenerateLink = async () => {
-    if (!campaignId || !offerId) {
+    if (!campaignId || !affiliateId) {
       toast({
         title: "Error",
-        description: "Please select both a campaign and an offer",
+        description: "Please select both a campaign and an affiliate",
         variant: "destructive",
       });
       return;
@@ -81,14 +98,14 @@ const TrackingLinkGenerator: React.FC = () => {
       const params = new URLSearchParams();
       
       params.append("cid", campaignId);
-      params.append("oid", offerId);
+      params.append("aid", affiliateId);
       
       if (sub1) params.append("s1", sub1);
       if (sub2) params.append("s2", sub2);
       if (sub3) params.append("s3", sub3);
       if (deepLink) params.append("dl", encodeURIComponent(deepLink));
       
-      const trackingUrl = `${baseUrl}/${campaignId}/${offerId}?${params.toString()}`;
+      const trackingUrl = `${baseUrl}/${campaignId}/${affiliateId}?${params.toString()}`;
       
       setGeneratedLink(trackingUrl);
       toast({
@@ -130,9 +147,9 @@ const TrackingLinkGenerator: React.FC = () => {
     return campaign ? campaign.name : "";
   };
 
-  const getSelectedOfferName = () => {
-    const offer = selectedCampaignOffers.find(o => o.id === offerId);
-    return offer ? offer.name : "";
+  const getSelectedAffiliateName = () => {
+    const affiliate = affiliates.find(a => a.id === affiliateId);
+    return affiliate ? affiliate.name : "";
   };
 
   return (
@@ -173,21 +190,21 @@ const TrackingLinkGenerator: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Offer</label>
+                <label className="text-sm font-medium">Affiliate</label>
                 <Select
-                  value={offerId}
-                  onValueChange={setOfferId}
-                  disabled={!campaignId || isGenerating}
+                  value={affiliateId}
+                  onValueChange={setAffiliateId}
+                  disabled={isGenerating}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select an offer" />
+                    <SelectValue placeholder="Select an affiliate" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Offers</SelectLabel>
-                      {selectedCampaignOffers.map((offer) => (
-                        <SelectItem key={offer.id} value={offer.id}>
-                          {offer.name} - ${offer.payoutAmount.toFixed(2)} {offer.payoutType}
+                      <SelectLabel>Affiliates</SelectLabel>
+                      {affiliates.map((affiliate) => (
+                        <SelectItem key={affiliate.id} value={affiliate.id}>
+                          {affiliate.name} - {affiliate.email}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -243,7 +260,7 @@ const TrackingLinkGenerator: React.FC = () => {
               <Button
                 onClick={handleGenerateLink}
                 className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90"
-                disabled={!campaignId || !offerId || isGenerating}
+                disabled={!campaignId || !affiliateId || isGenerating}
               >
                 {isGenerating ? (
                   <>
@@ -266,7 +283,7 @@ const TrackingLinkGenerator: React.FC = () => {
             <CardTitle>Your Tracking Link</CardTitle>
             <CardDescription>
               {generatedLink
-                ? `Link for ${getSelectedCampaignName()} - ${getSelectedOfferName()}`
+                ? `Link for ${getSelectedCampaignName()} - ${getSelectedAffiliateName()}`
                 : "Generate a link to see it here"}
             </CardDescription>
           </CardHeader>
@@ -298,8 +315,8 @@ const TrackingLinkGenerator: React.FC = () => {
                     <div className="text-gray-500">Campaign:</div>
                     <div>{getSelectedCampaignName()}</div>
                     
-                    <div className="text-gray-500">Offer:</div>
-                    <div>{getSelectedOfferName()}</div>
+                    <div className="text-gray-500">Affiliate:</div>
+                    <div>{getSelectedAffiliateName()}</div>
                     
                     {sub1 && (
                       <>
