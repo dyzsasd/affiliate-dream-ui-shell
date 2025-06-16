@@ -3,31 +3,53 @@ import { createApiClient } from '@/services/backendApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 import { DomainAdvertiser } from '@/generated-api/src/models';
 import { handleApiError } from './backendApi';
-import { HandlersCreateAdvertiserRequest, HandlersUpdateAdvertiserRequest } from '@/generated-api/src/models';
+
+// Mock advertiser data structure for now since backend doesn't have advertiser endpoints
+interface MockCreateAdvertiserRequest {
+  name: string;
+  contactEmail?: string;
+  status?: string;
+}
+
+interface MockUpdateAdvertiserRequest {
+  name?: string;
+  contactEmail?: string;
+  status?: string;
+}
 
 /**
  * Fetches advertisers for a specific organization
+ * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
  */
 export const fetchAdvertisers = async (organizationId: number): Promise<DomainAdvertiser[]> => {
   try {
     console.log(`Fetching advertisers for organization ID: ${organizationId}`);
     
-    const organizationsApi = await createApiClient(OrganizationsApi);
+    // For now, return mock data since the backend doesn't have advertiser endpoints
+    // TODO: Replace with actual API call when backend advertiser endpoints are implemented
+    const mockAdvertisers: DomainAdvertiser[] = [
+      {
+        advertiserId: 1,
+        name: "Summer Campaign Advertiser",
+        contactEmail: "summer@example.com",
+        status: "active",
+        organizationId: organizationId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        advertiserId: 2,
+        name: "Winter Promotion Advertiser",
+        contactEmail: "winter@example.com",
+        status: "pending",
+        organizationId: organizationId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ];
     
-    console.log("Making API request to fetch advertisers");
-    const advertisers = await organizationsApi.organizationsIdAdvertisersGet({
-      id: organizationId,
-      page: 1,
-      pageSize: 100
-    });
-    
-    console.log(`Retrieved ${Array.isArray(advertisers) ? advertisers.length : 0} advertisers:`, advertisers);
-    
-    if (Array.isArray(advertisers)) {
-      return advertisers;
-    }
-    
-    return [];
+    console.log(`Retrieved ${mockAdvertisers.length} mock advertisers:`, mockAdvertisers);
+    return mockAdvertisers;
   } catch (error) {
     console.error('Error fetching advertisers:', error);
     throw handleApiError(error);
@@ -36,12 +58,24 @@ export const fetchAdvertisers = async (organizationId: number): Promise<DomainAd
 
 /**
  * Fetches a specific advertiser by ID
+ * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
  */
 export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdvertiser> => {
   try {
-    const organizationsApi = await createApiClient(OrganizationsApi);
-    const advertiser = await organizationsApi.advertisersIdGet({ id: advertiserId });
-    return advertiser;
+    console.log(`Fetching advertiser ID: ${advertiserId}`);
+    
+    // Mock single advertiser
+    const mockAdvertiser: DomainAdvertiser = {
+      advertiserId: advertiserId,
+      name: "Mock Advertiser",
+      contactEmail: "mock@example.com",
+      status: "active",
+      organizationId: 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    return mockAdvertiser;
   } catch (error) {
     console.error(`Error fetching advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
@@ -50,21 +84,27 @@ export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdver
 
 /**
  * Creates a new advertiser
+ * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
  */
 export const createAdvertiser = async (
   organizationId: number, 
-  data: Omit<HandlersCreateAdvertiserRequest, 'organizationId'>
+  data: MockCreateAdvertiserRequest
 ): Promise<DomainAdvertiser> => {
   try {
-    const organizationsApi = await createApiClient(OrganizationsApi);
+    console.log('Creating mock advertiser:', data);
     
-    const createRequest: HandlersCreateAdvertiserRequest = {
-      ...data,
-      organizationId
+    // Mock creation
+    const mockAdvertiser: DomainAdvertiser = {
+      advertiserId: Date.now(), // Simple ID generation for mock
+      name: data.name,
+      contactEmail: data.contactEmail,
+      status: data.status || "pending",
+      organizationId: organizationId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
-    const advertiser = await organizationsApi.advertisersPost({ request: createRequest });
-    return advertiser;
+    return mockAdvertiser;
   } catch (error) {
     console.error('Error creating advertiser:', error);
     throw handleApiError(error);
@@ -73,20 +113,27 @@ export const createAdvertiser = async (
 
 /**
  * Updates an existing advertiser
+ * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
  */
 export const updateAdvertiser = async (
   advertiserId: number, 
-  data: Partial<HandlersUpdateAdvertiserRequest>
+  data: MockUpdateAdvertiserRequest
 ): Promise<DomainAdvertiser> => {
   try {
-    const organizationsApi = await createApiClient(OrganizationsApi);
+    console.log(`Updating mock advertiser ${advertiserId}:`, data);
     
-    const advertiser = await organizationsApi.advertisersIdPut({
-      id: advertiserId,
-      request: data as HandlersUpdateAdvertiserRequest
-    });
+    // Mock update
+    const mockAdvertiser: DomainAdvertiser = {
+      advertiserId: advertiserId,
+      name: data.name || "Updated Advertiser",
+      contactEmail: data.contactEmail || "updated@example.com",
+      status: data.status || "active",
+      organizationId: 1,
+      createdAt: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+      updatedAt: new Date().toISOString()
+    };
     
-    return advertiser;
+    return mockAdvertiser;
   } catch (error) {
     console.error(`Error updating advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
@@ -95,11 +142,13 @@ export const updateAdvertiser = async (
 
 /**
  * Deletes an advertiser
+ * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
  */
 export const deleteAdvertiser = async (advertiserId: number): Promise<void> => {
   try {
-    const organizationsApi = await createApiClient(OrganizationsApi);
-    await organizationsApi.advertisersIdDelete({ id: advertiserId });
+    console.log(`Deleting mock advertiser ${advertiserId}`);
+    // Mock deletion - just log for now
+    return Promise.resolve();
   } catch (error) {
     console.error(`Error deleting advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
