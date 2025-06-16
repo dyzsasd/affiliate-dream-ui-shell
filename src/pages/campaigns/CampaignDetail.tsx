@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +15,7 @@ import {
   Calendar,
   Link2,
 } from "lucide-react";
-import { mockCampaignDetail } from "@/services/api";
+import { campaignService } from "@/services/campaignService";
 import { CampaignDetail as CampaignDetailType, Offer } from "@/types/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,21 +24,21 @@ const CampaignDetail: React.FC = () => {
   const [campaign, setCampaign] = useState<CampaignDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
-    // Simulate API request
     const fetchCampaign = async () => {
       setLoading(true);
       try {
-        // In a real app, we would fetch from API using the campaignId
-        // await apiClient.getCampaign(campaignId);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setCampaign(mockCampaignDetail);
+        if (campaignId) {
+          const campaignData = await campaignService.getCampaign(campaignId);
+          setCampaign(campaignData);
+        }
       } catch (error) {
         console.error("Error fetching campaign:", error);
         toast({
-          title: "Error",
-          description: "Failed to fetch campaign details",
+          title: t("common.error"),
+          description: t("campaignDetail.errorFetchingCampaign"),
           variant: "destructive",
         });
       } finally {
@@ -46,7 +47,7 @@ const CampaignDetail: React.FC = () => {
     };
 
     fetchCampaign();
-  }, [campaignId, toast]);
+  }, [campaignId, toast, t]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -54,21 +55,21 @@ const CampaignDetail: React.FC = () => {
         return (
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
             <CheckCircle2 className="mr-1 h-3 w-3" />
-            Active
+            {t("campaignDetail.statusActive")}
           </Badge>
         );
       case "paused":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
             <PauseCircle className="mr-1 h-3 w-3" />
-            Paused
+            {t("campaignDetail.statusPaused")}
           </Badge>
         );
       case "draft":
         return (
           <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
             <FileEdit className="mr-1 h-3 w-3" />
-            Draft
+            {t("campaignDetail.statusDraft")}
           </Badge>
         );
       default:
@@ -77,7 +78,7 @@ const CampaignDetail: React.FC = () => {
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "No date set";
+    if (!dateString) return t("campaignDetail.noStartDate");
     return new Date(dateString).toLocaleDateString();
   };
 
@@ -92,12 +93,12 @@ const CampaignDetail: React.FC = () => {
   if (!campaign) {
     return (
       <div className="flex flex-col items-center justify-center py-10">
-        <h2 className="text-xl font-semibold mb-2">Campaign not found</h2>
-        <p className="text-gray-500 mb-4">The campaign you are looking for does not exist.</p>
+        <h2 className="text-xl font-semibold mb-2">{t("campaignDetail.campaignNotFound")}</h2>
+        <p className="text-gray-500 mb-4">{t("campaignDetail.campaignNotFoundDescription")}</p>
         <Link to="/campaigns">
           <Button>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Campaigns
+            {t("campaignDetail.backToCampaigns")}
           </Button>
         </Link>
       </div>
@@ -119,29 +120,29 @@ const CampaignDetail: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Campaign Details</CardTitle>
+            <CardTitle>{t("campaignDetail.campaignDetails")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Description</h3>
+                <h3 className="text-sm font-medium text-gray-500">{t("campaigns.description")}</h3>
                 <p className="mt-1">{campaign.description}</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Campaign Period</h3>
+                  <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.campaignPeriod")}</h3>
                   <div className="mt-1 flex items-center gap-1">
                     <Calendar className="h-4 w-4 text-gray-500" />
                     <p>
-                      {campaign.startDate ? formatDate(campaign.startDate) : "No start date"} -{" "}
-                      {campaign.endDate ? formatDate(campaign.endDate) : "No end date"}
+                      {campaign.startDate ? formatDate(campaign.startDate) : t("campaignDetail.noStartDate")} -{" "}
+                      {campaign.endDate ? formatDate(campaign.endDate) : t("campaignDetail.noEndDate")}
                     </p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Created</h3>
+                  <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.created")}</h3>
                   <div className="mt-1 flex items-center gap-1">
                     <Clock className="h-4 w-4 text-gray-500" />
                     <p>{new Date(campaign.createdAt).toLocaleString()}</p>
@@ -152,7 +153,7 @@ const CampaignDetail: React.FC = () => {
               <Separator />
 
               <div>
-                <h3 className="text-base font-medium mb-2">Provider Offers</h3>
+                <h3 className="text-base font-medium mb-2">{t("campaignDetail.providerOffers")}</h3>
                 <div className="space-y-4">
                   {campaign.offers.map((offer: Offer) => (
                     <div
@@ -179,7 +180,7 @@ const CampaignDetail: React.FC = () => {
                       </div>
                       <div className="mt-2 flex items-center justify-between">
                         <div className="text-sm">
-                          <span className="text-gray-500">Payout:</span>{" "}
+                          <span className="text-gray-500">{t("campaignDetail.payout")}:</span>{" "}
                           <span className="font-medium">
                             ${offer.payoutAmount.toFixed(2)} {offer.payoutType === "RevShare" && "%"}
                           </span>
@@ -187,7 +188,7 @@ const CampaignDetail: React.FC = () => {
                         <Link to={`/tracking-links?offerId=${offer.id}`}>
                           <Button size="sm" variant="outline" className="h-8">
                             <Link2 className="mr-1 h-4 w-4" />
-                            Generate Link
+                            {t("campaignDetail.generateLink")}
                           </Button>
                         </Link>
                       </div>
@@ -202,24 +203,24 @@ const CampaignDetail: React.FC = () => {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Performance Overview</CardTitle>
+              <CardTitle>{t("campaignDetail.performanceOverview")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Clicks</span>
+                  <span className="text-sm text-gray-500">{t("campaignDetail.clicks")}</span>
                   <span className="font-medium">1,245</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Conversions</span>
+                  <span className="text-sm text-gray-500">{t("campaignDetail.conversions")}</span>
                   <span className="font-medium">32</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Conversion Rate</span>
+                  <span className="text-sm text-gray-500">{t("campaignDetail.conversionRate")}</span>
                   <span className="font-medium">2.57%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Revenue</span>
+                  <span className="text-sm text-gray-500">{t("campaignDetail.revenue")}</span>
                   <span className="font-medium">$645.00</span>
                 </div>
 
@@ -227,7 +228,7 @@ const CampaignDetail: React.FC = () => {
 
                 <Link to="/reporting">
                   <Button variant="outline" className="w-full">
-                    View Full Report
+                    {t("campaignDetail.viewFullReport")}
                   </Button>
                 </Link>
               </div>
@@ -236,27 +237,27 @@ const CampaignDetail: React.FC = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+              <CardTitle>{t("campaignDetail.quickActions")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <Link to={`/tracking-links?campaignId=${campaign.id}`}>
                   <Button className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90">
-                    Generate Tracking Link
+                    {t("campaignDetail.generateTrackingLink")}
                   </Button>
                 </Link>
                 <Button variant="outline" className="w-full">
-                  Edit Campaign
+                  {t("campaignDetail.editCampaign")}
                 </Button>
                 {campaign.status === "active" ? (
                   <Button variant="outline" className="w-full text-yellow-600">
                     <PauseCircle className="mr-2 h-4 w-4" />
-                    Pause Campaign
+                    {t("campaignDetail.pauseCampaign")}
                   </Button>
                 ) : (
                   <Button variant="outline" className="w-full text-green-600">
                     <CheckCircle2 className="mr-2 h-4 w-4" />
-                    Activate Campaign
+                    {t("campaignDetail.activateCampaign")}
                   </Button>
                 )}
               </div>
