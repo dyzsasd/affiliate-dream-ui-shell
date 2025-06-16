@@ -1,13 +1,29 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AreaChart, BarChart } from "lucide-react";
+import { AreaChart, BarChart, RefreshCw } from "lucide-react";
 import { mockPerformanceData } from "@/services/api";
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar, BarChart as RechartsBarChart } from "recharts";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/auth";
+import { fetchAdvertisers } from "@/services/advertiserService";
 
 const AdvertiserDashboard: React.FC = () => {
   const { t } = useTranslation();
+  const { organization } = useAuth();
+
+  // Fetch advertisers for the organization
+  const { data: advertisers = [], isLoading: isLoadingAdvertisers, isError } = useQuery({
+    queryKey: ['advertisers', organization?.organizationId],
+    queryFn: async () => {
+      if (!organization?.organizationId) {
+        throw new Error('No organization ID available');
+      }
+      return fetchAdvertisers(organization.organizationId);
+    },
+    enabled: !!organization?.organizationId,
+  });
 
   // Multiply mock data by 10 and format dates for display
   const formattedData = mockPerformanceData.map(item => ({
@@ -30,10 +46,26 @@ const AdvertiserDashboard: React.FC = () => {
     { title: t("dashboard.conversionRate"), value: `${conversionRate}%`, change: "+2.4%" },
   ];
 
+  if (isLoadingAdvertisers) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+        <span className="ml-2">Loading dashboard...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">{t("dashboard.advertiserDashboard")}</h1>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">{t("dashboard.advertiserDashboard")}</h1>
+          {advertisers.length > 0 && (
+            <p className="text-muted-foreground">
+              Managing {advertisers.length} advertiser{advertisers.length !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
         <div className="flex items-center space-x-2">
           <select className="h-9 rounded-md border border-input px-3 py-1 text-sm bg-background">
             <option>Last 7 days</option>
@@ -43,6 +75,36 @@ const AdvertiserDashboard: React.FC = () => {
           </select>
         </div>
       </div>
+
+      {/* Advertisers Overview */}
+      {advertisers.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Advertisers Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {advertisers.slice(0, 6).map((advertiser) => (
+                <div key={advertiser.advertiserId} className="p-4 border rounded-lg">
+                  <h3 className="font-medium">{advertiser.name}</h3>
+                  <p className="text-sm text-muted-foreground">{advertiser.contactEmail}</p>
+                  <div className="mt-2">
+                    <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
+                      advertiser.status === 'active' 
+                        ? 'bg-green-100 text-green-800' 
+                        : advertiser.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {advertiser.status || 'unknown'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats Overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
