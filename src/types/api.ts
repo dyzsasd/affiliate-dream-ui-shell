@@ -1,4 +1,3 @@
-
 export interface Campaign {
   id: string;
   name: string;
@@ -10,8 +9,46 @@ export interface Campaign {
   updatedAt: string;
 }
 
-export interface CampaignDetail extends Campaign {
-  offers: Offer[];
+export interface CampaignDetail {
+  id: string;
+  name: string;
+  description?: string;
+  status: 'active' | 'paused' | 'draft';
+  startDate?: string;
+  endDate?: string;
+  createdAt: string;
+  updatedAt: string;
+  offers?: Offer[];
+  
+  // Additional fields from ModelsCampaignResponse
+  campaignId?: number;
+  advertiserId?: number;
+  organizationId?: number;
+  destinationUrl?: string;
+  thumbnailUrl?: string;
+  previewUrl?: string;
+  visibility?: string;
+  currencyId?: string;
+  payoutType?: string;
+  payoutAmount?: number;
+  revenueType?: string;
+  revenueAmount?: number;
+  conversionMethod?: string;
+  sessionDefinition?: string;
+  sessionDuration?: number;
+  termsAndConditions?: string;
+  internalNotes?: string;
+  
+  // Caps and limits
+  isCapsEnabled?: boolean;
+  dailyClickCap?: number;
+  dailyConversionCap?: number;
+  weeklyClickCap?: number;
+  weeklyConversionCap?: number;
+  monthlyClickCap?: number;
+  monthlyConversionCap?: number;
+  globalClickCap?: number;
+  globalConversionCap?: number;
 }
 
 export interface Offer {
