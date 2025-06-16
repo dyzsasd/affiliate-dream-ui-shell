@@ -1,123 +1,107 @@
 
 import { createApiClient } from '@/services/backendApi';
-import { AffiliatesApi } from '@/generated-api/src/apis/AffiliatesApi';
-import { DomainAffiliate, DomainAdvertiser } from '@/generated-api/src/models';
+import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
+import { DomainAdvertiser } from '@/generated-api/src/models';
 import { handleApiError } from './backendApi';
-import { HandlersCreateAffiliateRequest, HandlersUpdateAffiliateRequest } from '@/generated-api/src/models';
-
-// Map DomainAffiliate to DomainAdvertiser for frontend compatibility
-const mapAffiliateToAdvertiser = (affiliate: DomainAffiliate): DomainAdvertiser => {
-  return {
-    advertiserId: affiliate.affiliateId,
-    billingDetails: affiliate.billingInfo || affiliate.paymentDetails,
-    contactEmail: affiliate.contactEmail,
-    createdAt: affiliate.createdAt,
-    name: affiliate.name,
-    organizationId: affiliate.organizationId,
-    status: affiliate.status,
-    updatedAt: affiliate.updatedAt,
-  };
-};
+import { HandlersCreateAdvertiserRequest, HandlersUpdateAdvertiserRequest } from '@/generated-api/src/models';
 
 /**
- * Fetches advertisers (affiliates) for a specific organization
+ * Fetches advertisers for a specific organization
  */
 export const fetchAdvertisers = async (organizationId: number): Promise<DomainAdvertiser[]> => {
   try {
-    console.log(`Fetching affiliates for organization ID: ${organizationId}`);
+    console.log(`Fetching advertisers for organization ID: ${organizationId}`);
     
-    const affiliatesApi = await createApiClient(AffiliatesApi);
+    const organizationsApi = await createApiClient(OrganizationsApi);
     
-    console.log("Making API request to fetch affiliates");
-    const affiliates = await affiliatesApi.organizationsIdAffiliatesGet({
+    console.log("Making API request to fetch advertisers");
+    const advertisers = await organizationsApi.organizationsIdAdvertisersGet({
       id: organizationId,
       page: 1,
       pageSize: 100
     });
     
-    console.log(`Retrieved ${Array.isArray(affiliates) ? affiliates.length : 0} affiliates:`, affiliates);
+    console.log(`Retrieved ${Array.isArray(advertisers) ? advertisers.length : 0} advertisers:`, advertisers);
     
-    if (Array.isArray(affiliates)) {
-      return affiliates.map(mapAffiliateToAdvertiser);
+    if (Array.isArray(advertisers)) {
+      return advertisers;
     }
     
     return [];
   } catch (error) {
-    console.error('Error fetching affiliates:', error);
+    console.error('Error fetching advertisers:', error);
     throw handleApiError(error);
   }
 };
 
 /**
- * Fetches a specific advertiser (affiliate) by ID
+ * Fetches a specific advertiser by ID
  */
 export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdvertiser> => {
   try {
-    const affiliatesApi = await createApiClient(AffiliatesApi);
-    const affiliate = await affiliatesApi.affiliatesIdGet({ id: advertiserId });
-    return mapAffiliateToAdvertiser(affiliate);
+    const organizationsApi = await createApiClient(OrganizationsApi);
+    const advertiser = await organizationsApi.advertisersIdGet({ id: advertiserId });
+    return advertiser;
   } catch (error) {
-    console.error(`Error fetching affiliate ${advertiserId}:`, error);
+    console.error(`Error fetching advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
   }
 };
 
 /**
- * Creates a new advertiser (affiliate)
+ * Creates a new advertiser
  */
 export const createAdvertiser = async (
   organizationId: number, 
-  data: Omit<HandlersCreateAffiliateRequest, 'organizationId'>
+  data: Omit<HandlersCreateAdvertiserRequest, 'organizationId'>
 ): Promise<DomainAdvertiser> => {
   try {
-    const affiliatesApi = await createApiClient(AffiliatesApi);
+    const organizationsApi = await createApiClient(OrganizationsApi);
     
-    const createRequest: HandlersCreateAffiliateRequest = {
+    const createRequest: HandlersCreateAdvertiserRequest = {
       ...data,
-      organizationId,
-      // Map billingDetails to paymentDetails for affiliate API
-      paymentDetails: data.paymentDetails
+      organizationId
     };
     
-    const affiliate = await affiliatesApi.affiliatesPost({ request: createRequest });
-    return mapAffiliateToAdvertiser(affiliate);
+    const advertiser = await organizationsApi.advertisersPost({ request: createRequest });
+    return advertiser;
   } catch (error) {
-    console.error('Error creating affiliate:', error);
+    console.error('Error creating advertiser:', error);
     throw handleApiError(error);
   }
 };
 
 /**
- * Updates an existing advertiser (affiliate)
+ * Updates an existing advertiser
  */
 export const updateAdvertiser = async (
   advertiserId: number, 
-  data: Partial<HandlersUpdateAffiliateRequest>
+  data: Partial<HandlersUpdateAdvertiserRequest>
 ): Promise<DomainAdvertiser> => {
   try {
-    const affiliatesApi = await createApiClient(AffiliatesApi);
+    const organizationsApi = await createApiClient(OrganizationsApi);
     
-    const affiliate = await affiliatesApi.affiliatesIdPut({
+    const advertiser = await organizationsApi.advertisersIdPut({
       id: advertiserId,
-      request: data as HandlersUpdateAffiliateRequest
+      request: data as HandlersUpdateAdvertiserRequest
     });
     
-    return mapAffiliateToAdvertiser(affiliate);
+    return advertiser;
   } catch (error) {
-    console.error(`Error updating affiliate ${advertiserId}:`, error);
+    console.error(`Error updating advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
   }
 };
 
 /**
- * Deletes an advertiser (affiliate)
+ * Deletes an advertiser
  */
 export const deleteAdvertiser = async (advertiserId: number): Promise<void> => {
   try {
-    const affiliatesApi = await createApiClient(AffiliatesApi);
-    await affiliatesApi.affiliatesIdDelete({ id: advertiserId });
+    const organizationsApi = await createApiClient(OrganizationsApi);
+    await organizationsApi.advertisersIdDelete({ id: advertiserId });
   } catch (error) {
-    console.error(`Error deleting affiliate ${advertiserId}:`, error);
+    console.error(`Error deleting advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
   }
 };
