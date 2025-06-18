@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "您的联盟营销平台",
@@ -49,7 +48,8 @@
     "myProfile": "我的资料",
     "advertisers": "广告账户",
     "invitations": "邀请",
-    "analytics": "案例分析"
+    "analytics": "案例分析",
+    "marketplace": "市场"
   },
   "dashboard": {
     "advertiserDashboard": "概览",

@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "Votre plateforme de marketing d'affiliation",
@@ -48,7 +47,9 @@
     "conversions": "Conversions",
     "myProfile": "Mon profil",
     "advertisers": "Annonceurs",
-    "analytics": "Analyses"
+    "invitations": "Invitations",
+    "analytics": "Analyses",
+    "marketplace": "Marketplace"
   },
   "analytics": {
     "advertiserAnalytics": "Analyses de l'annonceur",

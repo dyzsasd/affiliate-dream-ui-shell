@@ -7,7 +7,8 @@ import {
   User,
   Mail,
   TrendingUp,
-  PieChart
+  PieChart,
+  Store
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -38,6 +39,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.campaigns"),
         path: "/campaigns",
         icon: LayoutDashboard
+      },
+      {
+        name: t("sidebar.marketplace"),
+        path: "/advertiser/marketplace",
+        icon: Store
       },
       {
         name: t("sidebar.analytics"),
