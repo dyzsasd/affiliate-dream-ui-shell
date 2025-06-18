@@ -4,9 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/auth";
 import { Toaster } from "@/components/ui/toaster";
 import AppLayout from "@/components/layout/AppLayout";
-import AuthLayout from "@/components/auth/AuthLayout";
-import LoginForm from "@/components/auth/LoginForm";
-import SignupForm from "@/components/auth/SignupForm";
+import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/Signup";
 import Dashboard from "@/pages/Dashboard";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
@@ -44,8 +43,8 @@ function App() {
           <div className="App">
             <Routes>
               {/* Auth routes */}
-              <Route path="/login" element={<AuthLayout><LoginForm /></AuthLayout>} />
-              <Route path="/signup" element={<AuthLayout><SignupForm /></AuthLayout>} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               
               {/* Protected routes */}
               <Route element={<AppLayout />}>
