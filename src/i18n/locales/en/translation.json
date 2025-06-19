@@ -192,5 +192,21 @@
     "personalInfo": "Personal Information",
     "contactInfo": "Contact Information",
     "organizationInfo": "Organization Information"
+  },
+  "analytics": {
+    "advertiserAnalytics": "Advertiser Analytics",
+    "totalPartners": "Total Partners",
+    "newPartners": "New Partners",
+    "lostPartners": "Lost Partners",
+    "viewPartners": "View Partners",
+    "showMe": "Show Me",
+    "affiliateMixChart": "Affiliate Mix Chart",
+    "topKeywords": "Top 20 Keywords",
+    "noKeywordsFound": "No keywords found",
+    "verticalPositioning": "Vertical Positioning",
+    "type": "Type",
+    "rank": "Rank",
+    "topPublishersInVertical": "Top Publishers in Vertical",
+    "partnersFor": "Partners for"
   }
 }
