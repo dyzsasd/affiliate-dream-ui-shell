@@ -99,7 +99,12 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
               return context.response;
             }
             
-            console.log('Token refreshed for retry, making new request...');
+            console.log('Token refreshed for retry, updating session state...');
+            
+            // Update the session state with the new token so other requests can use it
+            // The auth state change listener will automatically pick this up
+            // No need to manually update state since supabase.auth.refreshSession() 
+            // triggers the onAuthStateChange event which updates our context
             
             // Create new headers with fresh token
             const newHeaders = new Headers(context.init.headers);
