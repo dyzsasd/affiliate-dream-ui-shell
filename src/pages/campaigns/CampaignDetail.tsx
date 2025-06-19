@@ -25,7 +25,7 @@ import { CampaignDetail as CampaignDetailType, Offer } from "@/types/api";
 import { useToast } from "@/hooks/use-toast";
 
 const CampaignDetail: React.FC = () => {
-  const { campaignId } = useParams<{ campaignId: string }>();
+  const { id } = useParams<{ id: string }>();
   const [campaign, setCampaign] = useState<CampaignDetailType | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -33,14 +33,20 @@ const CampaignDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchCampaign = async () => {
+      if (!id) {
+        console.error('No campaign ID provided in URL');
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
-        if (campaignId) {
-          const campaignData = await campaignService.getCampaign(campaignId);
-          setCampaign(campaignData);
-        }
+        console.log(`Fetching campaign detail for ID: ${id}`);
+        const campaignData = await campaignService.getCampaign(id);
+        console.log('Campaign detail fetched:', campaignData);
+        setCampaign(campaignData);
       } catch (error) {
-        console.error("Error fetching campaign:", error);
+        console.error("Error fetching campaign detail:", error);
         toast({
           title: t("common.error"),
           description: t("campaignDetail.errorFetchingCampaign"),
@@ -52,7 +58,7 @@ const CampaignDetail: React.FC = () => {
     };
 
     fetchCampaign();
-  }, [campaignId, toast, t]);
+  }, [id, toast, t]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
