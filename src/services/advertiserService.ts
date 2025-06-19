@@ -1,10 +1,10 @@
 
 import { createApiClient } from '@/services/backendApi';
-import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
-import { DomainAdvertiser } from '@/generated-api/src/models';
+import { AdvertisersApi } from '@/generated-api/src/apis/AdvertisersApi';
+import { DomainAdvertiser, ModelsAdvertiserResponse } from '@/generated-api/src/models';
 import { handleApiError } from './backendApi';
 
-// Mock advertiser data structure for now since backend doesn't have advertiser endpoints
+// Request interfaces for creating and updating advertisers
 interface MockCreateAdvertiserRequest {
   name: string;
   contactEmail?: string;
@@ -17,76 +17,22 @@ interface MockUpdateAdvertiserRequest {
   status?: string;
 }
 
-// Centralized mock data - updated with Adidas domains
-const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
-  {
-    advertiserId: 1,
-    name: "Adidas FR",
-    contactEmail: "partnerships@adidas.fr",
-    status: "active",
-    organizationId: organizationId,
-    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    advertiserId: 2,
-    name: "Adidas ES",
-    contactEmail: "marketing@adidas.es",
-    status: "active",
-    organizationId: organizationId,
-    createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    advertiserId: 3,
-    name: "Nike Europe",
-    contactEmail: "affiliate@nike.com",
-    status: "pending",
-    organizationId: organizationId,
-    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    advertiserId: 4,
-    name: "Puma Global",
-    contactEmail: "partnerships@puma.com",
-    status: "active",
-    organizationId: organizationId,
-    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    advertiserId: 5,
-    name: "Under Armour EMEA",
-    contactEmail: "business@underarmour.com",
-    status: "inactive",
-    organizationId: organizationId,
-    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    advertiserId: 6,
-    name: "Reebok International",
-    contactEmail: "affiliates@reebok.com",
-    status: "active",
-    organizationId: organizationId,
-    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
-  }
-];
-
 /**
- * Fetches advertisers for a specific organization
- * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
+ * Fetches advertisers for a specific organization using real API
  */
 export const fetchAdvertisers = async (organizationId: number): Promise<DomainAdvertiser[]> => {
   try {
     console.log(`Fetching advertisers for organization ID: ${organizationId}`);
     
-    const mockAdvertisers = getMockAdvertisers(organizationId);
+    const advertisersApi = await createApiClient(AdvertisersApi);
+    const advertisers = await advertisersApi.organizationsIdAdvertisersGet({
+      id: organizationId,
+      page: 1,
+      pageSize: 100
+    });
     
-    console.log(`Retrieved ${mockAdvertisers.length} mock advertisers:`, mockAdvertisers);
-    return mockAdvertisers;
+    console.log(`Retrieved ${advertisers.length} advertisers from API:`, advertisers);
+    return advertisers;
   } catch (error) {
     console.error('Error fetching advertisers:', error);
     throw handleApiError(error);
@@ -94,27 +40,40 @@ export const fetchAdvertisers = async (organizationId: number): Promise<DomainAd
 };
 
 /**
- * Fetches a specific advertiser by ID
- * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
+ * Fetches a specific advertiser by ID using real API
  */
 export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdvertiser> => {
   try {
     console.log(`Fetching advertiser ID: ${advertiserId}`);
     
-    // Get all mock advertisers from all organizations to ensure we can find any advertiser
-    const allMockAdvertisers = [
-      ...getMockAdvertisers(1),
-      ...getMockAdvertisers(2),
-      ...getMockAdvertisers(3),
-      ...getMockAdvertisers(4),
-      ...getMockAdvertisers(5)
-    ];
+    const advertisersApi = await createApiClient(AdvertisersApi);
+    const response: ModelsAdvertiserResponse = await advertisersApi.advertisersIdGet({
+      id: advertiserId
+    });
     
-    const advertiser = allMockAdvertisers.find(adv => adv.advertiserId === advertiserId);
-    
-    if (!advertiser) {
-      throw new Error(`Advertiser with ID ${advertiserId} not found`);
-    }
+    // Convert ModelsAdvertiserResponse to DomainAdvertiser format
+    const advertiser: DomainAdvertiser = {
+      advertiserId: response.advertiserId,
+      name: response.name,
+      contactEmail: response.contactEmail,
+      status: response.status,
+      organizationId: response.organizationId,
+      createdAt: response.createdAt,
+      updatedAt: response.updatedAt,
+      billingDetails: response.billingDetails,
+      accountingContactEmail: response.accountingContactEmail,
+      affiliateIdMacro: response.affiliateIdMacro,
+      attributionMethod: response.attributionMethod,
+      attributionPriority: response.attributionPriority,
+      defaultCurrencyId: response.defaultCurrencyId,
+      emailAttributionMethod: response.emailAttributionMethod,
+      internalNotes: response.internalNotes,
+      offerIdMacro: response.offerIdMacro,
+      platformName: response.platformName,
+      platformUrl: response.platformUrl,
+      platformUsername: response.platformUsername,
+      reportingTimezoneId: response.reportingTimezoneId
+    };
     
     console.log(`Found advertiser:`, advertiser);
     return advertiser;
