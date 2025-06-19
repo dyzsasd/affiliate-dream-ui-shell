@@ -62,34 +62,66 @@ export const getAuthTokens = async () => {
   return session;
 };
 
+// Create API client with automatic retry on 401
 export const createApiClient = async <T>(ClientClass: new (configuration?: Configuration) => T): Promise<T> => {
-  // Get fresh session with possibly refreshed token
-  const session = await getAuthTokens();
-  const token = session?.access_token;
-  
   if (!ClientClass) {
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
   
   const baseUrl = getApiBase();
   console.log('Creating API client with base URL:', baseUrl);
-  console.log('Auth token available:', !!token);
   
-  // Log token expiry if available
-  if (session?.expires_at) {
-    const expiryDate = new Date(session.expires_at * 1000);
-    console.log('Token expires at:', expiryDate.toISOString());
-  }
-  
-  // Create configuration with proper authentication
+  // Create configuration with proper authentication and retry logic
   const configuration = new Configuration({
     basePath: baseUrl,
     apiKey: async (name: string) => {
-      if (name === 'Authorization' && token) {
-        return `Bearer ${token}`;
+      if (name === 'Authorization') {
+        const session = await getAuthTokens();
+        if (session?.access_token) {
+          console.log('Using auth token for API request');
+          return `Bearer ${session.access_token}`;
+        }
       }
       return '';
-    }
+    },
+    middleware: [{
+      post: async (context) => {
+        // Check if response is 401 and retry with fresh token
+        if (context.response.status === 401) {
+          console.log('Received 401 response, attempting to refresh token and retry...');
+          
+          try {
+            // Force refresh the session
+            const { data, error } = await supabase.auth.refreshSession();
+            
+            if (error || !data.session?.access_token) {
+              console.error('Failed to refresh token for retry:', error);
+              return context.response;
+            }
+            
+            console.log('Token refreshed for retry, making new request...');
+            
+            // Create new headers with fresh token
+            const newHeaders = new Headers(context.init.headers);
+            newHeaders.set('Authorization', `Bearer ${data.session.access_token}`);
+            
+            // Retry the request with fresh token
+            const retryResponse = await fetch(context.url, {
+              ...context.init,
+              headers: newHeaders
+            });
+            
+            console.log('Retry response status:', retryResponse.status);
+            return retryResponse;
+          } catch (retryError) {
+            console.error('Error during retry:', retryError);
+            return context.response;
+          }
+        }
+        
+        return context.response;
+      }
+    }]
   });
   
   // Create the client with proper configuration
