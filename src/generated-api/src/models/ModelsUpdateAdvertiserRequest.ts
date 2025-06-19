@@ -24,176 +24,150 @@ import {
 /**
  * 
  * @export
- * @interface DomainAdvertiser
+ * @interface ModelsUpdateAdvertiserRequest
  */
-export interface DomainAdvertiser {
+export interface ModelsUpdateAdvertiserRequest {
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     accountingContactEmail?: string;
     /**
      * 
-     * @type {number}
-     * @memberof DomainAdvertiser
-     */
-    advertiserId?: number;
-    /**
-     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     affiliateIdMacro?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     attributionMethod?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     attributionPriority?: string;
     /**
-     * JSONB
+     * 
      * @type {DomainBillingDetails}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     billingDetails?: DomainBillingDetails;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     contactEmail?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
-     */
-    createdAt?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     defaultCurrencyId?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     emailAttributionMethod?: string;
     /**
-     * General purpose fields (provider-agnostic)
+     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     internalNotes?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     offerIdMacro?: string;
     /**
      * 
-     * @type {number}
-     * @memberof DomainAdvertiser
-     */
-    organizationId?: number;
-    /**
-     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     platformName?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     platformUrl?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     platformUsername?: string;
     /**
      * 
      * @type {number}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
     reportingTimezoneId?: number;
     /**
-     * 'active', 'pending', 'inactive', 'rejected'
-     * @type {string}
-     * @memberof DomainAdvertiser
-     */
-    status?: string;
-    /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsUpdateAdvertiserRequest
      */
-    updatedAt?: string;
+    status: string;
 }
 
 /**
- * Check if a given object implements the DomainAdvertiser interface.
+ * Check if a given object implements the ModelsUpdateAdvertiserRequest interface.
  */
-export function instanceOfDomainAdvertiser(value: object): value is DomainAdvertiser {
+export function instanceOfModelsUpdateAdvertiserRequest(value: object): value is ModelsUpdateAdvertiserRequest {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('status' in value) || value['status'] === undefined) return false;
     return true;
 }
 
-export function DomainAdvertiserFromJSON(json: any): DomainAdvertiser {
-    return DomainAdvertiserFromJSONTyped(json, false);
+export function ModelsUpdateAdvertiserRequestFromJSON(json: any): ModelsUpdateAdvertiserRequest {
+    return ModelsUpdateAdvertiserRequestFromJSONTyped(json, false);
 }
 
-export function DomainAdvertiserFromJSONTyped(json: any, ignoreDiscriminator: boolean): DomainAdvertiser {
+export function ModelsUpdateAdvertiserRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ModelsUpdateAdvertiserRequest {
     if (json == null) {
         return json;
     }
     return {
         
         'accountingContactEmail': json['accounting_contact_email'] == null ? undefined : json['accounting_contact_email'],
-        'advertiserId': json['advertiser_id'] == null ? undefined : json['advertiser_id'],
         'affiliateIdMacro': json['affiliate_id_macro'] == null ? undefined : json['affiliate_id_macro'],
         'attributionMethod': json['attribution_method'] == null ? undefined : json['attribution_method'],
         'attributionPriority': json['attribution_priority'] == null ? undefined : json['attribution_priority'],
         'billingDetails': json['billing_details'] == null ? undefined : DomainBillingDetailsFromJSON(json['billing_details']),
         'contactEmail': json['contact_email'] == null ? undefined : json['contact_email'],
-        'createdAt': json['created_at'] == null ? undefined : json['created_at'],
         'defaultCurrencyId': json['default_currency_id'] == null ? undefined : json['default_currency_id'],
         'emailAttributionMethod': json['email_attribution_method'] == null ? undefined : json['email_attribution_method'],
         'internalNotes': json['internal_notes'] == null ? undefined : json['internal_notes'],
-        'name': json['name'] == null ? undefined : json['name'],
+        'name': json['name'],
         'offerIdMacro': json['offer_id_macro'] == null ? undefined : json['offer_id_macro'],
-        'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
         'platformName': json['platform_name'] == null ? undefined : json['platform_name'],
         'platformUrl': json['platform_url'] == null ? undefined : json['platform_url'],
         'platformUsername': json['platform_username'] == null ? undefined : json['platform_username'],
         'reportingTimezoneId': json['reporting_timezone_id'] == null ? undefined : json['reporting_timezone_id'],
-        'status': json['status'] == null ? undefined : json['status'],
-        'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
+        'status': json['status'],
     };
 }
 
-export function DomainAdvertiserToJSON(json: any): DomainAdvertiser {
-    return DomainAdvertiserToJSONTyped(json, false);
+export function ModelsUpdateAdvertiserRequestToJSON(json: any): ModelsUpdateAdvertiserRequest {
+    return ModelsUpdateAdvertiserRequestToJSONTyped(json, false);
 }
 
-export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ignoreDiscriminator: boolean = false): any {
+export function ModelsUpdateAdvertiserRequestToJSONTyped(value?: ModelsUpdateAdvertiserRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -201,25 +175,21 @@ export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ign
     return {
         
         'accounting_contact_email': value['accountingContactEmail'],
-        'advertiser_id': value['advertiserId'],
         'affiliate_id_macro': value['affiliateIdMacro'],
         'attribution_method': value['attributionMethod'],
         'attribution_priority': value['attributionPriority'],
         'billing_details': DomainBillingDetailsToJSON(value['billingDetails']),
         'contact_email': value['contactEmail'],
-        'created_at': value['createdAt'],
         'default_currency_id': value['defaultCurrencyId'],
         'email_attribution_method': value['emailAttributionMethod'],
         'internal_notes': value['internalNotes'],
         'name': value['name'],
         'offer_id_macro': value['offerIdMacro'],
-        'organization_id': value['organizationId'],
         'platform_name': value['platformName'],
         'platform_url': value['platformUrl'],
         'platform_username': value['platformUsername'],
         'reporting_timezone_id': value['reportingTimezoneId'],
         'status': value['status'],
-        'updated_at': value['updatedAt'],
     };
 }
 

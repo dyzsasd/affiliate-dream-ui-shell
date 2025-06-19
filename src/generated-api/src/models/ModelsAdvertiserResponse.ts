@@ -24,143 +24,143 @@ import {
 /**
  * 
  * @export
- * @interface DomainAdvertiser
+ * @interface ModelsAdvertiserResponse
  */
-export interface DomainAdvertiser {
+export interface ModelsAdvertiserResponse {
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     accountingContactEmail?: string;
     /**
      * 
      * @type {number}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     advertiserId?: number;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     affiliateIdMacro?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     attributionMethod?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     attributionPriority?: string;
     /**
-     * JSONB
+     * 
      * @type {DomainBillingDetails}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     billingDetails?: DomainBillingDetails;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     contactEmail?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     createdAt?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     defaultCurrencyId?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     emailAttributionMethod?: string;
     /**
-     * General purpose fields (provider-agnostic)
+     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     internalNotes?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     offerIdMacro?: string;
     /**
      * 
      * @type {number}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     organizationId?: number;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     platformName?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     platformUrl?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     platformUsername?: string;
     /**
      * 
      * @type {number}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     reportingTimezoneId?: number;
     /**
-     * 'active', 'pending', 'inactive', 'rejected'
+     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     status?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsAdvertiserResponse
      */
     updatedAt?: string;
 }
 
 /**
- * Check if a given object implements the DomainAdvertiser interface.
+ * Check if a given object implements the ModelsAdvertiserResponse interface.
  */
-export function instanceOfDomainAdvertiser(value: object): value is DomainAdvertiser {
+export function instanceOfModelsAdvertiserResponse(value: object): value is ModelsAdvertiserResponse {
     return true;
 }
 
-export function DomainAdvertiserFromJSON(json: any): DomainAdvertiser {
-    return DomainAdvertiserFromJSONTyped(json, false);
+export function ModelsAdvertiserResponseFromJSON(json: any): ModelsAdvertiserResponse {
+    return ModelsAdvertiserResponseFromJSONTyped(json, false);
 }
 
-export function DomainAdvertiserFromJSONTyped(json: any, ignoreDiscriminator: boolean): DomainAdvertiser {
+export function ModelsAdvertiserResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ModelsAdvertiserResponse {
     if (json == null) {
         return json;
     }
@@ -189,11 +189,11 @@ export function DomainAdvertiserFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function DomainAdvertiserToJSON(json: any): DomainAdvertiser {
-    return DomainAdvertiserToJSONTyped(json, false);
+export function ModelsAdvertiserResponseToJSON(json: any): ModelsAdvertiserResponse {
+    return ModelsAdvertiserResponseToJSONTyped(json, false);
 }
 
-export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ignoreDiscriminator: boolean = false): any {
+export function ModelsAdvertiserResponseToJSONTyped(value?: ModelsAdvertiserResponse | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

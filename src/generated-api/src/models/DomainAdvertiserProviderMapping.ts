@@ -33,6 +33,12 @@ export interface DomainAdvertiserProviderMapping {
     createdAt?: string;
     /**
      * 
+     * @type {string}
+     * @memberof DomainAdvertiserProviderMapping
+     */
+    lastSyncAt?: string;
+    /**
+     * 
      * @type {number}
      * @memberof DomainAdvertiserProviderMapping
      */
@@ -50,11 +56,29 @@ export interface DomainAdvertiserProviderMapping {
      */
     providerConfig?: string;
     /**
+     * Provider-specific data (stored as JSONB) - contains all Everflow-specific fields
+     * @type {string}
+     * @memberof DomainAdvertiserProviderMapping
+     */
+    providerData?: string;
+    /**
      * 'everflow' for MVP
      * @type {string}
      * @memberof DomainAdvertiserProviderMapping
      */
     providerType?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainAdvertiserProviderMapping
+     */
+    syncError?: string;
+    /**
+     * Synchronization metadata
+     * @type {string}
+     * @memberof DomainAdvertiserProviderMapping
+     */
+    syncStatus?: string;
     /**
      * 
      * @type {string}
@@ -82,10 +106,14 @@ export function DomainAdvertiserProviderMappingFromJSONTyped(json: any, ignoreDi
         
         'advertiserId': json['advertiser_id'] == null ? undefined : json['advertiser_id'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
+        'lastSyncAt': json['last_sync_at'] == null ? undefined : json['last_sync_at'],
         'mappingId': json['mapping_id'] == null ? undefined : json['mapping_id'],
         'providerAdvertiserId': json['provider_advertiser_id'] == null ? undefined : json['provider_advertiser_id'],
         'providerConfig': json['provider_config'] == null ? undefined : json['provider_config'],
+        'providerData': json['provider_data'] == null ? undefined : json['provider_data'],
         'providerType': json['provider_type'] == null ? undefined : json['provider_type'],
+        'syncError': json['sync_error'] == null ? undefined : json['sync_error'],
+        'syncStatus': json['sync_status'] == null ? undefined : json['sync_status'],
         'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
     };
 }
@@ -103,10 +131,14 @@ export function DomainAdvertiserProviderMappingToJSONTyped(value?: DomainAdverti
         
         'advertiser_id': value['advertiserId'],
         'created_at': value['createdAt'],
+        'last_sync_at': value['lastSyncAt'],
         'mapping_id': value['mappingId'],
         'provider_advertiser_id': value['providerAdvertiserId'],
         'provider_config': value['providerConfig'],
+        'provider_data': value['providerData'],
         'provider_type': value['providerType'],
+        'sync_error': value['syncError'],
+        'sync_status': value['syncStatus'],
         'updated_at': value['updatedAt'],
     };
 }

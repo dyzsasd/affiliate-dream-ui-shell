@@ -1,5 +1,83 @@
 basePath: /api/v1
 definitions:
+  domain.Advertiser:
+    properties:
+      accounting_contact_email:
+        type: string
+      advertiser_id:
+        type: integer
+      affiliate_id_macro:
+        type: string
+      attribution_method:
+        type: string
+      attribution_priority:
+        type: string
+      billing_details:
+        allOf:
+        - $ref: '#/definitions/domain.BillingDetails'
+        description: JSONB
+      contact_email:
+        type: string
+      created_at:
+        type: string
+      default_currency_id:
+        type: string
+      email_attribution_method:
+        type: string
+      internal_notes:
+        description: General purpose fields (provider-agnostic)
+        type: string
+      name:
+        type: string
+      offer_id_macro:
+        type: string
+      organization_id:
+        type: integer
+      platform_name:
+        type: string
+      platform_url:
+        type: string
+      platform_username:
+        type: string
+      reporting_timezone_id:
+        type: integer
+      status:
+        description: '''active'', ''pending'', ''inactive'', ''rejected'''
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.AdvertiserProviderMapping:
+    properties:
+      advertiser_id:
+        type: integer
+      created_at:
+        type: string
+      last_sync_at:
+        type: string
+      mapping_id:
+        type: integer
+      provider_advertiser_id:
+        description: e.g., Everflow's network_advertiser_id
+        type: string
+      provider_config:
+        description: JSONB stored as string
+        type: string
+      provider_data:
+        description: Provider-specific data (stored as JSONB) - contains all Everflow-specific
+          fields
+        type: string
+      provider_type:
+        description: '''everflow'' for MVP'
+        type: string
+      sync_error:
+        type: string
+      sync_status:
+        description: Synchronization metadata
+        type: string
+      updated_at:
+        type: string
+    type: object
   domain.Affiliate:
     properties:
       affiliate_id:
@@ -203,6 +281,90 @@ definitions:
         description: '"advertiser" or "publisher"'
         type: string
     type: object
+  domain.BillingAddress:
+    properties:
+      city:
+        type: string
+      company_name:
+        type: string
+      country:
+        type: string
+      line1:
+        type: string
+      line2:
+        type: string
+      postal_code:
+        type: string
+      state:
+        type: string
+    type: object
+  domain.BillingDetails:
+    properties:
+      additional_details:
+        additionalProperties: true
+        type: object
+      address:
+        $ref: '#/definitions/domain.BillingAddress'
+      auto_invoice_start_date:
+        description: 'Format: "2019-06-01 00:00:00"'
+        type: string
+      default_invoice_is_hidden:
+        type: boolean
+      default_payment_terms:
+        type: integer
+      frequency:
+        $ref: '#/definitions/domain.BillingFrequency'
+      invoice_amount_threshold:
+        type: number
+      invoice_generation_days_delay:
+        type: integer
+      is_invoice_creation_auto:
+        type: boolean
+      payment_details:
+        $ref: '#/definitions/domain.PaymentDetails'
+      payment_type:
+        $ref: '#/definitions/domain.PaymentType'
+      schedule:
+        $ref: '#/definitions/domain.BillingSchedule'
+      tax_id:
+        type: string
+    type: object
+  domain.BillingFrequency:
+    enum:
+    - weekly
+    - bimonthly
+    - monthly
+    - two_months
+    - quarterly
+    - manual
+    - other
+    type: string
+    x-enum-varnames:
+    - BillingFrequencyWeekly
+    - BillingFrequencyBimonthly
+    - BillingFrequencyMonthly
+    - BillingFrequencyTwoMonths
+    - BillingFrequencyQuarterly
+    - BillingFrequencyManual
+    - BillingFrequencyOther
+  domain.BillingSchedule:
+    properties:
+      day_of_month:
+        description: For monthly billing
+        type: integer
+      day_of_month_one:
+        description: For bimonthly
+        type: integer
+      day_of_month_two:
+        description: For bimonthly
+        type: integer
+      day_of_week:
+        description: For weekly billing
+        type: integer
+      starting_month:
+        description: For quarterly/yearly billing
+        type: integer
+    type: object
   domain.ContactEmailData:
     properties:
       count:
@@ -304,6 +466,77 @@ definitions:
     - OrganizationTypeAdvertiser
     - OrganizationTypeAffiliate
     - OrganizationTypePlatformOwner
+  domain.PaymentDetails:
+    properties:
+      account_number:
+        type: string
+      ach_account_type:
+        description: ACH details
+        type: string
+      additional_details:
+        additionalProperties: true
+        description: Additional details for other payment types
+        type: object
+      bank_address:
+        type: string
+      bank_name:
+        description: Wire transfer details
+        type: string
+      crypto_address:
+        type: string
+      crypto_wallet_type:
+        description: Crypto details
+        type: string
+      iban:
+        type: string
+      mailing_address:
+        allOf:
+        - $ref: '#/definitions/domain.BillingAddress'
+        description: Check details
+      paypal_email:
+        description: PayPal details
+        type: string
+      routing_number:
+        type: string
+      swift_code:
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/domain.PaymentDetailsType'
+        description: Payment type for validation and processing
+    type: object
+  domain.PaymentDetailsType:
+    enum:
+    - wire
+    - ach
+    - check
+    - paypal
+    - crypto
+    - other
+    type: string
+    x-enum-varnames:
+    - PaymentDetailsTypeWire
+    - PaymentDetailsTypeACH
+    - PaymentDetailsTypeCheck
+    - PaymentDetailsTypePayPal
+    - PaymentDetailsTypeCrypto
+    - PaymentDetailsTypeOther
+  domain.PaymentType:
+    enum:
+    - wire
+    - ach
+    - check
+    - paypal
+    - crypto
+    - other
+    type: string
+    x-enum-varnames:
+    - PaymentTypeWire
+    - PaymentTypeACH
+    - PaymentTypeCheck
+    - PaymentTypePayPal
+    - PaymentTypeCrypto
+    - PaymentTypeOther
   domain.Profile:
     properties:
       created_at:
@@ -573,6 +806,49 @@ definitions:
       role_id:
         type: integer
     type: object
+  models.AdvertiserResponse:
+    properties:
+      accounting_contact_email:
+        type: string
+      advertiser_id:
+        type: integer
+      affiliate_id_macro:
+        type: string
+      attribution_method:
+        type: string
+      attribution_priority:
+        type: string
+      billing_details:
+        $ref: '#/definitions/domain.BillingDetails'
+      contact_email:
+        type: string
+      created_at:
+        type: string
+      default_currency_id:
+        type: string
+      email_attribution_method:
+        type: string
+      internal_notes:
+        type: string
+      name:
+        type: string
+      offer_id_macro:
+        type: string
+      organization_id:
+        type: integer
+      platform_name:
+        type: string
+      platform_url:
+        type: string
+      platform_username:
+        type: string
+      reporting_timezone_id:
+        type: integer
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
   models.CampaignListResponse:
     properties:
       campaigns:
@@ -659,6 +935,58 @@ definitions:
         type: integer
       weekly_conversion_cap:
         type: integer
+    type: object
+  models.CreateAdvertiserProviderMappingRequest:
+    properties:
+      provider_mapping:
+        $ref: '#/definitions/domain.AdvertiserProviderMapping'
+    required:
+    - provider_mapping
+    type: object
+  models.CreateAdvertiserProviderMappingResponse:
+    properties:
+      provider_mapping:
+        $ref: '#/definitions/domain.AdvertiserProviderMapping'
+    type: object
+  models.CreateAdvertiserRequest:
+    properties:
+      accounting_contact_email:
+        type: string
+      affiliate_id_macro:
+        type: string
+      attribution_method:
+        type: string
+      attribution_priority:
+        type: string
+      billing_details:
+        $ref: '#/definitions/domain.BillingDetails'
+      contact_email:
+        type: string
+      default_currency_id:
+        type: string
+      email_attribution_method:
+        type: string
+      internal_notes:
+        type: string
+      name:
+        type: string
+      offer_id_macro:
+        type: string
+      organization_id:
+        type: integer
+      platform_name:
+        type: string
+      platform_url:
+        type: string
+      platform_username:
+        type: string
+      reporting_timezone_id:
+        type: integer
+      status:
+        type: string
+    required:
+    - name
+    - organization_id
     type: object
   models.CreateCampaignRequest:
     properties:
@@ -759,6 +1087,11 @@ definitions:
     - name
     - organization_id
     - status
+    type: object
+  models.GetAdvertiserProviderMappingResponse:
+    properties:
+      provider_mapping:
+        $ref: '#/definitions/domain.AdvertiserProviderMapping'
     type: object
   models.TrackingLinkGenerationRequest:
     properties:
@@ -1009,6 +1342,51 @@ definitions:
         example: facebook,mobile,lookalike
         type: string
     type: object
+  models.UpdateAdvertiserProviderMappingRequest:
+    properties:
+      provider_mapping:
+        $ref: '#/definitions/domain.AdvertiserProviderMapping'
+    required:
+    - provider_mapping
+    type: object
+  models.UpdateAdvertiserRequest:
+    properties:
+      accounting_contact_email:
+        type: string
+      affiliate_id_macro:
+        type: string
+      attribution_method:
+        type: string
+      attribution_priority:
+        type: string
+      billing_details:
+        $ref: '#/definitions/domain.BillingDetails'
+      contact_email:
+        type: string
+      default_currency_id:
+        type: string
+      email_attribution_method:
+        type: string
+      internal_notes:
+        type: string
+      name:
+        type: string
+      offer_id_macro:
+        type: string
+      platform_name:
+        type: string
+      platform_url:
+        type: string
+      platform_username:
+        type: string
+      reporting_timezone_id:
+        type: integer
+      status:
+        type: string
+    required:
+    - name
+    - status
+    type: object
   models.UpdateCampaignRequest:
     properties:
       billing_model:
@@ -1117,6 +1495,165 @@ info:
   title: Affiliate Backend API
   version: "1.0"
 paths:
+  /advertiser-provider-mappings:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new advertiser provider mapping
+      parameters:
+      - description: Provider mapping details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAdvertiserProviderMappingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created provider mapping
+          schema:
+            $ref: '#/definitions/models.CreateAdvertiserProviderMappingResponse'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create advertiser provider mapping
+      tags:
+      - advertiser-provider-mappings
+  /advertiser-provider-mappings/{mappingId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an advertiser provider mapping by mapping ID
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid mapping ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete advertiser provider mapping
+      tags:
+      - advertiser-provider-mappings
+    put:
+      consumes:
+      - application/json
+      description: Updates an advertiser provider mapping by mapping ID
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: integer
+      - description: Provider mapping details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateAdvertiserProviderMappingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update successful
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update advertiser provider mapping
+      tags:
+      - advertiser-provider-mappings
+  /advertisers:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new advertiser with the given details
+      parameters:
+      - description: Advertiser details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAdvertiserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created advertiser
+          schema:
+            $ref: '#/definitions/models.AdvertiserResponse'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new advertiser
+      tags:
+      - advertisers
   /advertisers/{advertiser_id}/campaigns:
     get:
       description: Retrieve campaigns for a specific advertiser with pagination
@@ -1152,6 +1689,343 @@ paths:
       summary: List campaigns by advertiser
       tags:
       - campaigns
+  /advertisers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an advertiser by its ID
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete advertiser
+      tags:
+      - advertisers
+    get:
+      consumes:
+      - application/json
+      description: Retrieves an advertiser by its ID
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Advertiser details
+          schema:
+            $ref: '#/definitions/models.AdvertiserResponse'
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get advertiser by ID
+      tags:
+      - advertisers
+    put:
+      consumes:
+      - application/json
+      description: Updates an advertiser with the given details
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Advertiser details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateAdvertiserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated advertiser
+          schema:
+            $ref: '#/definitions/models.AdvertiserResponse'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update advertiser
+      tags:
+      - advertisers
+  /advertisers/{id}/compare-with-everflow:
+    get:
+      consumes:
+      - application/json
+      description: Compares an advertiser with its Everflow counterpart and returns
+        discrepancies
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comparison results with discrepancies
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Compare advertiser with Everflow
+      tags:
+      - advertisers
+  /advertisers/{id}/provider-mappings/{providerType}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves an advertiser provider mapping by advertiser ID and provider
+        type
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Provider type
+        in: path
+        name: providerType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Provider mapping details
+          schema:
+            $ref: '#/definitions/models.GetAdvertiserProviderMappingResponse'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Provider mapping not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get advertiser provider mapping
+      tags:
+      - advertisers
+  /advertisers/{id}/sync-from-everflow:
+    post:
+      consumes:
+      - application/json
+      description: Syncs an advertiser from the Everflow platform
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sync completed successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Sync advertiser from Everflow
+      tags:
+      - advertisers
+  /advertisers/{id}/sync-to-everflow:
+    post:
+      consumes:
+      - application/json
+      description: Syncs an advertiser to the Everflow platform
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sync initiated successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid advertiser ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Advertiser not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Sync advertiser to Everflow
+      tags:
+      - advertisers
   /affiliate-provider-mappings:
     post:
       consumes:
@@ -2128,6 +3002,57 @@ paths:
       summary: Update organization
       tags:
       - organizations
+  /organizations/{id}/advertisers:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of advertisers for an organization with pagination
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of advertisers
+          schema:
+            items:
+              $ref: '#/definitions/domain.Advertiser'
+            type: array
+        "400":
+          description: Invalid organization ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - User doesn't have permission
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List advertisers by organization
+      tags:
+      - advertisers
   /organizations/{id}/affiliates:
     get:
       consumes:

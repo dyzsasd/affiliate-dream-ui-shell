@@ -24,176 +24,157 @@ import {
 /**
  * 
  * @export
- * @interface DomainAdvertiser
+ * @interface ModelsCreateAdvertiserRequest
  */
-export interface DomainAdvertiser {
+export interface ModelsCreateAdvertiserRequest {
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     accountingContactEmail?: string;
     /**
      * 
-     * @type {number}
-     * @memberof DomainAdvertiser
-     */
-    advertiserId?: number;
-    /**
-     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     affiliateIdMacro?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     attributionMethod?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     attributionPriority?: string;
     /**
-     * JSONB
+     * 
      * @type {DomainBillingDetails}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     billingDetails?: DomainBillingDetails;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     contactEmail?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
-     */
-    createdAt?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     defaultCurrencyId?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     emailAttributionMethod?: string;
     /**
-     * General purpose fields (provider-agnostic)
+     * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     internalNotes?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     offerIdMacro?: string;
     /**
      * 
      * @type {number}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
-    organizationId?: number;
+    organizationId: number;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     platformName?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     platformUrl?: string;
     /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     platformUsername?: string;
     /**
      * 
      * @type {number}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
     reportingTimezoneId?: number;
     /**
-     * 'active', 'pending', 'inactive', 'rejected'
-     * @type {string}
-     * @memberof DomainAdvertiser
-     */
-    status?: string;
-    /**
      * 
      * @type {string}
-     * @memberof DomainAdvertiser
+     * @memberof ModelsCreateAdvertiserRequest
      */
-    updatedAt?: string;
+    status?: string;
 }
 
 /**
- * Check if a given object implements the DomainAdvertiser interface.
+ * Check if a given object implements the ModelsCreateAdvertiserRequest interface.
  */
-export function instanceOfDomainAdvertiser(value: object): value is DomainAdvertiser {
+export function instanceOfModelsCreateAdvertiserRequest(value: object): value is ModelsCreateAdvertiserRequest {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('organizationId' in value) || value['organizationId'] === undefined) return false;
     return true;
 }
 
-export function DomainAdvertiserFromJSON(json: any): DomainAdvertiser {
-    return DomainAdvertiserFromJSONTyped(json, false);
+export function ModelsCreateAdvertiserRequestFromJSON(json: any): ModelsCreateAdvertiserRequest {
+    return ModelsCreateAdvertiserRequestFromJSONTyped(json, false);
 }
 
-export function DomainAdvertiserFromJSONTyped(json: any, ignoreDiscriminator: boolean): DomainAdvertiser {
+export function ModelsCreateAdvertiserRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ModelsCreateAdvertiserRequest {
     if (json == null) {
         return json;
     }
     return {
         
         'accountingContactEmail': json['accounting_contact_email'] == null ? undefined : json['accounting_contact_email'],
-        'advertiserId': json['advertiser_id'] == null ? undefined : json['advertiser_id'],
         'affiliateIdMacro': json['affiliate_id_macro'] == null ? undefined : json['affiliate_id_macro'],
         'attributionMethod': json['attribution_method'] == null ? undefined : json['attribution_method'],
         'attributionPriority': json['attribution_priority'] == null ? undefined : json['attribution_priority'],
         'billingDetails': json['billing_details'] == null ? undefined : DomainBillingDetailsFromJSON(json['billing_details']),
         'contactEmail': json['contact_email'] == null ? undefined : json['contact_email'],
-        'createdAt': json['created_at'] == null ? undefined : json['created_at'],
         'defaultCurrencyId': json['default_currency_id'] == null ? undefined : json['default_currency_id'],
         'emailAttributionMethod': json['email_attribution_method'] == null ? undefined : json['email_attribution_method'],
         'internalNotes': json['internal_notes'] == null ? undefined : json['internal_notes'],
-        'name': json['name'] == null ? undefined : json['name'],
+        'name': json['name'],
         'offerIdMacro': json['offer_id_macro'] == null ? undefined : json['offer_id_macro'],
-        'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
+        'organizationId': json['organization_id'],
         'platformName': json['platform_name'] == null ? undefined : json['platform_name'],
         'platformUrl': json['platform_url'] == null ? undefined : json['platform_url'],
         'platformUsername': json['platform_username'] == null ? undefined : json['platform_username'],
         'reportingTimezoneId': json['reporting_timezone_id'] == null ? undefined : json['reporting_timezone_id'],
         'status': json['status'] == null ? undefined : json['status'],
-        'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
     };
 }
 
-export function DomainAdvertiserToJSON(json: any): DomainAdvertiser {
-    return DomainAdvertiserToJSONTyped(json, false);
+export function ModelsCreateAdvertiserRequestToJSON(json: any): ModelsCreateAdvertiserRequest {
+    return ModelsCreateAdvertiserRequestToJSONTyped(json, false);
 }
 
-export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ignoreDiscriminator: boolean = false): any {
+export function ModelsCreateAdvertiserRequestToJSONTyped(value?: ModelsCreateAdvertiserRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -201,13 +182,11 @@ export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ign
     return {
         
         'accounting_contact_email': value['accountingContactEmail'],
-        'advertiser_id': value['advertiserId'],
         'affiliate_id_macro': value['affiliateIdMacro'],
         'attribution_method': value['attributionMethod'],
         'attribution_priority': value['attributionPriority'],
         'billing_details': DomainBillingDetailsToJSON(value['billingDetails']),
         'contact_email': value['contactEmail'],
-        'created_at': value['createdAt'],
         'default_currency_id': value['defaultCurrencyId'],
         'email_attribution_method': value['emailAttributionMethod'],
         'internal_notes': value['internalNotes'],
@@ -219,7 +198,6 @@ export function DomainAdvertiserToJSONTyped(value?: DomainAdvertiser | null, ign
         'platform_username': value['platformUsername'],
         'reporting_timezone_id': value['reportingTimezoneId'],
         'status': value['status'],
-        'updated_at': value['updatedAt'],
     };
 }
 
