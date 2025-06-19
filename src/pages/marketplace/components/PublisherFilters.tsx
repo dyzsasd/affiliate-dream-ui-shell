@@ -69,7 +69,6 @@ const PublisherFilters: React.FC<PublisherFiltersProps> = ({
               <SelectValue placeholder={t("marketplace.selectCategory")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t("marketplace.allCategories")}</SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
@@ -86,7 +85,6 @@ const PublisherFilters: React.FC<PublisherFiltersProps> = ({
               <SelectValue placeholder={t("marketplace.selectCountry")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t("marketplace.allCountries")}</SelectItem>
               {countries.map((country) => (
                 <SelectItem key={country} value={country}>
                   {country}
@@ -115,7 +113,6 @@ const PublisherFilters: React.FC<PublisherFiltersProps> = ({
               <SelectValue placeholder={t("marketplace.selectRating")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t("marketplace.anyRating")}</SelectItem>
               <SelectItem value="4.5">4.5+ ⭐</SelectItem>
               <SelectItem value="4.0">4.0+ ⭐</SelectItem>
               <SelectItem value="3.5">3.5+ ⭐</SelectItem>
@@ -131,7 +128,6 @@ const PublisherFilters: React.FC<PublisherFiltersProps> = ({
               <SelectValue placeholder={t("marketplace.selectPayoutModel")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t("marketplace.allPayoutModels")}</SelectItem>
               {payoutModels.map((model) => (
                 <SelectItem key={model} value={model}>
                   {model}
