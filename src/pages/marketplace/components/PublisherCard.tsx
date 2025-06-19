@@ -77,10 +77,6 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
             
             <div className="flex items-center space-x-6 text-right">
               <div>
-                <p className="text-xs text-muted-foreground">{t("marketplace.averageEPC")}</p>
-                <p className="text-lg font-semibold">${publisher.averageEPC}</p>
-              </div>
-              <div>
                 <p className="text-xs text-muted-foreground">{t("marketplace.conversionRate")}</p>
                 <p className="text-lg font-semibold">{publisher.conversionRate}%</p>
               </div>
@@ -132,11 +128,7 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
           )}
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-          <div>
-            <p className="text-muted-foreground">{t("marketplace.averageEPC")}</p>
-            <p className="font-semibold">${publisher.averageEPC}</p>
-          </div>
+        <div className="grid grid-cols-1 gap-4 mb-4 text-sm">
           <div>
             <p className="text-muted-foreground">{t("marketplace.conversionRate")}</p>
             <p className="font-semibold">{publisher.conversionRate}%</p>
