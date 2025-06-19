@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { CardContent } from '@/components/ui/card';
-import { DomainAdvertiser } from '@/generated-api/src/models';
+import { DomainAdvertiser, DomainBillingDetails } from '@/generated-api/src/models';
 
 interface AdvertiserInfoProps {
   advertiser: DomainAdvertiser;
@@ -15,18 +15,26 @@ export const AdvertiserInfo: React.FC<AdvertiserInfoProps> = ({ advertiser }) =>
   // Format the billing details for display if available
   const formatBillingDetails = () => {
     if (advertiser.billingDetails) {
-      try {
-        const billingObj = JSON.parse(advertiser.billingDetails);
-        return (
-          <pre className="bg-muted p-4 rounded-md overflow-auto text-sm">
-            {JSON.stringify(billingObj, null, 2)}
-          </pre>
-        );
-      } catch (e) {
-        return (
-          <p className="text-destructive">{t('common.error')}: {t('common.errorOccurred')}</p>
-        );
+      // Handle both object and string types
+      let billingObj: DomainBillingDetails;
+      
+      if (typeof advertiser.billingDetails === 'string') {
+        try {
+          billingObj = JSON.parse(advertiser.billingDetails);
+        } catch (e) {
+          return (
+            <p className="text-destructive">{t('common.error')}: {t('common.errorOccurred')}</p>
+          );
+        }
+      } else {
+        billingObj = advertiser.billingDetails;
       }
+      
+      return (
+        <pre className="bg-muted p-4 rounded-md overflow-auto text-sm">
+          {JSON.stringify(billingObj, null, 2)}
+        </pre>
+      );
     }
     return null;
   };

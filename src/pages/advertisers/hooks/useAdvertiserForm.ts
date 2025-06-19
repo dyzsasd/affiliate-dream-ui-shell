@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/auth';
 import { fetchAdvertiser } from '@/services/advertiserService';
 import { advertiserSchema, AdvertiserFormData, BillingDetails } from '../types/advertiser';
 import { useAdvertiserMutations } from './useAdvertiserMutations';
-import { DomainAffiliate } from '@/generated-api/src/models';
+import { DomainAffiliate, DomainBillingDetails } from '@/generated-api/src/models';
 
 interface UseAdvertiserFormProps {
   advertiserId?: string;
@@ -51,16 +51,29 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
   useEffect(() => {
     if (advertiser && isEditMode) {
       let billingDetails: BillingDetails = {};
+      let billingDetailsString = '';
       
-      if (typeof advertiser.billingDetails === 'string') {
-        try {
-          billingDetails = JSON.parse(advertiser.billingDetails) as BillingDetails;
-        } catch (e) {
-          billingDetails = {};
+      if (advertiser.billingDetails) {
+        if (typeof advertiser.billingDetails === 'string') {
+          try {
+            billingDetails = JSON.parse(advertiser.billingDetails) as BillingDetails;
+            billingDetailsString = advertiser.billingDetails;
+          } catch (e) {
+            billingDetails = {};
+            billingDetailsString = '';
+          }
+        } else {
+          // If it's already a DomainBillingDetails object, convert it
+          const domainBillingDetails = advertiser.billingDetails as DomainBillingDetails;
+          billingDetails = {
+            address: domainBillingDetails.address?.line1 || '',
+            city: domainBillingDetails.address?.city || '',
+            state: domainBillingDetails.address?.state || '',
+            country: domainBillingDetails.address?.country || '',
+            postalCode: domainBillingDetails.address?.postalCode || ''
+          };
+          billingDetailsString = JSON.stringify(domainBillingDetails);
         }
-      } else if (advertiser.billingDetails) {
-        // If it's already an object, cast it to BillingDetails
-        billingDetails = advertiser.billingDetails as unknown as BillingDetails;
       }
       
       form.reset({
@@ -72,7 +85,7 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
         billingState: billingDetails.state || '',
         billingCountry: billingDetails.country || '',
         billingPostalCode: billingDetails.postalCode || '',
-        billingDetails: advertiser.billingDetails || '',
+        billingDetails: billingDetailsString,
       });
     }
   }, [advertiser, form, isEditMode]);
