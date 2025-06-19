@@ -17,6 +17,64 @@ interface MockUpdateAdvertiserRequest {
   status?: string;
 }
 
+// Centralized mock data
+const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
+  {
+    advertiserId: 1,
+    name: "Adidas FR",
+    contactEmail: "partnerships@adidas.fr",
+    status: "active",
+    organizationId: organizationId,
+    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+  },
+  {
+    advertiserId: 2,
+    name: "Adidas ES",
+    contactEmail: "marketing@adidas.es",
+    status: "active",
+    organizationId: organizationId,
+    createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(), // 45 days ago
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+  },
+  {
+    advertiserId: 3,
+    name: "Nike Europe",
+    contactEmail: "affiliate@nike.com",
+    status: "pending",
+    organizationId: organizationId,
+    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days ago
+    updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString() // 12 hours ago
+  },
+  {
+    advertiserId: 4,
+    name: "Puma Global",
+    contactEmail: "partnerships@puma.com",
+    status: "active",
+    organizationId: organizationId,
+    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days ago
+    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days ago
+  },
+  {
+    advertiserId: 5,
+    name: "Under Armour EMEA",
+    contactEmail: "business@underarmour.com",
+    status: "inactive",
+    organizationId: organizationId,
+    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days ago
+    updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days ago
+  },
+  {
+    advertiserId: 6,
+    name: "Reebok International",
+    contactEmail: "affiliates@reebok.com",
+    status: "active",
+    organizationId: organizationId,
+    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), // 20 days ago
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+  }
+];
+
 /**
  * Fetches advertisers for a specific organization
  * NOTE: This is currently mocked since the backend doesn't have advertiser endpoints yet
@@ -25,63 +83,7 @@ export const fetchAdvertisers = async (organizationId: number): Promise<DomainAd
   try {
     console.log(`Fetching advertisers for organization ID: ${organizationId}`);
     
-    // Updated mock data with Adidas regional accounts
-    const mockAdvertisers: DomainAdvertiser[] = [
-      {
-        advertiserId: 1,
-        name: "Adidas FR",
-        contactEmail: "partnerships@adidas.fr",
-        status: "active",
-        organizationId: organizationId,
-        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
-        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
-      },
-      {
-        advertiserId: 2,
-        name: "Adidas ES",
-        contactEmail: "marketing@adidas.es",
-        status: "active",
-        organizationId: organizationId,
-        createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(), // 45 days ago
-        updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() // 1 day ago
-      },
-      {
-        advertiserId: 3,
-        name: "Nike Europe",
-        contactEmail: "affiliate@nike.com",
-        status: "pending",
-        organizationId: organizationId,
-        createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days ago
-        updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString() // 12 hours ago
-      },
-      {
-        advertiserId: 4,
-        name: "Puma Global",
-        contactEmail: "partnerships@puma.com",
-        status: "active",
-        organizationId: organizationId,
-        createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days ago
-        updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days ago
-      },
-      {
-        advertiserId: 5,
-        name: "Under Armour EMEA",
-        contactEmail: "business@underarmour.com",
-        status: "inactive",
-        organizationId: organizationId,
-        createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days ago
-        updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days ago
-      },
-      {
-        advertiserId: 6,
-        name: "Reebok International",
-        contactEmail: "affiliates@reebok.com",
-        status: "active",
-        organizationId: organizationId,
-        createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), // 20 days ago
-        updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
-      }
-    ];
+    const mockAdvertisers = getMockAdvertisers(organizationId);
     
     console.log(`Retrieved ${mockAdvertisers.length} mock advertisers:`, mockAdvertisers);
     return mockAdvertisers;
@@ -99,18 +101,16 @@ export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdver
   try {
     console.log(`Fetching advertiser ID: ${advertiserId}`);
     
-    // Mock single advertiser
-    const mockAdvertiser: DomainAdvertiser = {
-      advertiserId: advertiserId,
-      name: "Mock Advertiser",
-      contactEmail: "mock@example.com",
-      status: "active",
-      organizationId: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    // Use the same mock data and find the specific advertiser
+    const mockAdvertisers = getMockAdvertisers(1); // Using organizationId 1 as default for mock
+    const advertiser = mockAdvertisers.find(adv => adv.advertiserId === advertiserId);
     
-    return mockAdvertiser;
+    if (!advertiser) {
+      throw new Error(`Advertiser with ID ${advertiserId} not found`);
+    }
+    
+    console.log(`Found advertiser:`, advertiser);
+    return advertiser;
   } catch (error) {
     console.error(`Error fetching advertiser ${advertiserId}:`, error);
     throw handleApiError(error);
