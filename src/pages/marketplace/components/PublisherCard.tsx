@@ -48,7 +48,7 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
                   </div>
                   <div className="flex items-center gap-1">
                     <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                    {publisher.rating} ({publisher.reviewCount})
+                    {publisher.rating}
                   </div>
                   <div className="flex items-center gap-1">
                     <Eye className="h-3 w-3" />
@@ -76,10 +76,6 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
             </div>
             
             <div className="flex items-center space-x-6 text-right">
-              <div>
-                <p className="text-xs text-muted-foreground">{t("marketplace.conversionRate")}</p>
-                <p className="text-lg font-semibold">{publisher.conversionRate}%</p>
-              </div>
               <Button onClick={onViewDetails}>
                 {t("marketplace.viewDetails")}
               </Button>
@@ -128,18 +124,10 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
           )}
         </div>
         
-        <div className="grid grid-cols-1 gap-4 mb-4 text-sm">
-          <div>
-            <p className="text-muted-foreground">{t("marketplace.conversionRate")}</p>
-            <p className="font-semibold">{publisher.conversionRate}%</p>
-          </div>
-        </div>
-        
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-sm mb-4">
           <div className="flex items-center gap-1">
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
             <span>{publisher.rating}</span>
-            <span className="text-muted-foreground">({publisher.reviewCount})</span>
           </div>
           <div className="flex items-center gap-1 text-muted-foreground">
             <TrendingUp className="h-3 w-3" />
