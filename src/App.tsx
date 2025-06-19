@@ -9,9 +9,7 @@ import Signup from "@/pages/auth/Signup";
 import Dashboard from "@/pages/Dashboard";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
-import AdvertiserList from "@/pages/advertisers";
-import AdvertiserDetail from "@/pages/advertisers/AdvertiserDetail";
-import AdvertiserForm from "@/pages/advertisers/AdvertiserForm";
+import AdvertiserRoutes from "@/pages/advertisers";
 import ProfilePage from "@/pages/profile";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
@@ -55,11 +53,8 @@ function App() {
                 <Route path="/campaigns" element={<CampaignList />} />
                 <Route path="/campaigns/:id" element={<CampaignDetail />} />
                 
-                {/* Advertiser routes */}
-                <Route path="/advertisers" element={<AdvertiserList />} />
-                <Route path="/advertisers/new" element={<AdvertiserForm />} />
-                <Route path="/advertisers/:id" element={<AdvertiserDetail />} />
-                <Route path="/advertisers/:id/edit" element={<AdvertiserForm />} />
+                {/* Advertiser routes - use the AdvertiserRoutes component */}
+                <Route path="/advertisers/*" element={<AdvertiserRoutes />} />
                 
                 {/* Marketplace routes */}
                 <Route path="/advertiser/marketplace" element={<MarketplacePage />} />
