@@ -40,7 +40,9 @@ const CampaignList: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
+        console.log('Fetching campaigns from API...');
         const data = await campaignService.getCampaigns();
+        console.log('Campaigns fetched successfully:', data);
         setCampaigns(data);
       } catch (err) {
         console.error("Error fetching campaigns:", err);
