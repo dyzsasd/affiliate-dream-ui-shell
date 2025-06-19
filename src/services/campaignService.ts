@@ -1,3 +1,4 @@
+
 import { 
   CampaignsApi
 } from '@/generated-api/src/apis';
@@ -9,97 +10,167 @@ import {
 import { createApiClient, handleApiError } from './backendApi';
 import { Campaign, CampaignDetail, Offer } from '@/types/api';
 
-// Mock data as provided
+// Updated mock data with more realistic campaigns
 const mockCampaignsResponse = {
   "campaigns": [
     {
-      "campaign_id": 6,
+      "campaign_id": 1,
       "organization_id": 5,
       "advertiser_id": 1,
-      "name": "Full Test Campaign",
-      "description": "A comprehensive test campaign with all available fields",
+      "name": "Adidas Summer Collection 2025",
+      "description": "Promote the latest Adidas summer sportswear collection with attractive commissions",
       "status": "active",
-      "start_date": "2025-07-01T00:00:00Z",
+      "start_date": "2025-06-01T00:00:00Z",
       "end_date": "2025-08-31T00:00:00Z",
-      "destination_url": "https://example.com/landing",
-      "thumbnail_url": "https://example.com/thumb.jpg",
-      "preview_url": "https://example.com/preview.jpg",
+      "destination_url": "https://adidas.com/summer-collection",
+      "thumbnail_url": "https://example.com/adidas-summer-thumb.jpg",
+      "preview_url": "https://example.com/adidas-summer-preview.jpg",
       "visibility": "public",
-      "currency_id": "USD",
+      "currency_id": "EUR",
       "payout_type": "cpa",
-      "payout_amount": 25.5,
+      "payout_amount": 35.0,
       "revenue_type": "rpa",
-      "revenue_amount": 30,
+      "revenue_amount": 45.0,
       "conversion_method": "postback",
       "session_definition": "30-day attribution window",
       "session_duration": 30,
-      "terms_and_conditions": "Standard affiliate terms apply",
-      "internal_notes": "High-priority campaign for Q3",
-      "created_at": "2025-06-16T23:58:51.831539+02:00",
-      "updated_at": "2025-06-16T23:58:51.831539+02:00"
-    },
-    {
-      "campaign_id": 5,
-      "organization_id": 5,
-      "advertiser_id": 1,
-      "name": "Full Test Campaign",
-      "description": "A comprehensive test campaign with all available fields",
-      "status": "active",
-      "start_date": "2025-07-01T00:00:00Z",
-      "end_date": "2025-08-31T00:00:00Z",
-      "destination_url": "https://example.com/landing",
-      "thumbnail_url": "https://example.com/thumb.jpg",
-      "preview_url": "https://example.com/preview.jpg",
-      "visibility": "public",
-      "currency_id": "USD",
-      "payout_type": "cpa",
-      "payout_amount": 25.5,
-      "revenue_type": "rpa",
-      "revenue_amount": 30,
-      "created_at": "2025-06-16T23:58:51.104544+02:00",
-      "updated_at": "2025-06-16T23:58:51.104544+02:00"
-    },
-    {
-      "campaign_id": 4,
-      "organization_id": 5,
-      "advertiser_id": 1,
-      "name": "Full Test Campaign",
-      "description": "A comprehensive test campaign with all available fields",
-      "status": "active",
-      "start_date": "2025-07-01T00:00:00Z",
-      "end_date": "2025-08-31T00:00:00Z",
-      "destination_url": "https://example.com/landing",
-      "thumbnail_url": "https://example.com/thumb.jpg",
-      "preview_url": "https://example.com/preview.jpg",
-      "visibility": "public",
-      "currency_id": "USD",
-      "payout_type": "cpa",
-      "payout_amount": 25.5,
-      "revenue_type": "rpa",
-      "revenue_amount": 30,
-      "created_at": "2025-06-16T23:58:49.107926+02:00",
-      "updated_at": "2025-06-16T23:58:49.107926+02:00"
-    },
-    {
-      "campaign_id": 3,
-      "organization_id": 5,
-      "advertiser_id": 1,
-      "name": "Test Campaign via curl",
-      "status": "draft",
-      "created_at": "2025-06-16T23:41:40.185959+02:00",
-      "updated_at": "2025-06-16T23:41:40.185959+02:00"
+      "terms_and_conditions": "Standard affiliate terms apply. Minimum 10 conversions per month required.",
+      "internal_notes": "High-performing campaign for Q2/Q3 2025",
+      "created_at": "2025-05-15T10:30:00.000Z",
+      "updated_at": "2025-06-10T14:20:00.000Z"
     },
     {
       "campaign_id": 2,
       "organization_id": 5,
       "advertiser_id": 1,
-      "name": "Test Campaign via curl",
+      "name": "Nike Air Max Promotion",
+      "description": "Exclusive promotion for Nike Air Max sneakers with limited-time offers",
+      "status": "active",
+      "start_date": "2025-06-15T00:00:00Z",
+      "end_date": "2025-07-31T00:00:00Z",
+      "destination_url": "https://nike.com/air-max-promo",
+      "thumbnail_url": "https://example.com/nike-airmax-thumb.jpg",
+      "preview_url": "https://example.com/nike-airmax-preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "cpa",
+      "payout_amount": 28.5,
+      "revenue_type": "rpa",
+      "revenue_amount": 35.0,
+      "conversion_method": "pixel",
+      "session_definition": "7-day click, 1-day view attribution",
+      "session_duration": 7,
+      "terms_and_conditions": "US traffic only. No incentive traffic allowed.",
+      "internal_notes": "Nike's summer push for Air Max line",
+      "created_at": "2025-06-01T09:15:00.000Z",
+      "updated_at": "2025-06-12T16:45:00.000Z"
+    },
+    {
+      "campaign_id": 3,
+      "organization_id": 5,
+      "advertiser_id": 2,
+      "name": "Puma Lifestyle Campaign",
+      "description": "Comprehensive lifestyle campaign covering shoes, apparel, and accessories",
+      "status": "paused",
+      "start_date": "2025-05-01T00:00:00Z",
+      "end_date": "2025-09-30T00:00:00Z",
+      "destination_url": "https://puma.com/lifestyle",
+      "thumbnail_url": "https://example.com/puma-lifestyle-thumb.jpg",
+      "preview_url": "https://example.com/puma-lifestyle-preview.jpg",
+      "visibility": "private",
+      "currency_id": "GBP",
+      "payout_type": "revshare",
+      "payout_amount": 8.5,
+      "revenue_type": "revshare",
+      "revenue_amount": 12.0,
+      "conversion_method": "postback",
+      "session_definition": "14-day attribution window",
+      "session_duration": 14,
+      "terms_and_conditions": "UK and EU traffic only. Brand bidding prohibited.",
+      "internal_notes": "Currently paused for optimization",
+      "created_at": "2025-04-20T11:00:00.000Z",
+      "updated_at": "2025-06-05T13:30:00.000Z"
+    },
+    {
+      "campaign_id": 4,
+      "organization_id": 5,
+      "advertiser_id": 3,
+      "name": "Under Armour Fitness Challenge",
+      "description": "Promote Under Armour's fitness gear with performance tracking integration",
       "status": "draft",
-      "created_at": "2025-06-16T23:41:36.800493+02:00",
-      "updated_at": "2025-06-16T23:41:36.800493+02:00"
+      "start_date": "2025-07-01T00:00:00Z",
+      "end_date": "2025-12-31T00:00:00Z",
+      "destination_url": "https://underarmour.com/fitness-challenge",
+      "thumbnail_url": "https://example.com/ua-fitness-thumb.jpg",
+      "preview_url": "https://example.com/ua-fitness-preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "cpa",
+      "payout_amount": 22.0,
+      "revenue_type": "rpa",
+      "revenue_amount": 28.0,
+      "conversion_method": "api",
+      "session_definition": "45-day attribution window",
+      "session_duration": 45,
+      "terms_and_conditions": "Draft terms - subject to change before launch",
+      "internal_notes": "Preparing for Q3 launch",
+      "created_at": "2025-06-10T08:00:00.000Z",
+      "updated_at": "2025-06-18T12:15:00.000Z"
+    },
+    {
+      "campaign_id": 5,
+      "organization_id": 5,
+      "advertiser_id": 4,
+      "name": "Reebok CrossFit Partnership",
+      "description": "Partnership campaign targeting CrossFit enthusiasts and gym owners",
+      "status": "active",
+      "start_date": "2025-06-01T00:00:00Z",
+      "end_date": "2025-11-30T00:00:00Z",
+      "destination_url": "https://reebok.com/crossfit",
+      "thumbnail_url": "https://example.com/reebok-crossfit-thumb.jpg",
+      "preview_url": "https://example.com/reebok-crossfit-preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "hybrid",
+      "payout_amount": 15.0,
+      "revenue_type": "hybrid",
+      "revenue_amount": 20.0,
+      "conversion_method": "postback",
+      "session_definition": "21-day attribution window",
+      "session_duration": 21,
+      "terms_and_conditions": "Fitness and sports traffic preferred. Volume bonuses available.",
+      "internal_notes": "Strong performer in fitness vertical",
+      "created_at": "2025-05-25T14:45:00.000Z",
+      "updated_at": "2025-06-15T10:20:00.000Z"
+    },
+    {
+      "campaign_id": 6,
+      "organization_id": 5,
+      "advertiser_id": 5,
+      "name": "New Balance Running Series",
+      "description": "Seasonal campaign focusing on New Balance running shoes and apparel",
+      "status": "active",
+      "start_date": "2025-06-01T00:00:00Z",
+      "end_date": "2025-08-31T00:00:00Z",
+      "destination_url": "https://newbalance.com/running",
+      "thumbnail_url": "https://example.com/nb-running-thumb.jpg",
+      "preview_url": "https://example.com/nb-running-preview.jpg",
+      "visibility": "public",
+      "currency_id": "USD",
+      "payout_type": "cpa",
+      "payout_amount": 32.0,
+      "revenue_type": "rpa",
+      "revenue_amount": 40.0,
+      "conversion_method": "pixel",
+      "session_definition": "30-day click attribution",
+      "session_duration": 30,
+      "terms_and_conditions": "Running and fitness verticals only. No PPC on brand terms.",
+      "internal_notes": "Summer running season focus",
+      "created_at": "2025-05-30T16:30:00.000Z",
+      "updated_at": "2025-06-17T11:45:00.000Z"
     }
   ],
-  "total": 5,
+  "total": 6,
   "page": 1,
   "page_size": 20
 };
@@ -165,12 +236,12 @@ const mapToOffer = (domainOffer: any): Offer => {
 };
 
 export const campaignService = {
-  // Get all campaigns - using mock data for now
+  // Get all campaigns - using updated mock data
   getCampaigns: async (): Promise<Campaign[]> => {
     try {
-      console.log('Fetching campaigns with mock data');
+      console.log('Fetching campaigns with updated mock data');
       
-      // Return mock campaigns mapped to our Campaign type
+      // Return updated mock campaigns mapped to our Campaign type
       return mockCampaignsResponse.campaigns.map(mapToCampaign);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
