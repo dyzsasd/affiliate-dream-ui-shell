@@ -51,6 +51,8 @@ export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdver
       id: advertiserId
     });
     
+    console.log(`API response for advertiser ${advertiserId}:`, response);
+    
     // Convert ModelsAdvertiserResponse to DomainAdvertiser format
     const advertiser: DomainAdvertiser = {
       advertiserId: response.advertiserId,
@@ -75,7 +77,7 @@ export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdver
       reportingTimezoneId: response.reportingTimezoneId
     };
     
-    console.log(`Found advertiser:`, advertiser);
+    console.log(`Converted advertiser data:`, advertiser);
     return advertiser;
   } catch (error) {
     console.error(`Error fetching advertiser ${advertiserId}:`, error);
