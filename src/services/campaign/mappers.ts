@@ -1,0 +1,54 @@
+
+import { 
+  ModelsCampaignResponse
+} from '@/generated-api/src/models';
+import { Campaign, CampaignDetail } from '@/types/api';
+
+// Map backend campaign model to frontend Campaign type
+export const mapToCampaign = (domainCampaign: ModelsCampaignResponse): Campaign => {
+  return {
+    id: String(domainCampaign.campaignId || ''),
+    name: domainCampaign.name || '',
+    description: domainCampaign.description || '',
+    status: (domainCampaign.status as 'active' | 'paused' | 'draft') || 'draft',
+    startDate: domainCampaign.startDate,
+    endDate: domainCampaign.endDate,
+    createdAt: domainCampaign.createdAt || new Date().toISOString(),
+    updatedAt: domainCampaign.updatedAt || new Date().toISOString(),
+  };
+};
+
+// Map backend campaign model to frontend CampaignDetail type
+export const mapToCampaignDetail = (domainCampaign: ModelsCampaignResponse): CampaignDetail => {
+  return {
+    id: String(domainCampaign.campaignId || ''),
+    name: domainCampaign.name || '',
+    description: domainCampaign.description || '',
+    status: (domainCampaign.status as 'active' | 'paused' | 'draft') || 'draft',
+    startDate: domainCampaign.startDate,
+    endDate: domainCampaign.endDate,
+    createdAt: domainCampaign.createdAt || new Date().toISOString(),
+    updatedAt: domainCampaign.updatedAt || new Date().toISOString(),
+    
+    // Additional fields from ModelsCampaignResponse
+    campaignId: domainCampaign.campaignId,
+    advertiserId: domainCampaign.advertiserId,
+    organizationId: domainCampaign.organizationId,
+    destinationUrl: domainCampaign.destinationUrl,
+    thumbnailUrl: domainCampaign.thumbnailUrl,
+    previewUrl: domainCampaign.previewUrl,
+    visibility: domainCampaign.visibility,
+    currencyId: domainCampaign.currencyId,
+    payoutType: domainCampaign.payoutStructure,
+    payoutAmount: domainCampaign.payoutAmount,
+    revenueType: domainCampaign.revenueStructure,
+    revenueAmount: domainCampaign.revenueAmount,
+    conversionMethod: domainCampaign.conversionMethod,
+    sessionDefinition: domainCampaign.sessionDefinition,
+    sessionDuration: domainCampaign.sessionDuration,
+    termsAndConditions: domainCampaign.termsAndConditions,
+    internalNotes: domainCampaign.internalNotes,
+    
+    offers: [] // No offers endpoint available in current API
+  };
+};

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,7 +20,7 @@ import {
   Filter,
   Loader2
 } from "lucide-react";
-import { campaignService } from "@/services/campaignService";
+import { campaignService } from "@/services/campaign";
 import { Campaign } from "@/types/api";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";

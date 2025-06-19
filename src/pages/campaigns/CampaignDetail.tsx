@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -21,7 +20,7 @@ import {
   Settings,
   BarChart3,
 } from "lucide-react";
-import { campaignService } from "@/services/campaignService";
+import { campaignService } from "@/services/campaign";
 import { CampaignDetail as CampaignDetailType, Offer } from "@/types/api";
 import { useToast } from "@/hooks/use-toast";
 
