@@ -166,7 +166,13 @@
     "affiliateName": "Affiliate",
     "copyLink": "Copy Link",
     "testLink": "Test Link",
-    "noLinkGenerated": "No link generated yet. Fill out the form and click 'Generate Link' to create your tracking link."
+    "noLinkGenerated": "No link generated yet. Fill out the form and click 'Generate Link' to create your tracking link.",
+    "yourTrackingLink": "Your Tracking Link",
+    "linkFor": "Link for {{campaign}} - {{affiliate}}",
+    "generateLinkToSee": "Generate a link to see it here",
+    "trackingUrl": "Tracking URL",
+    "copyToClipboard": "Copy to Clipboard",
+    "fillFormToGenerate": "Fill out the form and click 'Generate Link' to create your tracking link."
   },
   "affiliates": {
     "title": "Affiliates",
