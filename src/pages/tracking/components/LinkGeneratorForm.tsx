@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { LinkIcon, Loader2 } from "lucide-react";
+import { Campaign } from "@/types/api";
 
 interface LinkGeneratorFormProps {
   campaignId: string;
@@ -37,8 +38,9 @@ interface LinkGeneratorFormProps {
   setDeepLink: (value: string) => void;
   isGenerating: boolean;
   onGenerateLink: () => void;
-  campaigns: Array<{ id: string; name: string }>;
+  campaigns: Campaign[];
   affiliates: Array<{ id: string; name: string; email: string }>;
+  isLoadingCampaigns?: boolean;
 }
 
 const LinkGeneratorForm: React.FC<LinkGeneratorFormProps> = ({
@@ -58,6 +60,7 @@ const LinkGeneratorForm: React.FC<LinkGeneratorFormProps> = ({
   onGenerateLink,
   campaigns,
   affiliates,
+  isLoadingCampaigns = false,
 }) => {
   const { t } = useTranslation();
 
@@ -76,19 +79,36 @@ const LinkGeneratorForm: React.FC<LinkGeneratorFormProps> = ({
             <Select
               value={campaignId}
               onValueChange={setCampaignId}
-              disabled={isGenerating}
+              disabled={isGenerating || isLoadingCampaigns}
             >
               <SelectTrigger>
-                <SelectValue placeholder={t("trackingLinks.selectCampaign")} />
+                <SelectValue placeholder={
+                  isLoadingCampaigns 
+                    ? t("trackingLinks.loadingCampaigns") 
+                    : t("trackingLinks.selectCampaign")
+                } />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>{t("trackingLinks.campaigns")}</SelectLabel>
-                  {campaigns.map((campaign) => (
-                    <SelectItem key={campaign.id} value={campaign.id}>
-                      {campaign.name}
+                  {isLoadingCampaigns ? (
+                    <SelectItem value="loading" disabled>
+                      <div className="flex items-center">
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t("trackingLinks.loadingCampaigns")}
+                      </div>
                     </SelectItem>
-                  ))}
+                  ) : campaigns.length === 0 ? (
+                    <SelectItem value="empty" disabled>
+                      {t("trackingLinks.noCampaigns")}
+                    </SelectItem>
+                  ) : (
+                    campaigns.map((campaign) => (
+                      <SelectItem key={campaign.id} value={campaign.id}>
+                        {campaign.name}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -165,7 +185,7 @@ const LinkGeneratorForm: React.FC<LinkGeneratorFormProps> = ({
           <Button
             onClick={onGenerateLink}
             className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90"
-            disabled={!campaignId || !affiliateId || isGenerating}
+            disabled={!campaignId || !affiliateId || isGenerating || isLoadingCampaigns}
           >
             {isGenerating ? (
               <>

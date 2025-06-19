@@ -1,9 +1,10 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
-import { mockCampaigns } from "@/services/api";
+import { campaignService } from "@/services/campaign";
+import { Campaign } from "@/types/api";
 import LinkGeneratorForm from "./components/LinkGeneratorForm";
 import LinkDisplay from "./components/LinkDisplay";
 
@@ -56,9 +57,34 @@ const TrackingLinkGenerator: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generatedLink, setGeneratedLink] = useState<string>("");
   
-  // Data
-  const campaigns = mockCampaigns;
+  // Data state
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState<boolean>(true);
   const affiliates = mockAffiliates;
+
+  // Fetch campaigns from backend API
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      setIsLoadingCampaigns(true);
+      try {
+        console.log('Fetching campaigns for tracking link generator...');
+        const data = await campaignService.getCampaigns();
+        console.log('Campaigns fetched for tracking:', data);
+        setCampaigns(data);
+      } catch (error) {
+        console.error("Error fetching campaigns for tracking:", error);
+        toast({
+          title: t("common.error"),
+          description: t("trackingLinks.errorLoadingCampaigns"),
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingCampaigns(false);
+      }
+    };
+
+    fetchCampaigns();
+  }, [toast, t]);
 
   const handleGenerateLink = async () => {
     if (!campaignId || !affiliateId) {
@@ -158,6 +184,7 @@ const TrackingLinkGenerator: React.FC = () => {
           onGenerateLink={handleGenerateLink}
           campaigns={campaigns}
           affiliates={affiliates}
+          isLoadingCampaigns={isLoadingCampaigns}
         />
         
         <LinkDisplay
