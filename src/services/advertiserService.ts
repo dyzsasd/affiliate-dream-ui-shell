@@ -17,7 +17,7 @@ interface MockUpdateAdvertiserRequest {
   status?: string;
 }
 
-// Centralized mock data
+// Centralized mock data - updated with Adidas domains
 const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
   {
     advertiserId: 1,
@@ -25,8 +25,8 @@ const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
     contactEmail: "partnerships@adidas.fr",
     status: "active",
     organizationId: organizationId,
-    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
-    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     advertiserId: 2,
@@ -34,8 +34,8 @@ const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
     contactEmail: "marketing@adidas.es",
     status: "active",
     organizationId: organizationId,
-    createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(), // 45 days ago
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() // 1 day ago
+    createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     advertiserId: 3,
@@ -43,8 +43,8 @@ const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
     contactEmail: "affiliate@nike.com",
     status: "pending",
     organizationId: organizationId,
-    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days ago
-    updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString() // 12 hours ago
+    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
   },
   {
     advertiserId: 4,
@@ -52,8 +52,8 @@ const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
     contactEmail: "partnerships@puma.com",
     status: "active",
     organizationId: organizationId,
-    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days ago
-    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days ago
+    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     advertiserId: 5,
@@ -61,8 +61,8 @@ const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
     contactEmail: "business@underarmour.com",
     status: "inactive",
     organizationId: organizationId,
-    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days ago
-    updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days ago
+    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
   },
   {
     advertiserId: 6,
@@ -70,8 +70,8 @@ const getMockAdvertisers = (organizationId: number): DomainAdvertiser[] => [
     contactEmail: "affiliates@reebok.com",
     status: "active",
     organizationId: organizationId,
-    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), // 20 days ago
-    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
+    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
   }
 ];
 
@@ -101,9 +101,16 @@ export const fetchAdvertiser = async (advertiserId: number): Promise<DomainAdver
   try {
     console.log(`Fetching advertiser ID: ${advertiserId}`);
     
-    // Use the same mock data and find the specific advertiser
-    const mockAdvertisers = getMockAdvertisers(1); // Using organizationId 1 as default for mock
-    const advertiser = mockAdvertisers.find(adv => adv.advertiserId === advertiserId);
+    // Get all mock advertisers from all organizations to ensure we can find any advertiser
+    const allMockAdvertisers = [
+      ...getMockAdvertisers(1),
+      ...getMockAdvertisers(2),
+      ...getMockAdvertisers(3),
+      ...getMockAdvertisers(4),
+      ...getMockAdvertisers(5)
+    ];
+    
+    const advertiser = allMockAdvertisers.find(adv => adv.advertiserId === advertiserId);
     
     if (!advertiser) {
       throw new Error(`Advertiser with ID ${advertiserId} not found`);
