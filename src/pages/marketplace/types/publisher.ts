@@ -30,6 +30,11 @@ export interface Publisher {
     tiktok?: string;
     twitter?: string;
     facebook?: string;
+    twitch?: string;
+    pinterest?: string;
+    soundcloud?: string;
+    goodreads?: string;
+    linkedin?: string;
   };
   performance: {
     totalClicks: number;
