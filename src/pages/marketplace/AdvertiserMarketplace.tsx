@@ -160,10 +160,7 @@ const AdvertiserMarketplace: React.FC = () => {
       {/* Results Count */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {t("marketplace.showingResults", { 
-            count: filteredPublishers.length,
-            total: mockPublishers.length 
-          })}
+          Showing {filteredPublishers.length} of {mockPublishers.length} publishers
         </p>
         
         <Select defaultValue="relevance">
