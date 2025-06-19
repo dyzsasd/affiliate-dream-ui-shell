@@ -28,7 +28,6 @@ const AdvertiserMarketplace: React.FC = () => {
   const [filters, setFilters] = useState({
     category: "",
     country: "",
-    minEPC: "",
     minRating: "",
     payoutModel: ""
   });
@@ -41,17 +40,15 @@ const AdvertiserMarketplace: React.FC = () => {
     
     const matchesCategory = !filters.category || publisher.categories.includes(filters.category);
     const matchesCountry = !filters.country || publisher.country === filters.country;
-    const matchesEPC = !filters.minEPC || publisher.averageEPC >= parseFloat(filters.minEPC);
     const matchesRating = !filters.minRating || publisher.rating >= parseFloat(filters.minRating);
     
-    return matchesSearch && matchesCategory && matchesCountry && matchesEPC && matchesRating;
+    return matchesSearch && matchesCategory && matchesCountry && matchesRating;
   });
 
   const handleClearFilters = () => {
     setFilters({
       category: "",
       country: "",
-      minEPC: "",
       minRating: "",
       payoutModel: ""
     });
@@ -129,11 +126,6 @@ const AdvertiserMarketplace: React.FC = () => {
           {filters.country && (
             <Badge variant="secondary">
               {t("marketplace.country")}: {filters.country}
-            </Badge>
-          )}
-          {filters.minEPC && (
-            <Badge variant="secondary">
-              {t("marketplace.minEPC")}: ${filters.minEPC}
             </Badge>
           )}
           {filters.minRating && (

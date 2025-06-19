@@ -15,7 +15,6 @@ import {
 interface FiltersState {
   category: string;
   country: string;
-  minEPC: string;
   minRating: string;
   payoutModel: string;
 }
@@ -61,7 +60,7 @@ const PublisherFilters: React.FC<PublisherFiltersProps> = ({
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="space-y-2">
           <Label htmlFor="category">{t("marketplace.category")}</Label>
           <Select value={filters.category} onValueChange={(value) => updateFilter("category", value)}>
@@ -92,18 +91,6 @@ const PublisherFilters: React.FC<PublisherFiltersProps> = ({
               ))}
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="minEPC">{t("marketplace.minimumEPC")}</Label>
-          <Input
-            id="minEPC"
-            type="number"
-            step="0.01"
-            placeholder="0.00"
-            value={filters.minEPC}
-            onChange={(e) => updateFilter("minEPC", e.target.value)}
-          />
         </div>
 
         <div className="space-y-2">
