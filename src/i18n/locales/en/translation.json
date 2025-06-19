@@ -207,6 +207,8 @@
     "type": "Type",
     "rank": "Rank",
     "topPublishersInVertical": "Top Publishers in Vertical",
-    "partnersFor": "Partners for"
+    "partnersFor": "Partners for",
+    "selectAdvertiser": "Select an Advertiser",
+    "selectAdvertiserDescription": "Search and select an advertiser from the dropdown to view their analytics data."
   }
 }

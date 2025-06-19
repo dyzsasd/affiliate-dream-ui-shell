@@ -83,7 +83,7 @@ const COLORS = {
 
 const AdvertiserAnalytics: React.FC = () => {
   const { t } = useTranslation();
-  const [selectedAdvertiser, setSelectedAdvertiser] = useState(mockAdvertisers[0]);
+  const [selectedAdvertiser, setSelectedAdvertiser] = useState<typeof mockAdvertisers[0] | null>(null);
   const [isPartnersModalOpen, setIsPartnersModalOpen] = useState(false);
   
   const chartData = mockData.advertiser.partnerInformation.promotypeMix.value.map(item => ({
@@ -104,152 +104,169 @@ const AdvertiserAnalytics: React.FC = () => {
         advertisers={mockAdvertisers}
       />
 
-      {/* Header with selected advertiser name and logo */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-          <span className="text-white text-2xl font-bold">{selectedAdvertiser.logo}</span>
+      {/* Empty State or Analytics Content */}
+      {!selectedAdvertiser ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="text-gray-400 mb-4">
+            <Info className="w-16 h-16" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-600 mb-2">
+            {t('analytics.selectAdvertiser')}
+          </h2>
+          <p className="text-gray-500">
+            {t('analytics.selectAdvertiserDescription')}
+          </p>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">{selectedAdvertiser.name}</h1>
-          <p className="text-gray-600">{t('analytics.advertiserAnalytics')}</p>
-        </div>
-      </div>
-
-      {/* Partner Statistics */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-3 gap-8">
-            {/* Total Partners */}
-            <div className="text-center">
-              <div className="text-sm text-gray-500 mb-2">{t('analytics.totalPartners')}</div>
-              <div className="flex items-center justify-center gap-2">
-                <ArrowUp className="w-4 h-4 text-green-500" />
-                <span className="text-3xl font-bold text-green-500">1379</span>
-              </div>
-              <Button 
-                variant="link" 
-                className="text-sm text-gray-600 mt-2"
-                onClick={() => setIsPartnersModalOpen(true)}
-              >
-                {t('analytics.viewPartners')}
-              </Button>
+      ) : (
+        <>
+          {/* Header with selected advertiser name and logo */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">{selectedAdvertiser.logo}</span>
             </div>
-
-            {/* New Partners */}
-            <div className="text-center border-l border-r border-gray-200 px-8">
-              <div className="text-sm text-gray-600 mb-2">{t('analytics.newPartners')}</div>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-2xl font-bold text-green-500">+153</span>
-              </div>
-              <Button variant="link" className="text-sm text-gray-600 mt-2">
-                {t('analytics.showMe')}
-              </Button>
-            </div>
-
-            {/* Lost Partners */}
-            <div className="text-center">
-              <div className="text-sm text-gray-600 mb-6">{t('analytics.lostPartners')}</div>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-2xl font-bold text-purple-500">-133</span>
-              </div>
-              <Button variant="link" className="text-sm text-gray-600 mt-2">
-                {t('analytics.showMe')}
-              </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">{selectedAdvertiser.name}</h1>
+              <p className="text-gray-600">{t('analytics.advertiserAnalytics')}</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Single row with Affiliate Mix Chart taking full width */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold">{t('analytics.affiliateMixChart')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center gap-12">
-            <div className="w-64 h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={80}
-                    outerRadius={120}
-                    dataKey="value"
+          {/* Partner Statistics */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-3 gap-8">
+                {/* Total Partners */}
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 mb-2">{t('analytics.totalPartners')}</div>
+                  <div className="flex items-center justify-center gap-2">
+                    <ArrowUp className="w-4 h-4 text-green-500" />
+                    <span className="text-3xl font-bold text-green-500">1379</span>
+                  </div>
+                  <Button 
+                    variant="link" 
+                    className="text-sm text-gray-600 mt-2"
+                    onClick={() => setIsPartnersModalOpen(true)}
                   >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="space-y-3">
-              {chartData.map((item) => (
-                <div key={item.name} className="flex items-center gap-3">
-                  <div 
-                    className="w-4 h-4 rounded" 
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span className="text-base text-gray-700 capitalize">{item.name}</span>
-                  <span className="text-sm text-gray-500 ml-2">({item.value})</span>
+                    {t('analytics.viewPartners')}
+                  </Button>
                 </div>
-              ))}
-            </div>
+
+                {/* New Partners */}
+                <div className="text-center border-l border-r border-gray-200 px-8">
+                  <div className="text-sm text-gray-600 mb-2">{t('analytics.newPartners')}</div>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-2xl font-bold text-green-500">+153</span>
+                  </div>
+                  <Button variant="link" className="text-sm text-gray-600 mt-2">
+                    {t('analytics.showMe')}
+                  </Button>
+                </div>
+
+                {/* Lost Partners */}
+                <div className="text-center">
+                  <div className="text-sm text-gray-600 mb-6">{t('analytics.lostPartners')}</div>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-2xl font-bold text-purple-500">-133</span>
+                  </div>
+                  <Button variant="link" className="text-sm text-gray-600 mt-2">
+                    {t('analytics.showMe')}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Single row with Affiliate Mix Chart taking full width */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">{t('analytics.affiliateMixChart')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center gap-12">
+                <div className="w-64 h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={80}
+                        outerRadius={120}
+                        dataKey="value"
+                      >
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="space-y-3">
+                  {chartData.map((item) => (
+                    <div key={item.name} className="flex items-center gap-3">
+                      <div 
+                        className="w-4 h-4 rounded" 
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="text-base text-gray-700 capitalize">{item.name}</span>
+                      <span className="text-sm text-gray-500 ml-2">({item.value})</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-2 gap-6">
+            {/* Top 20 Keywords */}
+            <Card className="bg-gray-50">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold flex items-center gap-2">
+                  {t('analytics.topKeywords')}
+                  <Info className="w-4 h-4 text-gray-400" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center text-gray-500 py-8">
+                  {t('analytics.noKeywordsFound')}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Vertical Positioning */}
+            <Card className="bg-gray-50">
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold flex items-center gap-2">
+                  {t('analytics.verticalPositioning')}
+                  <Info className="w-4 h-4 text-gray-400" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <span className="font-semibold">{t('analytics.type')}: </span>
+                    <span className="text-gray-600">{mockData.advertiser.verticals.sampleValue.name}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold">{t('analytics.rank')}: </span>
+                    <span className="text-gray-600">#{mockData.advertiser.verticals.sampleValue.rank}</span>
+                  </div>
+                  <div className="mt-6">
+                    <div className="font-semibold text-gray-700 mb-2">{t('analytics.topPublishersInVertical')}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
 
-      <div className="grid grid-cols-2 gap-6">
-        {/* Top 20 Keywords */}
-        <Card className="bg-gray-50">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex items-center gap-2">
-              {t('analytics.topKeywords')}
-              <Info className="w-4 h-4 text-gray-400" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center text-gray-500 py-8">
-              {t('analytics.noKeywordsFound')}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Vertical Positioning */}
-        <Card className="bg-gray-50">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex items-center gap-2">
-              {t('analytics.verticalPositioning')}
-              <Info className="w-4 h-4 text-gray-400" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <span className="font-semibold">{t('analytics.type')}: </span>
-                <span className="text-gray-600">{mockData.advertiser.verticals.sampleValue.name}</span>
-              </div>
-              <div>
-                <span className="font-semibold">{t('analytics.rank')}: </span>
-                <span className="text-gray-600">#{mockData.advertiser.verticals.sampleValue.rank}</span>
-              </div>
-              <div className="mt-6">
-                <div className="font-semibold text-gray-700 mb-2">{t('analytics.topPublishersInVertical')}</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Partners Modal */}
-      <PartnersModal 
-        isOpen={isPartnersModalOpen}
-        onClose={() => setIsPartnersModalOpen(false)}
-        partners={mockPartners}
-        advertiserName={selectedAdvertiser.name}
-      />
+          {/* Partners Modal */}
+          <PartnersModal 
+            isOpen={isPartnersModalOpen}
+            onClose={() => setIsPartnersModalOpen(false)}
+            partners={mockPartners}
+            advertiserName={selectedAdvertiser.name}
+          />
+        </>
+      )}
     </div>
   );
 };
