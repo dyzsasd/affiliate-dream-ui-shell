@@ -15,12 +15,22 @@ interface PublisherCardProps {
   onViewDetails: () => void;
 }
 
+// Mock logos mapping
+const mockLogos: { [key: string]: string } = {
+  "TechReview Pro": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=100&h=100&fit=crop&crop=center",
+  "Student Deals Hub": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=100&h=100&fit=crop&crop=center",
+  "Cashback Central": "https://images.unsplash.com/photo-1493962853295-0fd70327578a?w=100&h=100&fit=crop&crop=center",
+  "Digital Marketing Blog": "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=100&h=100&fit=crop&crop=center",
+  "University Network": "https://images.unsplash.com/photo-1498936178812-4b2e558d2937?w=100&h=100&fit=crop&crop=center"
+};
+
 const PublisherCard: React.FC<PublisherCardProps> = ({
   publisher,
   viewMode,
   onViewDetails
 }) => {
   const { t } = useTranslation();
+  const logoUrl = mockLogos[publisher.name] || publisher.logo;
 
   if (viewMode === "list") {
     return (
@@ -29,7 +39,7 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Avatar className="h-16 w-16">
-                <AvatarImage src={publisher.logo} alt={publisher.name} />
+                <AvatarImage src={logoUrl} alt={publisher.name} />
                 <AvatarFallback>{publisher.name.slice(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
               
@@ -91,7 +101,7 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={publisher.logo} alt={publisher.name} />
+            <AvatarImage src={logoUrl} alt={publisher.name} />
             <AvatarFallback>{publisher.name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           
