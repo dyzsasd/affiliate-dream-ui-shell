@@ -590,6 +590,9 @@ definitions:
     properties:
       advertiser_id:
         type: integer
+      billing_model:
+        description: Payout and revenue configuration
+        type: string
       campaign_id:
         type: integer
       conversion_method:
@@ -628,14 +631,13 @@ definitions:
         type: integer
       payout_amount:
         type: number
-      payout_type:
-        description: Payout and revenue configuration
+      payout_structure:
         type: string
       preview_url:
         type: string
       revenue_amount:
         type: number
-      revenue_type:
+      revenue_structure:
         type: string
       session_definition:
         type: string
@@ -662,6 +664,12 @@ definitions:
     properties:
       advertiser_id:
         type: integer
+      billing_model:
+        description: Payout and revenue configuration
+        enum:
+        - click
+        - conversion
+        type: string
       conversion_method:
         enum:
         - server_postback
@@ -698,23 +706,22 @@ definitions:
       organization_id:
         type: integer
       payout_amount:
+        minimum: 0
         type: number
-      payout_type:
-        description: Payout and revenue configuration
+      payout_structure:
         enum:
-        - cpa
-        - cpc
-        - cpm
+        - fixed
+        - percentage
         type: string
       preview_url:
         type: string
       revenue_amount:
+        minimum: 0
         type: number
-      revenue_type:
+      revenue_structure:
         enum:
-        - rpa
-        - rpc
-        - rpm
+        - fixed
+        - percentage
         type: string
       session_definition:
         enum:
@@ -753,8 +760,263 @@ definitions:
     - organization_id
     - status
     type: object
+  models.TrackingLinkGenerationRequest:
+    properties:
+      affiliate_id:
+        example: 1
+        type: integer
+      campaign_id:
+        example: 1
+        type: integer
+      creative_id:
+        example: 1
+        type: integer
+      description:
+        example: Tracking link for Facebook traffic
+        type: string
+      internal_notes:
+        example: High-performing traffic source
+        type: string
+      is_encrypt_parameters:
+        example: false
+        type: boolean
+      is_redirect_link:
+        example: true
+        type: boolean
+      name:
+        example: Facebook Campaign Link
+        type: string
+      network_offer_url_id:
+        example: 1
+        type: integer
+      network_tracking_domain_id:
+        example: 1
+        type: integer
+      network_traffic_source_id:
+        example: 1
+        type: integer
+      source_id:
+        example: facebook
+        type: string
+      sub1:
+        example: campaign_123
+        type: string
+      sub2:
+        example: adset_456
+        type: string
+      sub3:
+        example: ad_789
+        type: string
+      sub4:
+        example: placement_mobile
+        type: string
+      sub5:
+        example: audience_lookalike
+        type: string
+      tags:
+        example: facebook,mobile,lookalike
+        type: string
+    required:
+    - affiliate_id
+    - campaign_id
+    - name
+    type: object
+  models.TrackingLinkGenerationResponse:
+    properties:
+      generated_url:
+        example: https://tracking.example.com/ABC123/DEF456/?sub1=campaign_123
+        type: string
+      qr_code_url:
+        example: https://api.example.com/tracking-links/1/qr
+        type: string
+      tracking_link:
+        $ref: '#/definitions/models.TrackingLinkResponse'
+    type: object
+  models.TrackingLinkListResponse:
+    properties:
+      page:
+        example: 1
+        type: integer
+      page_size:
+        example: 20
+        type: integer
+      total:
+        example: 150
+        type: integer
+      total_pages:
+        example: 8
+        type: integer
+      tracking_links:
+        items:
+          $ref: '#/definitions/models.TrackingLinkResponse'
+        type: array
+    type: object
+  models.TrackingLinkRequest:
+    properties:
+      affiliate_id:
+        example: 1
+        type: integer
+      campaign_id:
+        example: 1
+        type: integer
+      description:
+        example: Tracking link for Facebook traffic
+        type: string
+      internal_notes:
+        example: High-performing traffic source
+        type: string
+      is_encrypt_parameters:
+        example: false
+        type: boolean
+      is_redirect_link:
+        example: true
+        type: boolean
+      name:
+        example: Facebook Campaign Link
+        type: string
+      source_id:
+        example: facebook
+        type: string
+      status:
+        example: active
+        type: string
+      sub1:
+        example: campaign_123
+        type: string
+      sub2:
+        example: adset_456
+        type: string
+      sub3:
+        example: ad_789
+        type: string
+      sub4:
+        example: placement_mobile
+        type: string
+      sub5:
+        example: audience_lookalike
+        type: string
+      tags:
+        example: facebook,mobile,lookalike
+        type: string
+    required:
+    - affiliate_id
+    - campaign_id
+    - name
+    - status
+    type: object
+  models.TrackingLinkResponse:
+    properties:
+      affiliate_id:
+        example: 1
+        type: integer
+      campaign_id:
+        example: 1
+        type: integer
+      created_at:
+        example: "2023-12-01T10:00:00Z"
+        type: string
+      description:
+        example: Tracking link for Facebook traffic
+        type: string
+      internal_notes:
+        example: High-performing traffic source
+        type: string
+      is_encrypt_parameters:
+        example: false
+        type: boolean
+      is_redirect_link:
+        example: true
+        type: boolean
+      name:
+        example: Facebook Campaign Link
+        type: string
+      organization_id:
+        example: 1
+        type: integer
+      source_id:
+        example: facebook
+        type: string
+      status:
+        example: active
+        type: string
+      sub1:
+        example: campaign_123
+        type: string
+      sub2:
+        example: adset_456
+        type: string
+      sub3:
+        example: ad_789
+        type: string
+      sub4:
+        example: placement_mobile
+        type: string
+      sub5:
+        example: audience_lookalike
+        type: string
+      tags:
+        example: facebook,mobile,lookalike
+        type: string
+      tracking_link_id:
+        example: 1
+        type: integer
+      tracking_url:
+        example: https://tracking.example.com/ABC123/DEF456/?sub1=campaign_123
+        type: string
+      updated_at:
+        example: "2023-12-01T10:30:00Z"
+        type: string
+    type: object
+  models.TrackingLinkUpdateRequest:
+    properties:
+      description:
+        example: Tracking link for Facebook traffic
+        type: string
+      internal_notes:
+        example: High-performing traffic source
+        type: string
+      is_encrypt_parameters:
+        example: false
+        type: boolean
+      is_redirect_link:
+        example: true
+        type: boolean
+      name:
+        example: Facebook Campaign Link
+        type: string
+      source_id:
+        example: facebook
+        type: string
+      status:
+        example: active
+        type: string
+      sub1:
+        example: campaign_123
+        type: string
+      sub2:
+        example: adset_456
+        type: string
+      sub3:
+        example: ad_789
+        type: string
+      sub4:
+        example: placement_mobile
+        type: string
+      sub5:
+        example: audience_lookalike
+        type: string
+      tags:
+        example: facebook,mobile,lookalike
+        type: string
+    type: object
   models.UpdateCampaignRequest:
     properties:
+      billing_model:
+        description: Payout and revenue configuration
+        enum:
+        - click
+        - conversion
+        type: string
       conversion_method:
         enum:
         - server_postback
@@ -789,23 +1051,22 @@ definitions:
       name:
         type: string
       payout_amount:
+        minimum: 0
         type: number
-      payout_type:
-        description: Payout and revenue configuration
+      payout_structure:
         enum:
-        - cpa
-        - cpc
-        - cpm
+        - fixed
+        - percentage
         type: string
       preview_url:
         type: string
       revenue_amount:
+        minimum: 0
         type: number
-      revenue_type:
+      revenue_structure:
         enum:
-        - rpa
-        - rpc
-        - rpm
+        - fixed
+        - percentage
         type: string
       session_definition:
         enum:
@@ -1219,6 +1480,51 @@ paths:
       summary: Get affiliate provider mapping
       tags:
       - affiliates
+  /affiliates/{id}/tracking-links:
+    get:
+      description: Retrieve a list of tracking links for a specific affiliate
+      parameters:
+      - description: Affiliate ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: List tracking links by affiliate
+      tags:
+      - tracking-links
   /api/v1/analytics/advertisers:
     post:
       consumes:
@@ -1544,6 +1850,51 @@ paths:
       summary: Update a campaign
       tags:
       - campaigns
+  /campaigns/{id}/tracking-links:
+    get:
+      description: Retrieve a list of tracking links for a specific campaign
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: List tracking links by campaign
+      tags:
+      - tracking-links
   /health:
     get:
       description: Returns the health status of the API
@@ -1857,6 +2208,359 @@ paths:
       summary: List campaigns by organization
       tags:
       - campaigns
+  /organizations/{organization_id}/tracking-links:
+    get:
+      description: Retrieve a list of tracking links for a specific organization
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: List tracking links by organization
+      tags:
+      - tracking-links
+    post:
+      consumes:
+      - application/json
+      description: Create a new tracking link for a campaign and affiliate
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking link creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TrackingLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.TrackingLinkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create a new tracking link
+      tags:
+      - tracking-links
+  /organizations/{organization_id}/tracking-links/{tracking_link_id}:
+    delete:
+      description: Delete a tracking link by its ID
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking Link ID
+        in: path
+        name: tracking_link_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete a tracking link
+      tags:
+      - tracking-links
+    get:
+      description: Retrieve a tracking link by its ID
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking Link ID
+        in: path
+        name: tracking_link_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get a tracking link
+      tags:
+      - tracking-links
+    put:
+      consumes:
+      - application/json
+      description: Update an existing tracking link
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking Link ID
+        in: path
+        name: tracking_link_id
+        required: true
+        type: integer
+      - description: Tracking link update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TrackingLinkUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update a tracking link
+      tags:
+      - tracking-links
+  /organizations/{organization_id}/tracking-links/{tracking_link_id}/qr:
+    get:
+      description: Generate and return a QR code image for a tracking link
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking Link ID
+        in: path
+        name: tracking_link_id
+        required: true
+        type: integer
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: QR code image" encoded with base64
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get tracking link QR code
+      tags:
+      - tracking-links
+  /organizations/{organization_id}/tracking-links/{tracking_link_id}/regenerate:
+    post:
+      description: Regenerate an existing tracking link with provider integration
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking Link ID
+        in: path
+        name: tracking_link_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkGenerationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Regenerate a tracking link
+      tags:
+      - tracking-links
+  /organizations/{organization_id}/tracking-links/generate:
+    post:
+      consumes:
+      - application/json
+      description: Generate a new tracking link with provider integration for a campaign
+        and affiliate
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking link generation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TrackingLinkGenerationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.TrackingLinkGenerationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Generate a new tracking link
+      tags:
+      - tracking-links
   /profiles:
     post:
       consumes:

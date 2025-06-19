@@ -8,6 +8,7 @@ src/apis/CampaignsApi.ts
 src/apis/OrganizationsApi.ts
 src/apis/ProfileApi.ts
 src/apis/SystemApi.ts
+src/apis/TrackingLinksApi.ts
 src/apis/WebhooksApi.ts
 src/apis/index.ts
 src/index.ts
@@ -59,6 +60,12 @@ src/models/HandlersUpsertProfileRequest.ts
 src/models/ModelsCampaignListResponse.ts
 src/models/ModelsCampaignResponse.ts
 src/models/ModelsCreateCampaignRequest.ts
+src/models/ModelsTrackingLinkGenerationRequest.ts
+src/models/ModelsTrackingLinkGenerationResponse.ts
+src/models/ModelsTrackingLinkListResponse.ts
+src/models/ModelsTrackingLinkRequest.ts
+src/models/ModelsTrackingLinkResponse.ts
+src/models/ModelsTrackingLinkUpdateRequest.ts
 src/models/ModelsUpdateCampaignRequest.ts
 src/models/index.ts
 src/runtime.ts

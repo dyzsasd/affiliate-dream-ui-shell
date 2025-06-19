@@ -26,6 +26,12 @@ export interface ModelsCampaignResponse {
      */
     advertiserId?: number;
     /**
+     * Payout and revenue configuration
+     * @type {string}
+     * @memberof ModelsCampaignResponse
+     */
+    billingModel?: string;
+    /**
      * 
      * @type {number}
      * @memberof ModelsCampaignResponse
@@ -134,11 +140,11 @@ export interface ModelsCampaignResponse {
      */
     payoutAmount?: number;
     /**
-     * Payout and revenue configuration
+     * 
      * @type {string}
      * @memberof ModelsCampaignResponse
      */
-    payoutType?: string;
+    payoutStructure?: string;
     /**
      * 
      * @type {string}
@@ -156,7 +162,7 @@ export interface ModelsCampaignResponse {
      * @type {string}
      * @memberof ModelsCampaignResponse
      */
-    revenueType?: string;
+    revenueStructure?: string;
     /**
      * 
      * @type {string}
@@ -237,6 +243,7 @@ export function ModelsCampaignResponseFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'advertiserId': json['advertiser_id'] == null ? undefined : json['advertiser_id'],
+        'billingModel': json['billing_model'] == null ? undefined : json['billing_model'],
         'campaignId': json['campaign_id'] == null ? undefined : json['campaign_id'],
         'conversionMethod': json['conversion_method'] == null ? undefined : json['conversion_method'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
@@ -255,10 +262,10 @@ export function ModelsCampaignResponseFromJSONTyped(json: any, ignoreDiscriminat
         'name': json['name'] == null ? undefined : json['name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
         'payoutAmount': json['payout_amount'] == null ? undefined : json['payout_amount'],
-        'payoutType': json['payout_type'] == null ? undefined : json['payout_type'],
+        'payoutStructure': json['payout_structure'] == null ? undefined : json['payout_structure'],
         'previewUrl': json['preview_url'] == null ? undefined : json['preview_url'],
         'revenueAmount': json['revenue_amount'] == null ? undefined : json['revenue_amount'],
-        'revenueType': json['revenue_type'] == null ? undefined : json['revenue_type'],
+        'revenueStructure': json['revenue_structure'] == null ? undefined : json['revenue_structure'],
         'sessionDefinition': json['session_definition'] == null ? undefined : json['session_definition'],
         'sessionDuration': json['session_duration'] == null ? undefined : json['session_duration'],
         'startDate': json['start_date'] == null ? undefined : json['start_date'],
@@ -284,6 +291,7 @@ export function ModelsCampaignResponseToJSONTyped(value?: ModelsCampaignResponse
     return {
         
         'advertiser_id': value['advertiserId'],
+        'billing_model': value['billingModel'],
         'campaign_id': value['campaignId'],
         'conversion_method': value['conversionMethod'],
         'created_at': value['createdAt'],
@@ -302,10 +310,10 @@ export function ModelsCampaignResponseToJSONTyped(value?: ModelsCampaignResponse
         'name': value['name'],
         'organization_id': value['organizationId'],
         'payout_amount': value['payoutAmount'],
-        'payout_type': value['payoutType'],
+        'payout_structure': value['payoutStructure'],
         'preview_url': value['previewUrl'],
         'revenue_amount': value['revenueAmount'],
-        'revenue_type': value['revenueType'],
+        'revenue_structure': value['revenueStructure'],
         'session_definition': value['sessionDefinition'],
         'session_duration': value['sessionDuration'],
         'start_date': value['startDate'],

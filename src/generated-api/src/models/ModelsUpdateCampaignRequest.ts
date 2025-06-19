@@ -20,6 +20,12 @@ import { mapValues } from '../runtime';
  */
 export interface ModelsUpdateCampaignRequest {
     /**
+     * Payout and revenue configuration
+     * @type {string}
+     * @memberof ModelsUpdateCampaignRequest
+     */
+    billingModel?: ModelsUpdateCampaignRequestBillingModelEnum;
+    /**
      * 
      * @type {string}
      * @memberof ModelsUpdateCampaignRequest
@@ -110,11 +116,11 @@ export interface ModelsUpdateCampaignRequest {
      */
     payoutAmount?: number;
     /**
-     * Payout and revenue configuration
+     * 
      * @type {string}
      * @memberof ModelsUpdateCampaignRequest
      */
-    payoutType?: ModelsUpdateCampaignRequestPayoutTypeEnum;
+    payoutStructure?: ModelsUpdateCampaignRequestPayoutStructureEnum;
     /**
      * 
      * @type {string}
@@ -132,7 +138,7 @@ export interface ModelsUpdateCampaignRequest {
      * @type {string}
      * @memberof ModelsUpdateCampaignRequest
      */
-    revenueType?: ModelsUpdateCampaignRequestRevenueTypeEnum;
+    revenueStructure?: ModelsUpdateCampaignRequestRevenueStructureEnum;
     /**
      * 
      * @type {string}
@@ -193,6 +199,15 @@ export interface ModelsUpdateCampaignRequest {
 /**
  * @export
  */
+export const ModelsUpdateCampaignRequestBillingModelEnum = {
+    Click: 'click',
+    Conversion: 'conversion'
+} as const;
+export type ModelsUpdateCampaignRequestBillingModelEnum = typeof ModelsUpdateCampaignRequestBillingModelEnum[keyof typeof ModelsUpdateCampaignRequestBillingModelEnum];
+
+/**
+ * @export
+ */
 export const ModelsUpdateCampaignRequestConversionMethodEnum = {
     ServerPostback: 'server_postback',
     Pixel: 'pixel'
@@ -202,22 +217,20 @@ export type ModelsUpdateCampaignRequestConversionMethodEnum = typeof ModelsUpdat
 /**
  * @export
  */
-export const ModelsUpdateCampaignRequestPayoutTypeEnum = {
-    Cpa: 'cpa',
-    Cpc: 'cpc',
-    Cpm: 'cpm'
+export const ModelsUpdateCampaignRequestPayoutStructureEnum = {
+    Fixed: 'fixed',
+    Percentage: 'percentage'
 } as const;
-export type ModelsUpdateCampaignRequestPayoutTypeEnum = typeof ModelsUpdateCampaignRequestPayoutTypeEnum[keyof typeof ModelsUpdateCampaignRequestPayoutTypeEnum];
+export type ModelsUpdateCampaignRequestPayoutStructureEnum = typeof ModelsUpdateCampaignRequestPayoutStructureEnum[keyof typeof ModelsUpdateCampaignRequestPayoutStructureEnum];
 
 /**
  * @export
  */
-export const ModelsUpdateCampaignRequestRevenueTypeEnum = {
-    Rpa: 'rpa',
-    Rpc: 'rpc',
-    Rpm: 'rpm'
+export const ModelsUpdateCampaignRequestRevenueStructureEnum = {
+    Fixed: 'fixed',
+    Percentage: 'percentage'
 } as const;
-export type ModelsUpdateCampaignRequestRevenueTypeEnum = typeof ModelsUpdateCampaignRequestRevenueTypeEnum[keyof typeof ModelsUpdateCampaignRequestRevenueTypeEnum];
+export type ModelsUpdateCampaignRequestRevenueStructureEnum = typeof ModelsUpdateCampaignRequestRevenueStructureEnum[keyof typeof ModelsUpdateCampaignRequestRevenueStructureEnum];
 
 /**
  * @export
@@ -270,6 +283,7 @@ export function ModelsUpdateCampaignRequestFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
+        'billingModel': json['billing_model'] == null ? undefined : json['billing_model'],
         'conversionMethod': json['conversion_method'] == null ? undefined : json['conversion_method'],
         'currencyId': json['currency_id'] == null ? undefined : json['currency_id'],
         'dailyClickCap': json['daily_click_cap'] == null ? undefined : json['daily_click_cap'],
@@ -285,10 +299,10 @@ export function ModelsUpdateCampaignRequestFromJSONTyped(json: any, ignoreDiscri
         'monthlyConversionCap': json['monthly_conversion_cap'] == null ? undefined : json['monthly_conversion_cap'],
         'name': json['name'],
         'payoutAmount': json['payout_amount'] == null ? undefined : json['payout_amount'],
-        'payoutType': json['payout_type'] == null ? undefined : json['payout_type'],
+        'payoutStructure': json['payout_structure'] == null ? undefined : json['payout_structure'],
         'previewUrl': json['preview_url'] == null ? undefined : json['preview_url'],
         'revenueAmount': json['revenue_amount'] == null ? undefined : json['revenue_amount'],
-        'revenueType': json['revenue_type'] == null ? undefined : json['revenue_type'],
+        'revenueStructure': json['revenue_structure'] == null ? undefined : json['revenue_structure'],
         'sessionDefinition': json['session_definition'] == null ? undefined : json['session_definition'],
         'sessionDuration': json['session_duration'] == null ? undefined : json['session_duration'],
         'startDate': json['start_date'] == null ? undefined : json['start_date'],
@@ -312,6 +326,7 @@ export function ModelsUpdateCampaignRequestToJSONTyped(value?: ModelsUpdateCampa
 
     return {
         
+        'billing_model': value['billingModel'],
         'conversion_method': value['conversionMethod'],
         'currency_id': value['currencyId'],
         'daily_click_cap': value['dailyClickCap'],
@@ -327,10 +342,10 @@ export function ModelsUpdateCampaignRequestToJSONTyped(value?: ModelsUpdateCampa
         'monthly_conversion_cap': value['monthlyConversionCap'],
         'name': value['name'],
         'payout_amount': value['payoutAmount'],
-        'payout_type': value['payoutType'],
+        'payout_structure': value['payoutStructure'],
         'preview_url': value['previewUrl'],
         'revenue_amount': value['revenueAmount'],
-        'revenue_type': value['revenueType'],
+        'revenue_structure': value['revenueStructure'],
         'session_definition': value['sessionDefinition'],
         'session_duration': value['sessionDuration'],
         'start_date': value['startDate'],

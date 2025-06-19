@@ -1,4 +1,3 @@
-
 /* tslint:disable */
 /* eslint-disable */
 export * from './ApiV1AnalyticsAdvertisersIdGet200Response';
@@ -6,7 +5,6 @@ export * from './ApiV1AnalyticsAdvertisersPost201Response';
 export * from './ApiV1AnalyticsAffiliatesIdGet200Response';
 export * from './ApiV1AnalyticsAffiliatesPost201Response';
 export * from './ApiV1AnalyticsAutocompleteGet200Response';
-export * from './DomainAdvertiser';
 export * from './DomainAffiliate';
 export * from './DomainAffiliateNetworkData';
 export * from './DomainAffiliateProviderMapping';
@@ -19,7 +17,6 @@ export * from './DomainAnalyticsPublisherResponsePublisher';
 export * from './DomainAnalyticsPublisherResponsePublisherKnown';
 export * from './DomainAnalyticsPublisherResponsePublisherPromotype';
 export * from './DomainAutocompleteResult';
-export * from './DomainCampaign';
 export * from './DomainContactEmailData';
 export * from './DomainContactEmailDataValueInner';
 export * from './DomainCountryRankingData';
@@ -51,4 +48,10 @@ export * from './HandlersUpsertProfileRequest';
 export * from './ModelsCampaignListResponse';
 export * from './ModelsCampaignResponse';
 export * from './ModelsCreateCampaignRequest';
+export * from './ModelsTrackingLinkGenerationRequest';
+export * from './ModelsTrackingLinkGenerationResponse';
+export * from './ModelsTrackingLinkListResponse';
+export * from './ModelsTrackingLinkRequest';
+export * from './ModelsTrackingLinkResponse';
+export * from './ModelsTrackingLinkUpdateRequest';
 export * from './ModelsUpdateCampaignRequest';
