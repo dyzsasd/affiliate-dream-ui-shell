@@ -1,3 +1,4 @@
+
 export interface Campaign {
   id: string;
   name: string;
@@ -29,10 +30,13 @@ export interface CampaignDetail {
   previewUrl?: string;
   visibility?: string;
   currencyId?: string;
+  billingModel?: string;
   payoutType?: string;
   payoutAmount?: number;
+  payoutStructure?: string;
   revenueType?: string;
   revenueAmount?: number;
+  revenueStructure?: string;
   conversionMethod?: string;
   sessionDefinition?: string;
   sessionDuration?: number;

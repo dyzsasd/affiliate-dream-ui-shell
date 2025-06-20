@@ -1,4 +1,5 @@
 
+
 import { 
   ModelsCampaignResponse
 } from '@/generated-api/src/models';
@@ -39,10 +40,13 @@ export const mapToCampaignDetail = (domainCampaign: ModelsCampaignResponse): Cam
     previewUrl: domainCampaign.previewUrl,
     visibility: domainCampaign.visibility,
     currencyId: domainCampaign.currencyId,
+    billingModel: domainCampaign.billingModel,
     payoutType: domainCampaign.payoutStructure,
     payoutAmount: domainCampaign.payoutAmount,
+    payoutStructure: domainCampaign.payoutStructure,
     revenueType: domainCampaign.revenueStructure,
     revenueAmount: domainCampaign.revenueAmount,
+    revenueStructure: domainCampaign.revenueStructure,
     conversionMethod: domainCampaign.conversionMethod,
     sessionDefinition: domainCampaign.sessionDefinition,
     sessionDuration: domainCampaign.sessionDuration,
@@ -52,3 +56,4 @@ export const mapToCampaignDetail = (domainCampaign: ModelsCampaignResponse): Cam
     offers: [] // No offers endpoint available in current API
   };
 };
+
