@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -44,7 +45,19 @@ const CampaignDetail: React.FC = () => {
         console.log(`Fetching campaign detail for ID: ${id}`);
         const campaignData = await campaignService.getCampaign(id);
         console.log('Campaign detail fetched:', campaignData);
-        setCampaign(campaignData);
+        
+        // Add demo default values for billing model and structures
+        const campaignWithDefaults = {
+          ...campaignData,
+          billingModel: campaignData?.billingModel || 'conversion', // Default demo value
+          payoutStructure: campaignData?.payoutStructure || 'percentage', // Default demo value
+          payoutAmount: campaignData?.payoutAmount || 15.5, // Default demo value
+          revenueStructure: campaignData?.revenueStructure || 'fixed', // Default demo value
+          revenueAmount: campaignData?.revenueAmount || 25.00, // Default demo value
+          currencyId: campaignData?.currencyId || 'USD' // Default demo value
+        };
+        
+        setCampaign(campaignWithDefaults);
       } catch (error) {
         console.error("Error fetching campaign detail:", error);
         toast({
