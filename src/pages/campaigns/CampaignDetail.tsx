@@ -110,6 +110,25 @@ const CampaignDetail: React.FC = () => {
     return `${currency || "USD"} ${amount.toFixed(2)}`;
   };
 
+  const formatPayoutAmount = (amount?: number, type?: string, currency?: string) => {
+    if (amount === undefined) return t("campaignDetail.notSet");
+    if (type === 'percentage') {
+      return `${amount.toFixed(2)}%`;
+    }
+    return `${currency || "USD"} ${amount.toFixed(2)}`;
+  };
+
+  const getBillingModelDisplay = (billingModel?: string) => {
+    if (!billingModel) return t("campaignDetail.notSet");
+    return billingModel === 'click' ? 'Click' : 'Conversion';
+  };
+
+  const getPayoutTypeDisplay = (payoutType?: string, billingModel?: string) => {
+    if (!payoutType) return t("campaignDetail.notSet");
+    if (billingModel === 'click') return 'Fixed';
+    return payoutType === 'percentage' ? 'Percentage' : 'Fixed';
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-10">
@@ -135,6 +154,7 @@ const CampaignDetail: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center gap-2 flex-wrap">
         <Link to="/campaigns">
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -206,7 +226,7 @@ const CampaignDetail: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Payout & Revenue Information */}
+          {/* Billing Model & Payout Information */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -215,27 +235,38 @@ const CampaignDetail: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <h4 className="font-medium text-green-700">{t("campaignDetail.payoutInformation")}</h4>
+              <div className="space-y-6">
+                {/* Billing Model */}
+                <div>
+                  <h4 className="font-medium text-purple-700 mb-3">Billing Model</h4>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutType")}</h3>
-                    <p className="mt-1 uppercase">{campaign.payoutType || t("campaignDetail.notSet")}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutAmount")}</h3>
-                    <p className="mt-1 font-semibold">{formatCurrency(campaign.payoutAmount, campaign.currencyId)}</p>
+                    <h3 className="text-sm font-medium text-gray-500">Model Type</h3>
+                    <p className="mt-1 font-semibold uppercase">{getBillingModelDisplay(campaign.billingModel)}</p>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <h4 className="font-medium text-blue-700">{t("campaignDetail.revenueInformation")}</h4>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueType")}</h3>
-                    <p className="mt-1 uppercase">{campaign.revenueType || t("campaignDetail.notSet")}</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-green-700">{t("campaignDetail.payoutInformation")}</h4>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutType")}</h3>
+                      <p className="mt-1">{getPayoutTypeDisplay(campaign.payoutStructure, campaign.billingModel)}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutAmount")}</h3>
+                      <p className="mt-1 font-semibold">{formatPayoutAmount(campaign.payoutAmount, campaign.payoutStructure, campaign.currencyId)}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueAmount")}</h3>
-                    <p className="mt-1 font-semibold">{formatCurrency(campaign.revenueAmount, campaign.currencyId)}</p>
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-blue-700">{t("campaignDetail.revenueInformation")}</h4>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueType")}</h3>
+                      <p className="mt-1">{getPayoutTypeDisplay(campaign.revenueStructure, campaign.billingModel)}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueAmount")}</h3>
+                      <p className="mt-1 font-semibold">{formatPayoutAmount(campaign.revenueAmount, campaign.revenueStructure, campaign.currencyId)}</p>
+                    </div>
                   </div>
                 </div>
               </div>
