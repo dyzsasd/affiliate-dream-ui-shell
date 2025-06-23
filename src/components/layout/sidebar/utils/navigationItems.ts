@@ -1,4 +1,3 @@
-
 import { 
   BarChart3, 
   Building2,
@@ -48,7 +47,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       },
       {
         name: "Influencer Search",
-        path: "/influencer-search",
+        path: "/influencer",
         icon: Users
       },
       {
