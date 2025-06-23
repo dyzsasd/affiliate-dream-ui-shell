@@ -104,8 +104,8 @@ const InfluencerSearch: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Find the right creators according to your needs</h1>
-          <p className="text-muted-foreground">Discover and connect with influencers for your campaigns</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t('influencerSearch.title')}</h1>
+          <p className="text-muted-foreground">{t('influencerSearch.description')}</p>
         </div>
         
         <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ const InfluencerSearch: React.FC = () => {
               className="flex items-center gap-2"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              {t('influencerSearch.filters')}
               {getActiveFiltersCount() > 0 && (
                 <Badge variant="secondary" className="ml-1">
                   {getActiveFiltersCount()}
@@ -147,13 +147,13 @@ const InfluencerSearch: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">All</Button>
-            <Button variant="default" size="sm">Creators</Button>
-            <Button variant="outline" size="sm">Brands</Button>
+            <Button variant="outline" size="sm">{t('influencerSearch.all')}</Button>
+            <Button variant="default" size="sm">{t('influencerSearch.creators')}</Button>
+            <Button variant="outline" size="sm">{t('influencerSearch.brands')}</Button>
           </div>
 
           <Input
-            placeholder="Add a keyword"
+            placeholder={t('influencerSearch.addKeyword')}
             className="max-w-xs"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -161,12 +161,12 @@ const InfluencerSearch: React.FC = () => {
 
           <Button className="flex items-center gap-2">
             <RefreshCw className="h-4 w-4" />
-            Refresh Search
+            {t('influencerSearch.refreshSearch')}
           </Button>
 
           {getActiveFiltersCount() > 0 && (
             <Button variant="ghost" onClick={handleClearFilters}>
-              Clear All
+              {t('influencerSearch.clearAll')}
             </Button>
           )}
         </div>
@@ -174,22 +174,22 @@ const InfluencerSearch: React.FC = () => {
         {/* Sort and Results Count */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {filteredInfluencers.length.toLocaleString()} results
+            {filteredInfluencers.length.toLocaleString()} {t('influencerSearch.results')}
           </p>
           
           <Select value={filters.sortBy} onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value }))}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by Random" />
+              <SelectValue placeholder={t('influencerSearch.sortBy')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="random">Random</SelectItem>
-              <SelectItem value="globalScore">Global Score</SelectItem>
-              <SelectItem value="followers">Most followers</SelectItem>
-              <SelectItem value="growth">Audience Growth</SelectItem>
-              <SelectItem value="instagramScore">Instagram Score</SelectItem>
-              <SelectItem value="tiktokScore">Tiktok Score</SelectItem>
-              <SelectItem value="youtubeScore">Youtube Score</SelectItem>
-              <SelectItem value="twitterScore">Twitter Score</SelectItem>
+              <SelectItem value="random">{t('influencerSearch.sortRandom')}</SelectItem>
+              <SelectItem value="globalScore">{t('influencerSearch.sortGlobalScore')}</SelectItem>
+              <SelectItem value="followers">{t('influencerSearch.sortFollowers')}</SelectItem>
+              <SelectItem value="growth">{t('influencerSearch.sortGrowth')}</SelectItem>
+              <SelectItem value="instagramScore">{t('influencerSearch.sortInstagramScore')}</SelectItem>
+              <SelectItem value="tiktokScore">{t('influencerSearch.sortTiktokScore')}</SelectItem>
+              <SelectItem value="youtubeScore">{t('influencerSearch.sortYoutubeScore')}</SelectItem>
+              <SelectItem value="twitterScore">{t('influencerSearch.sortTwitterScore')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -214,12 +214,12 @@ const InfluencerSearch: React.FC = () => {
           <CardContent className="py-12 text-center">
             <div className="mx-auto max-w-md">
               <div className="mb-4 text-6xl">🔍</div>
-              <h3 className="mb-2 text-lg font-semibold">No influencers found</h3>
+              <h3 className="mb-2 text-lg font-semibold">{t('influencerSearch.noInfluencersFound')}</h3>
               <p className="text-muted-foreground mb-4">
-                Try adjusting your search criteria or filters
+                {t('influencerSearch.tryAdjustingCriteria')}
               </p>
               <Button onClick={handleClearFilters} variant="outline">
-                Clear Filters
+                {t('influencerSearch.clearFilters')}
               </Button>
             </div>
           </CardContent>

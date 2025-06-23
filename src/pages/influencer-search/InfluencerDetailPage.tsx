@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +18,7 @@ import { mockInfluencers } from "./data/mockInfluencers";
 import { Influencer } from "./types/influencer";
 
 const InfluencerDetailPage: React.FC = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
@@ -26,9 +28,9 @@ const InfluencerDetailPage: React.FC = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Influencer not found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('influencerDetail.influencerNotFound')}</h1>
           <Button onClick={() => navigate('/influencer-search')}>
-            Back to Search
+            {t('influencerDetail.backToSearch')}
           </Button>
         </div>
       </div>
@@ -77,7 +79,7 @@ const InfluencerDetailPage: React.FC = () => {
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Search
+          {t('influencerDetail.backToSearch')}
         </Button>
         
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
@@ -109,29 +111,29 @@ const InfluencerDetailPage: React.FC = () => {
                 <span className="flex items-center gap-1">
                   <span>🌍</span> {influencer.language}
                 </span>
-                <span className="text-muted-foreground">Last updated {influencer.lastUpdated}</span>
+                <span className="text-muted-foreground">{t('influencerDetail.lastUpdated')} {influencer.lastUpdated}</span>
               </div>
             </div>
           </div>
           
           <div className="text-center lg:text-right">
             <div className="mb-4">
-              <div className="text-sm text-muted-foreground">Influence Score</div>
+              <div className="text-sm text-muted-foreground">{t('influencerSearch.influenceScore')}</div>
               <div className="text-4xl font-bold text-blue-600">{influencer.influenceScore}</div>
-              <div className="text-sm text-muted-foreground">{influencer.totalPoints.toLocaleString()} pts</div>
+              <div className="text-sm text-muted-foreground">{influencer.totalPoints.toLocaleString()} {t('influencerSearch.pts')}</div>
             </div>
             <div className="flex gap-2 justify-center lg:justify-end">
               <Button size="sm" variant="outline">
                 <Edit className="h-4 w-4 mr-1" />
-                Edit
+                {t('common.edit')}
               </Button>
               <Button size="sm">
                 <Mail className="h-4 w-4 mr-1" />
-                Send Email
+                {t('influencerDetail.sendEmail')}
               </Button>
               <Button size="sm" variant="outline">
                 <Users className="h-4 w-4 mr-1" />
-                CRM
+                {t('influencerSearch.crm')}
               </Button>
             </div>
           </div>
@@ -141,12 +143,12 @@ const InfluencerDetailPage: React.FC = () => {
       {/* Tabs */}
       <div className="flex gap-4 border-b mb-8">
         <Button variant="ghost" className="border-b-2 border-blue-500 text-blue-600 rounded-none">
-          Social Coverage
+          {t('influencerDetail.socialCoverage')}
         </Button>
-        <Button variant="ghost" className="text-muted-foreground rounded-none">Posts</Button>
-        <Button variant="ghost" className="text-muted-foreground rounded-none">Creator Network</Button>
-        <Button variant="ghost" className="text-muted-foreground rounded-none">Audience</Button>
-        <Button variant="ghost" className="text-muted-foreground rounded-none">Scoring</Button>
+        <Button variant="ghost" className="text-muted-foreground rounded-none">{t('influencerDetail.posts')}</Button>
+        <Button variant="ghost" className="text-muted-foreground rounded-none">{t('influencerDetail.creatorNetwork')}</Button>
+        <Button variant="ghost" className="text-muted-foreground rounded-none">{t('influencerDetail.audience')}</Button>
+        <Button variant="ghost" className="text-muted-foreground rounded-none">{t('influencerDetail.scoring')}</Button>
       </div>
 
       {/* Content */}
@@ -156,7 +158,7 @@ const InfluencerDetailPage: React.FC = () => {
           {/* About */}
           <Card>
             <CardHeader>
-              <CardTitle>About</CardTitle>
+              <CardTitle>{t('influencerDetail.about')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {influencer.quote && (
@@ -166,7 +168,7 @@ const InfluencerDetailPage: React.FC = () => {
               )}
               
               <div>
-                <h4 className="font-semibold mb-4">Followers</h4>
+                <h4 className="font-semibold mb-4">{t('influencerDetail.followers')}</h4>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white text-2xl">
@@ -183,7 +185,7 @@ const InfluencerDetailPage: React.FC = () => {
               <Separator />
 
               <div>
-                <h4 className="font-semibold mb-3">Profile Overview</h4>
+                <h4 className="font-semibold mb-3">{t('influencerDetail.profileOverview')}</h4>
                 <p className="text-muted-foreground leading-relaxed">
                   {influencer.profileOverview}
                 </p>
@@ -192,7 +194,7 @@ const InfluencerDetailPage: React.FC = () => {
               <Separator />
 
               <div>
-                <h4 className="font-semibold mb-3">Industries</h4>
+                <h4 className="font-semibold mb-3">{t('influencerDetail.industries')}</h4>
                 <div className="flex flex-wrap gap-2">
                   {influencer.industries.map((industry) => (
                     <Badge key={industry} variant="secondary">
@@ -211,19 +213,19 @@ const InfluencerDetailPage: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                Influencer Campaign Ripeness
+                {t('influencerDetail.campaignRipeness')}
                 <span className="text-green-600 font-bold text-xl">
                   {influencer.campaignRipeness.priceRange.split(' ')[0]}
                 </span>
-                <span className="text-muted-foreground">/ post</span>
-                <Badge variant="secondary" className="text-xs">Estimated</Badge>
+                <span className="text-muted-foreground">{t('influencerDetail.perPost')}</span>
+                <Badge variant="secondary" className="text-xs">{t('influencerDetail.estimated')}</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                  <span className="font-medium">Audience Target</span>
+                  <span className="font-medium">{t('influencerDetail.audienceTarget')}</span>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
                   {influencer.campaignRipeness.audienceTarget}
@@ -233,7 +235,7 @@ const InfluencerDetailPage: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-3 h-3 bg-purple-500 rounded-full"></span>
-                  <span className="font-medium">Engagement</span>
+                  <span className="font-medium">{t('influencerDetail.engagement')}</span>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
                   {influencer.campaignRipeness.engagementDescription}
@@ -243,7 +245,7 @@ const InfluencerDetailPage: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                  <span className="font-medium">Brand Suitability</span>
+                  <span className="font-medium">{t('influencerDetail.brandSuitability')}</span>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
                   {influencer.campaignRipeness.brandSuitability}
@@ -253,7 +255,7 @@ const InfluencerDetailPage: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                  <span className="font-medium">Partnership Likelihood</span>
+                  <span className="font-medium">{t('influencerDetail.partnershipLikelihood')}</span>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
                   {influencer.campaignRipeness.partnershipLikelihood}
@@ -266,7 +268,7 @@ const InfluencerDetailPage: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                Content Style
+                {t('influencerDetail.contentStyle')}
                 <span className="text-sm font-normal text-muted-foreground">
                   {influencer.contentStyle.type}
                 </span>
@@ -275,7 +277,7 @@ const InfluencerDetailPage: React.FC = () => {
             <CardContent>
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Brand Safety</span>
+                  <span className="font-medium">{t('influencerDetail.brandSafety')}</span>
                   <div className="flex items-center gap-3">
                     <span className={`font-medium ${getBrandSafetyColor(influencer.contentStyle.brandSafety)}`}>
                       {influencer.contentStyle.brandSafety}
@@ -290,7 +292,7 @@ const InfluencerDetailPage: React.FC = () => {
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Engagement</span>
+                  <span className="font-medium">{t('influencerDetail.engagement')}</span>
                   <div className="flex items-center gap-3">
                     <span className={`font-medium ${getEngagementColor(influencer.contentStyle.engagement)}`}>
                       {influencer.contentStyle.engagement}

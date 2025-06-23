@@ -1,4 +1,3 @@
-
 {
   "appName": "rolinko",
   "appDescription": "Your affiliate marketing platform",
@@ -66,7 +65,8 @@
     "advertisers": "Advertisers",
     "invitations": "Invitations",
     "analytics": "Analytics",
-    "marketplace": "Marketplace"
+    "marketplace": "Marketplace",
+    "influencerSearch": "Influencer Search"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -510,5 +510,57 @@
     "messagePlaceholder": "Tell the publisher about your campaign, goals, and why you'd like to work together...",
     "sending": "Sending...",
     "sendRequest": "Send Request"
+  },
+  "influencerSearch": {
+    "title": "Find the right creators according to your needs",
+    "description": "Discover and connect with influencers for your campaigns",
+    "filters": "Filters",
+    "all": "All",
+    "creators": "Creators",
+    "brands": "Brands",
+    "addKeyword": "Add a keyword",
+    "refreshSearch": "Refresh Search",
+    "clearAll": "Clear All",
+    "results": "results",
+    "sortBy": "Sort by",
+    "sortRandom": "Random",
+    "sortGlobalScore": "Global Score",
+    "sortFollowers": "Most followers",
+    "sortGrowth": "Audience Growth",
+    "sortInstagramScore": "Instagram Score",
+    "sortTiktokScore": "Tiktok Score",
+    "sortYoutubeScore": "Youtube Score",
+    "sortTwitterScore": "Twitter Score",
+    "noInfluencersFound": "No influencers found",
+    "tryAdjustingCriteria": "Try adjusting your search criteria or filters",
+    "clearFilters": "Clear Filters",
+    "crm": "CRM",
+    "viewDetails": "View",
+    "influenceScore": "Influence Score",
+    "pts": "pts"
+  },
+  "influencerDetail": {
+    "backToSearch": "Back to Search",
+    "influencerNotFound": "Influencer not found",
+    "sendEmail": "Send Email",
+    "socialCoverage": "Social Coverage",
+    "posts": "Posts",
+    "creatorNetwork": "Creator Network",
+    "audience": "Audience",
+    "scoring": "Scoring",
+    "about": "About",
+    "followers": "Followers",
+    "profileOverview": "Profile Overview",
+    "industries": "Industries",
+    "campaignRipeness": "Influencer Campaign Ripeness",
+    "perPost": "/ post",
+    "estimated": "Estimated",
+    "audienceTarget": "Audience Target",
+    "engagement": "Engagement",
+    "brandSuitability": "Brand Suitability",
+    "partnershipLikelihood": "Partnership Likelihood",
+    "contentStyle": "Content Style",
+    "brandSafety": "Brand Safety",
+    "lastUpdated": "Last updated"
   }
 }

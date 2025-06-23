@@ -1,5 +1,7 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +19,7 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
   influencer,
   viewMode
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const primarySocialMedia = influencer.socialMediaProfiles[0];
   
@@ -121,19 +124,19 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
             
             <div className="flex flex-col items-end gap-3 ml-4">
               <div className="text-right">
-                <div className="text-sm text-muted-foreground">Influence Score</div>
+                <div className="text-sm text-muted-foreground">{t('influencerSearch.influenceScore')}</div>
                 <div className="text-2xl font-bold text-blue-600">{influencer.influenceScore}</div>
-                <div className="text-xs text-muted-foreground">{influencer.totalPoints.toLocaleString()} pts</div>
+                <div className="text-xs text-muted-foreground">{influencer.totalPoints.toLocaleString()} {t('influencerSearch.pts')}</div>
               </div>
               
               <div className="flex gap-2">
                 <Button size="sm" variant="outline">
                   <Users className="h-4 w-4 mr-1" />
-                  CRM
+                  {t('influencerSearch.crm')}
                 </Button>
                 <Button size="sm" onClick={handleViewDetails}>
                   <ExternalLink className="h-4 w-4 mr-1" />
-                  View
+                  {t('influencerSearch.viewDetails')}
                 </Button>
               </div>
             </div>
@@ -168,9 +171,11 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
         </div>
         
         <div className="text-center mb-4">
-          <div className="text-sm text-muted-foreground">Influence Score</div>
-          <div className="text-xl font-bold text-blue-600">{influencer.influenceScore}</div>
-          <div className="text-xs text-muted-foreground">{influencer.totalPoints.toLocaleString()} pts</div>
+          <div className="text-sm text-muted-foreground">{t('influencerSearch.influenceScore')}</div>
+          <div className="text-xl font-bold text-blue-600">{influencer.influ
+
+enceScore}</div>
+          <div className="text-xs text-muted-foreground">{influencer.totalPoints.toLocaleString()} {t('influencerSearch.pts')}</div>
         </div>
         
         <div className="flex items-center justify-center gap-2 mb-4">
@@ -184,10 +189,10 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
         <div className="flex gap-2">
           <Button size="sm" variant="outline" className="flex-1">
             <Users className="h-4 w-4 mr-1" />
-            CRM
+            {t('influencerSearch.crm')}
           </Button>
           <Button size="sm" onClick={handleViewDetails} className="flex-1">
-            View
+            {t('common.view')}
           </Button>
         </div>
       </CardContent>
