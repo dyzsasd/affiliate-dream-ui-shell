@@ -89,9 +89,7 @@ const InfluencerSearch: React.FC = () => {
     setSearchTerm("");
   };
 
-  const getActiveFil
-
-tersCount = () => {
+  const getActiveFiltersCount = () => {
     let count = 0;
     if (searchTerm) count++;
     if (filters.profileType !== 'all') count++;
