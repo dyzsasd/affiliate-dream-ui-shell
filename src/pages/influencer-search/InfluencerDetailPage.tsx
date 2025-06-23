@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -14,22 +13,21 @@ import {
   Mail, 
   Edit
 } from "lucide-react";
-import { mockInfluencers } from "./data/mockInfluencers";
-import { Influencer } from "./types/influencer";
+import InfluencerService from "./services/influencerService";
 
 const InfluencerDetailPage: React.FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  const influencer = mockInfluencers.find(inf => inf.id === id);
+  const influencer = id ? InfluencerService.getInfluencerById(id) : null;
   
   if (!influencer) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">{t('influencerDetail.influencerNotFound')}</h1>
-          <Button onClick={() => navigate('/influencer-search')}>
+          <Button onClick={() => navigate('/influencer')}>
             {t('influencerDetail.backToSearch')}
           </Button>
         </div>
@@ -75,7 +73,7 @@ const InfluencerDetailPage: React.FC = () => {
       <div className="mb-8">
         <Button 
           variant="ghost" 
-          onClick={() => navigate('/influencer-search')}
+          onClick={() => navigate('/influencer')}
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />

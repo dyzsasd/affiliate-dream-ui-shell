@@ -62,8 +62,9 @@ function App() {
                 {/* Marketplace routes */}
                 <Route path="/advertiser/marketplace" element={<MarketplacePage />} />
                 
-                {/* Influencer Search route */}
-                <Route path="/influencer-search" element={<InfluencerSearch />} />
+                {/* Influencer routes */}
+                <Route path="/influencer" element={<InfluencerSearch />} />
+                <Route path="/influencer/:id" element={<InfluencerDetailPage />} />
                 
                 {/* Analytics routes */}
                 <Route path="/analytics/advertiser" element={<AdvertiserAnalytics />} />

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -24,7 +23,7 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
   const primarySocialMedia = influencer.socialMediaProfiles[0];
   
   const handleViewDetails = () => {
-    navigate(`/influencer-search/${influencer.id}`);
+    navigate(`/influencer/${influencer.id}`);
   };
   
   const getPlatformIcon = (platform: string) => {
