@@ -1,3 +1,4 @@
+
 {
   "appName": "rolinko",
   "appDescription": "Votre plateforme de marketing d'affiliation",
@@ -17,7 +18,14 @@
     "errorOccurred": "Une erreur est survenue",
     "back": "Retour",
     "saveChanges": "Enregistrer les modifications",
-    "create": "Créer"
+    "create": "Créer",
+    "success": "Succès",
+    "update": "Mettre à jour",
+    "name": "Nom",
+    "description": "Description",
+    "status": "Statut",
+    "createdAt": "Créé le",
+    "updatedAt": "Mis à jour le"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -37,7 +45,17 @@
     "organizationNameHint": "Si vous rejoignez une organisation existante, laissez ce champ vide. Un administrateur devra vous inviter.",
     "demoCredentials": "Pour la démo, utilisez: demo@example.com / password",
     "creatingAccount": "Création du compte...",
-    "signingIn": "Connexion en cours..."
+    "signingIn": "Connexion en cours...",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "signup": "Inscription",
+    "signInWithGoogle": "Se connecter avec Google",
+    "signInWithGitHub": "Se connecter avec GitHub",
+    "loginSuccess": "Connexion réussie",
+    "loginError": "Échec de la connexion",
+    "signupSuccess": "Compte créé avec succès",
+    "signupError": "Échec de la création du compte",
+    "enterCredentials": "Entrez vos identifiants pour accéder à votre compte"
   },
   "sidebar": {
     "dashboard": "Tableau de bord",
@@ -50,6 +68,39 @@
     "invitations": "Invitations",
     "analytics": "Analyses",
     "marketplace": "Marketplace"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "campaigns": "Campagnes",
+    "affiliates": "Affiliés",
+    "advertisers": "Annonceurs",
+    "tracking": "Suivi",
+    "reporting": "Rapports",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "marketplace": "Marketplace",
+    "organizations": "Organisations",
+    "users": "Utilisateurs",
+    "analytics": "Analyses"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "overview": "Aperçu",
+    "recentActivity": "Activité récente",
+    "quickStats": "Statistiques rapides",
+    "totalCampaigns": "Total des campagnes",
+    "activeCampaigns": "Campagnes actives",
+    "totalClicks": "Total des clics",
+    "totalConversions": "Total des conversions",
+    "conversionRate": "Taux de conversion",
+    "revenue": "Revenus",
+    "topPerformers": "Meilleurs performeurs",
+    "recentConversions": "Conversions récentes",
+    "conversions": "Conversions",
+    "campaignPerformance": "Performance des campagnes",
+    "revenueChart": "Graphique des revenus",
+    "recentCampaignActivity": "Activité récente des campagnes",
+    "advertiserDashboard": "Tableau de bord annonceur"
   },
   "analytics": {
     "advertiserAnalytics": "Analyses de l'annonceur",
@@ -67,7 +118,10 @@
     "verticalPositioning": "Positionnement Vertical",
     "type": "Type",
     "rank": "Rang",
-    "topPublishersInVertical": "Top 5 éditeurs dans ce vertical"
+    "topPublishersInVertical": "Top 5 éditeurs dans ce vertical",
+    "partnersFor": "Partenaires pour",
+    "selectAdvertiser": "Sélectionner un annonceur",
+    "selectAdvertiserDescription": "Recherchez et sélectionnez un annonceur dans la liste déroulante pour voir ses données d'analyse."
   },
   "campaigns": {
     "title": "Campagnes",
@@ -153,7 +207,9 @@
     "adminOptions": "Options administrateur",
     "adminOptionsDescription": "Options disponibles pour les administrateurs",
     "adminMessage": "En tant qu'administrateur, vous pouvez gérer les utilisateurs, les organisations et les paramètres.",
-    "manageUsers": "Gérer les utilisateurs"
+    "manageUsers": "Gérer les utilisateurs",
+    "personalInfo": "Informations personnelles",
+    "organizationInfo": "Informations sur l'organisation"
   },
   "language": {
     "title": "Langue",
@@ -216,7 +272,8 @@
     "countryLabel": "Pays",
     "countryPlaceholder": "Entrez le pays",
     "postalCodeLabel": "Code postal",
-    "postalCodePlaceholder": "Entrez le code postal"
+    "postalCodePlaceholder": "Entrez le code postal",
+    "searchAdvertisers": "Rechercher des annonceurs..."
   },
   "organizations": {
     "title": "Organisations",
@@ -263,6 +320,11 @@
   "organization": {
     "noOrganization": "Aucune organisation disponible"
   },
+  "reporting": {
+    "title": "Rapports",
+    "performance": "Rapport de performance",
+    "conversions": "Rapport de conversions"
+  },
   "trackingLinks": {
     "title": "Générateur de Liens de Suivi",
     "description": "Créez un lien de suivi pour vos campagnes promotionnelles",
@@ -297,7 +359,19 @@
     "linkGenerationError": "Échec de la génération du lien de suivi",
     "copied": "Copié !",
     "linkCopied": "Lien de suivi copié dans le presse-papiers",
-    "copyError": "Échec de la copie du lien"
+    "copyError": "Échec de la copie du lien",
+    "loadingCampaigns": "Chargement des campagnes...",
+    "noCampaigns": "Aucune campagne disponible",
+    "errorLoadingCampaigns": "Échec du chargement des campagnes. Veuillez réessayer.",
+    "generatedLink": "Lien de suivi généré",
+    "campaignName": "Campagne",
+    "affiliateName": "Affilié",
+    "copyLink": "Copier le lien",
+    "testLink": "Tester le lien"
+  },
+  "affiliates": {
+    "title": "Affiliés",
+    "searchAffiliates": "Rechercher des affiliés..."
   },
   "reports": {
     "performance": {

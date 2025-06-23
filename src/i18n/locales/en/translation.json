@@ -94,7 +94,12 @@
     "conversionRate": "Conversion Rate",
     "revenue": "Revenue",
     "topPerformers": "Top Performers",
-    "recentConversions": "Recent Conversions"
+    "recentConversions": "Recent Conversions",
+    "conversions": "Conversions",
+    "campaignPerformance": "Campaign Performance",
+    "revenueChart": "Revenue Chart",
+    "recentCampaignActivity": "Recent Campaign Activity",
+    "advertiserDashboard": "Advertiser Dashboard"
   },
   "campaigns": {
     "title": "Campaigns",
