@@ -25,8 +25,8 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
     hasPermission 
   } = useProfile(auth.user);
   
-  const [profileFetchAttempted, setProfileFetchAttempted] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [profileInitialized, setProfileInitialized] = useState(false);
   
   // Add initialization effect
   useEffect(() => {
@@ -48,8 +48,8 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
               });
               auth.setUser(session.user as User);
               
-              // Reset profile fetch flag when auth state changes
-              setProfileFetchAttempted(false);
+              // Reset profile initialization when auth state changes
+              setProfileInitialized(false);
               
               // Log token expiry for debugging
               if (session.expires_at) {
@@ -59,6 +59,7 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
             } else {
               auth.setSession(null);
               auth.setUser(null);
+              setProfileInitialized(false);
             }
           }
         );
@@ -99,43 +100,43 @@ export const useAuthProvider = (mockMode = false): AuthContextType => {
     initializeAuth();
   }, []);
 
-  // Enhanced profile initialization effect with retry logic
+  // Simplified profile initialization effect with proper guards
   useEffect(() => {
-    if (!authInitialized || !auth.user || isProfileLoading) {
-      return; // Wait until auth is initialized and not already loading
+    // Early return if conditions aren't met
+    if (!authInitialized || !auth.user || isProfileLoading || profileInitialized) {
+      return;
     }
     
-    // If we have a user but no profile or organization, and haven't attempted to fetch yet
-    if (auth.user && (!profile || !organization) && !profileFetchAttempted) {
-      const loadProfileData = async () => {
+    console.log("Starting profile initialization...");
+    setProfileInitialized(true);
+    
+    const loadProfileData = async () => {
+      try {
         console.log("Loading profile and organization data...");
-        setProfileFetchAttempted(true);
         
-        try {
-          // First try to fetch the profile
-          const backendProfile = await fetchBackendProfile();
-          console.log("Backend profile fetch result:", backendProfile);
-          
-          // Then, if we have an organizationId, fetch the organization
-          if (backendProfile?.organizationId) {
-            console.log("Organization ID found:", backendProfile.organizationId);
-            try {
-              const orgData = await fetchOrganization(backendProfile.organizationId);
-              console.log("Organization fetch completed:", orgData);
-            } catch (orgError) {
-              console.error("Failed to fetch organization:", orgError);
-            }
-          } else {
-            console.warn("No organization ID found in profile");
+        // First try to fetch the profile
+        const backendProfile = await fetchBackendProfile();
+        console.log("Backend profile fetch result:", backendProfile);
+        
+        // Then, if we have an organizationId, fetch the organization
+        if (backendProfile?.organizationId) {
+          console.log("Organization ID found:", backendProfile.organizationId);
+          try {
+            const orgData = await fetchOrganization(backendProfile.organizationId);
+            console.log("Organization fetch completed:", orgData);
+          } catch (orgError) {
+            console.error("Failed to fetch organization:", orgError);
           }
-        } catch (error) {
-          console.error("Failed to fetch profile:", error);
+        } else {
+          console.warn("No organization ID found in profile");
         }
-      };
-      
-      loadProfileData();
-    }
-  }, [auth.user, profile, organization, profileFetchAttempted, authInitialized, isProfileLoading]);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+    
+    loadProfileData();
+  }, [auth.user, authInitialized, isProfileLoading, profileInitialized]);
   
   return {
     ...auth,

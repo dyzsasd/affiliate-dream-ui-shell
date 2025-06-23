@@ -21,7 +21,6 @@ export const useProfile = (user: User | null) => {
   const [organization, setOrganization] = useState<DomainOrganization | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [isOrganizationLoading, setIsOrganizationLoading] = useState(false);
-  const [backendFetchAttempted, setBackendFetchAttempted] = useState(false);
   const { toast } = useToast();
 
   const handleFetchBackendProfile = async () => {
@@ -30,6 +29,7 @@ export const useProfile = (user: User | null) => {
       return null;
     }
     
+    console.log("Starting backend profile fetch for user:", user.id);
     setIsProfileLoading(true);
     
     try {
@@ -84,7 +84,7 @@ export const useProfile = (user: User | null) => {
       return null;
     } finally {
       setIsProfileLoading(false);
-      setBackendFetchAttempted(true);
+      console.log("Backend profile fetch completed");
     }
   };
 
@@ -94,6 +94,7 @@ export const useProfile = (user: User | null) => {
       return null;
     }
     
+    console.log("Starting organization fetch for ID:", organizationId);
     setIsOrganizationLoading(true);
     
     try {
@@ -131,6 +132,7 @@ export const useProfile = (user: User | null) => {
       return null;
     } finally {
       setIsOrganizationLoading(false);
+      console.log("Organization fetch completed");
     }
   };
 
