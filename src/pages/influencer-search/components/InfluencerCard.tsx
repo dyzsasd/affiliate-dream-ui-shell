@@ -172,9 +172,7 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
         
         <div className="text-center mb-4">
           <div className="text-sm text-muted-foreground">{t('influencerSearch.influenceScore')}</div>
-          <div className="text-xl font-bold text-blue-600">{influencer.influ
-
-enceScore}</div>
+          <div className="text-xl font-bold text-blue-600">{influencer.influenceScore}</div>
           <div className="text-xs text-muted-foreground">{influencer.totalPoints.toLocaleString()} {t('influencerSearch.pts')}</div>
         </div>
         
