@@ -99,6 +99,11 @@ const InfluencerSearch: React.FC = () => {
     return count;
   };
 
+  // Hardcoded results count to show 100+
+  const getResultsCount = () => {
+    return "100+";
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -174,7 +179,7 @@ const InfluencerSearch: React.FC = () => {
         {/* Sort and Results Count */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {filteredInfluencers.length.toLocaleString()} {t('influencerSearch.results')}
+            {getResultsCount()} {t('influencerSearch.results')}
           </p>
           
           <Select value={filters.sortBy} onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value }))}>

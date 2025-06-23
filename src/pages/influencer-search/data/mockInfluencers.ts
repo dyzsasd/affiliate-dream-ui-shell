@@ -231,5 +231,161 @@ export const mockInfluencers: Influencer[] = [
     },
     isVerified: true,
     tags: ['Photography', 'Art', 'Creative', 'Visual Content']
+  },
+  {
+    id: '7',
+    name: 'Sofia Martinez',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=center',
+    bio: 'Fitness & Wellness Coach Inspiring Healthy Living',
+    location: 'Spain',
+    language: 'Spanish',
+    category: 'Fitness & Health',
+    industries: ['Health', 'Fitness', 'Wellness'],
+    influenceScore: 9,
+    totalPoints: 15600,
+    lastUpdated: '12 hours ago',
+    profileOverview: 'Sofia Martinez is a certified fitness trainer and wellness coach who shares workout routines, healthy recipes, and motivational content. Her authentic approach to fitness makes her relatable to beginners and fitness enthusiasts alike.',
+    quote: '"Tu cuerpo puede hacerlo. Es tu mente la que tienes que convencer."',
+    socialMediaProfiles: [
+      {
+        platform: 'Instagram',
+        handle: '@sofia_fitness_life',
+        followers: 87500,
+        score: 82,
+        engagementRate: 7.3,
+        growth: 2.1
+      }
+    ],
+    campaignRipeness: {
+      priceRange: '$800 - $2K / post',
+      audienceTarget: 'Spanish-speaking fitness enthusiasts, primarily women aged 25-40.',
+      engagementDescription: 'Very high engagement with fitness and wellness content, strong community interaction.',
+      brandSuitability: 'Perfect for fitness brands, supplement companies, activewear, and wellness products.',
+      partnershipLikelihood: 'Very likely to partner with health and fitness brands, especially those promoting body positivity.'
+    },
+    contentStyle: {
+      type: 'Motivational',
+      brandSafety: 'Very safe',
+      engagement: 'Very good'
+    },
+    isVerified: true,
+    tags: ['Fitness', 'Wellness', 'Motivation', 'Health']
+  },
+  {
+    id: '8',
+    name: 'Jake Thompson',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=center',
+    bio: 'Tech Reviewer & Gaming Enthusiast',
+    location: 'Canada',
+    language: 'English',
+    category: 'Gaming & Technology',
+    industries: ['Technology', 'Gaming', 'Electronics'],
+    influenceScore: 8,
+    totalPoints: 12400,
+    lastUpdated: '6 hours ago',
+    profileOverview: 'Jake Thompson creates in-depth tech reviews, gaming content, and tutorials. Known for his honest opinions and detailed analysis of the latest gadgets and games.',
+    quote: '"Technology should make life easier, not more complicated."',
+    socialMediaProfiles: [
+      {
+        platform: 'YouTube',
+        handle: '@JakeTechReviews',
+        followers: 156000,
+        score: 78,
+        engagementRate: 5.8,
+        growth: 1.7
+      }
+    ],
+    campaignRipeness: {
+      priceRange: '$1K - $3K / post',
+      audienceTarget: 'Tech enthusiasts and gamers, primarily males aged 18-35.',
+      engagementDescription: 'High engagement with tech-savvy audience, strong influence on purchasing decisions.',
+      brandSuitability: 'Ideal for tech companies, gaming brands, electronics manufacturers.',
+      partnershipLikelihood: 'Very open to tech partnerships, especially for product reviews and launches.'
+    },
+    contentStyle: {
+      type: 'Educational',
+      brandSafety: 'Very safe',
+      engagement: 'Very good'
+    },
+    isVerified: true,
+    tags: ['Tech', 'Gaming', 'Reviews', 'Electronics']
+  },
+  {
+    id: '9',
+    name: 'Emma Chen',
+    avatar: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=center',
+    bio: 'Food Blogger & Recipe Developer',
+    location: 'Singapore',
+    language: 'English',
+    category: 'Food & Cooking',
+    industries: ['Food', 'Cooking', 'Lifestyle'],
+    influenceScore: 7,
+    totalPoints: 9800,
+    lastUpdated: '1 day ago',
+    profileOverview: 'Emma Chen is a passionate food blogger who creates easy-to-follow recipes and food photography tips. She specializes in Asian fusion cuisine and healthy meal prep ideas.',
+    quote: '"Good food is the foundation of genuine happiness."',
+    socialMediaProfiles: [
+      {
+        platform: 'Instagram',
+        handle: '@emmacookstogether',
+        followers: 64200,
+        score: 71,
+        engagementRate: 6.4,
+        growth: 1.2
+      }
+    ],
+    campaignRipeness: {
+      priceRange: '$600 - $1.5K / post',
+      audienceTarget: 'Food enthusiasts and home cooks, diverse age range with focus on health-conscious individuals.',
+      engagementDescription: 'Strong engagement with recipe posts and cooking tutorials.',
+      brandSuitability: 'Perfect for kitchen appliance brands, food products, cooking ingredients.',
+      partnershipLikelihood: 'Open to food brand partnerships and kitchen equipment collaborations.'
+    },
+    contentStyle: {
+      type: 'Educational',
+      brandSafety: 'Very safe',
+      engagement: 'Very good'
+    },
+    isVerified: false,
+    tags: ['Food', 'Cooking', 'Recipes', 'Asian Cuisine']
+  },
+  {
+    id: '10',
+    name: 'Marcus Johnson',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=center',
+    bio: 'Travel Photographer & Adventure Seeker',
+    location: 'United States',
+    language: 'English',
+    category: 'Travel & Adventure',
+    industries: ['Travel', 'Photography', 'Adventure'],
+    influenceScore: 9,
+    totalPoints: 18200,
+    lastUpdated: '8 hours ago',
+    profileOverview: 'Marcus Johnson captures stunning landscapes and shares travel tips from around the world. His content inspires wanderlust and provides practical advice for fellow travelers.',
+    quote: '"The world is a book, and those who do not travel read only one page."',
+    socialMediaProfiles: [
+      {
+        platform: 'Instagram',
+        handle: '@marcuswanderlust',
+        followers: 124000,
+        score: 85,
+        engagementRate: 8.1,
+        growth: 2.8
+      }
+    ],
+    campaignRipeness: {
+      priceRange: '$1.2K - $3.5K / post',
+      audienceTarget: 'Travel enthusiasts, adventure seekers, and photography lovers aged 25-45.',
+      engagementDescription: 'Exceptional engagement with travel content, high influence on travel decisions.',
+      brandSuitability: 'Ideal for travel brands, camera equipment, outdoor gear, and tourism boards.',
+      partnershipLikelihood: 'Very eager to partner with travel and outdoor brands.'
+    },
+    contentStyle: {
+      type: 'Inspirational',
+      brandSafety: 'Very safe',
+      engagement: 'Very good'
+    },
+    isVerified: true,
+    tags: ['Travel', 'Photography', 'Adventure', 'Landscape']
   }
 ];
