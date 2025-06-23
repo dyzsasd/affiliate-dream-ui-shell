@@ -1,25 +1,28 @@
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CheckCircle, Users, TrendingUp, ExternalLink } from "lucide-react";
+import { CheckCircle, Users, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Influencer } from "../types/influencer";
 
 interface InfluencerCardProps {
   influencer: Influencer;
   viewMode: "grid" | "list";
-  onViewDetails: () => void;
 }
 
 const InfluencerCard: React.FC<InfluencerCardProps> = ({
   influencer,
-  viewMode,
-  onViewDetails
+  viewMode
 }) => {
+  const navigate = useNavigate();
   const primarySocialMedia = influencer.socialMediaProfiles[0];
+  
+  const handleViewDetails = () => {
+    navigate(`/influencer-search/${influencer.id}`);
+  };
   
   const getPlatformIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
@@ -128,7 +131,7 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
                   <Users className="h-4 w-4 mr-1" />
                   CRM
                 </Button>
-                <Button size="sm" onClick={onViewDetails}>
+                <Button size="sm" onClick={handleViewDetails}>
                   <ExternalLink className="h-4 w-4 mr-1" />
                   View
                 </Button>
@@ -183,7 +186,7 @@ const InfluencerCard: React.FC<InfluencerCardProps> = ({
             <Users className="h-4 w-4 mr-1" />
             CRM
           </Button>
-          <Button size="sm" onClick={onViewDetails} className="flex-1">
+          <Button size="sm" onClick={handleViewDetails} className="flex-1">
             View
           </Button>
         </div>

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -23,6 +24,7 @@ import CreateAffiliateAccount from "@/pages/affiliate/CreateAffiliateAccount";
 import MarketplacePage from "@/pages/marketplace";
 import NotFound from "@/pages/NotFound";
 import InfluencerSearch from "@/pages/influencer-search";
+import InfluencerDetailPage from "@/pages/influencer-search/InfluencerDetailPage";
 import "./App.css";
 
 const queryClient = new QueryClient({

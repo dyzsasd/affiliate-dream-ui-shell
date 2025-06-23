@@ -16,14 +16,12 @@ import { Search, Filter, Grid, List, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import InfluencerCard from "./components/InfluencerCard";
 import InfluencerFilters from "./components/InfluencerFilters";
-import InfluencerDetailPanel from "./components/InfluencerDetailPanel";
 import { mockInfluencers } from "./data/mockInfluencers";
-import { Influencer, SearchFilters } from "./types/influencer";
+import { SearchFilters } from "./types/influencer";
 
 const InfluencerSearch: React.FC = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({
@@ -91,7 +89,9 @@ const InfluencerSearch: React.FC = () => {
     setSearchTerm("");
   };
 
-  const getActiveFiltersCount = () => {
+  const getActiveFil
+
+tersCount = () => {
     let count = 0;
     if (searchTerm) count++;
     if (filters.profileType !== 'all') count++;
@@ -238,19 +238,9 @@ const InfluencerSearch: React.FC = () => {
               key={influencer.id}
               influencer={influencer}
               viewMode={viewMode}
-              onViewDetails={() => setSelectedInfluencer(influencer)}
             />
           ))}
         </div>
-      )}
-
-      {/* Influencer Detail Panel */}
-      {selectedInfluencer && (
-        <InfluencerDetailPanel
-          influencer={selectedInfluencer}
-          isOpen={!!selectedInfluencer}
-          onClose={() => setSelectedInfluencer(null)}
-        />
       )}
     </div>
   );
