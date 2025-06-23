@@ -22,6 +22,7 @@ import UserList from "@/pages/users";
 import CreateAffiliateAccount from "@/pages/affiliate/CreateAffiliateAccount";
 import MarketplacePage from "@/pages/marketplace";
 import NotFound from "@/pages/NotFound";
+import InfluencerSearch from "@/pages/influencer-search";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -58,6 +59,9 @@ function App() {
                 
                 {/* Marketplace routes */}
                 <Route path="/advertiser/marketplace" element={<MarketplacePage />} />
+                
+                {/* Influencer Search route */}
+                <Route path="/influencer-search" element={<InfluencerSearch />} />
                 
                 {/* Analytics routes */}
                 <Route path="/analytics/advertiser" element={<AdvertiserAnalytics />} />
