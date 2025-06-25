@@ -138,10 +138,6 @@ const LoginForm: React.FC = () => {
           t("auth.signIn")
         )}
       </Button>
-      
-      <div className="mt-2 text-sm">
-        {t("auth.demoCredentials")}
-      </div>
     </form>
   );
 };

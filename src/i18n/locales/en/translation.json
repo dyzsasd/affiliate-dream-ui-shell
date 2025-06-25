@@ -1,5 +1,22 @@
 
 {
+  "appName": "Rolinko",
+  "appDescription": "Affiliate Marketing Platform",
+  "common": {
+    "error": "Error"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "signingIn": "Signing in...",
+    "dontHaveAccount": "Don't have an account?",
+    "emailAndPasswordRequired": "Email and password are required"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "advertisers": "Advertisers",

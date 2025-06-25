@@ -1,5 +1,22 @@
 
 {
+  "appName": "Rolinko",
+  "appDescription": "联盟营销平台",
+  "common": {
+    "error": "错误"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signOut": "退出登录",
+    "signUp": "注册",
+    "email": "邮箱",
+    "password": "密码",
+    "rememberMe": "记住我",
+    "forgotPassword": "忘记密码？",
+    "signingIn": "登录中...",
+    "dontHaveAccount": "还没有账户？",
+    "emailAndPasswordRequired": "邮箱和密码为必填项"
+  },
   "sidebar": {
     "dashboard": "仪表板",
     "advertisers": "广告主",

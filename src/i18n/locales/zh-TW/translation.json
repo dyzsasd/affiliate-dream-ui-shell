@@ -1,5 +1,22 @@
 
 {
+  "appName": "Rolinko",
+  "appDescription": "聯盟行銷平台",
+  "common": {
+    "error": "錯誤"
+  },
+  "auth": {
+    "signIn": "登入",
+    "signOut": "登出",
+    "signUp": "註冊",
+    "email": "電子郵件",
+    "password": "密碼",
+    "rememberMe": "記住我",
+    "forgotPassword": "忘記密碼？",
+    "signingIn": "登入中...",
+    "dontHaveAccount": "還沒有帳戶？",
+    "emailAndPasswordRequired": "電子郵件和密碼為必填項"
+  },
   "sidebar": {
     "dashboard": "儀表板",
     "advertisers": "廣告主",

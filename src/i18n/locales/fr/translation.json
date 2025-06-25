@@ -1,5 +1,22 @@
 
 {
+  "appName": "Rolinko",
+  "appDescription": "Plateforme de marketing d'affiliation",
+  "common": {
+    "error": "Erreur"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "signUp": "S'inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
+    "signingIn": "Connexion en cours...",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "emailAndPasswordRequired": "L'email et le mot de passe sont requis"
+  },
   "sidebar": {
     "dashboard": "Tableau de bord",
     "advertisers": "Annonceurs",
