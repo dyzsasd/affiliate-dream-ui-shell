@@ -13,6 +13,27 @@ import { createApiClient } from '@/services/backendApi';
 import { AnalyticsApi } from '@/generated-api/src/apis/AnalyticsApi';
 import { DomainAutocompleteResult } from '@/generated-api/src/models/DomainAutocompleteResult';
 
+// Type definitions for partner information structure
+interface PromotypeData {
+  promotype?: string;
+  count?: number;
+}
+
+interface PartnerInformation {
+  promotypeMix?: {
+    value?: PromotypeData[];
+  };
+  partners?: {
+    count?: number;
+  };
+  partnersAdded?: {
+    count?: number;
+  };
+  partnersRemoved?: {
+    count?: number;
+  };
+}
+
 // Mock partners data - this would eventually come from API
 const mockPartners = [
   { id: 1, name: "TechReview Pro", type: "blog", joinDate: "2024-01-15", performance: "high" as const },
@@ -69,13 +90,14 @@ const AdvertiserAnalytics: React.FC = () => {
     return name.charAt(0).toUpperCase();
   };
 
-  // Process chart data from API response
+  // Process chart data from API response with proper type safety
   const getChartData = () => {
-    if (!advertiserData?.advertiser?.partnerInformation?.promotypeMix?.value) {
+    const partnerInfo = advertiserData?.advertiser?.partnerInformation as PartnerInformation;
+    if (!partnerInfo?.promotypeMix?.value) {
       return [];
     }
 
-    return advertiserData.advertiser.partnerInformation.promotypeMix.value.map(item => ({
+    return partnerInfo.promotypeMix.value.map(item => ({
       name: item.promotype || '',
       value: item.count || 0,
       color: COLORS[item.promotype as keyof typeof COLORS] || '#6b7280'
@@ -83,6 +105,11 @@ const AdvertiserAnalytics: React.FC = () => {
   };
 
   const chartData = getChartData();
+
+  // Helper function to safely get partner information
+  const getPartnerInfo = () => {
+    return advertiserData?.advertiser?.partnerInformation as PartnerInformation;
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -140,7 +167,7 @@ const AdvertiserAnalytics: React.FC = () => {
                   <div className="flex items-center justify-center gap-2">
                     <ArrowUp className="w-4 h-4 text-green-500" />
                     <span className="text-3xl font-bold text-green-500">
-                      {advertiserData?.advertiser?.partnerInformation?.partners?.count || '0'}
+                      {getPartnerInfo()?.partners?.count || '0'}
                     </span>
                   </div>
                   <Button 
@@ -157,7 +184,7 @@ const AdvertiserAnalytics: React.FC = () => {
                   <div className="text-sm text-gray-600 mb-2">{t('analytics.newPartners')}</div>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-2xl font-bold text-green-500">
-                      +{advertiserData?.advertiser?.partnerInformation?.partnersAdded?.count || '0'}
+                      +{getPartnerInfo()?.partnersAdded?.count || '0'}
                     </span>
                   </div>
                   <Button variant="link" className="text-sm text-gray-600 mt-2">
@@ -170,7 +197,7 @@ const AdvertiserAnalytics: React.FC = () => {
                   <div className="text-sm text-gray-600 mb-6">{t('analytics.lostPartners')}</div>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-2xl font-bold text-purple-500">
-                      -{advertiserData?.advertiser?.partnerInformation?.partnersRemoved?.count || '0'}
+                      -{getPartnerInfo()?.partnersRemoved?.count || '0'}
                     </span>
                   </div>
                   <Button variant="link" className="text-sm text-gray-600 mt-2">
