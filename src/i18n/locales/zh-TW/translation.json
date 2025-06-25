@@ -3,7 +3,10 @@
   "appName": "Rolinko",
   "appDescription": "聯盟行銷平台",
   "common": {
-    "error": "錯誤"
+    "error": "錯誤",
+    "loading": "載入中...",
+    "search": "搜尋",
+    "noResultsFound": "未找到結果"
   },
   "auth": {
     "signIn": "登入",
@@ -69,6 +72,18 @@
     "verticalPositioning": "垂直定位",
     "type": "類型",
     "rank": "排名",
-    "topPublishersInVertical": "垂直領域頂級發佈商"
+    "topPublishersInVertical": "垂直領域頂級發佈商",
+    "searchAdvertiserPlaceholder": "搜尋廣告主（至少3個字元）...",
+    "noAdvertisersFound": "未找到廣告主。"
+  },
+  "dashboard": {
+    "advertiserDashboard": "廣告主儀表板",
+    "totalClicks": "總點擊量",
+    "conversions": "轉換量",
+    "revenue": "收入",
+    "conversionRate": "轉換率",
+    "campaignPerformance": "行銷活動表現",
+    "revenueChart": "收入圖表",
+    "recentCampaignActivity": "近期行銷活動"
   }
 }

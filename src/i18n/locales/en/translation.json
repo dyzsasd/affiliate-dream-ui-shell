@@ -3,7 +3,10 @@
   "appName": "Rolinko",
   "appDescription": "Affiliate Marketing Platform",
   "common": {
-    "error": "Error"
+    "error": "Error",
+    "loading": "Loading...",
+    "search": "Search",
+    "noResultsFound": "No results found"
   },
   "auth": {
     "signIn": "Sign In",
@@ -69,6 +72,18 @@
     "verticalPositioning": "Vertical Positioning",
     "type": "Type",
     "rank": "Rank",
-    "topPublishersInVertical": "Top Publishers in Vertical"
+    "topPublishersInVertical": "Top Publishers in Vertical",
+    "searchAdvertiserPlaceholder": "Search advertiser (min 3 characters)...",
+    "noAdvertisersFound": "No advertisers found."
+  },
+  "dashboard": {
+    "advertiserDashboard": "Advertiser Dashboard",
+    "totalClicks": "Total Clicks",
+    "conversions": "Conversions", 
+    "revenue": "Revenue",
+    "conversionRate": "Conversion Rate",
+    "campaignPerformance": "Campaign Performance",
+    "revenueChart": "Revenue Chart",
+    "recentCampaignActivity": "Recent Campaign Activity"
   }
 }

@@ -3,7 +3,10 @@
   "appName": "Rolinko",
   "appDescription": "Plateforme de marketing d'affiliation",
   "common": {
-    "error": "Erreur"
+    "error": "Erreur",
+    "loading": "Chargement...",
+    "search": "Rechercher",
+    "noResultsFound": "Aucun résultat trouvé"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -69,6 +72,18 @@
     "verticalPositioning": "Positionnement vertical",
     "type": "Type",
     "rank": "Rang",
-    "topPublishersInVertical": "Top éditeurs dans le vertical"
+    "topPublishersInVertical": "Top éditeurs dans le vertical",
+    "searchAdvertiserPlaceholder": "Rechercher un annonceur (min 3 caractères)...",
+    "noAdvertisersFound": "Aucun annonceur trouvé."
+  },
+  "dashboard": {
+    "advertiserDashboard": "Tableau de bord annonceur",
+    "totalClicks": "Total des clics",
+    "conversions": "Conversions",
+    "revenue": "Revenus",
+    "conversionRate": "Taux de conversion",
+    "campaignPerformance": "Performance des campagnes",
+    "revenueChart": "Graphique des revenus",
+    "recentCampaignActivity": "Activité récente des campagnes"
   }
 }

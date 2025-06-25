@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -19,12 +20,14 @@ import { createApiClient } from '@/services/backendApi';
 import { AnalyticsApi } from '@/generated-api/src/apis/AnalyticsApi';
 import { DomainAutocompleteResult } from '@/generated-api/src/models/DomainAutocompleteResult';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 interface AdvertiserSearchProps {
   onSelect: (advertiser: DomainAutocompleteResult) => void;
 }
 
 const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,7 +88,7 @@ const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
             <Input
               ref={inputRef}
               type="text"
-              placeholder="Search advertiser (min 3 characters)..."
+              placeholder={t('analytics.searchAdvertiserPlaceholder')}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               className="pl-10 w-full"
@@ -108,9 +111,9 @@ const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
           <Command>
             <CommandList>
               {isLoading ? (
-                <div className="py-6 text-center text-sm">Loading...</div>
+                <div className="py-6 text-center text-sm">{t('common.loading')}</div>
               ) : !autocompleteResults || autocompleteResults.length === 0 ? (
-                <CommandEmpty>No advertisers found.</CommandEmpty>
+                <CommandEmpty>{t('analytics.noAdvertisersFound')}</CommandEmpty>
               ) : (
                 <CommandGroup>
                   {autocompleteResults.map((advertiser) => (

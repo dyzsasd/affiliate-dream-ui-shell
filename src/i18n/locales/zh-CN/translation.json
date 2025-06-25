@@ -3,7 +3,10 @@
   "appName": "Rolinko",
   "appDescription": "联盟营销平台",
   "common": {
-    "error": "错误"
+    "error": "错误",
+    "loading": "加载中...",
+    "search": "搜索",
+    "noResultsFound": "未找到结果"
   },
   "auth": {
     "signIn": "登录",
@@ -69,6 +72,18 @@
     "verticalPositioning": "垂直定位",
     "type": "类型",
     "rank": "排名",
-    "topPublishersInVertical": "垂直领域顶级发布商"
+    "topPublishersInVertical": "垂直领域顶级发布商",
+    "searchAdvertiserPlaceholder": "搜索广告主（至少3个字符）...",
+    "noAdvertisersFound": "未找到广告主。"
+  },
+  "dashboard": {
+    "advertiserDashboard": "广告主仪表板",
+    "totalClicks": "总点击量",
+    "conversions": "转化量",
+    "revenue": "收入",
+    "conversionRate": "转化率",
+    "campaignPerformance": "营销活动表现",
+    "revenueChart": "收入图表",
+    "recentCampaignActivity": "近期营销活动"
   }
 }
