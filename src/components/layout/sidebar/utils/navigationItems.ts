@@ -120,6 +120,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: User
       },
       {
+        name: t("sidebar.analytics"),
+        path: "/analytics/advertiser",
+        icon: TrendingUp
+      },
+      {
         name: t("sidebar.invitations"),
         path: "/invitations",
         icon: Mail
