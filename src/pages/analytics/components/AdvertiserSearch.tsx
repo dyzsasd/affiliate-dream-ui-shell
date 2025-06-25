@@ -16,42 +16,60 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-
-interface Advertiser {
-  id: number;
-  domain: string;
-  name: string;
-  logo: string;
-}
+import { createApiClient } from '@/services/backendApi';
+import { AnalyticsApi } from '@/generated-api/src/apis/AnalyticsApi';
+import { DomainAutocompleteResult } from '@/generated-api/src/models/DomainAutocompleteResult';
+import { useQuery } from '@tanstack/react-query';
 
 interface AdvertiserSearchProps {
-  onSelect: (advertiser: Advertiser) => void;
-  advertisers: Advertiser[];
+  onSelect: (advertiser: DomainAutocompleteResult) => void;
 }
 
-const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect, advertisers }) => {
+const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const [filteredAdvertisers, setFilteredAdvertisers] = useState<Advertiser[]>([]);
+
+  // Query for autocomplete results
+  const { data: autocompleteResults, isLoading } = useQuery({
+    queryKey: ['advertiser-autocomplete', searchValue],
+    queryFn: async () => {
+      if (searchValue.length < 3) return [];
+      
+      const apiClient = await createApiClient(AnalyticsApi);
+      const response = await apiClient.apiV1AnalyticsAutocompleteGet({
+        q: searchValue,
+        type: 'advertiser', // Filter to only advertisers
+        limit: 10
+      });
+      
+      // Filter results to only show advertisers
+      return response.data?.filter(item => item.type === 'advertiser') || [];
+    },
+    enabled: searchValue.length >= 3,
+    staleTime: 30000, // Cache for 30 seconds
+  });
 
   useEffect(() => {
     if (searchValue.length >= 3) {
-      const filtered = advertisers.filter(advertiser =>
-        advertiser.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        advertiser.domain.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredAdvertisers(filtered);
       setOpen(true);
     } else {
-      setFilteredAdvertisers([]);
       setOpen(false);
     }
-  }, [searchValue, advertisers]);
+  }, [searchValue]);
 
-  const handleSelect = (advertiser: Advertiser) => {
+  const handleSelect = (advertiser: DomainAutocompleteResult) => {
     onSelect(advertiser);
-    setSearchValue(advertiser.name);
+    setSearchValue(advertiser.name || advertiser.domain || '');
     setOpen(false);
+  };
+
+  const getDisplayName = (advertiser: DomainAutocompleteResult) => {
+    return advertiser.name || advertiser.domain || '';
+  };
+
+  const getLogoInitial = (advertiser: DomainAutocompleteResult) => {
+    const name = getDisplayName(advertiser);
+    return name.charAt(0).toUpperCase();
   };
 
   return (
@@ -72,22 +90,28 @@ const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect, advertise
         <PopoverContent className="w-[400px] p-0" align="start">
           <Command>
             <CommandList>
-              {filteredAdvertisers.length === 0 ? (
+              {isLoading ? (
+                <div className="py-6 text-center text-sm">Loading...</div>
+              ) : !autocompleteResults || autocompleteResults.length === 0 ? (
                 <CommandEmpty>No advertisers found.</CommandEmpty>
               ) : (
                 <CommandGroup>
-                  {filteredAdvertisers.map((advertiser) => (
+                  {autocompleteResults.map((advertiser) => (
                     <CommandItem
                       key={advertiser.id}
                       onSelect={() => handleSelect(advertiser)}
                       className="flex items-center gap-3 cursor-pointer"
                     >
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-md flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">{advertiser.logo}</span>
+                        <span className="text-white text-sm font-bold">
+                          {getLogoInitial(advertiser)}
+                        </span>
                       </div>
                       <div>
-                        <div className="font-medium">{advertiser.name}</div>
-                        <div className="text-sm text-gray-500">{advertiser.domain}</div>
+                        <div className="font-medium">{getDisplayName(advertiser)}</div>
+                        {advertiser.domain && (
+                          <div className="text-sm text-gray-500">{advertiser.domain}</div>
+                        )}
                       </div>
                     </CommandItem>
                   ))}

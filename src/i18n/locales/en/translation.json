@@ -36,5 +36,22 @@
     "noInfluencersFound": "No influencers found",
     "tryAdjustingCriteria": "Try adjusting your search criteria or clearing filters",
     "clearFilters": "Clear Filters"
+  },
+  "analytics": {
+    "selectAdvertiser": "Select an Advertiser",
+    "selectAdvertiserDescription": "Search and select an advertiser to view their analytics data",
+    "advertiserAnalytics": "Advertiser Analytics",
+    "totalPartners": "Total Partners",
+    "newPartners": "New Partners",
+    "lostPartners": "Lost Partners",
+    "viewPartners": "View Partners",
+    "showMe": "Show Me",
+    "affiliateMixChart": "Affiliate Mix Chart",
+    "topKeywords": "Top 20 Keywords",
+    "noKeywordsFound": "No keywords found",
+    "verticalPositioning": "Vertical Positioning",
+    "type": "Type",
+    "rank": "Rank",
+    "topPublishersInVertical": "Top Publishers in Vertical"
   }
 }
