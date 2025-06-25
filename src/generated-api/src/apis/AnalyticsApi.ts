@@ -1,3 +1,4 @@
+
 /* tslint:disable */
 /* eslint-disable */
 /**
@@ -87,7 +88,7 @@ export class AnalyticsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/analytics/advertisers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/analytics/advertisers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -124,7 +125,7 @@ export class AnalyticsApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/analytics/advertisers`,
+            path: `/analytics/advertisers`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -160,7 +161,7 @@ export class AnalyticsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/analytics/affiliates/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/analytics/affiliates/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -197,7 +198,7 @@ export class AnalyticsApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/analytics/affiliates`,
+            path: `/analytics/affiliates`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -245,7 +246,7 @@ export class AnalyticsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/analytics/autocomplete`,
+            path: `/analytics/autocomplete`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
