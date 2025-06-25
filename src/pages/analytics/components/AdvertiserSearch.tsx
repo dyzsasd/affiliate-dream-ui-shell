@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -28,6 +27,7 @@ interface AdvertiserSearchProps {
 const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Query for autocomplete results
   const { data: autocompleteResults, isLoading } = useQuery({
@@ -61,6 +61,10 @@ const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
     onSelect(advertiser);
     setSearchValue(advertiser.name || advertiser.domain || '');
     setOpen(false);
+    // Keep focus on input after selection
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   const getDisplayName = (advertiser: DomainAutocompleteResult) => {
@@ -74,20 +78,33 @@ const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
 
   return (
     <div className="w-full max-w-md">
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} modal={false}>
         <PopoverTrigger asChild>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
+              ref={inputRef}
               type="text"
               placeholder="Search advertiser (min 3 characters)..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               className="pl-10 w-full"
+              onFocus={() => {
+                if (searchValue.length >= 3) {
+                  setOpen(true);
+                }
+              }}
             />
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0" align="start">
+        <PopoverContent 
+          className="w-[400px] p-0" 
+          align="start"
+          onOpenAutoFocus={(e) => {
+            // Prevent the popover from taking focus away from the input
+            e.preventDefault();
+          }}
+        >
           <Command>
             <CommandList>
               {isLoading ? (
