@@ -152,7 +152,7 @@ const AdvertiserMarketplace: React.FC = () => {
       {/* Results Count */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Showing {filteredPublishers.length} of {mockPublishers.length} publishers
+          Showing {filteredPublishers.length} of 10000+ publishers
         </p>
         
         <Select defaultValue="relevance">
