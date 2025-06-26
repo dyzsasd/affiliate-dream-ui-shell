@@ -1,4 +1,3 @@
-
 {
   "appName": "Rolinko",
   "appDescription": "联盟营销平台",
@@ -49,6 +48,34 @@
     "conversions": "转化",
     "organizations": "组织",
     "users": "用户"
+  },
+  "marketplace": {
+    "title": "发布商市场",
+    "description": "发现并联系高质量的发布商进行合作",
+    "filters": "筛选器",
+    "searchPlaceholder": "按名称或类别搜索发布商...",
+    "clearAll": "全部清除",
+    "search": "搜索",
+    "category": "类别",
+    "country": "国家",
+    "minRating": "最低评分",
+    "sortBy": "排序方式",
+    "sortRelevance": "相关性",
+    "sortRating": "最高评分",
+    "sortEPC": "最高每次点击收入",
+    "sortConversionRate": "最高转化率",
+    "noResults": "未找到发布商",
+    "noResultsDescription": "请尝试调整搜索条件或清除筛选器以查看更多结果",
+    "clearFilters": "清除筛选器",
+    "viewDetails": "查看详情",
+    "advancedFilters": "高级筛选器",
+    "selectCategory": "选择类别",
+    "selectCountry": "选择国家",
+    "minimumRating": "最低评分",
+    "selectRating": "选择评分",
+    "payoutModel": "付费模式",
+    "selectPayoutModel": "选择付费模式",
+    "monthlyTraffic": "月流量"
   },
   "organizations": {
     "title": "组织",

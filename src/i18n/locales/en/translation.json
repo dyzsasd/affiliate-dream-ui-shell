@@ -1,4 +1,3 @@
-
 {
   "appName": "Rolinko",
   "appDescription": "Affiliate Marketing Platform",
@@ -49,6 +48,34 @@
     "conversions": "Conversions",
     "organizations": "Organizations",
     "users": "Users"
+  },
+  "marketplace": {
+    "title": "Publisher Marketplace",
+    "description": "Discover and connect with high-quality publishers for your campaigns",
+    "filters": "Filters",
+    "searchPlaceholder": "Search publishers by name or category...",
+    "clearAll": "Clear All",
+    "search": "Search",
+    "category": "Category",
+    "country": "Country",
+    "minRating": "Min Rating",
+    "sortBy": "Sort by",
+    "sortRelevance": "Relevance",
+    "sortRating": "Highest Rating",
+    "sortEPC": "Highest EPC",
+    "sortConversionRate": "Highest Conversion Rate",
+    "noResults": "No Publishers Found",
+    "noResultsDescription": "Try adjusting your search criteria or clear filters to see more results",
+    "clearFilters": "Clear Filters",
+    "viewDetails": "View Details",
+    "advancedFilters": "Advanced Filters",
+    "selectCategory": "Select Category",
+    "selectCountry": "Select Country",
+    "minimumRating": "Minimum Rating",
+    "selectRating": "Select Rating",
+    "payoutModel": "Payout Model",
+    "selectPayoutModel": "Select Payout Model",
+    "monthlyTraffic": "monthly traffic"
   },
   "organizations": {
     "title": "Organizations",

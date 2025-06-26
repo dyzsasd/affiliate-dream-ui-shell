@@ -1,4 +1,3 @@
-
 {
   "appName": "Rolinko",
   "appDescription": "聯盟行銷平台",
@@ -49,6 +48,34 @@
     "conversions": "轉換",
     "organizations": "組織",
     "users": "使用者"
+  },
+  "marketplace": {
+    "title": "發佈商市場",
+    "description": "發現並聯繫高品質的發佈商進行合作",
+    "filters": "篩選器",
+    "searchPlaceholder": "按名稱或類別搜尋發佈商...",
+    "clearAll": "全部清除",
+    "search": "搜尋",
+    "category": "類別",
+    "country": "國家",
+    "minRating": "最低評分",
+    "sortBy": "排序方式",
+    "sortRelevance": "相關性",
+    "sortRating": "最高評分",
+    "sortEPC": "最高每次點擊收入",
+    "sortConversionRate": "最高轉換率",
+    "noResults": "未找到發佈商",
+    "noResultsDescription": "請嘗試調整搜尋條件或清除篩選器以查看更多結果",
+    "clearFilters": "清除篩選器",
+    "viewDetails": "檢視詳情",
+    "advancedFilters": "進階篩選器",
+    "selectCategory": "選擇類別",
+    "selectCountry": "選擇國家",
+    "minimumRating": "最低評分",
+    "selectRating": "選擇評分",
+    "payoutModel": "付費模式",
+    "selectPayoutModel": "選擇付費模式",
+    "monthlyTraffic": "月流量"
   },
   "organizations": {
     "title": "組織",
