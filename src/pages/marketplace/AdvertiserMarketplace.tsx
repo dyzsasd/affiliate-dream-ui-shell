@@ -50,7 +50,7 @@ const AdvertiserMarketplace: React.FC = () => {
         pageSize,
         country: filters.country && filters.country !== "all" ? filters.country : undefined,
         verticals: filters.vertical && filters.vertical !== "all" ? [filters.vertical] : undefined,
-        partnerDomains: searchTerm ? [searchTerm] : undefined
+        domain: searchTerm || undefined
       };
 
       const result = await searchPublishers(searchParams);

@@ -9,6 +9,7 @@ export interface PublisherSearchParams {
   country?: string;
   verticals?: string[];
   partnerDomains?: string[];
+  domain?: string;
   page?: number;
   pageSize?: number;
 }
@@ -27,6 +28,7 @@ export const searchPublishers = async (params: PublisherSearchParams): Promise<P
       country: params.country,
       verticals: params.verticals,
       partnerDomains: params.partnerDomains,
+      domain: params.domain,
       page: params.page,
       offset: params.pageSize
     };
