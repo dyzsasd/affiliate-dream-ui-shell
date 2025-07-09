@@ -1,0 +1,39 @@
+{
+  "title": "Rapports",
+  "description": "Voir les rapports et analyses complets",
+  "performance": {
+    "title": "Rapport de performance",
+    "description": "Suivez les métriques de performance de vos campagnes",
+    "impressions": "Impressions",
+    "clicks": "Clics",
+    "ctr": "CTR",
+    "conversions": "Conversions",
+    "conversionRate": "Taux de conversion",
+    "revenue": "Revenus",
+    "selectDateRange": "Sélectionner la période",
+    "last7Days": "7 derniers jours",
+    "last30Days": "30 derniers jours",
+    "last3Months": "3 derniers mois",
+    "last12Months": "12 derniers mois",
+    "filterByCampaign": "Filtrer par campagne",
+    "allCampaigns": "Toutes les campagnes",
+    "performanceMetrics": "Métriques de performance",
+    "traffic": "Trafic",
+    "rates": "Taux",
+    "clickThroughRate": "Taux de clic",
+    "dailyPerformanceData": "Données de performance quotidiennes",
+    "date": "Date",
+    "total": "Total"
+  },
+  "conversions": {
+    "title": "Rapport de conversions",
+    "description": "Analyser les données et tendances de conversion",
+    "conversionsBySource": "Conversions par source",
+    "conversionTrends": "Tendances de conversion",
+    "topConvertingCampaigns": "Campagnes les plus convertissantes",
+    "conversionValue": "Valeur de conversion",
+    "averageOrderValue": "Valeur moyenne de commande",
+    "conversionsByDevice": "Conversions par appareil",
+    "conversionsByLocation": "Conversions par localisation"
+  }
+}

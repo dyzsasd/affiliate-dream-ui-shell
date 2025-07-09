@@ -1,0 +1,18 @@
+{
+  "title": "Campaigns",
+  "description": "Manage your marketing campaigns",
+  "errorFetchingCampaign": "Error fetching campaign details",
+  "statusActive": "Active",
+  "statusPaused": "Paused", 
+  "statusDraft": "Draft",
+  "noDate": "No date set",
+  "notSet": "Not set",
+  "campaignNotFound": "Campaign Not Found",
+  "campaignNotFoundDescription": "The campaign you're looking for doesn't exist or has been removed.",
+  "backToCampaigns": "Back to Campaigns",
+  "basicInformation": "Basic Information",
+  "noDescription": "No description provided",
+  "campaignId": "Campaign ID",
+  "advertiserId": "Advertiser ID",
+  "campaignPeriod": "Campaign Period"
+}

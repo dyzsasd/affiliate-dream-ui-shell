@@ -1,0 +1,19 @@
+{
+  "selectAdvertiser": "Sélectionner un annonceur",
+  "selectAdvertiserDescription": "Recherchez et sélectionnez un annonceur pour voir ses données analytiques",
+  "advertiserAnalytics": "Analyses de l'annonceur",
+  "totalPartners": "Partenaires totaux",
+  "newPartners": "Nouveaux partenaires",
+  "lostPartners": "Partenaires perdus",
+  "viewPartners": "Voir les partenaires",
+  "showMe": "Montrer",
+  "affiliateMixChart": "Graphique du mix d'affiliation",
+  "topKeywords": "Top 20 des mots-clés",
+  "noKeywordsFound": "Aucun mot-clé trouvé",
+  "verticalPositioning": "Positionnement vertical",
+  "type": "Type",
+  "rank": "Rang",
+  "topPublishersInVertical": "Top éditeurs dans le vertical",
+  "searchAdvertiserPlaceholder": "Rechercher un annonceur (min 3 caractères)...",
+  "noAdvertisersFound": "Aucun annonceur trouvé."
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Campagnes",
+  "description": "Gérez vos campagnes marketing",
+  "errorFetchingCampaign": "Erreur lors de la récupération des détails de la campagne",
+  "statusActive": "Actif",
+  "statusPaused": "En pause",
+  "statusDraft": "Brouillon",
+  "noDate": "Aucune date définie",
+  "notSet": "Non défini",
+  "campaignNotFound": "Campagne introuvable",
+  "campaignNotFoundDescription": "La campagne que vous recherchez n'existe pas ou a été supprimée.",
+  "backToCampaigns": "Retour aux campagnes",
+  "basicInformation": "Informations de base",
+  "noDescription": "Aucune description fournie",
+  "campaignId": "ID de campagne",
+  "advertiserId": "ID de l'annonceur",
+  "campaignPeriod": "Période de campagne"
+}

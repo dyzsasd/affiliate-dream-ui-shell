@@ -1,0 +1,20 @@
+{
+  "title": "Platform Owner Dashboard",
+  "description": "Overview of platform-wide metrics and management",
+  "totalOrganizations": "Total Organizations",
+  "totalUsers": "Total Users",
+  "totalRevenue": "Total Revenue",
+  "monthlyGrowth": "Monthly Growth",
+  "recentActivity": "Recent Activity",
+  "systemHealth": "System Health",
+  "userActivity": "User Activity",
+  "organizationGrowth": "Organization Growth",
+  "revenueAnalytics": "Revenue Analytics",
+  "platformMetrics": "Platform Metrics",
+  "activeAdvertisers": "Active Advertisers",
+  "activeAffiliates": "Active Affiliates",
+  "totalCampaigns": "Total Campaigns",
+  "totalClicks": "Total Clicks",
+  "conversionRate": "Platform Conversion Rate",
+  "averageRevenue": "Average Revenue per User"
+}

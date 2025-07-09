@@ -1,0 +1,20 @@
+{
+  "title": "Tableau de bord propriétaire de plateforme",
+  "description": "Vue d'ensemble des métriques et gestion à l'échelle de la plateforme",
+  "totalOrganizations": "Total des organisations",
+  "totalUsers": "Total des utilisateurs",
+  "totalRevenue": "Revenus totaux",
+  "monthlyGrowth": "Croissance mensuelle",
+  "recentActivity": "Activité récente",
+  "systemHealth": "Santé du système",
+  "userActivity": "Activité utilisateur",
+  "organizationGrowth": "Croissance des organisations",
+  "revenueAnalytics": "Analyses des revenus",
+  "platformMetrics": "Métriques de la plateforme",
+  "activeAdvertisers": "Annonceurs actifs",
+  "activeAffiliates": "Affiliés actifs",
+  "totalCampaigns": "Total des campagnes",
+  "totalClicks": "Total des clics",
+  "conversionRate": "Taux de conversion de la plateforme",
+  "averageRevenue": "Revenus moyens par utilisateur"
+}

@@ -1,0 +1,39 @@
+{
+  "title": "Reports",
+  "description": "View comprehensive reporting and analytics",
+  "performance": {
+    "title": "Performance Report",
+    "description": "Track your campaign performance metrics",
+    "impressions": "Impressions",
+    "clicks": "Clicks",
+    "ctr": "CTR",
+    "conversions": "Conversions",
+    "conversionRate": "Conversion Rate",
+    "revenue": "Revenue",
+    "selectDateRange": "Select Date Range",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "last3Months": "Last 3 Months",
+    "last12Months": "Last 12 Months",
+    "filterByCampaign": "Filter by Campaign",
+    "allCampaigns": "All Campaigns",
+    "performanceMetrics": "Performance Metrics",
+    "traffic": "Traffic",
+    "rates": "Rates",
+    "clickThroughRate": "Click Through Rate",
+    "dailyPerformanceData": "Daily Performance Data",
+    "date": "Date",
+    "total": "Total"
+  },
+  "conversions": {
+    "title": "Conversion Report",
+    "description": "Analyze conversion data and trends",
+    "conversionsBySource": "Conversions by Source",
+    "conversionTrends": "Conversion Trends",
+    "topConvertingCampaigns": "Top Converting Campaigns",
+    "conversionValue": "Conversion Value",
+    "averageOrderValue": "Average Order Value",
+    "conversionsByDevice": "Conversions by Device",
+    "conversionsByLocation": "Conversions by Location"
+  }
+}
