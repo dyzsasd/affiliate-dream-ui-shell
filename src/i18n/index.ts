@@ -38,9 +38,35 @@ import frProfile from './locales/fr/profile.json';
 
 import zhCNApp from './locales/zh-CN/app.json';
 import zhCNCommon from './locales/zh-CN/common.json';
+import zhCNAuth from './locales/zh-CN/auth.json';
+import zhCNSidebar from './locales/zh-CN/sidebar.json';
+import zhCNMarketplace from './locales/zh-CN/marketplace.json';
+import zhCNAdvertisers from './locales/zh-CN/advertisers.json';
+import zhCNCampaigns from './locales/zh-CN/campaigns.json';
+import zhCNOrganizations from './locales/zh-CN/organizations.json';
+import zhCNUsers from './locales/zh-CN/users.json';
+import zhCNReports from './locales/zh-CN/reports.json';
+import zhCNDashboard from './locales/zh-CN/dashboard.json';
+import zhCNPlatformOwnerDashboard from './locales/zh-CN/platformOwnerDashboard.json';
+import zhCNInfluencerSearch from './locales/zh-CN/influencerSearch.json';
+import zhCNAnalytics from './locales/zh-CN/analytics.json';
+import zhCNProfile from './locales/zh-CN/profile.json';
 
 import zhTWApp from './locales/zh-TW/app.json';
 import zhTWCommon from './locales/zh-TW/common.json';
+import zhTWAuth from './locales/zh-TW/auth.json';
+import zhTWSidebar from './locales/zh-TW/sidebar.json';
+import zhTWMarketplace from './locales/zh-TW/marketplace.json';
+import zhTWAdvertisers from './locales/zh-TW/advertisers.json';
+import zhTWCampaigns from './locales/zh-TW/campaigns.json';
+import zhTWOrganizations from './locales/zh-TW/organizations.json';
+import zhTWUsers from './locales/zh-TW/users.json';
+import zhTWReports from './locales/zh-TW/reports.json';
+import zhTWDashboard from './locales/zh-TW/dashboard.json';
+import zhTWPlatformOwnerDashboard from './locales/zh-TW/platformOwnerDashboard.json';
+import zhTWInfluencerSearch from './locales/zh-TW/influencerSearch.json';
+import zhTWAnalytics from './locales/zh-TW/analytics.json';
+import zhTWProfile from './locales/zh-TW/profile.json';
 
 // Combine all translations into legacy format for compatibility
 const enTranslation = {
@@ -79,12 +105,41 @@ const frTranslation = {
   profile: frProfile
 };
 
-// Use existing translations for Chinese until fully migrated
-import zhCNTranslationFull from './locales/zh-CN/translation.json';
-import zhTWTranslationFull from './locales/zh-TW/translation.json';
+const zhCNTranslation = {
+  ...zhCNApp,
+  common: zhCNCommon,
+  auth: zhCNAuth,
+  sidebar: zhCNSidebar,
+  marketplace: zhCNMarketplace,
+  advertisers: zhCNAdvertisers,
+  campaigns: zhCNCampaigns,
+  organizations: zhCNOrganizations,
+  users: zhCNUsers,
+  reports: zhCNReports,
+  dashboard: zhCNDashboard,
+  platformOwnerDashboard: zhCNPlatformOwnerDashboard,
+  influencerSearch: zhCNInfluencerSearch,
+  analytics: zhCNAnalytics,
+  profile: zhCNProfile
+};
 
-const zhCNTranslation = { ...zhCNApp, ...zhCNCommon, ...zhCNTranslationFull };
-const zhTWTranslation = { ...zhTWApp, ...zhTWCommon, ...zhTWTranslationFull };
+const zhTWTranslation = {
+  ...zhTWApp,
+  common: zhTWCommon,
+  auth: zhTWAuth,
+  sidebar: zhTWSidebar,
+  marketplace: zhTWMarketplace,
+  advertisers: zhTWAdvertisers,
+  campaigns: zhTWCampaigns,
+  organizations: zhTWOrganizations,
+  users: zhTWUsers,
+  reports: zhTWReports,
+  dashboard: zhTWDashboard,
+  platformOwnerDashboard: zhTWPlatformOwnerDashboard,
+  influencerSearch: zhTWInfluencerSearch,
+  analytics: zhTWAnalytics,
+  profile: zhTWProfile
+};
 
 // Language resources
 const resources = {

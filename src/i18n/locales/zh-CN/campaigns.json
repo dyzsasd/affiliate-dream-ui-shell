@@ -1,0 +1,18 @@
+{
+  "title": "营销活动",
+  "description": "管理您的营销活动",
+  "errorFetchingCampaign": "获取营销活动详情时出错",
+  "statusActive": "活跃",
+  "statusPaused": "已暂停",
+  "statusDraft": "草稿",
+  "noDate": "未设置日期",
+  "notSet": "未设置",
+  "campaignNotFound": "未找到营销活动",
+  "campaignNotFoundDescription": "您要查找的营销活动不存在或已被删除。",
+  "backToCampaigns": "返回营销活动",
+  "basicInformation": "基本信息",
+  "noDescription": "未提供描述",
+  "campaignId": "营销活动ID",
+  "advertiserId": "广告主ID",
+  "campaignPeriod": "营销活动周期"
+}

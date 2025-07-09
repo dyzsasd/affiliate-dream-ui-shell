@@ -1,0 +1,39 @@
+{
+  "title": "報告",
+  "description": "檢視全面的報告和分析",
+  "performance": {
+    "title": "效能報告",
+    "description": "追蹤您的行銷活動效能指標",
+    "impressions": "曝光次數",
+    "clicks": "點擊次數",
+    "ctr": "點擊率",
+    "conversions": "轉換次數",
+    "conversionRate": "轉換率",
+    "revenue": "收入",
+    "selectDateRange": "選擇日期範圍",
+    "last7Days": "最近7天",
+    "last30Days": "最近30天",
+    "last3Months": "最近3個月",
+    "last12Months": "最近12個月",
+    "filterByCampaign": "按行銷活動篩選",
+    "allCampaigns": "所有行銷活動",
+    "performanceMetrics": "效能指標",
+    "traffic": "流量",
+    "rates": "比率",
+    "clickThroughRate": "點擊通過率",
+    "dailyPerformanceData": "每日效能資料",
+    "date": "日期",
+    "total": "總計"
+  },
+  "conversions": {
+    "title": "轉換報告",
+    "description": "分析轉換資料和趨勢",
+    "conversionsBySource": "按來源轉換",
+    "conversionTrends": "轉換趨勢",
+    "topConvertingCampaigns": "轉換率最高的行銷活動",
+    "conversionValue": "轉換價值",
+    "averageOrderValue": "平均訂單價值",
+    "conversionsByDevice": "按設備轉換",
+    "conversionsByLocation": "按位置轉換"
+  }
+}

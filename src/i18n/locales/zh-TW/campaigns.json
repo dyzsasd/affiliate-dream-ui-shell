@@ -1,0 +1,18 @@
+{
+  "title": "行銷活動",
+  "description": "管理您的行銷活動",
+  "errorFetchingCampaign": "取得行銷活動詳情時發生錯誤",
+  "statusActive": "活躍",
+  "statusPaused": "已暫停",
+  "statusDraft": "草稿",
+  "noDate": "未設定日期",
+  "notSet": "未設定",
+  "campaignNotFound": "未找到行銷活動",
+  "campaignNotFoundDescription": "您要尋找的行銷活動不存在或已被刪除。",
+  "backToCampaigns": "返回行銷活動",
+  "basicInformation": "基本資訊",
+  "noDescription": "未提供描述",
+  "campaignId": "行銷活動ID",
+  "advertiserId": "廣告主ID",
+  "campaignPeriod": "行銷活動週期"
+}

@@ -1,0 +1,19 @@
+{
+  "selectAdvertiser": "选择广告主",
+  "selectAdvertiserDescription": "搜索并选择广告主查看其分析数据",
+  "advertiserAnalytics": "广告主分析",
+  "totalPartners": "合作伙伴总数",
+  "newPartners": "新合作伙伴",
+  "lostPartners": "流失合作伙伴",
+  "viewPartners": "查看合作伙伴",
+  "showMe": "显示详情",
+  "affiliateMixChart": "联盟营销组合图",
+  "topKeywords": "热门关键词前20",
+  "noKeywordsFound": "未找到关键词",
+  "verticalPositioning": "垂直定位",
+  "type": "类型",
+  "rank": "排名",
+  "topPublishersInVertical": "垂直领域顶级发布商",
+  "searchAdvertiserPlaceholder": "搜索广告主（至少3个字符）...",
+  "noAdvertisersFound": "未找到广告主。"
+}

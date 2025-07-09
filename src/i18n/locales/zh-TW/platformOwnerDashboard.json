@@ -1,0 +1,20 @@
+{
+  "title": "平台擁有者儀表板",
+  "description": "平台範圍內的指標和管理概覽",
+  "totalOrganizations": "組織總數",
+  "totalUsers": "使用者總數",
+  "totalRevenue": "總收入",
+  "monthlyGrowth": "月增長率",
+  "recentActivity": "最近活動",
+  "systemHealth": "系統健康",
+  "userActivity": "使用者活動",
+  "organizationGrowth": "組織增長",
+  "revenueAnalytics": "收入分析",
+  "platformMetrics": "平台指標",
+  "activeAdvertisers": "活躍廣告主",
+  "activeAffiliates": "活躍聯盟夥伴",
+  "totalCampaigns": "行銷活動總數",
+  "totalClicks": "點擊總數",
+  "conversionRate": "平台轉換率",
+  "averageRevenue": "每使用者平均收入"
+}

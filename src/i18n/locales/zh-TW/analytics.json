@@ -1,0 +1,19 @@
+{
+  "selectAdvertiser": "選擇廣告主",
+  "selectAdvertiserDescription": "搜尋並選擇廣告主查看其分析資料",
+  "advertiserAnalytics": "廣告主分析",
+  "totalPartners": "合作夥伴總數",
+  "newPartners": "新合作夥伴",
+  "lostPartners": "流失合作夥伴",
+  "viewPartners": "檢視合作夥伴",
+  "showMe": "顯示詳情",
+  "affiliateMixChart": "聯盟行銷組合圖",
+  "topKeywords": "熱門關鍵字前20",
+  "noKeywordsFound": "未找到關鍵字",
+  "verticalPositioning": "垂直定位",
+  "type": "類型",
+  "rank": "排名",
+  "topPublishersInVertical": "垂直領域頂級發佈商",
+  "searchAdvertiserPlaceholder": "搜尋廣告主（至少3個字元）...",
+  "noAdvertisersFound": "未找到廣告主。"
+}

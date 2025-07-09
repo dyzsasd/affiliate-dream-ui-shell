@@ -1,0 +1,39 @@
+{
+  "title": "报告",
+  "description": "查看全面的报告和分析",
+  "performance": {
+    "title": "表现报告",
+    "description": "跟踪您的营销活动表现指标",
+    "impressions": "展示次数",
+    "clicks": "点击次数",
+    "ctr": "点击率",
+    "conversions": "转化次数",
+    "conversionRate": "转化率",
+    "revenue": "收入",
+    "selectDateRange": "选择日期范围",
+    "last7Days": "最近7天",
+    "last30Days": "最近30天",
+    "last3Months": "最近3个月",
+    "last12Months": "最近12个月",
+    "filterByCampaign": "按营销活动筛选",
+    "allCampaigns": "所有营销活动",
+    "performanceMetrics": "表现指标",
+    "traffic": "流量",
+    "rates": "比率",
+    "clickThroughRate": "点击通过率",
+    "dailyPerformanceData": "每日表现数据",
+    "date": "日期",
+    "total": "总计"
+  },
+  "conversions": {
+    "title": "转化报告",
+    "description": "分析转化数据和趋势",
+    "conversionsBySource": "按来源转化",
+    "conversionTrends": "转化趋势",
+    "topConvertingCampaigns": "转化率最高的营销活动",
+    "conversionValue": "转化价值",
+    "averageOrderValue": "平均订单价值",
+    "conversionsByDevice": "按设备转化",
+    "conversionsByLocation": "按位置转化"
+  }
+}

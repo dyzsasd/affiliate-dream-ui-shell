@@ -1,0 +1,20 @@
+{
+  "title": "平台所有者仪表板",
+  "description": "平台范围内的指标和管理概览",
+  "totalOrganizations": "组织总数",
+  "totalUsers": "用户总数",
+  "totalRevenue": "总收入",
+  "monthlyGrowth": "月增长率",
+  "recentActivity": "最近活动",
+  "systemHealth": "系统健康",
+  "userActivity": "用户活动",
+  "organizationGrowth": "组织增长",
+  "revenueAnalytics": "收入分析",
+  "platformMetrics": "平台指标",
+  "activeAdvertisers": "活跃广告主",
+  "activeAffiliates": "活跃联盟伙伴",
+  "totalCampaigns": "营销活动总数",
+  "totalClicks": "点击总数",
+  "conversionRate": "平台转化率",
+  "averageRevenue": "每用户平均收入"
+}
