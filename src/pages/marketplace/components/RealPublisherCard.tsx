@@ -216,29 +216,19 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
               )}
             </div>
 
-            {/* Metrics */}
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="text-center p-2 bg-muted/30 rounded">
-                <div className="font-semibold text-blue-600">
-                  {publisherData.trafficScore || 0}
-                </div>
-                <div className="text-xs text-muted-foreground">Traffic Score</div>
-              </div>
-              <div className="text-center p-2 bg-muted/30 rounded">
-                <div className="font-semibold text-green-600">
-                  {publisherData.relevance || 0}
-                </div>
-                <div className="text-xs text-muted-foreground">Relevance</div>
-              </div>
-            </div>
 
             {/* Social Media */}
             {publisherData.socialMedia?.value && (
               <div>
                 <h4 className="font-medium text-sm mb-2">{t("marketplace.socialPlatforms")}</h4>
                 <div className="flex gap-2">
-                  {Object.keys(publisherData.socialMedia.value).slice(0, 4).map((platform) => (
-                    <Badge key={platform} variant="outline" className="text-xs capitalize">
+                  {Object.entries(publisherData.socialMedia.value).slice(0, 4).map(([platform, url]) => (
+                    <Badge 
+                      key={platform} 
+                      variant="outline" 
+                      className="text-xs capitalize cursor-pointer hover:bg-muted/50 transition-colors"
+                      onClick={() => url && window.open(url, '_blank')}
+                    >
                       {platform}
                     </Badge>
                   ))}
