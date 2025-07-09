@@ -56,5 +56,18 @@
   "keyMetrics": "关键指标",
   "contactInformation": "联系信息",
   "lastActive": "最后活跃",
-  "socialMedia": "社交媒体"
+  "socialMedia": "社交媒体",
+  "noDescription": "暂无描述",
+  "socialPlatforms": "社交",
+  "websitePreview": "网站预览",
+  "topKeywords": "热门关键词",
+  "partners": "合作伙伴",
+  "countryRankings": "国家排名",
+  "allCountries": "所有国家",
+  "verticalsSelected": "个垂直领域已选择",
+  "sortScore": "按分数排序",
+  "sortTraffic": "按流量排序",
+  "verticals": "垂直领域",
+  "affiliateNetworks": "联盟网络",
+  "description": "描述"
 }

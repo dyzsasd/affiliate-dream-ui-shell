@@ -56,5 +56,18 @@
   "keyMetrics": "Key Metrics",
   "contactInformation": "Contact Information",
   "lastActive": "Last Active",
-  "socialMedia": "Social Media"
+  "socialMedia": "Social Media",
+  "noDescription": "No description available",
+  "socialPlatforms": "Social",
+  "websitePreview": "Website Preview",
+  "topKeywords": "Top Keywords",
+  "partners": "Partners",
+  "countryRankings": "Country Rankings",
+  "allCountries": "All Countries",
+  "verticalsSelected": "verticals selected",
+  "sortScore": "Sort by Score",
+  "sortTraffic": "Sort by Traffic",
+  "verticals": "Verticals",
+  "affiliateNetworks": "Affiliate Networks",
+  "description": "Description"
 }

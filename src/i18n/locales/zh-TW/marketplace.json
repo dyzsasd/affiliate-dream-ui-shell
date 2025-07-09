@@ -56,5 +56,18 @@
   "keyMetrics": "關鍵指標",
   "contactInformation": "聯絡資訊",
   "lastActive": "最後活躍",
-  "socialMedia": "社群媒體"
+  "socialMedia": "社群媒體",
+  "noDescription": "暫無描述",
+  "socialPlatforms": "社群",
+  "websitePreview": "網站預覽",
+  "topKeywords": "熱門關鍵字",
+  "partners": "合作夥伴",
+  "countryRankings": "國家排名",
+  "allCountries": "所有國家",
+  "verticalsSelected": "個垂直領域已選擇",
+  "sortScore": "按分數排序",
+  "sortTraffic": "按流量排序",
+  "verticals": "垂直領域",
+  "affiliateNetworks": "聯盟網路",
+  "description": "描述"
 }

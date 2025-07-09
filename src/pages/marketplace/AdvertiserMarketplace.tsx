@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,47 +12,106 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Search, Filter, Grid, List, Star } from "lucide-react";
+import { Search, Filter, Grid, List, Star, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import PublisherCard from "./components/PublisherCard";
-import PublisherFilters from "./components/PublisherFilters";
-import PublisherDetailPanel from "./components/PublisherDetailPanel";
-import { mockPublishers } from "./data/mockPublishers";
-import { Publisher } from "./types/publisher";
+import RealPublisherCard from "./components/RealPublisherCard";
+import RealPublisherFilters from "./components/RealPublisherFilters";
+import RealPublisherDetailPanel from "./components/RealPublisherDetailPanel";
+import { searchPublishers, type PublisherSearchParams } from "@/services/publisherService";
+import type { DomainAnalyticsPublisherResponse } from '@/generated-api/src/models';
+import { useToast } from "@/hooks/use-toast";
 
 const AdvertiserMarketplace: React.FC = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
+  
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(null);
+  const [selectedPublisher, setSelectedPublisher] = useState<DomainAnalyticsPublisherResponse | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState({
-    category: "",
     country: "",
-    minRating: "",
-    payoutModel: ""
+    verticals: [] as string[]
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [publishers, setPublishers] = useState<DomainAnalyticsPublisherResponse[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  
+  const pageSize = 20;
 
-  // Filter publishers based on search and filters
-  const filteredPublishers = mockPublishers.filter(publisher => {
-    const matchesSearch = publisher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         publisher.categories.some(cat => cat.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = !filters.category || publisher.categories.includes(filters.category);
-    const matchesCountry = !filters.country || publisher.country === filters.country;
-    const matchesRating = !filters.minRating || publisher.rating >= parseFloat(filters.minRating);
-    
-    return matchesSearch && matchesCategory && matchesCountry && matchesRating;
-  });
+  // Load publishers function
+  const loadPublishers = async (page: number = 1, append: boolean = false) => {
+    setLoading(true);
+    try {
+      const searchParams: PublisherSearchParams = {
+        page,
+        pageSize,
+        country: filters.country || undefined,
+        verticals: filters.verticals.length > 0 ? filters.verticals : undefined,
+        partnerDomains: searchTerm ? [searchTerm] : undefined
+      };
+
+      const result = await searchPublishers(searchParams);
+      
+      if (append) {
+        setPublishers(prev => [...prev, ...result.publishers]);
+      } else {
+        setPublishers(result.publishers);
+      }
+      
+      setHasMore(result.hasMore);
+      setTotalCount(result.totalCount);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Error loading publishers:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load publishers. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load publishers on component mount and filter changes
+  useEffect(() => {
+    loadPublishers(1, false);
+  }, [filters.country, filters.verticals]);
+
+  // Search with debounce
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      if (searchTerm !== undefined) {
+        loadPublishers(1, false);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
 
   const handleClearFilters = () => {
     setFilters({
-      category: "",
       country: "",
-      minRating: "",
-      payoutModel: ""
+      verticals: []
     });
     setSearchTerm("");
+  };
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      loadPublishers(currentPage + 1, true);
+    }
+  };
+
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (filters.country) count++;
+    if (filters.verticals.length > 0) count++;
+    if (searchTerm) count++;
+    return count;
   };
 
   return (
@@ -103,7 +162,7 @@ const AdvertiserMarketplace: React.FC = () => {
           {t("marketplace.filters")}
         </Button>
         
-        {(Object.values(filters).some(f => f) || searchTerm) && (
+        {getActiveFiltersCount() > 0 && (
           <Button variant="ghost" onClick={handleClearFilters}>
             {t("marketplace.clearAll")}
           </Button>
@@ -111,16 +170,11 @@ const AdvertiserMarketplace: React.FC = () => {
       </div>
 
       {/* Active Filters */}
-      {(Object.values(filters).some(f => f) || searchTerm) && (
+      {(getActiveFiltersCount() > 0) && (
         <div className="flex flex-wrap gap-2">
           {searchTerm && (
             <Badge variant="secondary" className="flex items-center gap-1">
               {t("marketplace.search")}: {searchTerm}
-            </Badge>
-          )}
-          {filters.category && (
-            <Badge variant="secondary">
-              {t("marketplace.category")}: {filters.category}
             </Badge>
           )}
           {filters.country && (
@@ -128,9 +182,9 @@ const AdvertiserMarketplace: React.FC = () => {
               {t("marketplace.country")}: {filters.country}
             </Badge>
           )}
-          {filters.minRating && (
+          {filters.verticals.length > 0 && (
             <Badge variant="secondary">
-              {t("marketplace.minRating")}: {filters.minRating}+ <Star className="h-3 w-3 ml-1" />
+              {t("marketplace.verticals")}: {filters.verticals.length} selected
             </Badge>
           )}
         </div>
@@ -140,7 +194,7 @@ const AdvertiserMarketplace: React.FC = () => {
       {showFilters && (
         <Card>
           <CardContent className="p-6">
-            <PublisherFilters 
+            <RealPublisherFilters 
               filters={filters} 
               onFiltersChange={setFilters}
               onClear={handleClearFilters}
@@ -149,11 +203,15 @@ const AdvertiserMarketplace: React.FC = () => {
         </Card>
       )}
 
-      {/* Results Count */}
+      {/* Results Count and Loading */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          Showing {filteredPublishers.length} of 10000+ publishers
-        </p>
+        <div className="flex items-center space-x-2">
+          <p className="text-sm text-muted-foreground">
+            {loading ? "Loading..." : `Showing ${publishers.length} publishers`}
+            {totalCount > 0 && ` (${totalCount}+ total)`}
+          </p>
+          {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+        </div>
         
         <Select defaultValue="relevance">
           <SelectTrigger className="w-[180px]">
@@ -162,14 +220,14 @@ const AdvertiserMarketplace: React.FC = () => {
           <SelectContent>
             <SelectItem value="relevance">{t("marketplace.sortRelevance")}</SelectItem>
             <SelectItem value="rating">{t("marketplace.sortRating")}</SelectItem>
-            <SelectItem value="epc">{t("marketplace.sortEPC")}</SelectItem>
-            <SelectItem value="conversionRate">{t("marketplace.sortConversionRate")}</SelectItem>
+            <SelectItem value="score">{t("marketplace.sortScore")}</SelectItem>
+            <SelectItem value="traffic">{t("marketplace.sortTraffic")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Publishers Grid/List */}
-      {filteredPublishers.length === 0 ? (
+      {!loading && publishers.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <div className="mx-auto max-w-md">
@@ -185,26 +243,48 @@ const AdvertiserMarketplace: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className={cn(
-          "grid gap-6",
-          viewMode === "grid" 
-            ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-            : "grid-cols-1"
-        )}>
-          {filteredPublishers.map((publisher) => (
-            <PublisherCard
-              key={publisher.id}
-              publisher={publisher}
-              viewMode={viewMode}
-              onViewDetails={() => setSelectedPublisher(publisher)}
-            />
-          ))}
+        <div className="space-y-6">
+          <div className={cn(
+            "grid gap-6",
+            viewMode === "grid" 
+              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+              : "grid-cols-1"
+          )}>
+            {publishers.map((publisher, index) => (
+              <RealPublisherCard
+                key={`${publisher.publisher?.domain}-${index}`}
+                publisher={publisher}
+                viewMode={viewMode}
+                onViewDetails={() => setSelectedPublisher(publisher)}
+              />
+            ))}
+          </div>
+          
+          {/* Load More Button */}
+          {hasMore && !loading && (
+            <div className="flex justify-center">
+              <Button 
+                variant="outline" 
+                onClick={handleLoadMore}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load More Publishers"
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       )}
 
       {/* Publisher Detail Panel */}
       {selectedPublisher && (
-        <PublisherDetailPanel
+        <RealPublisherDetailPanel
           publisher={selectedPublisher}
           isOpen={!!selectedPublisher}
           onClose={() => setSelectedPublisher(null)}

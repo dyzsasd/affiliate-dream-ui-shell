@@ -56,5 +56,18 @@
   "keyMetrics": "Métriques clés",
   "contactInformation": "Informations de contact",
   "lastActive": "Dernière activité",
-  "socialMedia": "Réseaux sociaux"
+  "socialMedia": "Réseaux sociaux",
+  "noDescription": "Aucune description disponible",
+  "socialPlatforms": "Social",
+  "websitePreview": "Aperçu du Site Web",
+  "topKeywords": "Mots-clés Principaux",
+  "partners": "Partenaires",
+  "countryRankings": "Classements par Pays",
+  "allCountries": "Tous les Pays",
+  "verticalsSelected": "verticales sélectionnées",
+  "sortScore": "Trier par Score",
+  "sortTraffic": "Trier par Trafic",
+  "verticals": "Verticales",
+  "affiliateNetworks": "Réseaux d'Affiliation",
+  "description": "Description"
 }
