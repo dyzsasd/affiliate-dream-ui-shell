@@ -62,7 +62,7 @@ const CampaignDetail: React.FC = () => {
         console.error("Error fetching campaign detail:", error);
         toast({
           title: t("common.error"),
-          description: t("campaignDetail.errorFetchingCampaign"),
+          description: t("campaigns.errorFetchingCampaign"),
           variant: "destructive",
         });
       } finally {
@@ -79,21 +79,21 @@ const CampaignDetail: React.FC = () => {
         return (
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
             <CheckCircle2 className="mr-1 h-3 w-3" />
-            {t("campaignDetail.statusActive")}
+            {t("campaigns.statusActive")}
           </Badge>
         );
       case "paused":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
             <PauseCircle className="mr-1 h-3 w-3" />
-            {t("campaignDetail.statusPaused")}
+            {t("campaigns.statusPaused")}
           </Badge>
         );
       case "draft":
         return (
           <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
             <FileEdit className="mr-1 h-3 w-3" />
-            {t("campaignDetail.statusDraft")}
+            {t("campaigns.statusDraft")}
           </Badge>
         );
       default:
@@ -108,23 +108,23 @@ const CampaignDetail: React.FC = () => {
     return (
       <Badge variant="outline" className={`${isPublic ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-gray-50 text-gray-700 border-gray-200"}`}>
         {isPublic ? <Globe className="mr-1 h-3 w-3" /> : <Eye className="mr-1 h-3 w-3" />}
-        {t(isPublic ? "campaignDetail.visibilityPublic" : "campaignDetail.visibilityPrivate")}
+        {t(isPublic ? "campaigns.visibilityPublic" : "campaigns.visibilityPrivate")}
       </Badge>
     );
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return t("campaignDetail.noDate");
+    if (!dateString) return t("campaigns.noDate");
     return new Date(dateString).toLocaleDateString();
   };
 
   const formatCurrency = (amount?: number, currency?: string) => {
-    if (amount === undefined) return t("campaignDetail.notSet");
+    if (amount === undefined) return t("campaigns.notSet");
     return `${currency || "USD"} ${amount.toFixed(2)}`;
   };
 
   const formatPayoutAmount = (amount?: number, type?: string, currency?: string) => {
-    if (amount === undefined) return t("campaignDetail.notSet");
+    if (amount === undefined) return t("campaigns.notSet");
     if (type === 'percentage') {
       return `${amount.toFixed(2)}%`;
     }
@@ -132,12 +132,12 @@ const CampaignDetail: React.FC = () => {
   };
 
   const getBillingModelDisplay = (billingModel?: string) => {
-    if (!billingModel) return t("campaignDetail.notSet");
+    if (!billingModel) return t("campaigns.notSet");
     return billingModel === 'click' ? 'Click' : 'Conversion';
   };
 
   const getPayoutTypeDisplay = (payoutType?: string, billingModel?: string) => {
-    if (!payoutType) return t("campaignDetail.notSet");
+    if (!payoutType) return t("campaigns.notSet");
     if (billingModel === 'click') return 'Fixed';
     return payoutType === 'percentage' ? 'Percentage' : 'Fixed';
   };
@@ -153,12 +153,12 @@ const CampaignDetail: React.FC = () => {
   if (!campaign) {
     return (
       <div className="flex flex-col items-center justify-center py-10">
-        <h2 className="text-xl font-semibold mb-2">{t("campaignDetail.campaignNotFound")}</h2>
-        <p className="text-gray-500 mb-4">{t("campaignDetail.campaignNotFoundDescription")}</p>
+        <h2 className="text-xl font-semibold mb-2">{t("campaigns.campaignNotFound")}</h2>
+        <p className="text-gray-500 mb-4">{t("campaigns.campaignNotFoundDescription")}</p>
         <Link to="/campaigns">
           <Button>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            {t("campaignDetail.backToCampaigns")}
+            {t("campaigns.backToCampaigns")}
           </Button>
         </Link>
       </div>
@@ -186,30 +186,30 @@ const CampaignDetail: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="h-5 w-5" />
-                {t("campaignDetail.basicInformation")}
+                {t("campaigns.basicInformation")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">{t("campaigns.description")}</h3>
-                  <p className="mt-1">{campaign.description || t("campaignDetail.noDescription")}</p>
+                  <p className="mt-1">{campaign.description || t("campaigns.noDescription")}</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.campaignId")}</h3>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaigns.campaignId")}</h3>
                     <p className="mt-1 font-mono text-sm">{campaign.campaignId}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.advertiserId")}</h3>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaigns.advertiserId")}</h3>
                     <p className="mt-1 font-mono text-sm">{campaign.advertiserId}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.campaignPeriod")}</h3>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaigns.campaignPeriod")}</h3>
                     <div className="mt-1 flex items-center gap-1">
                       <Calendar className="h-4 w-4 text-gray-500" />
                       <p>
@@ -218,7 +218,7 @@ const CampaignDetail: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.created")}</h3>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaigns.created")}</h3>
                     <div className="mt-1 flex items-center gap-1">
                       <Clock className="h-4 w-4 text-gray-500" />
                       <p>{new Date(campaign.createdAt).toLocaleString()}</p>
@@ -228,7 +228,7 @@ const CampaignDetail: React.FC = () => {
 
                 {campaign.destinationUrl && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.destinationUrl")}</h3>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaigns.destinationUrl")}</h3>
                     <a href={campaign.destinationUrl} target="_blank" rel="noopener noreferrer" 
                        className="mt-1 text-blue-600 hover:text-blue-800 break-all">
                       {campaign.destinationUrl}
@@ -244,7 +244,7 @@ const CampaignDetail: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5" />
-                {t("campaignDetail.payoutRevenue")}
+                {t("campaigns.payoutRevenue")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -260,24 +260,24 @@ const CampaignDetail: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <h4 className="font-medium text-green-700">{t("campaignDetail.payoutInformation")}</h4>
+                    <h4 className="font-medium text-green-700">{t("campaigns.payoutInformation")}</h4>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutType")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.payoutType")}</h3>
                       <p className="mt-1">{getPayoutTypeDisplay(campaign.payoutStructure, campaign.billingModel)}</p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.payoutAmount")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.payoutAmount")}</h3>
                       <p className="mt-1 font-semibold">{formatPayoutAmount(campaign.payoutAmount, campaign.payoutStructure, campaign.currencyId)}</p>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="font-medium text-blue-700">{t("campaignDetail.revenueInformation")}</h4>
+                    <h4 className="font-medium text-blue-700">{t("campaigns.revenueInformation")}</h4>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueType")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.revenueType")}</h3>
                       <p className="mt-1">{getPayoutTypeDisplay(campaign.revenueStructure, campaign.billingModel)}</p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.revenueAmount")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.revenueAmount")}</h3>
                       <p className="mt-1 font-semibold">{formatPayoutAmount(campaign.revenueAmount, campaign.revenueStructure, campaign.currencyId)}</p>
                     </div>
                   </div>
@@ -292,28 +292,28 @@ const CampaignDetail: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Target className="h-5 w-5" />
-                  {t("campaignDetail.trackingConversion")}
+                  {t("campaigns.trackingConversion")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {campaign.conversionMethod && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.conversionMethod")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.conversionMethod")}</h3>
                       <p className="mt-1">{campaign.conversionMethod}</p>
                     </div>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {campaign.sessionDefinition && (
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.sessionDefinition")}</h3>
+                        <h3 className="text-sm font-medium text-gray-500">{t("campaigns.sessionDefinition")}</h3>
                         <p className="mt-1">{campaign.sessionDefinition}</p>
                       </div>
                     )}
                     {campaign.sessionDuration && (
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.sessionDuration")}</h3>
-                        <p className="mt-1">{campaign.sessionDuration} {t("campaignDetail.minutes")}</p>
+                        <h3 className="text-sm font-medium text-gray-500">{t("campaigns.sessionDuration")}</h3>
+                        <p className="mt-1">{campaign.sessionDuration} {t("campaigns.minutes")}</p>
                       </div>
                     )}
                   </div>
@@ -326,19 +326,19 @@ const CampaignDetail: React.FC = () => {
           {(campaign.termsAndConditions || campaign.internalNotes) && (
             <Card>
               <CardHeader>
-                <CardTitle>{t("campaignDetail.additionalInformation")}</CardTitle>
+                <CardTitle>{t("campaigns.additionalInformation")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {campaign.termsAndConditions && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.termsAndConditions")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.termsAndConditions")}</h3>
                       <p className="mt-1 text-sm">{campaign.termsAndConditions}</p>
                     </div>
                   )}
                   {campaign.internalNotes && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaignDetail.internalNotes")}</h3>
+                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.internalNotes")}</h3>
                       <p className="mt-1 text-sm text-gray-600">{campaign.internalNotes}</p>
                     </div>
                   )}
@@ -351,7 +351,7 @@ const CampaignDetail: React.FC = () => {
           {campaign.offers && campaign.offers.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>{t("campaignDetail.providerOffers")}</CardTitle>
+                <CardTitle>{t("campaigns.providerOffers")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -380,7 +380,7 @@ const CampaignDetail: React.FC = () => {
                       </div>
                       <div className="mt-2 flex items-center justify-between">
                         <div className="text-sm">
-                          <span className="text-gray-500">{t("campaignDetail.payout")}:</span>{" "}
+                          <span className="text-gray-500">{t("campaigns.payout")}:</span>{" "}
                           <span className="font-medium">
                             ${offer.payoutAmount.toFixed(2)} {offer.payoutType === "RevShare" && "%"}
                           </span>
@@ -388,7 +388,7 @@ const CampaignDetail: React.FC = () => {
                         <Link to={`/tracking-links?offerId=${offer.id}`}>
                           <Button size="sm" variant="outline" className="h-8">
                             <Link2 className="mr-1 h-4 w-4" />
-                            {t("campaignDetail.generateLink")}
+                            {t("campaigns.generateLink")}
                           </Button>
                         </Link>
                       </div>
@@ -406,25 +406,25 @@ const CampaignDetail: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
-                {t("campaignDetail.performanceOverview")}
+                {t("campaigns.performanceOverview")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">{t("campaignDetail.clicks")}</span>
+                  <span className="text-sm text-gray-500">{t("campaigns.clicks")}</span>
                   <span className="font-medium">1,245</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">{t("campaignDetail.conversions")}</span>
+                  <span className="text-sm text-gray-500">{t("campaigns.conversions")}</span>
                   <span className="font-medium">32</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">{t("campaignDetail.conversionRate")}</span>
+                  <span className="text-sm text-gray-500">{t("campaigns.conversionRate")}</span>
                   <span className="font-medium">2.57%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">{t("campaignDetail.revenue")}</span>
+                  <span className="text-sm text-gray-500">{t("campaigns.revenue")}</span>
                   <span className="font-medium">$645.00</span>
                 </div>
 
@@ -432,7 +432,7 @@ const CampaignDetail: React.FC = () => {
 
                 <Link to="/reporting">
                   <Button variant="outline" className="w-full">
-                    {t("campaignDetail.viewFullReport")}
+                    {t("campaigns.viewFullReport")}
                   </Button>
                 </Link>
               </div>
@@ -441,27 +441,27 @@ const CampaignDetail: React.FC = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>{t("campaignDetail.quickActions")}</CardTitle>
+              <CardTitle>{t("campaigns.quickActions")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <Link to={`/tracking-links?campaignId=${campaign.campaignId}`}>
                   <Button className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90">
-                    {t("campaignDetail.generateTrackingLink")}
+                    {t("campaigns.generateTrackingLink")}
                   </Button>
                 </Link>
                 <Button variant="outline" className="w-full">
-                  {t("campaignDetail.editCampaign")}
+                  {t("campaigns.editCampaign")}
                 </Button>
                 {campaign.status === "active" ? (
                   <Button variant="outline" className="w-full text-yellow-600">
                     <PauseCircle className="mr-2 h-4 w-4" />
-                    {t("campaignDetail.pauseCampaign")}
+                    {t("campaigns.pauseCampaign")}
                   </Button>
                 ) : (
                   <Button variant="outline" className="w-full text-green-600">
                     <CheckCircle2 className="mr-2 h-4 w-4" />
-                    {t("campaignDetail.activateCampaign")}
+                    {t("campaigns.activateCampaign")}
                   </Button>
                 )}
               </div>
@@ -472,7 +472,7 @@ const CampaignDetail: React.FC = () => {
           {(campaign.previewUrl || campaign.thumbnailUrl) && (
             <Card>
               <CardHeader>
-                <CardTitle>{t("campaignDetail.campaignAssets")}</CardTitle>
+                <CardTitle>{t("campaigns.campaignAssets")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -480,7 +480,7 @@ const CampaignDetail: React.FC = () => {
                     <a href={campaign.previewUrl} target="_blank" rel="noopener noreferrer">
                       <Button variant="outline" className="w-full">
                         <Eye className="mr-2 h-4 w-4" />
-                        {t("campaignDetail.viewPreview")}
+                        {t("campaigns.viewPreview")}
                       </Button>
                     </a>
                   )}
@@ -488,7 +488,7 @@ const CampaignDetail: React.FC = () => {
                     <a href={campaign.thumbnailUrl} target="_blank" rel="noopener noreferrer">
                       <Button variant="outline" className="w-full">
                         <Eye className="mr-2 h-4 w-4" />
-                        {t("campaignDetail.viewThumbnail")}
+                        {t("campaigns.viewThumbnail")}
                       </Button>
                     </a>
                   )}
