@@ -601,6 +601,37 @@ definitions:
           type: object
         type: array
     type: object
+  handlers.AffiliatesSearchRequest:
+    properties:
+      country:
+        description: Country code to filter by (optional)
+        example: US
+        type: string
+      offset:
+        description: Page size (number of results per page)
+        example: 10
+        type: integer
+      page:
+        description: Page number for pagination
+        example: 1
+        type: integer
+      partner_domains:
+        description: Partner domains to search for (optional)
+        example:
+        - amazon.com
+        - etsy.com
+        items:
+          type: string
+        type: array
+      verticals:
+        description: Verticals to filter by (optional) - matches verticalsV2 names
+        example:
+        - E-commerce
+        - Fashion / Clothing
+        items:
+          type: string
+        type: array
+    type: object
   handlers.CreateAdvertiserRequest:
     properties:
       data:
@@ -2399,6 +2430,53 @@ paths:
       summary: List tracking links by affiliate
       tags:
       - tracking-links
+  /affiliates/search:
+    post:
+      consumes:
+      - application/json
+      description: Search for affiliates/publishers filtered by country, partner domains,
+        and/or verticals with full publisher data, sorted by country rankings
+      parameters:
+      - description: Search parameters
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AffiliatesSearchRequest'
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of publishers with full data sorted by country rankings
+          schema:
+            items:
+              $ref: '#/definitions/domain.AnalyticsPublisherResponse'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: No affiliates found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Search affiliates by country, partner domains, and verticals
+      tags:
+      - affiliates
   /api/v1/analytics/advertisers:
     post:
       consumes:

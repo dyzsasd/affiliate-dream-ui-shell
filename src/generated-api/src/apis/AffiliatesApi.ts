@@ -17,8 +17,11 @@ import * as runtime from '../runtime';
 import type {
   DomainAffiliate,
   DomainAffiliateProviderMapping,
+  DomainAnalyticsPublisherResponse,
+  HandlersAffiliatesSearchRequest,
   HandlersCreateAffiliateProviderMappingRequest,
   HandlersCreateAffiliateRequest,
+  HandlersErrorResponse,
   HandlersUpdateAffiliateProviderMappingRequest,
   HandlersUpdateAffiliateRequest,
 } from '../models/index';
@@ -27,10 +30,16 @@ import {
     DomainAffiliateToJSON,
     DomainAffiliateProviderMappingFromJSON,
     DomainAffiliateProviderMappingToJSON,
+    DomainAnalyticsPublisherResponseFromJSON,
+    DomainAnalyticsPublisherResponseToJSON,
+    HandlersAffiliatesSearchRequestFromJSON,
+    HandlersAffiliatesSearchRequestToJSON,
     HandlersCreateAffiliateProviderMappingRequestFromJSON,
     HandlersCreateAffiliateProviderMappingRequestToJSON,
     HandlersCreateAffiliateRequestFromJSON,
     HandlersCreateAffiliateRequestToJSON,
+    HandlersErrorResponseFromJSON,
+    HandlersErrorResponseToJSON,
     HandlersUpdateAffiliateProviderMappingRequestFromJSON,
     HandlersUpdateAffiliateProviderMappingRequestToJSON,
     HandlersUpdateAffiliateRequestFromJSON,
@@ -70,6 +79,12 @@ export interface AffiliatesIdPutRequest {
 
 export interface AffiliatesPostRequest {
     request: HandlersCreateAffiliateRequest;
+}
+
+export interface AffiliatesSearchPostRequest {
+    request: HandlersAffiliatesSearchRequest;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface OrganizationsIdAffiliatesGetRequest {
@@ -423,6 +438,56 @@ export class AffiliatesApi extends runtime.BaseAPI {
      */
     async affiliatesPost(requestParameters: AffiliatesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainAffiliate> {
         const response = await this.affiliatesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Search for affiliates/publishers filtered by country, partner domains, and/or verticals with full publisher data, sorted by country rankings
+     * Search affiliates by country, partner domains, and verticals
+     */
+    async affiliatesSearchPostRaw(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainAnalyticsPublisherResponse>>> {
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling affiliatesSearchPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/affiliates/search`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HandlersAffiliatesSearchRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainAnalyticsPublisherResponseFromJSON));
+    }
+
+    /**
+     * Search for affiliates/publishers filtered by country, partner domains, and/or verticals with full publisher data, sorted by country rankings
+     * Search affiliates by country, partner domains, and verticals
+     */
+    async affiliatesSearchPost(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainAnalyticsPublisherResponse>> {
+        const response = await this.affiliatesSearchPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

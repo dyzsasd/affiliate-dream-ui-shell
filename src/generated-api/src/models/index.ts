@@ -39,6 +39,7 @@ export * from './DomainProfile';
 export * from './DomainSocialMediaData';
 export * from './DomainVerticalData';
 export * from './DomainVerticalDataSampleValue';
+export * from './HandlersAffiliatesSearchRequest';
 export * from './HandlersCreateAdvertiserRequest';
 export * from './HandlersCreateAffiliateProviderMappingRequest';
 export * from './HandlersCreateAffiliateRequest';

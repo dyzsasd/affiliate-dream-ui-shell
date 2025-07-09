@@ -53,6 +53,7 @@ src/models/DomainProfile.ts
 src/models/DomainSocialMediaData.ts
 src/models/DomainVerticalData.ts
 src/models/DomainVerticalDataSampleValue.ts
+src/models/HandlersAffiliatesSearchRequest.ts
 src/models/HandlersCreateAdvertiserRequest.ts
 src/models/HandlersCreateAffiliateProviderMappingRequest.ts
 src/models/HandlersCreateAffiliateRequest.ts
