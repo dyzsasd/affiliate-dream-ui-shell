@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Globe, Users, Star, Eye, Mail } from "lucide-react";
+import ContactPublisherModal from "./ContactPublisherModal";
 import type { DomainAnalyticsPublisherResponse } from '@/generated-api/src/models';
 
 interface RealPublisherCardProps {
@@ -18,6 +19,7 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
   onViewDetails
 }) => {
   const { t } = useTranslation();
+  const [showContactModal, setShowContactModal] = useState(false);
 
   const publisherData = publisher.publisher;
   if (!publisherData) return null;
@@ -116,7 +118,7 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
                 <Eye className="h-3 w-3 mr-1" />
                 {t("marketplace.viewDetails")}
               </Button>
-              <Button variant="default" size="sm">
+              <Button variant="default" size="sm" onClick={() => setShowContactModal(true)}>
                 <Mail className="h-3 w-3 mr-1" />
                 Contact
               </Button>
@@ -238,6 +240,13 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
           </div>
         </div>
       </CardContent>
+      
+      {/* Contact Modal */}
+      <ContactPublisherModal
+        publisher={publisher}
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+      />
     </Card>
   );
 };
