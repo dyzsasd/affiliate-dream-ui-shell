@@ -85,9 +85,9 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
     },
     middleware: [{
       post: async (context) => {
-        // Check if response is 401 and retry with fresh token
-        if (context.response.status === 401) {
-          console.log('Received 401 response, attempting to refresh token and retry...');
+        // Check if response is 401 or 403 and retry with fresh token
+        if (context.response.status === 401 || context.response.status === 403) {
+          console.log(`Received ${context.response.status} response, attempting to refresh token and retry...`);
           
           try {
             // Force refresh the session
