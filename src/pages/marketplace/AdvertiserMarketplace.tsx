@@ -195,18 +195,6 @@ const AdvertiserMarketplace: React.FC = () => {
           </p>
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         </div>
-        
-        <Select defaultValue="relevance">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={t("marketplace.sortBy")} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="relevance">{t("marketplace.sortRelevance")}</SelectItem>
-            <SelectItem value="rating">{t("marketplace.sortRating")}</SelectItem>
-            <SelectItem value="score">{t("marketplace.sortScore")}</SelectItem>
-            <SelectItem value="traffic">{t("marketplace.sortTraffic")}</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Publishers Grid/List */}
