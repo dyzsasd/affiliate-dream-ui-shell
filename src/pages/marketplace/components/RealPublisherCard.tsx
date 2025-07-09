@@ -1,17 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  ExternalLink, 
-  Star, 
-  Globe, 
-  Eye,
-  MessageSquare,
-  Mail
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink, Globe, Users, Star, Eye, Mail } from "lucide-react";
 import type { DomainAnalyticsPublisherResponse } from '@/generated-api/src/models';
 
 interface RealPublisherCardProps {
@@ -26,171 +18,236 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
   onViewDetails
 }) => {
   const { t } = useTranslation();
-  
+
   const publisherData = publisher.publisher;
   if (!publisherData) return null;
 
   const domain = publisherData.domain || "Unknown";
   const description = publisherData.metaData?.description || t("marketplace.noDescription");
-  const faviconUrl = publisherData.metaData?.faviconImageUrl;
   const screenshotUrl = publisherData.metaData?.screenshotImageUrl;
+  const faviconUrl = publisherData.metaData?.faviconImageUrl;
   
-  // Get primary country
-  const primaryCountry = publisherData.countryRankings?.highestValue?.countryCode?.toUpperCase() || "Unknown";
+  // Get country from rankings
+  const topCountry = publisherData.countryRankings?.highestValue?.countryCode?.toUpperCase();
   
-  // Get primary vertical
-  const primaryVertical = publisherData.verticalsV2?.sampleValue?.name || 
-                         publisherData.verticalsV2?.value?.[0]?.name || 
-                         "Uncategorized";
+  // Get top verticals
+  const topVerticals = publisherData.verticalsV2?.value?.slice(0, 5) || [];
   
   // Get affiliate networks
-  const affiliateNetworks = publisherData.affiliateNetworks?.sampleValue || [];
+  const affiliateNetworks = publisherData.affiliateNetworks?.value || [];
   
-  // Get social media platforms
-  const socialPlatforms = publisherData.socialMedia?.socialsAvailable || [];
+  // Get partners count
+  const partnersCount = (publisherData.partners as any)?.count || 0;
   
-  // Calculate relevance score as rating
-  const relevanceScore = publisherData.relevance || 0;
-  const rating = Math.min(5, Math.max(0, relevanceScore * 5));
-
-  const isListView = viewMode === "list";
+  // Get keywords count
+  const keywordsCount = (publisherData.keywords as any)?.count || 0;
 
   return (
-    <Card className={cn(
-      "hover:shadow-md transition-shadow cursor-pointer",
-      isListView && "flex-row p-4"
-    )}>
-      <div className={cn(
-        "flex",
-        isListView ? "flex-row items-center space-x-4 w-full" : "flex-col"
-      )}>
-        {/* Header */}
-        <div className={cn(
-          "flex items-center space-x-3",
-          isListView ? "flex-shrink-0" : "p-4 pb-2"
-        )}>
-          {faviconUrl ? (
-            <img 
-              src={faviconUrl} 
-              alt={`${domain} favicon`}
-              className="w-10 h-10 rounded-lg object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-              <Globe className="h-5 w-5 text-muted-foreground" />
+    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <CardContent className="p-0">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+          {/* Left Section - Website Preview */}
+          <div className="space-y-4">
+            <div className="relative">
+              {screenshotUrl ? (
+                <div className="aspect-[4/3] rounded-lg overflow-hidden border bg-muted">
+                  <img 
+                    src={screenshotUrl} 
+                    alt={`${domain} screenshot`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="aspect-[4/3] rounded-lg border bg-muted flex items-center justify-center">
+                  <Globe className="h-12 w-12 text-muted-foreground" />
+                </div>
+              )}
             </div>
-          )}
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2">
-              <h3 className="font-semibold text-sm truncate">{domain}</h3>
+            
+            <div className="flex items-center gap-3">
+              {faviconUrl && (
+                <img 
+                  src={faviconUrl} 
+                  alt={`${domain} favicon`}
+                  className="w-6 h-6 rounded"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              )}
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{domain}</span>
+                {topCountry && (
+                  <Badge variant="outline" className="text-xs">
+                    {topCountry}
+                  </Badge>
+                )}
+              </div>
               <Button
-                variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-0"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(`https://${domain}`, '_blank');
-                }}
+                variant="ghost"
+                onClick={() => window.open(`https://${domain}`, '_blank')}
+                className="p-1 h-auto"
               >
                 <ExternalLink className="h-3 w-3" />
               </Button>
             </div>
-            
-            <div className="flex items-center space-x-2 mt-1">
-              <div className="flex items-center space-x-1">
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs text-muted-foreground">
-                  {rating.toFixed(1)}
-                </span>
+
+            <div className="flex gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Star className="h-3 w-3" />
+                <span>{keywordsCount}</span>
+                <span className="text-xs">Keywords</span>
               </div>
-              <Badge variant="outline" className="text-xs">
-                {primaryCountry}
-              </Badge>
+              <div className="flex items-center gap-1">
+                <Users className="h-3 w-3" />
+                <span>{partnersCount}</span>
+                <span className="text-xs">Partners</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={onViewDetails}>
+                <Eye className="h-3 w-3 mr-1" />
+                {t("marketplace.viewDetails")}
+              </Button>
+              <Button variant="default" size="sm">
+                <Mail className="h-3 w-3 mr-1" />
+                Contact
+              </Button>
             </div>
           </div>
-        </div>
 
-        {/* Content */}
-        <div className={cn(
-          "flex-1",
-          isListView ? "min-w-0" : "px-4"
-        )}>
-          <p className={cn(
-            "text-sm text-muted-foreground line-clamp-2",
-            isListView && "line-clamp-1"
-          )}>
-            {description}
-          </p>
-          
-          <div className="mt-3 space-y-2">
-            <div className="flex flex-wrap gap-1">
-              <Badge variant="secondary" className="text-xs">
-                {primaryVertical}
-              </Badge>
-              {affiliateNetworks.slice(0, 2).map((network: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {network}
-                </Badge>
-              ))}
+          {/* Middle Section - Details */}
+          <div className="space-y-4 lg:col-span-1">
+            <div>
+              <h3 className="font-semibold text-lg mb-2">
+                {publisherData.promotype?.value || "Website"}
+              </h3>
+              <p className="text-sm text-muted-foreground line-clamp-3">
+                {description}
+              </p>
             </div>
-            
-            {socialPlatforms.length > 0 && (
-              <div className="flex items-center space-x-1">
-                <span className="text-xs text-muted-foreground">
-                  {t("marketplace.socialPlatforms")}:
-                </span>
-                <div className="flex space-x-1">
-                  {socialPlatforms.slice(0, 3).map((platform: string, index: number) => (
-                    <Badge key={index} variant="outline" className="text-xs">
-                      {platform}
+
+            {/* Affiliate Networks */}
+            {affiliateNetworks.length > 0 && (
+              <div>
+                <h4 className="font-medium text-sm mb-2">{t("marketplace.affiliateNetworks")}</h4>
+                <div className="flex flex-wrap gap-1">
+                  {affiliateNetworks.slice(0, 3).map((network, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                      {network}
                     </Badge>
                   ))}
-                  {socialPlatforms.length > 3 && (
+                  {affiliateNetworks.length > 3 && (
                     <Badge variant="outline" className="text-xs">
-                      +{socialPlatforms.length - 3}
+                      +{affiliateNetworks.length - 3}
                     </Badge>
                   )}
                 </div>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* Actions */}
-        <div className={cn(
-          "flex items-center justify-between gap-2",
-          isListView ? "flex-shrink-0" : "p-4 pt-2"
-        )}>
-          <div className="flex space-x-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onViewDetails();
-              }}
-            >
-              <Eye className="h-4 w-4 mr-1" />
-              {t("marketplace.viewDetails")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                // TODO: Implement contact functionality
-              }}
-            >
-              <MessageSquare className="h-4 w-4 mr-1" />
-              {t("marketplace.contact")}
-            </Button>
+            {/* Top Keywords */}
+            {publisherData.keywords?.sampleValue && publisherData.keywords.sampleValue.length > 0 && (
+              <div>
+                <h4 className="font-medium text-sm mb-2">{t("marketplace.topKeywords")}</h4>
+                <div className="flex flex-wrap gap-1">
+                  {publisherData.keywords.sampleValue.slice(0, 4).map((keyword: any, index: number) => (
+                    <Badge key={index} variant="outline" className="text-xs">
+                      {keyword.value}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Section - Vertical Mix & Metrics */}
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium text-sm mb-3">Vertical Mix</h4>
+              
+              {/* Vertical Progress Bar */}
+              {topVerticals.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex h-2 rounded-full overflow-hidden bg-muted">
+                    {topVerticals.map((vertical: any, index: number) => {
+                      const colors = [
+                        'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 
+                        'bg-purple-500', 'bg-pink-500'
+                      ];
+                      const width = Math.max(15, (vertical.score || 20) / 2); // Ensure minimum width
+                      
+                      return (
+                        <div
+                          key={index}
+                          className={`${colors[index % colors.length]} transition-all duration-300`}
+                          style={{ width: `${width}%` }}
+                        />
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="space-y-1">
+                    {topVerticals.map((vertical: any, index: number) => {
+                      const colors = [
+                        'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 
+                        'bg-purple-500', 'bg-pink-500'
+                      ];
+                      
+                      return (
+                        <div key={index} className="flex items-center gap-2 text-xs">
+                          <div className={`w-2 h-2 rounded-full ${colors[index % colors.length]}`} />
+                          <span className="text-muted-foreground flex-1 truncate">
+                            {vertical.name}
+                          </span>
+                          <span className="font-medium">{vertical.score}%</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Metrics */}
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="text-center p-2 bg-muted/30 rounded">
+                <div className="font-semibold text-blue-600">
+                  {publisherData.trafficScore || 0}
+                </div>
+                <div className="text-xs text-muted-foreground">Traffic Score</div>
+              </div>
+              <div className="text-center p-2 bg-muted/30 rounded">
+                <div className="font-semibold text-green-600">
+                  {publisherData.relevance || 0}
+                </div>
+                <div className="text-xs text-muted-foreground">Relevance</div>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            {publisherData.socialMedia?.value && (
+              <div>
+                <h4 className="font-medium text-sm mb-2">{t("marketplace.socialPlatforms")}</h4>
+                <div className="flex gap-2">
+                  {Object.keys(publisherData.socialMedia.value).slice(0, 4).map((platform) => (
+                    <Badge key={platform} variant="outline" className="text-xs capitalize">
+                      {platform}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };
