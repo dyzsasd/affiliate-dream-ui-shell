@@ -30,7 +30,7 @@ const AdvertiserMarketplace: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState({
     country: "all",
-    verticals: [] as string[]
+    vertical: "all"
   });
   const [showFilters, setShowFilters] = useState(false);
   const [publishers, setPublishers] = useState<DomainAnalyticsPublisherResponse[]>([]);
@@ -49,7 +49,7 @@ const AdvertiserMarketplace: React.FC = () => {
         page,
         pageSize,
         country: filters.country && filters.country !== "all" ? filters.country : undefined,
-        verticals: filters.verticals.length > 0 ? filters.verticals : undefined,
+        verticals: filters.vertical && filters.vertical !== "all" ? [filters.vertical] : undefined,
         partnerDomains: searchTerm ? [searchTerm] : undefined
       };
 
@@ -79,7 +79,7 @@ const AdvertiserMarketplace: React.FC = () => {
   // Load publishers on component mount and filter changes
   useEffect(() => {
     loadPublishers(1, false);
-  }, [filters.country, filters.verticals]);
+  }, [filters.country, filters.vertical]);
 
   // Search with debounce
   useEffect(() => {
@@ -95,7 +95,7 @@ const AdvertiserMarketplace: React.FC = () => {
   const handleClearFilters = () => {
     setFilters({
       country: "all",
-      verticals: []
+      vertical: "all"
     });
     setSearchTerm("");
   };
@@ -109,7 +109,7 @@ const AdvertiserMarketplace: React.FC = () => {
   const getActiveFiltersCount = () => {
     let count = 0;
     if (filters.country && filters.country !== "all") count++;
-    if (filters.verticals.length > 0) count++;
+    if (filters.vertical && filters.vertical !== "all") count++;
     if (searchTerm) count++;
     return count;
   };
@@ -177,14 +177,14 @@ const AdvertiserMarketplace: React.FC = () => {
               {t("marketplace.search")}: {searchTerm}
             </Badge>
           )}
-          {filters.country && (
+          {filters.country && filters.country !== "all" && (
             <Badge variant="secondary">
               {t("marketplace.country")}: {filters.country}
             </Badge>
           )}
-          {filters.verticals.length > 0 && (
+          {filters.vertical && filters.vertical !== "all" && (
             <Badge variant="secondary">
-              {t("marketplace.verticals")}: {filters.verticals.length} selected
+              {t("marketplace.vertical")}: {filters.vertical}
             </Badge>
           )}
         </div>

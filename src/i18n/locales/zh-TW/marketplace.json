@@ -69,5 +69,8 @@
   "sortTraffic": "按流量排序",
   "verticals": "垂直領域",
   "affiliateNetworks": "聯盟網路",
-  "description": "描述"
+  "description": "描述",
+  "selectVertical": "選擇垂直領域",
+  "allVerticals": "所有垂直領域",
+  "vertical": "垂直領域"
 }

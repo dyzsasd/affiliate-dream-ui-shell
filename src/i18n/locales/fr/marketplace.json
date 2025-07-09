@@ -69,5 +69,8 @@
   "sortTraffic": "Trier par Trafic",
   "verticals": "Verticales",
   "affiliateNetworks": "Réseaux d'Affiliation",
-  "description": "Description"
+  "description": "Description",
+  "selectVertical": "Sélectionner une verticale",
+  "allVerticals": "Toutes les Verticales",
+  "vertical": "Verticale"
 }
