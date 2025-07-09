@@ -442,8 +442,8 @@ export class AffiliatesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Search for affiliates/publishers filtered by country, partner domains, and/or verticals with full publisher data, sorted by country rankings
-     * Search affiliates by country, partner domains, and verticals
+     * Search for affiliates/publishers with domain auto-completion and filtered by country, partner domains, and/or verticals with full publisher data, sorted by number of partners. Accessible by advertisers, affiliate managers, and admins.
+     * Search affiliates by domain, country, partner domains, and verticals
      */
     async affiliatesSearchPostRaw(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainAnalyticsPublisherResponse>>> {
         if (requestParameters['request'] == null) {
@@ -483,8 +483,8 @@ export class AffiliatesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Search for affiliates/publishers filtered by country, partner domains, and/or verticals with full publisher data, sorted by country rankings
-     * Search affiliates by country, partner domains, and verticals
+     * Search for affiliates/publishers with domain auto-completion and filtered by country, partner domains, and/or verticals with full publisher data, sorted by number of partners. Accessible by advertisers, affiliate managers, and admins.
+     * Search affiliates by domain, country, partner domains, and verticals
      */
     async affiliatesSearchPost(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainAnalyticsPublisherResponse>> {
         const response = await this.affiliatesSearchPostRaw(requestParameters, initOverrides);

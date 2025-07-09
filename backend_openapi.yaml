@@ -607,6 +607,11 @@ definitions:
         description: Country code to filter by (optional)
         example: US
         type: string
+      domain:
+        description: Domain name to search for (optional) - partial matching like
+          auto-completion
+        example: example.com
+        type: string
       offset:
         description: Page size (number of results per page)
         example: 10
@@ -2434,8 +2439,10 @@ paths:
     post:
       consumes:
       - application/json
-      description: Search for affiliates/publishers filtered by country, partner domains,
-        and/or verticals with full publisher data, sorted by country rankings
+      description: Search for affiliates/publishers with domain auto-completion and
+        filtered by country, partner domains, and/or verticals with full publisher
+        data, sorted by number of partners. Accessible by advertisers, affiliate managers,
+        and admins.
       parameters:
       - description: Search parameters
         in: body
@@ -2455,7 +2462,8 @@ paths:
       - application/json
       responses:
         "200":
-          description: List of publishers with full data sorted by country rankings
+          description: List of publishers with full data sorted by number of partners
+            (empty array if no results)
           schema:
             items:
               $ref: '#/definitions/domain.AnalyticsPublisherResponse'
@@ -2464,17 +2472,13 @@ paths:
           description: Invalid request
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: No affiliates found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
         "500":
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: Search affiliates by country, partner domains, and verticals
+      summary: Search affiliates by domain, country, partner domains, and verticals
       tags:
       - affiliates
   /api/v1/analytics/advertisers:

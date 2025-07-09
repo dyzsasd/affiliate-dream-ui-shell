@@ -26,6 +26,12 @@ export interface HandlersAffiliatesSearchRequest {
      */
     country?: string;
     /**
+     * Domain name to search for (optional) - partial matching like auto-completion
+     * @type {string}
+     * @memberof HandlersAffiliatesSearchRequest
+     */
+    domain?: string;
+    /**
      * Page size (number of results per page)
      * @type {number}
      * @memberof HandlersAffiliatesSearchRequest
@@ -69,6 +75,7 @@ export function HandlersAffiliatesSearchRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'country': json['country'] == null ? undefined : json['country'],
+        'domain': json['domain'] == null ? undefined : json['domain'],
         'offset': json['offset'] == null ? undefined : json['offset'],
         'page': json['page'] == null ? undefined : json['page'],
         'partnerDomains': json['partner_domains'] == null ? undefined : json['partner_domains'],
@@ -88,6 +95,7 @@ export function HandlersAffiliatesSearchRequestToJSONTyped(value?: HandlersAffil
     return {
         
         'country': value['country'],
+        'domain': value['domain'],
         'offset': value['offset'],
         'page': value['page'],
         'partner_domains': value['partnerDomains'],
