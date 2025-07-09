@@ -103,7 +103,7 @@ const RealPublisherFilters: React.FC<RealPublisherFiltersProps> = ({
               <SelectValue placeholder={t("marketplace.selectCountry")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t("marketplace.allCountries")}</SelectItem>
+              <SelectItem value="all">{t("marketplace.allCountries")}</SelectItem>
               {availableCountries.map((country) => (
                 <SelectItem key={country.code} value={country.code}>
                   {country.name}

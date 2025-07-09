@@ -29,7 +29,7 @@ const AdvertiserMarketplace: React.FC = () => {
   const [selectedPublisher, setSelectedPublisher] = useState<DomainAnalyticsPublisherResponse | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState({
-    country: "",
+    country: "all",
     verticals: [] as string[]
   });
   const [showFilters, setShowFilters] = useState(false);
@@ -48,7 +48,7 @@ const AdvertiserMarketplace: React.FC = () => {
       const searchParams: PublisherSearchParams = {
         page,
         pageSize,
-        country: filters.country || undefined,
+        country: filters.country && filters.country !== "all" ? filters.country : undefined,
         verticals: filters.verticals.length > 0 ? filters.verticals : undefined,
         partnerDomains: searchTerm ? [searchTerm] : undefined
       };
@@ -94,7 +94,7 @@ const AdvertiserMarketplace: React.FC = () => {
 
   const handleClearFilters = () => {
     setFilters({
-      country: "",
+      country: "all",
       verticals: []
     });
     setSearchTerm("");
@@ -108,7 +108,7 @@ const AdvertiserMarketplace: React.FC = () => {
 
   const getActiveFiltersCount = () => {
     let count = 0;
-    if (filters.country) count++;
+    if (filters.country && filters.country !== "all") count++;
     if (filters.verticals.length > 0) count++;
     if (searchTerm) count++;
     return count;
