@@ -12,8 +12,8 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Search, Filter, Grid, List, Star, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Search, Filter, Star, Loader2 } from "lucide-react";
+
 import RealPublisherCard from "./components/RealPublisherCard";
 import RealPublisherFilters from "./components/RealPublisherFilters";
 import RealPublisherDetailPanel from "./components/RealPublisherDetailPanel";
@@ -27,7 +27,7 @@ const AdvertiserMarketplace: React.FC = () => {
   
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPublisher, setSelectedPublisher] = useState<DomainAnalyticsPublisherResponse | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode] = useState<"list">("list");
   const [filters, setFilters] = useState({
     country: "all",
     vertical: "all"
@@ -121,23 +121,6 @@ const AdvertiserMarketplace: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("marketplace.title")}</h1>
           <p className="text-muted-foreground">{t("marketplace.description")}</p>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Button
-            variant={viewMode === "grid" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("grid")}
-          >
-            <Grid className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === "list" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("list")}
-          >
-            <List className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 
@@ -244,12 +227,7 @@ const AdvertiserMarketplace: React.FC = () => {
         </Card>
       ) : (
         <div className="space-y-6">
-          <div className={cn(
-            "grid gap-6",
-            viewMode === "grid" 
-              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-              : "grid-cols-1"
-          )}>
+          <div className="grid gap-6 grid-cols-1">
             {publishers.map((publisher, index) => (
               <RealPublisherCard
                 key={`${publisher.publisher?.domain}-${index}`}
