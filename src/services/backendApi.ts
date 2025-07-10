@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Configuration } from '@/generated-api/src/runtime';
 
 // Using the production API URL
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://api.affiliate.rolinko.com') + '/api/v1';
+const DEFAULT_API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://api.affiliate.rolinko.com') + '/api/v1';
 
 // Define a simple ApiError interface
 interface ApiError {
@@ -11,8 +11,12 @@ interface ApiError {
 }
 
 export const getApiBase = () => {
+  // Check for debug mode backend URL override
+  const debugUrl = localStorage.getItem('debug_backend_url');
+  const baseUrl = debugUrl || DEFAULT_API_BASE_URL;
+  
   // Make sure the API_BASE_URL does not have trailing slash
-  return API_BASE_URL.replace(/\/+$/, '');
+  return baseUrl.replace(/\/+$/, '');
 };
 
 // Check if a token is close to expiring (within 5 minutes)
