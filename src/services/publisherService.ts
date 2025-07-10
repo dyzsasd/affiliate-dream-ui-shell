@@ -40,9 +40,9 @@ export const searchPublishers = async (params: PublisherSearchParams): Promise<P
     });
 
     return {
-      publishers: response,
-      hasMore: response.length === (params.pageSize || 20),
-      totalCount: response.length > 0 ? 100 : 0 // Mock total count as API doesn't return it
+      publishers: response.data || [],
+      hasMore: (response.data?.length || 0) === (params.pageSize || 20),
+      totalCount: response.total || 0
     };
   } catch (error) {
     console.error('Error searching publishers:', error);
