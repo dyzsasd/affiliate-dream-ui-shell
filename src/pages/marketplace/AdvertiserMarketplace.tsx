@@ -191,7 +191,7 @@ const AdvertiserMarketplace: React.FC = () => {
         <div className="flex items-center space-x-2">
           <p className="text-sm text-muted-foreground">
             {loading ? "Loading..." : `Showing ${publishers.length} publishers`}
-            {totalCount > 0 && ` (${totalCount}+ total)`}
+            {totalCount > 0 && ` (${totalCount} total)`}
           </p>
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         </div>
