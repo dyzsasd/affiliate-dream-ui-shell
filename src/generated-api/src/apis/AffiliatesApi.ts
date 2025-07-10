@@ -17,8 +17,8 @@ import * as runtime from '../runtime';
 import type {
   DomainAffiliate,
   DomainAffiliateProviderMapping,
-  DomainAnalyticsPublisherResponse,
   HandlersAffiliatesSearchRequest,
+  HandlersAffiliatesSearchResponse,
   HandlersCreateAffiliateProviderMappingRequest,
   HandlersCreateAffiliateRequest,
   HandlersErrorResponse,
@@ -30,10 +30,10 @@ import {
     DomainAffiliateToJSON,
     DomainAffiliateProviderMappingFromJSON,
     DomainAffiliateProviderMappingToJSON,
-    DomainAnalyticsPublisherResponseFromJSON,
-    DomainAnalyticsPublisherResponseToJSON,
     HandlersAffiliatesSearchRequestFromJSON,
     HandlersAffiliatesSearchRequestToJSON,
+    HandlersAffiliatesSearchResponseFromJSON,
+    HandlersAffiliatesSearchResponseToJSON,
     HandlersCreateAffiliateProviderMappingRequestFromJSON,
     HandlersCreateAffiliateProviderMappingRequestToJSON,
     HandlersCreateAffiliateRequestFromJSON,
@@ -445,7 +445,7 @@ export class AffiliatesApi extends runtime.BaseAPI {
      * Search for affiliates/publishers with domain auto-completion and filtered by country, partner domains, and/or verticals with full publisher data, sorted by number of partners. Accessible by advertisers, affiliate managers, and admins.
      * Search affiliates by domain, country, partner domains, and verticals
      */
-    async affiliatesSearchPostRaw(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainAnalyticsPublisherResponse>>> {
+    async affiliatesSearchPostRaw(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersAffiliatesSearchResponse>> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
@@ -479,14 +479,14 @@ export class AffiliatesApi extends runtime.BaseAPI {
             body: HandlersAffiliatesSearchRequestToJSON(requestParameters['request']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainAnalyticsPublisherResponseFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => HandlersAffiliatesSearchResponseFromJSON(jsonValue));
     }
 
     /**
      * Search for affiliates/publishers with domain auto-completion and filtered by country, partner domains, and/or verticals with full publisher data, sorted by number of partners. Accessible by advertisers, affiliate managers, and admins.
      * Search affiliates by domain, country, partner domains, and verticals
      */
-    async affiliatesSearchPost(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainAnalyticsPublisherResponse>> {
+    async affiliatesSearchPost(requestParameters: AffiliatesSearchPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersAffiliatesSearchResponse> {
         const response = await this.affiliatesSearchPostRaw(requestParameters, initOverrides);
         return await response.value();
     }

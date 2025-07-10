@@ -16,8 +16,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   return (
     <div
       className={cn(
-        "h-screen flex flex-col bg-sidebar transition-all duration-300 ease-in-out",
-        isOpen ? "w-64" : "w-20"
+        "h-screen flex flex-col bg-sidebar transition-all duration-300 ease-in-out border-r border-sidebar-border",
+        isOpen ? "w-64" : "w-16"
       )}
     >
       <SidebarHeader isOpen={isOpen} toggleSidebar={toggleSidebar} />

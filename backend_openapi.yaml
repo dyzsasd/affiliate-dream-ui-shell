@@ -637,6 +637,23 @@ definitions:
           type: string
         type: array
     type: object
+  handlers.AffiliatesSearchResponse:
+    properties:
+      data:
+        description: List of affiliate publishers matching the search criteria
+        items:
+          $ref: '#/definitions/domain.AnalyticsPublisherResponse'
+        type: array
+      offset:
+        description: Page size (number of results per page)
+        type: integer
+      page:
+        description: Current page number
+        type: integer
+      total:
+        description: Total number of items found matching the search criteria
+        type: integer
+    type: object
   handlers.CreateAdvertiserRequest:
     properties:
       data:
@@ -2462,12 +2479,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: List of publishers with full data sorted by number of partners
-            (empty array if no results)
+          description: Search results with data array and total count
           schema:
-            items:
-              $ref: '#/definitions/domain.AnalyticsPublisherResponse'
-            type: array
+            $ref: '#/definitions/handlers.AffiliatesSearchResponse'
         "400":
           description: Invalid request
           schema:

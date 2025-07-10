@@ -152,6 +152,10 @@ export const useAuthentication = () => {
         throw error;
       }
 
+      // Clear debug mode settings on sign out
+      localStorage.removeItem('debug_mode_enabled');
+      localStorage.removeItem('debug_backend_url');
+
       setSession(null);
       setUser(null);
       toast({
