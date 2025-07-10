@@ -25,6 +25,7 @@ import MarketplacePage from "@/pages/marketplace";
 import NotFound from "@/pages/NotFound";
 import InfluencerSearch from "@/pages/influencer-search";
 import InfluencerDetailPage from "@/pages/influencer-search/InfluencerDetailPage";
+import BillingDashboard from "@/pages/billing";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -85,6 +86,9 @@ function App() {
                 
                 {/* Affiliate routes */}
                 <Route path="/affiliate/create" element={<CreateAffiliateAccount />} />
+                
+                {/* Billing routes */}
+                <Route path="/billing" element={<BillingDashboard />} />
                 
                 {/* Other routes */}
                 <Route path="/invitations" element={<InvitationManagement />} />

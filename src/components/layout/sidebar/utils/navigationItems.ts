@@ -9,7 +9,8 @@ import {
   TrendingUp,
   PieChart,
   Store,
-  Users
+  Users,
+  CreditCard
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -60,6 +61,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.reports"),
         path: "/reporting",
         icon: BarChart3
+      },
+      {
+        name: t("sidebar.billing"),
+        path: "/billing",
+        icon: CreditCard
       },
       {
         name: t("sidebar.invitations"),
