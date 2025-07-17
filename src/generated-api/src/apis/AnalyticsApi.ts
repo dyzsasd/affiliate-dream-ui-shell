@@ -51,6 +51,10 @@ export interface ApiV1AnalyticsAdvertisersPostRequest {
     advertiser: HandlersCreateAdvertiserRequest;
 }
 
+export interface ApiV1AnalyticsAffiliatesDomainDomainGetRequest {
+    domain: string;
+}
+
 export interface ApiV1AnalyticsAffiliatesIdGetRequest {
     id: number;
 }
@@ -140,6 +144,41 @@ export class AnalyticsApi extends runtime.BaseAPI {
      */
     async apiV1AnalyticsAdvertisersPost(requestParameters: ApiV1AnalyticsAdvertisersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAdvertisersPost201Response> {
         const response = await this.apiV1AnalyticsAdvertisersPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieve detailed analytics data for a specific publisher (affiliate) by domain name
+     * Get publisher analytics data by domain
+     */
+    async apiV1AnalyticsAffiliatesDomainDomainGetRaw(requestParameters: ApiV1AnalyticsAffiliatesDomainDomainGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAffiliatesIdGet200Response>> {
+        if (requestParameters['domain'] == null) {
+            throw new runtime.RequiredError(
+                'domain',
+                'Required parameter "domain" was null or undefined when calling apiV1AnalyticsAffiliatesDomainDomainGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/analytics/affiliates/domain/{domain}`.replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAffiliatesIdGet200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve detailed analytics data for a specific publisher (affiliate) by domain name
+     * Get publisher analytics data by domain
+     */
+    async apiV1AnalyticsAffiliatesDomainDomainGet(requestParameters: ApiV1AnalyticsAffiliatesDomainDomainGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAffiliatesIdGet200Response> {
+        const response = await this.apiV1AnalyticsAffiliatesDomainDomainGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
