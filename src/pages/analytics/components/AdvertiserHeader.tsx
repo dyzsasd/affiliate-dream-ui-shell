@@ -11,12 +11,12 @@ const AdvertiserHeader: React.FC<AdvertiserHeaderProps> = ({ advertiser }) => {
   const { t } = useTranslation();
 
   const getDisplayName = (advertiser: DomainAutocompleteResult | null) => {
-    if (!advertiser) return 'Loading...';
+    if (!advertiser || advertiser === null || advertiser === undefined) return 'Loading...';
     return advertiser.name || advertiser.domain || '';
   };
 
   const getLogoInitial = (advertiser: DomainAutocompleteResult | null) => {
-    if (!advertiser) return 'L';
+    if (!advertiser || advertiser === null || advertiser === undefined) return 'L';
     const name = getDisplayName(advertiser);
     return name.charAt(0).toUpperCase();
   };
