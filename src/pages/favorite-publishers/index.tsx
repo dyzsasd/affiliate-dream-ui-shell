@@ -183,7 +183,7 @@ const FavoritePublisherLists: React.FC = () => {
                   <Button 
                     variant="outline" 
                     className="w-full"
-                    onClick={() => navigate(`/favorite_publishers/${list.listId}`)}
+                    onClick={() => navigate(`/favorite_publishers/${(list as any).list_id || list.listId}`)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
                     {t('favoritePublishers.viewPublishers')}
