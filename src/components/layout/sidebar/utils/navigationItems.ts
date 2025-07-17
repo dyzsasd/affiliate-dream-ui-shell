@@ -10,7 +10,8 @@ import {
   PieChart,
   Store,
   Users,
-  CreditCard
+  CreditCard,
+  Heart
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -56,6 +57,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.analytics"),
         path: "/analytics/advertiser",
         icon: TrendingUp
+      },
+      {
+        name: t("sidebar.favoritePublishers"),
+        path: "/favorite_publisher",
+        icon: Heart
       },
       {
         name: t("sidebar.reports"),

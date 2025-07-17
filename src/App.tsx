@@ -28,6 +28,8 @@ import NotFound from "@/pages/NotFound";
 import InfluencerSearch from "@/pages/influencer-search";
 import InfluencerDetailPage from "@/pages/influencer-search/InfluencerDetailPage";
 import BillingDashboard from "@/pages/billing";
+import FavoritePublisherLists from "@/pages/favorite-publishers";
+import FavoritePublisherListDetail from "@/pages/favorite-publishers/FavoritePublisherListDetail";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -94,6 +96,10 @@ function App() {
                 
                 {/* Billing routes */}
                 <Route path="/billing" element={<BillingDashboard />} />
+                
+                {/* Favorite Publisher Lists routes */}
+                <Route path="/favorite_publisher" element={<FavoritePublisherLists />} />
+                <Route path="/favorite_publishers/:listId" element={<FavoritePublisherListDetail />} />
                 
                 {/* Other routes */}
                 <Route path="/invitations" element={<InvitationManagement />} />
