@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
+import { useParams, useNavigate } from 'react-router-dom';
 import AdvertiserSearch from './components/AdvertiserSearch';
 import AdvertiserHeader from './components/AdvertiserHeader';
 import PartnerStatistics from './components/PartnerStatistics';
@@ -59,31 +60,40 @@ const COLORS = {
 
 const AdvertiserAnalytics: React.FC = () => {
   const { t } = useTranslation();
+  const { advertiserId } = useParams<{ advertiserId: string }>();
+  const navigate = useNavigate();
   const [selectedAdvertiser, setSelectedAdvertiser] = useState<DomainAutocompleteResult | null>(null);
   const [isPartnersModalOpen, setIsPartnersModalOpen] = useState(false);
 
   // Query for advertiser details
   const { data: advertiserData, isLoading: isLoadingAdvertiser } = useQuery({
-    queryKey: ['advertiser-analytics', selectedAdvertiser?.id],
+    queryKey: ['advertiser-analytics', advertiserId || selectedAdvertiser?.id],
     queryFn: async () => {
-      if (!selectedAdvertiser?.id) return null;
+      const id = advertiserId || selectedAdvertiser?.id;
+      if (!id) return null;
       
       const apiClient = await createApiClient(AnalyticsApi);
       const response = await apiClient.apiV1AnalyticsAdvertisersIdGet({
-        id: selectedAdvertiser.id
+        id: parseInt(id.toString())
       });
       
       return response.data;
     },
-    enabled: !!selectedAdvertiser?.id,
+    enabled: !!(advertiserId || selectedAdvertiser?.id),
   });
 
   const handleAdvertiserSelect = (advertiser: DomainAutocompleteResult) => {
     setSelectedAdvertiser(advertiser);
+    // Navigate to the advertiser-specific URL
+    navigate(`/analytics/advertiser/${advertiser.id}`);
   };
 
-  const getDisplayName = (advertiser: DomainAutocompleteResult) => {
-    return advertiser.name || advertiser.domain || '';
+  const getDisplayName = (advertiser?: DomainAutocompleteResult) => {
+    if (advertiser) {
+      return advertiser.name || advertiser.domain || '';
+    }
+    // If we have advertiser data from URL, try to get name from there
+    return (advertiserData?.advertiser as any)?.name || (advertiserData?.advertiser as any)?.domain || '';
   };
 
   // Process chart data from API response with proper type safety
@@ -107,25 +117,42 @@ const AdvertiserAnalytics: React.FC = () => {
     return advertiserData?.advertiser?.partnerInformation as PartnerInformation;
   };
 
+  // Effect to set selectedAdvertiser when URL changes
+  useEffect(() => {
+    if (advertiserId && advertiserData?.advertiser) {
+      // Create a mock DomainAutocompleteResult from advertiser data
+      const advertiser: DomainAutocompleteResult = {
+        id: parseInt(advertiserId),
+        name: (advertiserData.advertiser as any)?.name,
+        domain: (advertiserData.advertiser as any)?.domain,
+      };
+      setSelectedAdvertiser(advertiser);
+    }
+  }, [advertiserId, advertiserData]);
+
+  const currentAdvertiser = selectedAdvertiser;
+  const showContent = advertiserId || selectedAdvertiser;
+
   return (
     <div className="space-y-6 p-6">
-      {/* Search Bar */}
-      <AdvertiserSearch onSelect={handleAdvertiserSelect} />
+      {/* Search Bar - only show if no advertiser is selected via URL */}
+      {!advertiserId && <AdvertiserSearch onSelect={handleAdvertiserSelect} />}
 
       {/* Empty State or Analytics Content */}
-      {!selectedAdvertiser ? (
+      {!showContent ? (
         <EmptyState />
       ) : isLoadingAdvertiser ? (
-        <LoadingState advertiser={selectedAdvertiser} />
+        <LoadingState advertiser={currentAdvertiser} />
       ) : (
         <>
           {/* Header with selected advertiser name and logo */}
-          <AdvertiserHeader advertiser={selectedAdvertiser} />
+          <AdvertiserHeader advertiser={currentAdvertiser} />
 
           {/* Partner Statistics */}
           <PartnerStatistics 
             partnerInfo={getPartnerInfo()}
-            onViewPartnersClick={() => setIsPartnersModalOpen(true)}
+            onViewPartnersClick={() => navigate(`/analytics/advertiser/${advertiserId || currentAdvertiser?.id}/all_partners`)}
+            onViewNewPartnersClick={() => navigate(`/analytics/advertiser/${advertiserId || currentAdvertiser?.id}/new_partners`)}
           />
 
           {/* Affiliate Mix Chart */}
@@ -139,7 +166,7 @@ const AdvertiserAnalytics: React.FC = () => {
             isOpen={isPartnersModalOpen}
             onClose={() => setIsPartnersModalOpen(false)}
             partners={mockPartners}
-            advertiserName={getDisplayName(selectedAdvertiser)}
+            advertiserName={getDisplayName(currentAdvertiser)}
           />
         </>
       )}

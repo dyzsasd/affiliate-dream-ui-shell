@@ -15,5 +15,12 @@
   "rank": "Rank",
   "topPublishersInVertical": "Top Publishers in Vertical",
   "searchAdvertiserPlaceholder": "Search advertiser (min 3 characters)...",
-  "noAdvertisersFound": "No advertisers found."
+  "noAdvertisersFound": "No advertisers found.",
+  "allPartnersFor": "All Partners for",
+  "allPartnersDescription": "View and manage all partners for this advertiser",
+  "newPartnersFor": "New Partners for",
+  "newPartnersDescription": "View partners that joined recently (last 30 days)",
+  "noNewPartners": "No New Partners",
+  "noNewPartnersDescription": "No new partners have joined recently",
+  "somePartnersFailedToLoad": "Failed to load {{count}} partners"
 }

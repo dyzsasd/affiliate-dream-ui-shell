@@ -16,6 +16,8 @@ import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
 import ConversionReport from "@/pages/reporting/ConversionReport";
 import AdvertiserAnalytics from "@/pages/analytics/AdvertiserAnalytics";
+import AllPartnersPage from "@/pages/analytics/AllPartnersPage";
+import NewPartnersPage from "@/pages/analytics/NewPartnersPage";
 import InvitationManagement from "@/pages/invitations";
 import OrganizationList from "@/pages/organizations";
 import OrganizationEdit from "@/pages/organizations/OrganizationEdit";
@@ -69,6 +71,9 @@ function App() {
                 
                 {/* Analytics routes */}
                 <Route path="/analytics/advertiser" element={<AdvertiserAnalytics />} />
+                <Route path="/analytics/advertiser/:advertiserId" element={<AdvertiserAnalytics />} />
+                <Route path="/analytics/advertiser/:advertiserId/all_partners" element={<AllPartnersPage />} />
+                <Route path="/analytics/advertiser/:advertiserId/new_partners" element={<NewPartnersPage />} />
                 
                 {/* Tracking routes */}
                 <Route path="/tracking-links" element={<TrackingLinkGenerator />} />
