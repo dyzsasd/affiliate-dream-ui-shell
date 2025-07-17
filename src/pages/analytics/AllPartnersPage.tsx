@@ -1,17 +1,15 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Search, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { createApiClient } from '@/services/backendApi';
 import { AnalyticsApi } from '@/generated-api/src/apis/AnalyticsApi';
 import type { DomainAnalyticsPublisherResponse } from '@/generated-api/src/models';
 import RealPublisherCard from '@/pages/marketplace/components/RealPublisherCard';
-import RealPublisherFilters from '@/pages/marketplace/components/RealPublisherFilters';
 import RealPublisherDetailPanel from '@/pages/marketplace/components/RealPublisherDetailPanel';
 import { useToast } from '@/hooks/use-toast';
 
@@ -21,25 +19,19 @@ const AllPartnersPage: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedPublisher, setSelectedPublisher] = useState<DomainAnalyticsPublisherResponse | null>(null);
-  const [filters, setFilters] = useState({
-    country: 'all',
-    vertical: 'all'
-  });
-  const [showFilters, setShowFilters] = useState(false);
   const [partners, setPartners] = useState<DomainAnalyticsPublisherResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentBatch, setCurrentBatch] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
   const [failedDomains, setFailedDomains] = useState<Set<string>>(new Set());
+  const [allPartnerDomains, setAllPartnerDomains] = useState<string[]>([]);
 
-  const pageSize = 20;
+  const batchSize = 10;
 
   // Query for advertiser details to get partner domains
-  const { data: advertiserData } = useQuery({
+  const { data: advertiserData, isLoading: advertiserLoading } = useQuery({
     queryKey: ['advertiser-analytics', advertiserId],
     queryFn: async () => {
       if (!advertiserId) return null;
@@ -54,111 +46,101 @@ const AllPartnersPage: React.FC = () => {
     enabled: !!advertiserId,
   });
 
-  // Get partner domains from advertiser data
-  const getPartnerDomains = useCallback(() => {
-    const partnerInfo = advertiserData?.advertiser?.partnerInformation as any;
-    if (!partnerInfo?.promotypeMix?.value) return [];
+  // Extract partner domains from advertiser data
+  const extractPartnerDomains = useCallback(() => {
+    if (!advertiserData?.advertiser) return [];
     
-    // Extract domains from the promotype mix data
-    // This is a simplified extraction - adjust based on actual API response structure
-    const domains = partnerInfo.promotypeMix.value
-      .map((item: any) => item.domain)
-      .filter(Boolean) as string[];
+    console.log('Advertiser data:', advertiserData);
     
+    // Try to extract domains from various possible locations in the response
+    const advertiser = advertiserData.advertiser as any;
+    let domains: string[] = [];
+    
+    // Check partnerInformation structure
+    if (advertiser.partnerInformation?.promotypeMix?.value) {
+      domains = advertiser.partnerInformation.promotypeMix.value
+        .map((item: any) => item.domain)
+        .filter(Boolean);
+    }
+    
+    // Check other possible locations for partner data
+    if (domains.length === 0 && advertiser.partners) {
+      domains = advertiser.partners.map((partner: any) => partner.domain).filter(Boolean);
+    }
+    
+    // Check affiliateMix if available
+    if (domains.length === 0 && advertiser.affiliateMix?.value) {
+      domains = advertiser.affiliateMix.value
+        .map((item: any) => item.domain)
+        .filter(Boolean);
+    }
+    
+    console.log('Extracted domains:', domains);
     return [...new Set(domains)]; // Remove duplicates
   }, [advertiserData]);
 
-  // Fetch publisher details for multiple domains
+  // Initialize partner domains when advertiser data loads
+  useEffect(() => {
+    if (advertiserData) {
+      const domains = extractPartnerDomains();
+      setAllPartnerDomains(domains);
+      setHasMore(domains.length > 0);
+      console.log('All partner domains:', domains);
+    }
+  }, [advertiserData, extractPartnerDomains]);
+
+  // Fetch publisher details for a batch of domains
   const fetchPublisherBatch = async (domains: string[]) => {
     const apiClient = await createApiClient(AnalyticsApi);
-    const publisherPromises = domains.map(async (domain) => {
+    const results: DomainAnalyticsPublisherResponse[] = [];
+    
+    for (const domain of domains) {
       try {
+        console.log(`Fetching data for domain: ${domain}`);
         const response = await apiClient.apiV1AnalyticsAffiliatesDomainDomainGet({
           domain
         });
-        return response.data;
+        if (response.data) {
+          results.push(response.data);
+        }
       } catch (error) {
         console.error(`Failed to fetch data for domain ${domain}:`, error);
         setFailedDomains(prev => new Set([...prev, domain]));
-        return null;
       }
-    });
+    }
 
-    const results = await Promise.allSettled(publisherPromises);
-    return results
-      .map(result => result.status === 'fulfilled' ? result.value : null)
-      .filter(Boolean) as DomainAnalyticsPublisherResponse[];
+    return results;
   };
 
-  // Load partners function
-  const loadPartners = async (page: number = 1, append: boolean = false) => {
-    const partnerDomains = getPartnerDomains();
+  // Load next batch of partners
+  const loadNextBatch = async () => {
+    if (loadingMore || !hasMore || allPartnerDomains.length === 0) return;
+
+    const startIndex = currentBatch * batchSize;
+    const endIndex = startIndex + batchSize;
+    const batchDomains = allPartnerDomains.slice(startIndex, endIndex);
     
-    if (partnerDomains.length === 0) {
-      setPartners([]);
+    if (batchDomains.length === 0) {
       setHasMore(false);
-      setTotalCount(0);
       return;
     }
 
-    if (page === 1) {
+    if (currentBatch === 0) {
       setLoading(true);
     } else {
       setLoadingMore(true);
     }
 
     try {
-      // Calculate pagination for domains
-      const startIndex = (page - 1) * pageSize;
-      const endIndex = startIndex + pageSize;
-      const domainsToFetch = partnerDomains.slice(startIndex, endIndex);
+      const batchResults = await fetchPublisherBatch(batchDomains);
       
-      if (domainsToFetch.length === 0) {
-        setHasMore(false);
-        return;
-      }
-
-      const fetchedPartners = await fetchPublisherBatch(domainsToFetch);
+      setPartners(prev => [...prev, ...batchResults]);
+      setCurrentBatch(prev => prev + 1);
+      setHasMore(endIndex < allPartnerDomains.length);
       
-      // Apply filters
-      let filteredPartners = fetchedPartners;
-      
-      if (searchTerm) {
-        filteredPartners = filteredPartners.filter(partner =>
-          partner.publisher?.domain?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (partner.publisher?.known as any)?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-
-      if (filters.country && filters.country !== 'all') {
-        filteredPartners = filteredPartners.filter(partner => {
-          const countryRankings = partner.publisher?.countryRankings?.value;
-          return countryRankings?.some((ranking: any) => 
-            ranking.countryCode?.toUpperCase() === filters.country.toUpperCase()
-          );
-        });
-      }
-
-      if (filters.vertical && filters.vertical !== 'all') {
-        filteredPartners = filteredPartners.filter(partner => {
-          const verticals = partner.publisher?.verticalsV2?.value;
-          return verticals?.some((vertical: any) => 
-            vertical.name === filters.vertical
-          );
-        });
-      }
-
-      if (append) {
-        setPartners(prev => [...prev, ...filteredPartners]);
-      } else {
-        setPartners(filteredPartners);
-      }
-      
-      setHasMore(endIndex < partnerDomains.length);
-      setTotalCount(partnerDomains.length);
-      setCurrentPage(page);
+      console.log(`Loaded batch ${currentBatch + 1}, got ${batchResults.length} publishers`);
     } catch (error) {
-      console.error('Error loading partners:', error);
+      console.error('Error loading partner batch:', error);
       toast({
         title: "Error",
         description: "Failed to load partners. Please try again.",
@@ -170,49 +152,26 @@ const AllPartnersPage: React.FC = () => {
     }
   };
 
-  // Load partners on component mount and filter changes
+  // Load first batch when domains are available
   useEffect(() => {
-    if (advertiserData) {
-      loadPartners(1, false);
+    if (allPartnerDomains.length > 0 && currentBatch === 0) {
+      loadNextBatch();
     }
-  }, [advertiserData, filters.country, filters.vertical]);
-
-  // Search with debounce
-  useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      if (advertiserData) {
-        loadPartners(1, false);
-      }
-    }, 500);
-
-    return () => clearTimeout(debounceTimer);
-  }, [searchTerm]);
-
-  const handleClearFilters = () => {
-    setFilters({
-      country: 'all',
-      vertical: 'all'
-    });
-    setSearchTerm('');
-  };
-
-  const handleLoadMore = () => {
-    if (!loadingMore && hasMore) {
-      loadPartners(currentPage + 1, true);
-    }
-  };
-
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (filters.country && filters.country !== 'all') count++;
-    if (filters.vertical && filters.vertical !== 'all') count++;
-    if (searchTerm) count++;
-    return count;
-  };
+  }, [allPartnerDomains]);
 
   const getDisplayName = () => {
-    return (advertiserData?.advertiser as any)?.name || (advertiserData?.advertiser as any)?.domain || 'Advertiser';
+    return (advertiserData?.advertiser as any)?.name || 
+           (advertiserData?.advertiser as any)?.domain || 
+           'Advertiser';
   };
+
+  if (advertiserLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -237,68 +196,6 @@ const AllPartnersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t('marketplace.searchPlaceholder')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        
-        <Button
-          variant="outline"
-          onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2"
-        >
-          <Search className="h-4 w-4" />
-          {t('marketplace.filters')}
-        </Button>
-        
-        {getActiveFiltersCount() > 0 && (
-          <Button variant="ghost" onClick={handleClearFilters}>
-            {t('marketplace.clearAll')}
-          </Button>
-        )}
-      </div>
-
-      {/* Active Filters */}
-      {getActiveFiltersCount() > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {searchTerm && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              {t('marketplace.search')}: {searchTerm}
-            </Badge>
-          )}
-          {filters.country && filters.country !== 'all' && (
-            <Badge variant="secondary">
-              {t('marketplace.country')}: {filters.country}
-            </Badge>
-          )}
-          {filters.vertical && filters.vertical !== 'all' && (
-            <Badge variant="secondary">
-              {t('marketplace.vertical')}: {filters.vertical}
-            </Badge>
-          )}
-        </div>
-      )}
-
-      {/* Filters Panel */}
-      {showFilters && (
-        <Card>
-          <CardContent className="p-6">
-            <RealPublisherFilters 
-              filters={filters} 
-              onFiltersChange={setFilters}
-              onClear={handleClearFilters}
-            />
-          </CardContent>
-        </Card>
-      )}
-
       {/* Failed Domains Alert */}
       {failedDomains.size > 0 && (
         <Card className="border-orange-200 bg-orange-50">
@@ -310,29 +207,29 @@ const AllPartnersPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Results Count and Loading */}
+      {/* Results Summary */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <p className="text-sm text-muted-foreground">
             {loading ? "Loading..." : `Showing ${partners.length} partners`}
-            {totalCount > 0 && ` (${totalCount} total)`}
+            {allPartnerDomains.length > 0 && ` of ${allPartnerDomains.length} total`}
           </p>
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         </div>
       </div>
 
       {/* Partners List */}
-      {!loading && partners.length === 0 ? (
+      {!loading && partners.length === 0 && allPartnerDomains.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <div className="mx-auto max-w-md">
-              <div className="mb-4 text-6xl">🔍</div>
-              <h3 className="mb-2 text-lg font-semibold">{t('marketplace.noResults')}</h3>
+              <div className="mb-4 text-6xl">📊</div>
+              <h3 className="mb-2 text-lg font-semibold">No Partners Found</h3>
               <p className="text-muted-foreground mb-4">
-                {t('marketplace.noResultsDescription')}
+                This advertiser doesn't have any partner data available.
               </p>
-              <Button onClick={handleClearFilters} variant="outline">
-                {t('marketplace.clearFilters')}
+              <Button onClick={() => navigate(`/analytics/advertiser/${advertiserId}`)} variant="outline">
+                Back to Analytics
               </Button>
             </div>
           </CardContent>
@@ -355,16 +252,16 @@ const AllPartnersPage: React.FC = () => {
             <div className="flex justify-center">
               <Button 
                 variant="outline" 
-                onClick={handleLoadMore}
+                onClick={loadNextBatch}
                 disabled={loadingMore}
               >
                 {loadingMore ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Loading...
+                    Loading More...
                   </>
                 ) : (
-                  "Load More Partners"
+                  `Load More Partners (${Math.min(batchSize, allPartnerDomains.length - partners.length)} remaining)`
                 )}
               </Button>
             </div>
