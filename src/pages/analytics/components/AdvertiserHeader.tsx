@@ -4,17 +4,19 @@ import { useTranslation } from 'react-i18next';
 import { DomainAutocompleteResult } from '@/generated-api/src/models/DomainAutocompleteResult';
 
 interface AdvertiserHeaderProps {
-  advertiser: DomainAutocompleteResult;
+  advertiser: DomainAutocompleteResult | null;
 }
 
 const AdvertiserHeader: React.FC<AdvertiserHeaderProps> = ({ advertiser }) => {
   const { t } = useTranslation();
 
-  const getDisplayName = (advertiser: DomainAutocompleteResult) => {
+  const getDisplayName = (advertiser: DomainAutocompleteResult | null) => {
+    if (!advertiser) return 'Loading...';
     return advertiser.name || advertiser.domain || '';
   };
 
-  const getLogoInitial = (advertiser: DomainAutocompleteResult) => {
+  const getLogoInitial = (advertiser: DomainAutocompleteResult | null) => {
+    if (!advertiser) return 'L';
     const name = getDisplayName(advertiser);
     return name.charAt(0).toUpperCase();
   };
@@ -27,7 +29,7 @@ const AdvertiserHeader: React.FC<AdvertiserHeaderProps> = ({ advertiser }) => {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{getDisplayName(advertiser)}</h1>
         <p className="text-gray-600">{t('analytics.advertiserAnalytics')}</p>
-        {advertiser.domain && (
+        {advertiser?.domain && (
           <p className="text-sm text-gray-500">{advertiser.domain}</p>
         )}
       </div>
