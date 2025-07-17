@@ -59,7 +59,7 @@ const AllPartnersPage: React.FC = () => {
     // Check partnerInformation structure
     if (advertiser.partnerInformation?.promotypeMix?.value) {
       domains = advertiser.partnerInformation.promotypeMix.value
-        .map((item: any) => item.domain)
+        .flatMap((promotype: any) => promotype.value || [])
         .filter(Boolean);
     }
     
