@@ -99,6 +99,7 @@ function App() {
                 
                 {/* Favorite Publisher Lists routes */}
                 <Route path="/favorite_publisher" element={<FavoritePublisherLists />} />
+                <Route path="/favorite_publisher/create" element={<FavoritePublisherListDetail />} />
                 <Route path="/favorite_publishers/:listId" element={<FavoritePublisherListDetail />} />
                 
                 {/* Other routes */}
