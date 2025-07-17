@@ -26,5 +26,16 @@
   "showingPublishers": "Showing {{count}} publishers",
   "removeSuccess": "Publisher Removed",
   "removeSuccessDescription": "The publisher has been removed from the list successfully.",
-  "removeError": "Failed to remove publisher from the list. Please try again."
+  "removeError": "Failed to remove publisher from the list. Please try again.",
+  "createNewList": "Create New Favorite Publisher List",
+  "listDetails": "List Details",
+  "listName": "List Name",
+  "listNamePlaceholder": "Enter a name for your list",
+  "nameRequired": "List name is required",
+  "descriptionPlaceholder": "Optional description for your list",
+  "creating": "Creating...",
+  "createList": "Create List",
+  "createSuccess": "List Created",
+  "createSuccessDescription": "Your favorite publisher list has been created successfully.",
+  "createError": "Failed to create list. Please try again."
 }
