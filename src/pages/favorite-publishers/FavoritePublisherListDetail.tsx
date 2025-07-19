@@ -12,6 +12,7 @@ import { AnalyticsApi } from '@/generated-api/src/apis/AnalyticsApi';
 import type { DomainFavoritePublisherList, DomainFavoritePublisherListItem, DomainAnalyticsPublisherResponse } from '@/generated-api/src/models';
 import RealPublisherCard from '@/pages/marketplace/components/RealPublisherCard';
 import RealPublisherDetailPanel from '@/pages/marketplace/components/RealPublisherDetailPanel';
+import PublisherStatusProgress from './components/PublisherStatusProgress';
 import { useToast } from '@/hooks/use-toast';
 
 const FavoritePublisherListDetail: React.FC = () => {
@@ -254,6 +255,14 @@ const FavoritePublisherListDetail: React.FC = () => {
                     viewMode="list"
                     onViewDetails={() => setSelectedPublisher(publisherResponse)}
                   />
+                  
+                  {/* Status Progress Indicator */}
+                  {item?.status && (
+                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm">
+                      <PublisherStatusProgress status={item.status} />
+                    </div>
+                  )}
+                  
                   {/* Custom remove button overlay */}
                   <div className="absolute top-4 right-4">
                     <Button
@@ -273,12 +282,6 @@ const FavoritePublisherListDetail: React.FC = () => {
                       )}
                     </Button>
                   </div>
-                  {/* Status badge */}
-                  {item?.status && (
-                    <div className="absolute top-4 left-4">
-                      <Badge variant="secondary">{item.status}</Badge>
-                    </div>
-                  )}
                 </div>
               );
             })}
