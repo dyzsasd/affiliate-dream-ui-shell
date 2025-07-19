@@ -143,30 +143,33 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
             ) : (
               <RadioGroup value={selectedListId} onValueChange={setSelectedListId}>
                 <div className="space-y-2">
-                  {listsData.map((list) => (
-                    <div key={list.listId} className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value={list.listId?.toString() || ''}
-                        id={`list-${list.listId}`}
-                      />
-                      <Label
-                        htmlFor={`list-${list.listId}`}
-                        className="flex-1 cursor-pointer"
-                      >
-                        <div>
-                          <div className="font-medium">{list.name}</div>
-                          {list.description && (
-                            <div className="text-sm text-muted-foreground">
-                              {list.description}
+                  {listsData.map((list, index) => {
+                    const listId = list.listId?.toString() || index.toString();
+                    return (
+                      <div key={listId} className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value={listId}
+                          id={`list-${listId}`}
+                        />
+                        <Label
+                          htmlFor={`list-${listId}`}
+                          className="flex-1 cursor-pointer"
+                        >
+                          <div>
+                            <div className="font-medium">{list.name}</div>
+                            {list.description && (
+                              <div className="text-sm text-muted-foreground">
+                                {list.description}
+                              </div>
+                            )}
+                            <div className="text-xs text-muted-foreground">
+                              {list.items?.length || 0} publishers
                             </div>
-                          )}
-                          <div className="text-xs text-muted-foreground">
-                            {list.items?.length || 0} publishers
                           </div>
-                        </div>
-                      </Label>
-                    </div>
-                  ))}
+                        </Label>
+                      </div>
+                    );
+                  })}
                 </div>
               </RadioGroup>
             )}
