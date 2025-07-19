@@ -26,5 +26,17 @@
   "showingPublishers": "显示 {{count}} 个发布商",
   "removeSuccess": "发布商已移除",
   "removeSuccessDescription": "发布商已成功从列表中移除。",
-  "removeError": "从列表中移除发布商失败。请重试。"
+  "removeError": "从列表中移除发布商失败。请重试。",
+  "createNewList": "创建新的收藏发布商列表",
+  "listDetails": "列表详情",
+  "listName": "列表名称",
+  "listNamePlaceholder": "为您的列表输入名称",
+  "nameRequired": "列表名称是必需的",
+  "description": "描述",
+  "descriptionPlaceholder": "为您的列表添加可选描述",
+  "creating": "创建中...",
+  "createList": "创建列表",
+  "createSuccess": "列表已创建",
+  "createSuccessDescription": "您的收藏发布商列表已成功创建。",
+  "createError": "创建列表失败。请重试。"
 }

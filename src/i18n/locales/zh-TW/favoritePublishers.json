@@ -26,5 +26,17 @@
   "showingPublishers": "顯示 {{count}} 個發布商",
   "removeSuccess": "發布商已移除",
   "removeSuccessDescription": "發布商已成功從列表中移除。",
-  "removeError": "從列表中移除發布商失敗。請重試。"
+  "removeError": "從列表中移除發布商失敗。請重試。",
+  "createNewList": "建立新的收藏發布商列表",
+  "listDetails": "列表詳情",
+  "listName": "列表名稱",
+  "listNamePlaceholder": "為您的列表輸入名稱",
+  "nameRequired": "列表名稱是必需的",
+  "description": "描述",
+  "descriptionPlaceholder": "為您的列表新增可選描述",
+  "creating": "建立中...",
+  "createList": "建立列表",
+  "createSuccess": "列表已建立",
+  "createSuccessDescription": "您的收藏發布商列表已成功建立。",
+  "createError": "建立列表失敗。請重試。"
 }
