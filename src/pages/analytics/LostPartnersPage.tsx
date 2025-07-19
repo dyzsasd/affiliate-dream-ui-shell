@@ -22,11 +22,6 @@ const LostPartnersPage: React.FC = () => {
   const { toast } = useToast();
 
   const [selectedPublisher, setSelectedPublisher] = useState<DomainAnalyticsPublisherResponse | null>(null);
-  const [filters, setFilters] = useState({
-    country: 'all',
-    vertical: 'all'
-  });
-  const [showFilters, setShowFilters] = useState(false);
   const [partners, setPartners] = useState<DomainAnalyticsPublisherResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -118,32 +113,11 @@ const LostPartnersPage: React.FC = () => {
       }
 
       const fetchedPartners = await fetchPublisherBatch(domainsToFetch);
-      
-      // Apply filters
-      let filteredPartners = fetchedPartners;
-
-      if (filters.country && filters.country !== 'all') {
-        filteredPartners = filteredPartners.filter(partner => {
-          const countryRankings = partner.publisher?.countryRankings?.value;
-          return countryRankings?.some((ranking: any) => 
-            ranking.countryCode?.toUpperCase() === filters.country.toUpperCase()
-          );
-        });
-      }
-
-      if (filters.vertical && filters.vertical !== 'all') {
-        filteredPartners = filteredPartners.filter(partner => {
-          const verticals = partner.publisher?.verticalsV2?.value;
-          return verticals?.some((vertical: any) => 
-            vertical.name === filters.vertical
-          );
-        });
-      }
 
       if (append) {
-        setPartners(prev => [...prev, ...filteredPartners]);
+        setPartners(prev => [...prev, ...fetchedPartners]);
       } else {
-        setPartners(filteredPartners);
+        setPartners(fetchedPartners);
       }
       
       setHasMore(endIndex < lostPartnerDomains.length);
@@ -167,26 +141,12 @@ const LostPartnersPage: React.FC = () => {
     if (advertiserData) {
       loadPartners(1, false);
     }
-  }, [advertiserData, filters.country, filters.vertical]);
-
-  const handleClearFilters = () => {
-    setFilters({
-      country: 'all',
-      vertical: 'all'
-    });
-  };
+  }, [advertiserData]);
 
   const handleLoadMore = () => {
     if (!loadingMore && hasMore) {
       loadPartners(currentPage + 1, true);
     }
-  };
-
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (filters.country && filters.country !== 'all') count++;
-    if (filters.vertical && filters.vertical !== 'all') count++;
-    return count;
   };
 
   const getDisplayName = () => {
@@ -216,52 +176,6 @@ const LostPartnersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-        <Button
-          variant="outline"
-          onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2"
-        >
-          <Search className="h-4 w-4" />
-          {t('marketplace.filters')}
-        </Button>
-        
-        {getActiveFiltersCount() > 0 && (
-          <Button variant="ghost" onClick={handleClearFilters}>
-            {t('marketplace.clearAll')}
-          </Button>
-        )}
-      </div>
-
-      {/* Active Filters */}
-      {getActiveFiltersCount() > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {filters.country && filters.country !== 'all' && (
-            <Badge variant="secondary">
-              {t('marketplace.country')}: {filters.country}
-            </Badge>
-          )}
-          {filters.vertical && filters.vertical !== 'all' && (
-            <Badge variant="secondary">
-              {t('marketplace.vertical')}: {filters.vertical}
-            </Badge>
-          )}
-        </div>
-      )}
-
-      {/* Filters Panel */}
-      {showFilters && (
-        <Card>
-          <CardContent className="p-6">
-            <RealPublisherFilters 
-              filters={filters} 
-              onFiltersChange={setFilters}
-              onClear={handleClearFilters}
-            />
-          </CardContent>
-        </Card>
-      )}
 
       {/* Failed Domains Alert */}
       {failedDomains.size > 0 && (
@@ -295,9 +209,6 @@ const LostPartnersPage: React.FC = () => {
               <p className="text-muted-foreground mb-4">
                 {t('analytics.noLostPartnersDescription')}
               </p>
-              <Button onClick={handleClearFilters} variant="outline">
-                {t('marketplace.clearFilters')}
-              </Button>
             </div>
           </CardContent>
         </Card>
