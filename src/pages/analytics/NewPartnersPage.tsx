@@ -221,6 +221,7 @@ const NewPartnersPage: React.FC = () => {
                 publisher={publisher}
                 viewMode="list"
                 onViewDetails={() => setSelectedPublisher(publisher)}
+                hideContactButton={true}
               />
             ))}
           </div>

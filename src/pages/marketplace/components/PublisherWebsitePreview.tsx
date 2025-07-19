@@ -10,13 +10,15 @@ interface PublisherWebsitePreviewProps {
   onViewDetails: () => void;
   onContact: () => void;
   onAddToFavorites?: () => void;
+  hideContactButton?: boolean;
 }
 
 const PublisherWebsitePreview: React.FC<PublisherWebsitePreviewProps> = ({
   publisherData,
   onViewDetails,
   onContact,
-  onAddToFavorites
+  onAddToFavorites,
+  hideContactButton = false
 }) => {
   const { t } = useTranslation();
 
@@ -103,10 +105,12 @@ const PublisherWebsitePreview: React.FC<PublisherWebsitePreviewProps> = ({
           <Eye className="h-3 w-3 mr-1" />
           {t("marketplace.viewDetails")}
         </Button>
-        <Button variant="default" size="sm" onClick={onContact}>
-          <Mail className="h-3 w-3 mr-1" />
-          Contact
-        </Button>
+        {!hideContactButton && (
+          <Button variant="default" size="sm" onClick={onContact}>
+            <Mail className="h-3 w-3 mr-1" />
+            Contact
+          </Button>
+        )}
         {onAddToFavorites && (
           <Button variant="outline" size="sm" onClick={onAddToFavorites}>
             <Heart className="h-3 w-3 mr-1" />

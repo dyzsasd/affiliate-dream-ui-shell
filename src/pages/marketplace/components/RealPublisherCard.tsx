@@ -11,12 +11,14 @@ interface RealPublisherCardProps {
   publisher: DomainAnalyticsPublisherResponse;
   viewMode: "grid" | "list";
   onViewDetails: () => void;
+  hideContactButton?: boolean;
 }
 
 const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
   publisher,
   viewMode,
-  onViewDetails
+  onViewDetails,
+  hideContactButton = false
 }) => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAddToFavoritesModal, setShowAddToFavoritesModal] = useState(false);
@@ -34,6 +36,7 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
             onViewDetails={onViewDetails}
             onContact={() => setShowContactModal(true)}
             onAddToFavorites={() => setShowAddToFavoritesModal(true)}
+            hideContactButton={hideContactButton}
           />
 
           {/* Middle Section - Details */}
