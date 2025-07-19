@@ -263,15 +263,9 @@ const FavoritePublisherListDetail: React.FC = () => {
                   />
                   
                   {/* Status Progress Indicator */}
-                  {item?.status ? (
-                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm z-10">
-                      <PublisherStatusProgress status={item.status} />
-                    </div>
-                  ) : (
-                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-2 border shadow-sm z-10">
-                      <span className="text-xs text-muted-foreground">No status</span>
-                    </div>
-                  )}
+                  <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm z-10">
+                    <PublisherStatusProgress status={item?.status || 'added'} />
+                  </div>
                   
                   {/* Custom remove button overlay */}
                   <div className="absolute top-4 right-4 z-10">
