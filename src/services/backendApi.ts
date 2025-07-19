@@ -1,8 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Configuration } from '@/generated-api/src/runtime';
 
-// Using the production API URL - without /api/v1 suffix since the generated client adds it
-const DEFAULT_API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+// Using the production API URL
+const DEFAULT_API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://api.affiliate.rolinko.com') + '/api/v1';
 
 // Define a simple ApiError interface
 interface ApiError {
