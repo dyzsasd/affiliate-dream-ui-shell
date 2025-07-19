@@ -101,7 +101,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -144,7 +144,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}/external-messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}/external-messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -180,7 +180,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -224,7 +224,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}/messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}/messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -269,7 +269,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}/status`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}/status`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -310,7 +310,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations`,
+            path: `/publisher-messaging/conversations`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -347,7 +347,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations`,
+            path: `/publisher-messaging/conversations`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
