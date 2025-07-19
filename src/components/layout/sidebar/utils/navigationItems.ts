@@ -11,7 +11,8 @@ import {
   Store,
   Users,
   CreditCard,
-  Heart
+  Heart,
+  MessageCircle
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -57,6 +58,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.favoritePublishers"),
         path: "/favorite_publisher",
         icon: Heart
+      },
+      {
+        name: t("sidebar.conversations"),
+        path: "/conversations",
+        icon: MessageCircle
       },
       {
         name: t("sidebar.reports"),
