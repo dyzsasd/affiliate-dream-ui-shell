@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Configuration } from '@/generated-api/src/runtime';
 
 // Using the production API URL
-const DEFAULT_API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://api.affiliate.rolinko.com') + '/api/v1';
+const DEFAULT_API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.affiliate.rolinko.com';
 
 // Define a simple ApiError interface
 interface ApiError {
