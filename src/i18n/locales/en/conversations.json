@@ -1,0 +1,9 @@
+{
+  "title": "Conversations",
+  "description": "Manage your conversations with publishers.",
+  "noConversations": "No Conversations",
+  "noConversationsDescription": "Start conversations by contacting publishers from your favorite lists.",
+  "loadError": "Failed to load conversations. Please try again.",
+  "messages": "messages",
+  "loadMore": "Load More"
+}

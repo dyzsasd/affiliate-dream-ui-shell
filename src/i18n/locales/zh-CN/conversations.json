@@ -1,0 +1,9 @@
+{
+  "title": "对话",
+  "description": "管理您与发布商的对话。",
+  "noConversations": "无对话",
+  "noConversationsDescription": "通过联系您收藏列表中的发布商来开始对话。",
+  "loadError": "加载对话失败。请重试。",
+  "messages": "消息",
+  "loadMore": "加载更多"
+}

@@ -12,13 +12,15 @@ interface RealPublisherCardProps {
   viewMode: "grid" | "list";
   onViewDetails: () => void;
   hideContactButton?: boolean;
+  listId?: number;
 }
 
 const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
   publisher,
   viewMode,
   onViewDetails,
-  hideContactButton = false
+  hideContactButton = false,
+  listId
 }) => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAddToFavoritesModal, setShowAddToFavoritesModal] = useState(false);
@@ -52,6 +54,7 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
         publisher={publisher}
         isOpen={showContactModal}
         onClose={() => setShowContactModal(false)}
+        listId={listId}
       />
 
       {/* Add to Favorites Modal */}
