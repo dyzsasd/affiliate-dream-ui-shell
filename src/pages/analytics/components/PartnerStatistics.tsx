@@ -29,12 +29,14 @@ interface PartnerStatisticsProps {
   partnerInfo: PartnerInformation | undefined;
   onViewPartnersClick: () => void;
   onViewNewPartnersClick?: () => void;
+  onViewLostPartnersClick?: () => void;
 }
 
 const PartnerStatistics: React.FC<PartnerStatisticsProps> = ({ 
   partnerInfo, 
   onViewPartnersClick,
-  onViewNewPartnersClick 
+  onViewNewPartnersClick,
+  onViewLostPartnersClick 
 }) => {
   const { t } = useTranslation();
 
@@ -85,7 +87,11 @@ const PartnerStatistics: React.FC<PartnerStatisticsProps> = ({
                 -{partnerInfo?.partnersRemoved?.count || '0'}
               </span>
             </div>
-            <Button variant="link" className="text-sm text-gray-600 mt-2">
+            <Button 
+              variant="link" 
+              className="text-sm text-gray-600 mt-2"
+              onClick={onViewLostPartnersClick}
+            >
               {t('analytics.showMe')}
             </Button>
           </div>

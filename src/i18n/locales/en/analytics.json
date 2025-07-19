@@ -22,5 +22,9 @@
   "newPartnersDescription": "View partners that joined recently (last 30 days)",
   "noNewPartners": "No New Partners",
   "noNewPartnersDescription": "No new partners have joined recently",
+  "lostPartnersFor": "Lost Partners for",
+  "lostPartnersDescription": "Partners that have recently stopped working with this advertiser.",
+  "noLostPartners": "No Lost Partners",
+  "noLostPartnersDescription": "This advertiser hasn't lost any partners recently.",
   "somePartnersFailedToLoad": "Failed to load {{count}} partners"
 }

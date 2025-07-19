@@ -153,6 +153,7 @@ const AdvertiserAnalytics: React.FC = () => {
             partnerInfo={getPartnerInfo()}
             onViewPartnersClick={() => navigate(`/analytics/advertiser/${advertiserId || currentAdvertiser?.id}/all_partners`)}
             onViewNewPartnersClick={() => navigate(`/analytics/advertiser/${advertiserId || currentAdvertiser?.id}/new_partners`)}
+            onViewLostPartnersClick={() => navigate(`/analytics/advertiser/${advertiserId || currentAdvertiser?.id}/lost_partners`)}
           />
 
           {/* Affiliate Mix Chart */}

@@ -15,7 +15,7 @@ import RealPublisherFilters from '@/pages/marketplace/components/RealPublisherFi
 import RealPublisherDetailPanel from '@/pages/marketplace/components/RealPublisherDetailPanel';
 import { useToast } from '@/hooks/use-toast';
 
-const NewPartnersPage: React.FC = () => {
+const LostPartnersPage: React.FC = () => {
   const { advertiserId } = useParams<{ advertiserId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ const NewPartnersPage: React.FC = () => {
 
   const pageSize = 20;
 
-  // Query for advertiser details to get new partner domains
+  // Query for advertiser details to get lost partner domains
   const { data: advertiserData } = useQuery({
     queryKey: ['advertiser-analytics', advertiserId],
     queryFn: async () => {
@@ -54,13 +54,13 @@ const NewPartnersPage: React.FC = () => {
     enabled: !!advertiserId,
   });
 
-  // Get new partner domains from advertiser data
-  const getNewPartnerDomains = useCallback(() => {
+  // Get lost partner domains from advertiser data
+  const getLostPartnerDomains = useCallback(() => {
     const partnerInfo = advertiserData?.advertiser?.partnerInformation as any;
     
-    // Get domains from partnersAdded.value array
-    if (partnerInfo?.partnersAdded?.value) {
-      return partnerInfo.partnersAdded.value
+    // Get domains from partnersRemoved.value array
+    if (partnerInfo?.partnersRemoved?.value) {
+      return partnerInfo.partnersRemoved.value
         .map((partner: any) => partner.domain)
         .filter(Boolean) as string[];
     }
@@ -92,9 +92,9 @@ const NewPartnersPage: React.FC = () => {
 
   // Load partners function
   const loadPartners = async (page: number = 1, append: boolean = false) => {
-    const newPartnerDomains = getNewPartnerDomains();
+    const lostPartnerDomains = getLostPartnerDomains();
     
-    if (newPartnerDomains.length === 0) {
+    if (lostPartnerDomains.length === 0) {
       setPartners([]);
       setHasMore(false);
       setTotalCount(0);
@@ -111,7 +111,7 @@ const NewPartnersPage: React.FC = () => {
       // Calculate pagination for domains
       const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
-      const domainsToFetch = newPartnerDomains.slice(startIndex, endIndex);
+      const domainsToFetch = lostPartnerDomains.slice(startIndex, endIndex);
       
       if (domainsToFetch.length === 0) {
         setHasMore(false);
@@ -154,14 +154,14 @@ const NewPartnersPage: React.FC = () => {
         setPartners(filteredPartners);
       }
       
-      setHasMore(endIndex < newPartnerDomains.length);
-      setTotalCount(newPartnerDomains.length);
+      setHasMore(endIndex < lostPartnerDomains.length);
+      setTotalCount(lostPartnerDomains.length);
       setCurrentPage(page);
     } catch (error) {
-      console.error('Error loading new partners:', error);
+      console.error('Error loading lost partners:', error);
       toast({
         title: "Error",
-        description: "Failed to load new partners. Please try again.",
+        description: "Failed to load lost partners. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -229,10 +229,10 @@ const NewPartnersPage: React.FC = () => {
         </Button>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            {t('analytics.newPartnersFor')} {getDisplayName()}
+            {t('analytics.lostPartnersFor')} {getDisplayName()}
           </h1>
           <p className="text-muted-foreground">
-            {t('analytics.newPartnersDescription')}
+            {t('analytics.lostPartnersDescription')}
           </p>
         </div>
       </div>
@@ -314,7 +314,7 @@ const NewPartnersPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <p className="text-sm text-muted-foreground">
-            {loading ? "Loading..." : `Showing ${partners.length} new partners`}
+            {loading ? "Loading..." : `Showing ${partners.length} lost partners`}
             {totalCount > 0 && ` (${totalCount} total)`}
           </p>
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -326,10 +326,10 @@ const NewPartnersPage: React.FC = () => {
         <Card>
           <CardContent className="py-12 text-center">
             <div className="mx-auto max-w-md">
-              <div className="mb-4 text-6xl">🎉</div>
-              <h3 className="mb-2 text-lg font-semibold">{t('analytics.noNewPartners')}</h3>
+              <div className="mb-4 text-6xl">🎯</div>
+              <h3 className="mb-2 text-lg font-semibold">{t('analytics.noLostPartners')}</h3>
               <p className="text-muted-foreground mb-4">
-                {t('analytics.noNewPartnersDescription')}
+                {t('analytics.noLostPartnersDescription')}
               </p>
               <Button onClick={handleClearFilters} variant="outline">
                 {t('marketplace.clearFilters')}
@@ -384,4 +384,4 @@ const NewPartnersPage: React.FC = () => {
   );
 };
 
-export default NewPartnersPage;
+export default LostPartnersPage;
