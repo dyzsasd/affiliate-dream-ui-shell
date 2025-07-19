@@ -247,7 +247,13 @@ const FavoritePublisherListDetail: React.FC = () => {
           
           <div className="grid gap-6 grid-cols-1">
             {publishers.map((publisherResponse, index) => {
-              const item = listItems?.[index];
+              // Find the corresponding list item for this publisher
+              const item = listItems?.find(item => 
+                item.publisherDomain === publisherResponse.publisher?.domain
+              );
+              
+              console.log(`Publisher ${publisherResponse.publisher?.domain} has status:`, item?.status);
+              
               return (
                 <div key={`${publisherResponse.publisher?.domain}-${index}`} className="relative">
                   <RealPublisherCard
@@ -257,14 +263,18 @@ const FavoritePublisherListDetail: React.FC = () => {
                   />
                   
                   {/* Status Progress Indicator */}
-                  {item?.status && (
-                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm">
+                  {item?.status ? (
+                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm z-10">
                       <PublisherStatusProgress status={item.status} />
+                    </div>
+                  ) : (
+                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-2 border shadow-sm z-10">
+                      <span className="text-xs text-muted-foreground">No status</span>
                     </div>
                   )}
                   
                   {/* Custom remove button overlay */}
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-4 right-4 z-10">
                     <Button
                       variant="destructive"
                       size="sm"
