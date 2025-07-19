@@ -21,7 +21,6 @@ const NewPartnersPage: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
 
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedPublisher, setSelectedPublisher] = useState<DomainAnalyticsPublisherResponse | null>(null);
   const [filters, setFilters] = useState({
     country: 'all',
@@ -122,13 +121,6 @@ const NewPartnersPage: React.FC = () => {
       
       // Apply filters
       let filteredPartners = fetchedPartners;
-      
-      if (searchTerm) {
-        filteredPartners = filteredPartners.filter(partner =>
-          partner.publisher?.domain?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (partner.publisher?.known as any)?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
 
       if (filters.country && filters.country !== 'all') {
         filteredPartners = filteredPartners.filter(partner => {
@@ -177,23 +169,11 @@ const NewPartnersPage: React.FC = () => {
     }
   }, [advertiserData, filters.country, filters.vertical]);
 
-  // Search with debounce
-  useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      if (advertiserData) {
-        loadPartners(1, false);
-      }
-    }, 500);
-
-    return () => clearTimeout(debounceTimer);
-  }, [searchTerm]);
-
   const handleClearFilters = () => {
     setFilters({
       country: 'all',
       vertical: 'all'
     });
-    setSearchTerm('');
   };
 
   const handleLoadMore = () => {
@@ -206,7 +186,6 @@ const NewPartnersPage: React.FC = () => {
     let count = 0;
     if (filters.country && filters.country !== 'all') count++;
     if (filters.vertical && filters.vertical !== 'all') count++;
-    if (searchTerm) count++;
     return count;
   };
 
@@ -237,18 +216,8 @@ const NewPartnersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Search and Filters */}
+      {/* Filters */}
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t('marketplace.searchPlaceholder')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        
         <Button
           variant="outline"
           onClick={() => setShowFilters(!showFilters)}
@@ -268,11 +237,6 @@ const NewPartnersPage: React.FC = () => {
       {/* Active Filters */}
       {getActiveFiltersCount() > 0 && (
         <div className="flex flex-wrap gap-2">
-          {searchTerm && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              {t('marketplace.search')}: {searchTerm}
-            </Badge>
-          )}
           {filters.country && filters.country !== 'all' && (
             <Badge variant="secondary">
               {t('marketplace.country')}: {filters.country}
