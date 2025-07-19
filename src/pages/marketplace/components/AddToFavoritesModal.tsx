@@ -144,7 +144,7 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
               <RadioGroup value={selectedListId} onValueChange={setSelectedListId}>
                 <div className="space-y-2">
                   {listsData.map((list, index) => {
-                    const listId = list.listId?.toString() || index.toString();
+                    const listId = (list as any).list_id?.toString() || list.listId?.toString() || (index + 1).toString();
                     return (
                       <div key={listId} className="flex items-center space-x-2">
                         <RadioGroupItem
