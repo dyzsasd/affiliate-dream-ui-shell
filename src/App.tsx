@@ -32,6 +32,7 @@ import BillingDashboard from "@/pages/billing";
 import FavoritePublisherLists from "@/pages/favorite-publishers";
 import FavoritePublisherListDetail from "@/pages/favorite-publishers/FavoritePublisherListDetail";
 import CreateFavoritePublisherList from "@/pages/favorite-publishers/CreateFavoritePublisherList";
+import ConversationsList from "@/pages/conversations";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -104,6 +105,9 @@ function App() {
                 <Route path="/favorite_publisher" element={<FavoritePublisherLists />} />
                 <Route path="/favorite_publisher/create" element={<CreateFavoritePublisherList />} />
                 <Route path="/favorite_publishers/:listId" element={<FavoritePublisherListDetail />} />
+                
+                {/* Conversations routes */}
+                <Route path="/conversations" element={<ConversationsList />} />
                 
                 {/* Other routes */}
                 <Route path="/invitations" element={<InvitationManagement />} />
