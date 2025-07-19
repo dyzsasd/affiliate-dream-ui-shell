@@ -49,11 +49,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: Store
       },
       {
-        name: t("sidebar.influencerSearch"),
-        path: "/influencer",
-        icon: Users
-      },
-      {
         name: t("sidebar.analytics"),
         path: "/analytics/advertiser",
         icon: TrendingUp
