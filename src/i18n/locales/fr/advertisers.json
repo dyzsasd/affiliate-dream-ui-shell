@@ -40,5 +40,13 @@
   "countryPlaceholder": "Entrez le pays",
   "postalCodeLabel": "Code postal",
   "postalCodePlaceholder": "Entrez le code postal",
-  "advertiserDetails": "Détails de l'annonceur"
+  "advertiserDetails": "Détails de l'annonceur",
+  "basicInfo": "Informations de Base",
+  "idLabel": "ID Annonceur",
+  "orgIdLabel": "ID Organisation",
+  "createdLabel": "Créé le",
+  "updatedLabel": "Mis à jour le",
+  "contactInfo": "Informations de Contact",
+  "notFound": "Annonceur Non Trouvé",
+  "backToList": "Retour aux Annonceurs"
 }

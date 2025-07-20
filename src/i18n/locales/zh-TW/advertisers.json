@@ -40,5 +40,13 @@
   "countryPlaceholder": "輸入國家",
   "postalCodeLabel": "郵遞區號",
   "postalCodePlaceholder": "輸入郵遞區號",
-  "advertiserDetails": "廣告主詳情"
+  "advertiserDetails": "廣告主詳情",
+  "basicInfo": "基本資訊",
+  "idLabel": "廣告主ID",
+  "orgIdLabel": "組織ID",
+  "createdLabel": "建立時間",
+  "updatedLabel": "更新時間",
+  "contactInfo": "聯絡資訊",
+  "notFound": "廣告主未找到",
+  "backToList": "返回廣告主列表"
 }

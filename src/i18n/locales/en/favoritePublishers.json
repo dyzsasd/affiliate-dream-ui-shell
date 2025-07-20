@@ -32,6 +32,7 @@
   "listName": "List Name",
   "listNamePlaceholder": "Enter a name for your list",
   "nameRequired": "List name is required",
+  "description": "Description",
   "descriptionPlaceholder": "Optional description for your list",
   "creating": "Creating...",
   "createList": "Create List",

@@ -40,5 +40,13 @@
   "countryPlaceholder": "Enter country",
   "postalCodeLabel": "Postal Code",
   "postalCodePlaceholder": "Enter postal code",
-  "advertiserDetails": "Advertiser Details"
+  "advertiserDetails": "Advertiser Details",
+  "basicInfo": "Basic Information",
+  "idLabel": "Advertiser ID",
+  "orgIdLabel": "Organization ID",
+  "createdLabel": "Created At",
+  "updatedLabel": "Updated At",
+  "contactInfo": "Contact Information",
+  "notFound": "Advertiser Not Found",
+  "backToList": "Back to Advertisers"
 }

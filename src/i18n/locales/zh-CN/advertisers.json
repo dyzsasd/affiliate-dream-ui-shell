@@ -40,5 +40,13 @@
   "countryPlaceholder": "输入国家",
   "postalCodeLabel": "邮政编码",
   "postalCodePlaceholder": "输入邮政编码",
-  "advertiserDetails": "广告主详情"
+  "advertiserDetails": "广告主详情",
+  "basicInfo": "基本信息",
+  "idLabel": "广告主ID",
+  "orgIdLabel": "组织ID",
+  "createdLabel": "创建时间",
+  "updatedLabel": "更新时间",
+  "contactInfo": "联系信息",
+  "notFound": "广告主未找到",
+  "backToList": "返回广告主列表"
 }
