@@ -95,10 +95,12 @@ const CampaignList: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight">{t("campaigns.title")}</h1>
-        <Button className="bg-affiliate-primary hover:bg-affiliate-primary/90">
-          <Plus className="mr-2 h-4 w-4" />
-          {t("campaigns.newCampaign")}
-        </Button>
+        <Link to="/campaigns/new">
+          <Button className="bg-affiliate-primary hover:bg-affiliate-primary/90">
+            <Plus className="mr-2 h-4 w-4" />
+            {t("campaigns.newCampaign")}
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">

@@ -59,5 +59,15 @@
   "viewPreview": "View Preview",
   "viewThumbnail": "View Thumbnail",
   "visibilityPublic": "Public",
-  "visibilityPrivate": "Private"
+  "visibilityPrivate": "Private",
+  "createNew": "Create New Campaign",
+  "campaignDetails": "Campaign Details",
+  "namePlaceholder": "Enter campaign name",
+  "descriptionPlaceholder": "Describe your campaign goals and details",
+  "selectStatus": "Select status",
+  "creating": "Creating...",
+  "create": "Create Campaign",
+  "createSuccess": "Campaign Created",
+  "createSuccessDescription": "Campaign has been created successfully.",
+  "createError": "Failed to create campaign. Please try again."
 }

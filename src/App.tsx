@@ -10,6 +10,7 @@ import Signup from "@/pages/auth/Signup";
 import Dashboard from "@/pages/Dashboard";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
+import CampaignForm from "@/pages/campaigns/CampaignForm";
 import AdvertiserRoutes from "@/pages/advertisers";
 import ProfilePage from "@/pages/profile";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
@@ -64,6 +65,7 @@ function App() {
                 
                 {/* Campaign routes */}
                 <Route path="/campaigns" element={<CampaignList />} />
+                <Route path="/campaigns/new" element={<CampaignForm />} />
                 <Route path="/campaigns/:id" element={<CampaignDetail />} />
                 
                 {/* Advertiser routes - use the AdvertiserRoutes component */}
