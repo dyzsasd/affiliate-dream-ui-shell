@@ -8,7 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { CreditCard, AlertCircle, DollarSign, Clock, Download, Plus, Trash2 } from 'lucide-react';
 import { BillingApi } from '@/generated-api/src/apis/BillingApi';
-import { Configuration } from '@/generated-api/src/runtime';
+import { createApiClient } from '@/services/backendApi';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { PaymentMethodModal } from './components/PaymentMethodModal';
@@ -25,23 +25,12 @@ const BillingDashboard: React.FC = () => {
   const [showRechargeModal, setShowRechargeModal] = useState(false);
   const { backendUrl } = useDebugMode();
 
-  // Initialize API client
-  const getBillingApi = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.access_token) throw new Error('No authentication token');
-    
-    const config = new Configuration({
-      basePath: backendUrl || (process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.example.com'),
-      accessToken: session.access_token,
-    });
-    return new BillingApi(config);
-  };
 
   // Fetch billing dashboard data
   const { data: dashboardData, isLoading: dashboardLoading, error: dashboardError } = useQuery({
     queryKey: ['billing-dashboard'],
     queryFn: async () => {
-      const api = await getBillingApi();
+      const api = await createApiClient(BillingApi);
       return api.billingDashboardGet();
     },
     refetchInterval: 30000, // Refresh every 30 seconds
@@ -50,7 +39,7 @@ const BillingDashboard: React.FC = () => {
   // Delete payment method mutation
   const deletePymentMethodMutation = useMutation({
     mutationFn: async (paymentMethodId: number) => {
-      const api = await getBillingApi();
+      const api = await createApiClient(BillingApi);
       return api.billingPaymentMethodsIdDelete({ id: paymentMethodId });
     },
     onSuccess: () => {

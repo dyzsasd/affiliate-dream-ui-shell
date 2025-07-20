@@ -13,8 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BillingApi } from '@/generated-api/src/apis/BillingApi';
-import { Configuration } from '@/generated-api/src/runtime';
-import { supabase } from '@/integrations/supabase/client';
+import { createApiClient } from '@/services/backendApi';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '../utils/formatCurrency';
 import { useDebugMode } from '@/hooks/useDebugMode';
@@ -50,14 +49,7 @@ export const RechargeModal: React.FC<RechargeModalProps> = ({
 
   const rechargeMutation = useMutation({
     mutationFn: async (amount: number) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) throw new Error('No authentication token');
-      
-      const config = new Configuration({
-        basePath: backendUrl || (process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.example.com'),
-        accessToken: session.access_token,
-      });
-      const api = new BillingApi(config);
+      const api = await createApiClient(BillingApi);
       
       return api.billingRechargePost({
         request: {

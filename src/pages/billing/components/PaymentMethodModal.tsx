@@ -13,8 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BillingApi } from '@/generated-api/src/apis/BillingApi';
-import { Configuration } from '@/generated-api/src/runtime';
-import { supabase } from '@/integrations/supabase/client';
+import { createApiClient } from '@/services/backendApi';
 import { useToast } from '@/hooks/use-toast';
 import { useDebugMode } from '@/hooks/useDebugMode';
 
@@ -38,14 +37,7 @@ export const PaymentMethodModal: React.FC<PaymentMethodModalProps> = ({
 
   const addPaymentMethodMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) throw new Error('No authentication token');
-      
-      const config = new Configuration({
-        basePath: backendUrl || (process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.example.com'),
-        accessToken: session.access_token,
-      });
-      const api = new BillingApi(config);
+      const api = await createApiClient(BillingApi);
       
       return api.billingPaymentMethodsPost({
         request: {

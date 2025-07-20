@@ -8,8 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Download, Search, Filter } from 'lucide-react';
 import { BillingApi } from '@/generated-api/src/apis/BillingApi';
-import { Configuration } from '@/generated-api/src/runtime';
-import { supabase } from '@/integrations/supabase/client';
+import { createApiClient } from '@/services/backendApi';
 import { formatCurrency } from '../utils/formatCurrency';
 import { DomainTransactionType } from '@/generated-api/src/models';
 import { useDebugMode } from '@/hooks/useDebugMode';
@@ -27,14 +26,7 @@ export const TransactionHistory: React.FC = () => {
   const { data: transactions, isLoading, error } = useQuery({
     queryKey: ['billing-transactions', filters],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) throw new Error('No authentication token');
-      
-      const config = new Configuration({
-        basePath: backendUrl || (process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.example.com'),
-        accessToken: session.access_token,
-      });
-      const api = new BillingApi(config);
+      const api = await createApiClient(BillingApi);
       
       return api.billingTransactionsGet({
         limit: filters.limit,
