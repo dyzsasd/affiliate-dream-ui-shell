@@ -50,15 +50,20 @@ const ContactPublisherModal: React.FC<ContactPublisherModalProps> = ({
   // Create conversation mutation
   const createConversationMutation = useMutation({
     mutationFn: async ({ subject, message }: { subject: string; message: string }) => {
-      const apiClient = await createApiClient(PublisherMessagingApi);
-      return await apiClient.apiV1PublisherMessagingConversationsPost({
-        request: {
-          subject,
-          initialMessage: message,
-          publisherDomain,
-          listId: currentListId
-        }
-      });
+      try {
+        const apiClient = await createApiClient(PublisherMessagingApi);
+        return await apiClient.apiV1PublisherMessagingConversationsPost({
+          request: {
+            subject,
+            initialMessage: message,
+            publisherDomain,
+            listId: currentListId
+          }
+        });
+      } catch (error) {
+        console.error('Error creating conversation:', error);
+        throw error;
+      }
     },
     onSuccess: async () => {
       // Update publisher status to "contacted" if we have a list context

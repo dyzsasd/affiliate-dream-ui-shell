@@ -65,10 +65,16 @@ export const getAuthTokens = async () => {
   return session;
 };
 
-// Create API client with automatic retry on 401
+// Create API client with proper session validation
 export const createApiClient = async <T>(ClientClass: new (configuration?: Configuration) => T): Promise<T> => {
   if (!ClientClass) {
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
+  }
+  
+  // Ensure we have a valid session before creating the client
+  const session = await getAuthTokens();
+  if (!session?.access_token) {
+    throw new Error('No valid authentication session found. Please log in again.');
   }
   
   const baseUrl = getApiBase();
