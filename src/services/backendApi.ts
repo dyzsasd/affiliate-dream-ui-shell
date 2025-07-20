@@ -101,40 +101,45 @@ export const getAuthTokens = async () => {
 
 // Create API client with proper session validation using the token manager
 export const createApiClient = async <T>(ClientClass: new (configuration?: Configuration) => T): Promise<T> => {
+  console.log('🔧 Creating API client for:', ClientClass.name);
+  
   if (!ClientClass) {
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
   
   // Ensure we have a valid token before creating the client
   const token = await tokenManager.getValidToken();
+  console.log('🔑 Pre-creation token check:', token ? 'Present' : 'Missing');
   if (!token) {
     throw new Error('No valid authentication token found. Please log in again.');
   }
   
   const baseUrl = getApiBase();
-  console.log('Creating API client with base URL:', baseUrl);
+  console.log('🌐 Creating API client with base URL:', baseUrl);
   
   // Create configuration with proper authentication and retry logic
   const configuration = new Configuration({
     basePath: baseUrl,
     apiKey: async (name: string) => {
-      console.log('API Key requested for:', name);
+      console.log('🔐 API Key requested for parameter:', name);
       if (name === 'Authorization') {
         try {
           const token = await tokenManager.getValidToken();
-          console.log('Token retrieved for API request:', token ? 'Present' : 'Missing');
+          console.log('🎫 Token retrieved for API request:', token ? `Present (${token.substring(0, 20)}...)` : 'Missing');
           if (token) {
-            console.log('Using auth token for API request');
-            return `Bearer ${token}`;
+            const authHeader = `Bearer ${token}`;
+            console.log('✅ Using auth header for API request:', authHeader.substring(0, 30) + '...');
+            return authHeader;
           } else {
-            console.warn('No valid token found for API request');
+            console.warn('❌ No valid token found for API request');
             return '';
           }
         } catch (error) {
-          console.error('Error getting auth token:', error);
+          console.error('💥 Error getting auth token:', error);
           return '';
         }
       }
+      console.log('⚪ Non-authorization parameter, returning empty string');
       return '';
     },
     // No middleware - no token refresh logic
