@@ -70,16 +70,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: BarChart3
       },
       {
-        name: t("sidebar.billing"),
-        path: "/billing",
-        icon: CreditCard
-      },
-      {
-        name: t("sidebar.invitations"),
-        path: "/invitations",
-        icon: Mail
-      },
-      {
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
@@ -109,11 +99,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: PieChart
       },
       {
-        name: t("sidebar.invitations"),
-        path: "/invitations",
-        icon: Mail
-      },
-      {
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
@@ -138,11 +123,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: TrendingUp
       },
       {
-        name: t("sidebar.invitations"),
-        path: "/invitations",
-        icon: Mail
-      },
-      {
         name: t("sidebar.reports"),
         path: "/reporting",
         icon: BarChart3
@@ -158,11 +138,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
   // Default fallback
   return [
     ...baseItems,
-    {
-      name: t("sidebar.invitations"),
-      path: "/invitations",
-      icon: Mail
-    },
     {
       name: t("sidebar.myProfile"),
       path: "/profile",
