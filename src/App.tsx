@@ -33,7 +33,8 @@ import FavoritePublisherLists from "@/pages/favorite-publishers";
 import FavoritePublisherListDetail from "@/pages/favorite-publishers/FavoritePublisherListDetail";
 import CreateFavoritePublisherList from "@/pages/favorite-publishers/CreateFavoritePublisherList";
 import ConversationsList from "@/pages/conversations";
-import ConversationDetail from "@/pages/conversations/ConversationDetail";
+// Import the component directly with a different syntax to ensure it loads
+import ConversationDetail from "./pages/conversations/ConversationDetail";
 import "./App.css";
 
 const queryClient = new QueryClient({
