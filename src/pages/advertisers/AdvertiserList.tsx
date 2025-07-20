@@ -114,7 +114,7 @@ const AdvertiserList: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <p className="text-destructive font-medium">
-          {t('organization.noOrganization')}
+          {t('organizations.noOrganization')}
         </p>
       </div>
     );

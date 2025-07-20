@@ -8,6 +8,7 @@
   "website": "網站",
   "phoneNumber": "電話號碼",
   "address": "地址",
+  "noOrganization": "未找到組織",
   "city": "城市",
   "state": "州/省",
   "zipCode": "郵遞區號",

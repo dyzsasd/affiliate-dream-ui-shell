@@ -8,6 +8,7 @@
   "website": "Website",
   "phoneNumber": "Phone Number",
   "address": "Address",
+  "noOrganization": "No organization found",
   "city": "City",
   "state": "State",
   "zipCode": "Zip Code",
