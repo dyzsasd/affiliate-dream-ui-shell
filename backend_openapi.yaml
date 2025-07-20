@@ -1560,9 +1560,6 @@ definitions:
     properties:
       advertiser_id:
         type: integer
-      billing_model:
-        description: Payout and revenue configuration
-        type: string
       campaign_id:
         type: integer
       conversion_method:
@@ -1582,6 +1579,13 @@ definitions:
         type: string
       end_date:
         type: string
+      fixed_click_amount:
+        type: number
+      fixed_conversion_amount:
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        type: number
       global_click_cap:
         type: integer
       global_conversion_cap:
@@ -1599,15 +1603,9 @@ definitions:
         type: string
       organization_id:
         type: integer
-      payout_amount:
+      percentage_conversion_amount:
         type: number
-      payout_structure:
-        type: string
       preview_url:
-        type: string
-      revenue_amount:
-        type: number
-      revenue_structure:
         type: string
       session_definition:
         type: string
@@ -1686,12 +1684,6 @@ definitions:
     properties:
       advertiser_id:
         type: integer
-      billing_model:
-        description: Payout and revenue configuration
-        enum:
-        - click
-        - conversion
-        type: string
       conversion_method:
         enum:
         - server_postback
@@ -1710,6 +1702,16 @@ definitions:
         type: string
       end_date:
         type: string
+      fixed_click_amount:
+        minimum: 0
+        type: number
+      fixed_conversion_amount:
+        minimum: 0
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        minimum: 0
+        type: number
       global_click_cap:
         type: integer
       global_conversion_cap:
@@ -1727,23 +1729,11 @@ definitions:
         type: string
       organization_id:
         type: integer
-      payout_amount:
+      percentage_conversion_amount:
+        maximum: 100
         minimum: 0
         type: number
-      payout_structure:
-        enum:
-        - fixed
-        - percentage
-        type: string
       preview_url:
-        type: string
-      revenue_amount:
-        minimum: 0
-        type: number
-      revenue_structure:
-        enum:
-        - fixed
-        - percentage
         type: string
       session_definition:
         enum:
@@ -2083,12 +2073,6 @@ definitions:
     type: object
   models.UpdateCampaignRequest:
     properties:
-      billing_model:
-        description: Payout and revenue configuration
-        enum:
-        - click
-        - conversion
-        type: string
       conversion_method:
         enum:
         - server_postback
@@ -2107,6 +2091,16 @@ definitions:
         type: string
       end_date:
         type: string
+      fixed_click_amount:
+        minimum: 0
+        type: number
+      fixed_conversion_amount:
+        minimum: 0
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        minimum: 0
+        type: number
       global_click_cap:
         type: integer
       global_conversion_cap:
@@ -2122,23 +2116,11 @@ definitions:
         type: integer
       name:
         type: string
-      payout_amount:
+      percentage_conversion_amount:
+        maximum: 100
         minimum: 0
         type: number
-      payout_structure:
-        enum:
-        - fixed
-        - percentage
-        type: string
       preview_url:
-        type: string
-      revenue_amount:
-        minimum: 0
-        type: number
-      revenue_structure:
-        enum:
-        - fixed
-        - percentage
         type: string
       session_definition:
         enum:
