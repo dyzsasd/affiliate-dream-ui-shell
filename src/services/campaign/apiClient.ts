@@ -19,8 +19,10 @@ export class CampaignApiClient {
   async getCampaignsByOrganization(organizationId: number, page: number = 1, pageSize: number = 100): Promise<ModelsCampaignListResponse> {
     try {
       console.log(`Fetching campaigns for organization ID: ${organizationId}`);
+      console.log(`Debug: Getting API client with JWT token`);
       
       const campaignsApi = await this.getApiClient();
+      console.log(`Debug: API client created, making request to organizationsOrganizationIdCampaignsGet`);
       const response = await campaignsApi.organizationsOrganizationIdCampaignsGet({
         organizationId: organizationId,
         page: page,
