@@ -243,16 +243,18 @@ const FavoritePublisherListDetail: React.FC = () => {
           </div>
           
           <div className="grid gap-6 grid-cols-1">
-            {publishers.map((publisherResponse, index) => {
-              // Find the corresponding list item for this publisher
-              const item = listItems?.find(item => 
-                item.publisherDomain === publisherResponse.publisher?.domain
+            {listItems?.map((item, index) => {
+              // Find the corresponding publisher response for this item
+              const publisherResponse = publishers.find(pub => 
+                pub.publisher?.domain === item.publisherDomain
               );
               
-              console.log(`Publisher ${publisherResponse.publisher?.domain} has status:`, item?.status);
+              if (!publisherResponse) return null;
+              
+              console.log(`Publisher ${item.publisherDomain} has status:`, item.status);
               
               return (
-                <div key={`${publisherResponse.publisher?.domain}-${index}`} className="relative">
+                <div key={`${item.publisherDomain}-${index}`} className="relative">
                   <RealPublisherCard
                     publisher={publisherResponse}
                     viewMode="list"
@@ -263,7 +265,7 @@ const FavoritePublisherListDetail: React.FC = () => {
                   
                   {/* Status Progress Indicator */}
                   <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm z-10">
-                    <PublisherStatusProgress status={item?.status || 'added'} />
+                    <PublisherStatusProgress status={item.status || 'added'} />
                   </div>
                   
                   {/* Custom remove button overlay */}
@@ -272,8 +274,8 @@ const FavoritePublisherListDetail: React.FC = () => {
                       variant="destructive"
                       size="sm"
                       onClick={() => {
-                        if (publisherResponse.publisher?.domain) {
-                          handleRemovePublisher(publisherResponse.publisher.domain);
+                        if (item.publisherDomain) {
+                          handleRemovePublisher(item.publisherDomain);
                         }
                       }}
                       disabled={removePublisherMutation.isPending}
