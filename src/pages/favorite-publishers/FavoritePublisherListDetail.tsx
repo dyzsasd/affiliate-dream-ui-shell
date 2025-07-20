@@ -83,20 +83,22 @@ const FavoritePublisherListDetail: React.FC = () => {
           let publisherResponse: DomainAnalyticsPublisherResponse;
           
           if (item.publisher) {
-            console.log(`Publisher details already available for ${item.publisherDomain}`);
+            const domain = (item as any).publisher_domain || item.publisherDomain;
+            console.log(`Publisher details already available for ${domain}`);
             // If publisher details are already included, convert them to the expected type
             publisherResponse = {
               publisher: item.publisher as any // Type conversion needed due to API type differences
             };
-          } else if (item.publisherDomain) {
-            console.log(`Fetching publisher details for domain: ${item.publisherDomain}`);
+          } else if ((item as any).publisher_domain || item.publisherDomain) {
+            const domain = (item as any).publisher_domain || item.publisherDomain;
+            console.log(`Fetching publisher details for domain: ${domain}`);
             // Fetch publisher details by domain
             const apiClient = await createApiClient(AnalyticsApi);
             const response = await apiClient.apiV1AnalyticsAffiliatesDomainDomainGet({
-              domain: item.publisherDomain
+              domain: domain
             });
             publisherResponse = response.data;
-            console.log(`Fetched publisher details for ${item.publisherDomain}:`, publisherResponse);
+            console.log(`Fetched publisher details for ${domain}:`, publisherResponse);
           } else {
             console.log('Item has no publisher or publisherDomain, skipping');
             continue; // Skip items without domain or publisher data
@@ -104,7 +106,7 @@ const FavoritePublisherListDetail: React.FC = () => {
 
           publisherResponses.push(publisherResponse);
         } catch (error) {
-          console.error(`Failed to fetch publisher details for ${item.publisherDomain}:`, error);
+          console.error(`Failed to fetch publisher details for ${(item as any).publisher_domain || item.publisherDomain}:`, error);
         }
       }
 
@@ -257,16 +259,17 @@ const FavoritePublisherListDetail: React.FC = () => {
           <div className="grid gap-6 grid-cols-1">
             {listItems?.map((item, index) => {
               // Find the corresponding publisher response for this item
+              const domain = (item as any).publisher_domain || item.publisherDomain;
               const publisherResponse = publishers.find(pub => 
-                pub.publisher?.domain === item.publisherDomain
+                pub.publisher?.domain === domain
               );
               
               if (!publisherResponse) return null;
               
-              console.log(`Publisher ${item.publisherDomain} has status:`, item.status);
+              console.log(`Publisher ${domain} has status:`, item.status);
               
               return (
-                <div key={`${item.publisherDomain}-${index}`} className="relative">
+                <div key={`${domain}-${index}`} className="relative">
                   <RealPublisherCard
                     publisher={publisherResponse}
                     viewMode="list"
@@ -286,8 +289,9 @@ const FavoritePublisherListDetail: React.FC = () => {
                       variant="destructive"
                       size="sm"
                       onClick={() => {
-                        if (item.publisherDomain) {
-                          handleRemovePublisher(item.publisherDomain);
+                        const domain = (item as any).publisher_domain || item.publisherDomain;
+                        if (domain) {
+                          handleRemovePublisher(domain);
                         }
                       }}
                       disabled={removePublisherMutation.isPending}
