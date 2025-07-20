@@ -19,81 +19,197 @@ export const getApiBase = () => {
   return baseUrl.replace(/\/+$/, '');
 };
 
-// Check if a token is close to expiring (within 5 minutes)
-export const isTokenExpiringSoon = (expiresAt: number): boolean => {
-  if (!expiresAt) return true;
-  
-  // Convert expiresAt from seconds to milliseconds and add buffer time (5 minutes)
-  const expirationTime = expiresAt * 1000;
-  const currentTime = new Date().getTime();
-  const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-  
-  return currentTime + bufferTime >= expirationTime;
-};
+// JWT Token Manager State Machine
+enum TokenState {
+  INITIALIZING = 'initializing',
+  AUTHENTICATED = 'authenticated', 
+  REFRESHING = 'refreshing'
+}
 
-// Store ongoing refresh promise to prevent multiple simultaneous refresh calls
-let refreshPromise: Promise<any> | null = null;
+class JWTTokenManager {
+  private state: TokenState = TokenState.INITIALIZING;
+  public currentSession: any = null;
+  private refreshPromise: Promise<any> | null = null;
+  private pendingRequests: Array<{ resolve: Function; reject: Function }> = [];
 
-// Get the current valid auth tokens or refresh if needed
-export const getAuthTokens = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  // If no session exists, return null
-  if (!session) {
-    console.log('No session found');
-    return null;
+  constructor() {
+    this.initialize();
   }
-  
-  // Check if token is expiring soon and needs refresh
-  if (session.expires_at && isTokenExpiringSoon(session.expires_at)) {
-    console.log('Token is expiring soon, refreshing...');
-    
-    // If a refresh is already in progress, wait for it
-    if (refreshPromise) {
-      console.log('Refresh already in progress, waiting...');
-      try {
-        const result = await refreshPromise;
-        return result.data?.session || null;
-      } catch (error) {
-        console.error('Error waiting for ongoing refresh:', error);
-        return null;
-      }
-    }
-    
+
+  private async initialize() {
+    console.log('JWT Manager: Initializing...');
     try {
-      // Start the refresh and store the promise
-      refreshPromise = supabase.auth.refreshSession();
-      const { data, error } = await refreshPromise;
-      
-      if (error) {
-        console.error('Error refreshing token:', error);
-        refreshPromise = null;
-        return null;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        this.currentSession = session;
+        this.state = TokenState.AUTHENTICATED;
+        console.log('JWT Manager: Initialized with existing session');
+      } else {
+        console.log('JWT Manager: No existing session found');
       }
-      
-      console.log('Token refreshed successfully');
-      refreshPromise = null;
-      return data.session;
-    } catch (refreshError) {
-      console.error('Exception during token refresh:', refreshError);
-      refreshPromise = null;
+    } catch (error) {
+      console.error('JWT Manager: Error during initialization:', error);
+    }
+  }
+
+  private isTokenExpiringSoon(expiresAt: number): boolean {
+    if (!expiresAt) return true;
+    
+    const expirationTime = expiresAt * 1000;
+    const currentTime = new Date().getTime();
+    const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+    
+    return currentTime + bufferTime >= expirationTime;
+  }
+
+  async getValidToken(): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+      // If we're initializing, wait for initialization to complete
+      if (this.state === TokenState.INITIALIZING) {
+        console.log('JWT Manager: Currently initializing, queueing request');
+        this.pendingRequests.push({ resolve, reject });
+        return;
+      }
+
+      // If we're refreshing, queue the request
+      if (this.state === TokenState.REFRESHING) {
+        console.log('JWT Manager: Currently refreshing, queueing request');
+        this.pendingRequests.push({ resolve, reject });
+        return;
+      }
+
+      // If authenticated, check if token needs refresh
+      if (this.state === TokenState.AUTHENTICATED) {
+        if (this.currentSession?.access_token && 
+            (!this.currentSession.expires_at || !this.isTokenExpiringSoon(this.currentSession.expires_at))) {
+          resolve(this.currentSession.access_token);
+          return;
+        }
+
+        // Token needs refresh
+        this.pendingRequests.push({ resolve, reject });
+        this.refreshToken();
+        return;
+      }
+
+      reject(new Error('No valid session available'));
+    });
+  }
+
+  async refreshTokenOnError(): Promise<string | null> {
+    if (this.state !== TokenState.AUTHENTICATED) {
+      console.log('JWT Manager: Cannot refresh token, not in authenticated state');
       return null;
     }
+
+    return new Promise((resolve, reject) => {
+      this.pendingRequests.push({ resolve, reject });
+      this.refreshToken();
+    });
   }
-  
-  return session;
+
+  private async refreshToken() {
+    if (this.state === TokenState.REFRESHING) {
+      console.log('JWT Manager: Refresh already in progress');
+      return;
+    }
+
+    this.state = TokenState.REFRESHING;
+    console.log('JWT Manager: Starting token refresh');
+
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      
+      if (error || !data.session) {
+        console.error('JWT Manager: Token refresh failed:', error);
+        this.state = TokenState.INITIALIZING;
+        this.currentSession = null;
+        this.rejectPendingRequests(new Error('Token refresh failed'));
+        return;
+      }
+
+      this.currentSession = data.session;
+      this.state = TokenState.AUTHENTICATED;
+      console.log('JWT Manager: Token refreshed successfully');
+      
+      // Resolve all pending requests
+      this.resolvePendingRequests(data.session.access_token);
+    } catch (error) {
+      console.error('JWT Manager: Exception during token refresh:', error);
+      this.state = TokenState.INITIALIZING;
+      this.currentSession = null;
+      this.rejectPendingRequests(error);
+    }
+  }
+
+  private resolvePendingRequests(token: string) {
+    const requests = [...this.pendingRequests];
+    this.pendingRequests = [];
+    
+    requests.forEach(({ resolve }) => {
+      resolve(token);
+    });
+  }
+
+  private rejectPendingRequests(error: any) {
+    const requests = [...this.pendingRequests];
+    this.pendingRequests = [];
+    
+    requests.forEach(({ reject }) => {
+      reject(error);
+    });
+  }
+
+  // Update session when auth state changes
+  updateSession(session: any) {
+    if (session) {
+      this.currentSession = session;
+      this.state = TokenState.AUTHENTICATED;
+      console.log('JWT Manager: Session updated from auth state change');
+    } else {
+      this.currentSession = null;
+      this.state = TokenState.INITIALIZING;
+      console.log('JWT Manager: Session cleared from auth state change');
+    }
+  }
+}
+
+// Global token manager instance
+const tokenManager = new JWTTokenManager();
+
+// Listen to auth state changes to update the token manager
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log('JWT Manager: Auth state changed:', event);
+  tokenManager.updateSession(session);
+});
+
+// Export the token manager for direct use
+export { tokenManager };
+
+// Legacy function for backward compatibility - returns full session object
+export const getAuthTokens = async () => {
+  try {
+    const token = await tokenManager.getValidToken();
+    if (token && tokenManager.currentSession) {
+      return tokenManager.currentSession;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting auth tokens:', error);
+    return null;
+  }
 };
 
-// Create API client with proper session validation
+// Create API client with proper session validation using the token manager
 export const createApiClient = async <T>(ClientClass: new (configuration?: Configuration) => T): Promise<T> => {
   if (!ClientClass) {
     throw new Error('API client not initialized. Please run "npm run generate-api" first.');
   }
   
-  // Ensure we have a valid session before creating the client
-  const session = await getAuthTokens();
-  if (!session?.access_token) {
-    throw new Error('No valid authentication session found. Please log in again.');
+  // Ensure we have a valid token before creating the client
+  const token = await tokenManager.getValidToken();
+  if (!token) {
+    throw new Error('No valid authentication token found. Please log in again.');
   }
   
   const baseUrl = getApiBase();
@@ -105,12 +221,12 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
     apiKey: async (name: string) => {
       if (name === 'Authorization') {
         try {
-          const session = await getAuthTokens();
-          if (session?.access_token) {
+          const token = await tokenManager.getValidToken();
+          if (token) {
             console.log('Using auth token for API request');
-            return `Bearer ${session.access_token}`;
+            return `Bearer ${token}`;
           } else {
-            console.warn('No valid session found for API request');
+            console.warn('No valid token found for API request');
             return '';
           }
         } catch (error) {
@@ -127,11 +243,11 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
           console.log(`Received ${context.response.status} response, attempting to refresh token and retry...`);
           
           try {
-            // Force refresh the session
-            const { data, error } = await supabase.auth.refreshSession();
+            // Use token manager to refresh token
+            const refreshedToken = await tokenManager.refreshTokenOnError();
             
-            if (error || !data.session?.access_token) {
-              console.error('Failed to refresh token for retry:', error);
+            if (!refreshedToken) {
+              console.error('Failed to refresh token for retry');
               return context.response;
             }
             
@@ -139,7 +255,7 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
             
             // Create new headers with fresh token
             const newHeaders = new Headers(context.init.headers);
-            newHeaders.set('Authorization', `Bearer ${data.session.access_token}`);
+            newHeaders.set('Authorization', `Bearer ${refreshedToken}`);
             
             // Clone the original request init but with new headers
             const retryInit = {
@@ -152,8 +268,6 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
             
             console.log('Retry response status:', retryResponse.status);
             
-            // If retry is successful, the auth state change will automatically update
-            // the session state for future requests
             return retryResponse;
           } catch (retryError) {
             console.error('Error during retry:', retryError);

@@ -4,7 +4,7 @@ import { User } from '@/types/auth';
 import { UserProfile } from '@/contexts/auth/authTypes';
 import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
-import { createApiClient, handleApiError, getAuthTokens } from '@/services/backendApi';
+import { createApiClient, handleApiError, tokenManager } from '@/services/backendApi';
 import { HandlersUpdateProfileRequest } from '@/generated-api/src/models';
 import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
 
@@ -18,20 +18,6 @@ export const fetchBackendProfile = async (user: User): Promise<DomainProfile | n
   }
   
   try {
-    // Get a fresh session with possibly refreshed token
-    const session = await getAuthTokens();
-    
-    if (!session) {
-      console.log("No valid session found for profile fetch");
-      throw new Error("Authentication required");
-    }
-    
-    console.log("Session for profile fetch:", {
-      userId: session.user?.id,
-      hasAccessToken: !!session.access_token,
-      tokenExpiry: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : 'unknown'
-    });
-    
     console.log("Fetching backend profile with authenticated session...");
     const profileApi = await createApiClient(ProfileApi);
     console.log("ProfileApi client created successfully");
@@ -57,14 +43,6 @@ export const fetchOrganization = async (organizationId: number): Promise<DomainO
   }
   
   try {
-    // Get a fresh session with possibly refreshed token
-    const session = await getAuthTokens();
-    
-    if (!session) {
-      console.log("No valid session found for organization fetch");
-      throw new Error("Authentication required");
-    }
-    
     console.log("Fetching organization data for ID:", organizationId);
     const organizationsApi = await createApiClient(OrganizationsApi);
     
@@ -105,17 +83,6 @@ export const updateUserProfile = async (
     }
 
     try {
-      const session = await getAuthTokens();
-      
-      if (!session) {
-        throw new Error("No valid session for profile update");
-      }
-      
-      console.log("Session for profile update:", {
-        hasAccessToken: !!session.access_token,
-        tokenExpiry: session.expires_at ? new Date(session.expires_at * 1000).toISOString() : 'unknown'
-      });
-      
       const profileApi = await createApiClient(ProfileApi);
       
       const profileRequest: HandlersUpdateProfileRequest = {
