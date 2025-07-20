@@ -30,7 +30,7 @@ const NewPartnersPage: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [failedDomains, setFailedDomains] = useState<Set<string>>(new Set());
 
-  const pageSize = 20;
+  const pageSize = 10;
 
   // Query for advertiser details to get new partner domains
   const { data: advertiserData } = useQuery({
