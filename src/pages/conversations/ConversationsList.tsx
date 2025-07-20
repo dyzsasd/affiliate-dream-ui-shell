@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -140,32 +141,34 @@ const ConversationsList: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {conversations.map((conversation) => (
-            <Card key={conversation.conversationId} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">{conversation.subject}</CardTitle>
-                  <Badge className={getStatusColor(conversation.status)}>
-                    {t(`conversations:status.${conversation.status}`)}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                  <div>
-                    <span className="font-medium">{t("conversations:publisherDomain")}:</span>{" "}
-                    {conversation.publisherDomain}
+            <Link key={conversation.conversationId} to={`/conversations/${conversation.conversationId}`}>
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardHeader className="pb-3">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg">{conversation.subject}</CardTitle>
+                    <Badge className={getStatusColor(conversation.status)}>
+                      {conversation.status}
+                    </Badge>
                   </div>
-                  <div>
-                    <span className="font-medium">{t("conversations:messageCount")}:</span>{" "}
-                    {conversation.messageCount || 0}
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
+                    <div>
+                      <span className="font-medium">Publisher:</span>{" "}
+                      {conversation.publisherDomain}
+                    </div>
+                    <div>
+                      <span className="font-medium">Messages:</span>{" "}
+                      {conversation.messageCount || 0}
+                    </div>
+                    <div>
+                      <span className="font-medium">Last message:</span>{" "}
+                      {formatDate(conversation.lastMessageAt)}
+                    </div>
                   </div>
-                  <div>
-                    <span className="font-medium">{t("conversations:lastMessage")}:</span>{" "}
-                    {formatDate(conversation.lastMessageAt)}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       )}

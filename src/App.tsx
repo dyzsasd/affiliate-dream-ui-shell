@@ -33,6 +33,7 @@ import FavoritePublisherLists from "@/pages/favorite-publishers";
 import FavoritePublisherListDetail from "@/pages/favorite-publishers/FavoritePublisherListDetail";
 import CreateFavoritePublisherList from "@/pages/favorite-publishers/CreateFavoritePublisherList";
 import ConversationsList from "@/pages/conversations";
+import ConversationDetail from "@/pages/conversations/ConversationDetail";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -107,7 +108,8 @@ function App() {
                 <Route path="/favorite_publishers/:listId" element={<FavoritePublisherListDetail />} />
                 
                 {/* Conversations routes */}
-                <Route path="/conversations" element={<ConversationsList />} />
+          <Route path="/conversations" element={<ConversationsList />} />
+          <Route path="/conversations/:conversationId" element={<ConversationDetail />} />
                 
                 {/* Other routes */}
                 <Route path="/invitations" element={<InvitationManagement />} />
