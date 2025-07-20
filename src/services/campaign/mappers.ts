@@ -40,18 +40,32 @@ export const mapToCampaignDetail = (domainCampaign: ModelsCampaignResponse): Cam
     previewUrl: domainCampaign.previewUrl,
     visibility: domainCampaign.visibility,
     currencyId: domainCampaign.currencyId,
-    billingModel: domainCampaign.billingModel,
-    payoutType: domainCampaign.payoutStructure,
-    payoutAmount: domainCampaign.payoutAmount,
-    payoutStructure: domainCampaign.payoutStructure,
-    revenueType: domainCampaign.revenueStructure,
-    revenueAmount: domainCampaign.revenueAmount,
-    revenueStructure: domainCampaign.revenueStructure,
     conversionMethod: domainCampaign.conversionMethod,
     sessionDefinition: domainCampaign.sessionDefinition,
     sessionDuration: domainCampaign.sessionDuration,
     termsAndConditions: domainCampaign.termsAndConditions,
     internalNotes: domainCampaign.internalNotes,
+    
+    // Simplified billing configuration - use fixed revenue as base
+    fixedRevenue: domainCampaign.fixedRevenue || 0,
+    
+    // Click-based payout amounts
+    fixedClickAmount: domainCampaign.fixedClickAmount || 0,
+    
+    // Conversion-based payout amounts  
+    fixedConversionAmount: domainCampaign.fixedConversionAmount || 0,
+    percentageConversionAmount: domainCampaign.percentageConversionAmount || 0,
+    
+    // Caps and limits
+    isCapsEnabled: domainCampaign.isCapsEnabled || false,
+    dailyClickCap: domainCampaign.dailyClickCap || 0,
+    dailyConversionCap: domainCampaign.dailyConversionCap || 0,
+    weeklyClickCap: domainCampaign.weeklyClickCap || 0,
+    weeklyConversionCap: domainCampaign.weeklyConversionCap || 0,
+    monthlyClickCap: domainCampaign.monthlyClickCap || 0,
+    monthlyConversionCap: domainCampaign.monthlyConversionCap || 0,
+    globalClickCap: domainCampaign.globalClickCap || 0,
+    globalConversionCap: domainCampaign.globalConversionCap || 0,
     
     offers: [] // No offers endpoint available in current API
   };

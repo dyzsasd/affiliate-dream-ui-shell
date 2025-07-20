@@ -28,14 +28,13 @@ const campaignSchema = z.object({
   previewUrl: z.string().url().optional().or(z.literal("")),
   visibility: z.enum(["public", "require_approval", "private"]).optional(),
   currencyId: z.string().optional(),
-  billingModel: z.enum(["click", "conversion"]).optional(),
-  payoutStructure: z.enum(["fixed", "percentage"]).optional(),
-  payoutAmount: z.number().min(0).optional(),
-  revenueStructure: z.enum(["fixed", "percentage"]).optional(),
-  revenueAmount: z.number().min(0).optional(),
   conversionMethod: z.enum(["server_postback", "pixel"]).optional(),
   sessionDefinition: z.enum(["cookie", "ip", "fingerprint"]).optional(),
   sessionDuration: z.number().min(1).optional(),
+  fixedRevenue: z.number().min(0).optional(),
+  fixedClickAmount: z.number().min(0).optional(),
+  fixedConversionAmount: z.number().min(0).optional(),
+  percentageConversionAmount: z.number().min(0).optional(),
   isCapsEnabled: z.boolean().optional(),
   dailyClickCap: z.number().min(0).optional(),
   weeklyClickCap: z.number().min(0).optional(),
@@ -71,14 +70,13 @@ const CampaignForm: React.FC = () => {
       previewUrl: "",
       visibility: "public",
       currencyId: "USD",
-      billingModel: "conversion",
-      payoutStructure: "fixed",
-      payoutAmount: 0,
-      revenueStructure: "fixed", 
-      revenueAmount: 0,
       conversionMethod: "server_postback",
       sessionDefinition: "cookie",
       sessionDuration: 30,
+      fixedRevenue: 0,
+      fixedClickAmount: 0,
+      fixedConversionAmount: 0,
+      percentageConversionAmount: 0,
       isCapsEnabled: false,
       dailyClickCap: 0,
       weeklyClickCap: 0,
@@ -121,11 +119,10 @@ const CampaignForm: React.FC = () => {
         previewUrl: data.previewUrl || undefined,
         visibility: data.visibility as ModelsCreateCampaignRequest['visibility'],
         currencyId: data.currencyId || undefined,
-        billingModel: data.billingModel as ModelsCreateCampaignRequest['billingModel'],
-        payoutStructure: data.payoutStructure as ModelsCreateCampaignRequest['payoutStructure'],
-        payoutAmount: data.payoutAmount || undefined,
-        revenueStructure: data.revenueStructure as ModelsCreateCampaignRequest['revenueStructure'],
-        revenueAmount: data.revenueAmount || undefined,
+        fixedRevenue: data.fixedRevenue || undefined,
+        fixedClickAmount: data.fixedClickAmount || undefined,
+        fixedConversionAmount: data.fixedConversionAmount || undefined,
+        percentageConversionAmount: data.percentageConversionAmount || undefined,
         conversionMethod: data.conversionMethod as ModelsCreateCampaignRequest['conversionMethod'],
         sessionDefinition: data.sessionDefinition as ModelsCreateCampaignRequest['sessionDefinition'],
         sessionDuration: data.sessionDuration || undefined,
@@ -327,7 +324,7 @@ const CampaignForm: React.FC = () => {
               <Card className="p-4 bg-muted/50">
                 <h3 className="text-lg font-semibold mb-4">Payout & Revenue Configuration</h3>
                 <div className="grid gap-4">
-                  <div className="grid gap-4 md:grid-cols-3">
+                  <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="currencyId"
@@ -344,28 +341,6 @@ const CampaignForm: React.FC = () => {
                               <SelectItem value="USD">USD</SelectItem>
                               <SelectItem value="EUR">EUR</SelectItem>
                               <SelectItem value="GBP">GBP</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="billingModel"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Billing Model</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select billing model" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="click">Click</SelectItem>
-                              <SelectItem value="conversion">Conversion</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -397,43 +372,44 @@ const CampaignForm: React.FC = () => {
                     />
                   </div>
                   
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Revenue</h4>
+                    <FormField
+                      control={form.control}
+                      name="fixedRevenue"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Fixed Revenue</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              step="0.01"
+                              placeholder="0.00"
+                              value={field.value || ''}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-4">
-                      <h4 className="font-medium">Payout Configuration</h4>
+                      <h4 className="font-medium">Click-based Payout</h4>
                       <FormField
                         control={form.control}
-                        name="payoutStructure"
+                        name="fixedClickAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Payout Structure</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select payout structure" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="fixed">Fixed</SelectItem>
-                                <SelectItem value="percentage">Percentage</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="payoutAmount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Payout Amount</FormLabel>
+                            <FormLabel>Fixed Click Amount</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
-                                step="0.01" 
+                                step="0.01"
                                 placeholder="0.00"
-                                {...field}
+                                value={field.value || ''}
                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                               />
                             </FormControl>
@@ -444,24 +420,22 @@ const CampaignForm: React.FC = () => {
                     </div>
                     
                     <div className="space-y-4">
-                      <h4 className="font-medium">Revenue Configuration</h4>
+                      <h4 className="font-medium">Conversion-based Payout</h4>
                       <FormField
                         control={form.control}
-                        name="revenueStructure"
+                        name="fixedConversionAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Revenue Structure</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select revenue structure" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="fixed">Fixed</SelectItem>
-                                <SelectItem value="percentage">Percentage</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <FormLabel>Fixed Conversion Amount</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                step="0.01"
+                                placeholder="0.00"
+                                value={field.value || ''}
+                                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                              />
+                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -469,16 +443,16 @@ const CampaignForm: React.FC = () => {
                       
                       <FormField
                         control={form.control}
-                        name="revenueAmount"
+                        name="percentageConversionAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Revenue Amount</FormLabel>
+                            <FormLabel>Percentage Conversion Amount (%)</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
-                                step="0.01" 
+                                step="0.01"
                                 placeholder="0.00"
-                                {...field}
+                                value={field.value || ''}
                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                               />
                             </FormControl>
@@ -491,9 +465,113 @@ const CampaignForm: React.FC = () => {
                 </div>
               </Card>
 
+              {/* Tracking Configuration */}
+              <Card className="p-4 bg-muted/50">
+                <h3 className="text-lg font-semibold mb-4">Tracking Configuration</h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <FormField
+                    control={form.control}
+                    name="conversionMethod"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Conversion Method</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select method" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="server_postback">Server Postback</SelectItem>
+                            <SelectItem value="pixel">Pixel</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="sessionDefinition"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Session Definition</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select definition" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="cookie">Cookie</SelectItem>
+                            <SelectItem value="ip">IP</SelectItem>
+                            <SelectItem value="fingerprint">Fingerprint</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="sessionDuration"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Session Duration (minutes)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min="1"
+                            value={field.value || ''}
+                            onChange={(e) => field.onChange(parseInt(e.target.value) || 30)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </Card>
+
+              {/* Additional Information */}
+              <Card className="p-4 bg-muted/50">
+                <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
+                <div className="grid gap-4">
+                  <FormField
+                    control={form.control}
+                    name="termsAndConditions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Terms and Conditions</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Enter terms and conditions..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="internalNotes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Internal Notes</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Internal notes for team members..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </Card>
+
               <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
+                <Button 
+                  type="button" 
                   variant="outline"
                   onClick={() => navigate("/campaigns")}
                 >
@@ -508,7 +586,7 @@ const CampaignForm: React.FC = () => {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      {t("campaigns.create")}
+                      {t("campaigns.createCampaign")}
                     </>
                   )}
                 </Button>
