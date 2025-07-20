@@ -118,9 +118,11 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   const configuration = new Configuration({
     basePath: baseUrl,
     apiKey: async (name: string) => {
+      console.log('API Key requested for:', name);
       if (name === 'Authorization') {
         try {
           const token = await tokenManager.getValidToken();
+          console.log('Token retrieved for API request:', token ? 'Present' : 'Missing');
           if (token) {
             console.log('Using auth token for API request');
             return `Bearer ${token}`;
