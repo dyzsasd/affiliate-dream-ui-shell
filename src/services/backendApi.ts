@@ -19,18 +19,10 @@ export const getApiBase = () => {
   return baseUrl.replace(/\/+$/, '');
 };
 
-// JWT Token Manager State Machine
-enum TokenState {
-  INITIALIZING = 'initializing',
-  AUTHENTICATED = 'authenticated', 
-  REFRESHING = 'refreshing'
-}
-
+// Simple JWT Token Manager - No Refresh Logic
 class JWTTokenManager {
-  private state: TokenState = TokenState.INITIALIZING;
   public currentSession: any = null;
-  private refreshPromise: Promise<any> | null = null;
-  private pendingRequests: Array<{ resolve: Function; reject: Function }> = [];
+  private initialized: boolean = false;
 
   constructor() {
     this.initialize();
@@ -42,133 +34,40 @@ class JWTTokenManager {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         this.currentSession = session;
-        this.state = TokenState.AUTHENTICATED;
         console.log('JWT Manager: Initialized with existing session');
       } else {
         console.log('JWT Manager: No existing session found');
       }
+      this.initialized = true;
     } catch (error) {
       console.error('JWT Manager: Error during initialization:', error);
+      this.initialized = true;
     }
-  }
-
-  private isTokenExpiringSoon(expiresAt: number): boolean {
-    if (!expiresAt) return true;
-    
-    const expirationTime = expiresAt * 1000;
-    const currentTime = new Date().getTime();
-    const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-    
-    return currentTime + bufferTime >= expirationTime;
   }
 
   async getValidToken(): Promise<string | null> {
-    return new Promise((resolve, reject) => {
-      // If we're initializing, wait for initialization to complete
-      if (this.state === TokenState.INITIALIZING) {
-        console.log('JWT Manager: Currently initializing, queueing request');
-        this.pendingRequests.push({ resolve, reject });
-        return;
-      }
-
-      // If we're refreshing, queue the request
-      if (this.state === TokenState.REFRESHING) {
-        console.log('JWT Manager: Currently refreshing, queueing request');
-        this.pendingRequests.push({ resolve, reject });
-        return;
-      }
-
-      // If authenticated, check if token needs refresh
-      if (this.state === TokenState.AUTHENTICATED) {
-        if (this.currentSession?.access_token && 
-            (!this.currentSession.expires_at || !this.isTokenExpiringSoon(this.currentSession.expires_at))) {
-          resolve(this.currentSession.access_token);
-          return;
-        }
-
-        // Token needs refresh
-        this.pendingRequests.push({ resolve, reject });
-        this.refreshToken();
-        return;
-      }
-
-      reject(new Error('No valid session available'));
-    });
-  }
-
-  async refreshTokenOnError(): Promise<string | null> {
-    if (this.state !== TokenState.AUTHENTICATED) {
-      console.log('JWT Manager: Cannot refresh token, not in authenticated state');
-      return null;
+    // Wait for initialization if not done yet
+    while (!this.initialized) {
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    return new Promise((resolve, reject) => {
-      this.pendingRequests.push({ resolve, reject });
-      this.refreshToken();
-    });
-  }
-
-  private async refreshToken() {
-    if (this.state === TokenState.REFRESHING) {
-      console.log('JWT Manager: Refresh already in progress');
-      return;
+    // Return the same token always, no expiration checks
+    if (this.currentSession?.access_token) {
+      console.log('JWT Manager: Serving existing token');
+      return this.currentSession.access_token;
     }
 
-    this.state = TokenState.REFRESHING;
-    console.log('JWT Manager: Starting token refresh');
-
-    try {
-      const { data, error } = await supabase.auth.refreshSession();
-      
-      if (error || !data.session) {
-        console.error('JWT Manager: Token refresh failed:', error);
-        this.state = TokenState.INITIALIZING;
-        this.currentSession = null;
-        this.rejectPendingRequests(new Error('Token refresh failed'));
-        return;
-      }
-
-      this.currentSession = data.session;
-      this.state = TokenState.AUTHENTICATED;
-      console.log('JWT Manager: Token refreshed successfully');
-      
-      // Resolve all pending requests
-      this.resolvePendingRequests(data.session.access_token);
-    } catch (error) {
-      console.error('JWT Manager: Exception during token refresh:', error);
-      this.state = TokenState.INITIALIZING;
-      this.currentSession = null;
-      this.rejectPendingRequests(error);
-    }
+    console.log('JWT Manager: No token available');
+    return null;
   }
 
-  private resolvePendingRequests(token: string) {
-    const requests = [...this.pendingRequests];
-    this.pendingRequests = [];
-    
-    requests.forEach(({ resolve }) => {
-      resolve(token);
-    });
-  }
-
-  private rejectPendingRequests(error: any) {
-    const requests = [...this.pendingRequests];
-    this.pendingRequests = [];
-    
-    requests.forEach(({ reject }) => {
-      reject(error);
-    });
-  }
-
-  // Update session when auth state changes
+  // Update session when auth state changes - only sets, never refreshes
   updateSession(session: any) {
     if (session) {
       this.currentSession = session;
-      this.state = TokenState.AUTHENTICATED;
       console.log('JWT Manager: Session updated from auth state change');
     } else {
       this.currentSession = null;
-      this.state = TokenState.INITIALIZING;
       console.log('JWT Manager: Session cleared from auth state change');
     }
   }
@@ -236,48 +135,7 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
       }
       return '';
     },
-    middleware: [{
-      post: async (context) => {
-        // Check if response is 401 or 403 and retry with fresh token
-        if (context.response.status === 401 || context.response.status === 403) {
-          console.log(`Received ${context.response.status} response, attempting to refresh token and retry...`);
-          
-          try {
-            // Use token manager to refresh token
-            const refreshedToken = await tokenManager.refreshTokenOnError();
-            
-            if (!refreshedToken) {
-              console.error('Failed to refresh token for retry');
-              return context.response;
-            }
-            
-            console.log('Token refreshed for retry, retrying request with new token...');
-            
-            // Create new headers with fresh token
-            const newHeaders = new Headers(context.init.headers);
-            newHeaders.set('Authorization', `Bearer ${refreshedToken}`);
-            
-            // Clone the original request init but with new headers
-            const retryInit = {
-              ...context.init,
-              headers: newHeaders
-            };
-            
-            // Retry the request with fresh token
-            const retryResponse = await fetch(context.url, retryInit);
-            
-            console.log('Retry response status:', retryResponse.status);
-            
-            return retryResponse;
-          } catch (retryError) {
-            console.error('Error during retry:', retryError);
-            return context.response;
-          }
-        }
-        
-        return context.response;
-      }
-    }]
+    // No middleware - no token refresh logic
   });
   
   // Create the client with proper configuration
