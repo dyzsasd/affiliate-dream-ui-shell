@@ -123,6 +123,11 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
     apiKey: async (name: string) => {
       console.log('🔐 API Key requested for parameter:', name);
       console.log('🔍 Request stack trace:', new Error().stack?.split('\n').slice(1, 4).join('\n'));
+      
+      // Log which API class is requesting the token
+      const caller = new Error().stack?.split('\n')[2];
+      console.log('📡 API caller:', caller);
+      
       if (name === 'Authorization') {
         try {
           const token = await tokenManager.getValidToken();

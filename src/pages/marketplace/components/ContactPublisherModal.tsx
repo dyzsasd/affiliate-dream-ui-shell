@@ -69,8 +69,14 @@ const ContactPublisherModal: React.FC<ContactPublisherModalProps> = ({
       // Update publisher status to "contacted" if we have a list context
       if (currentListId && publisherDomain) {
         try {
+          console.log('🔄 Attempting to update publisher status to "contacted"');
+          console.log('📋 List ID:', currentListId);
+          console.log('🌐 Publisher Domain:', publisherDomain);
+          
           const apiClient = await createApiClient(FavoritePublisherListsApi);
-          await apiClient.apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch({
+          console.log('✅ FavoritePublisherListsApi client created for status update');
+          
+          const statusUpdateResult = await apiClient.apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch({
             listId: currentListId,
             domain: publisherDomain,
             request: {
@@ -78,12 +84,26 @@ const ContactPublisherModal: React.FC<ContactPublisherModalProps> = ({
             }
           });
           
+          console.log('✅ Publisher status updated successfully:', statusUpdateResult);
+          
           // Invalidate relevant queries
           queryClient.invalidateQueries({ queryKey: ['favorite-publisher-list-items', currentListId.toString()] });
           queryClient.invalidateQueries({ queryKey: ['conversations'] });
-        } catch (error) {
-          console.error('Failed to update publisher status:', error);
+        } catch (statusError) {
+          console.error('❌ Failed to update publisher status to "contacted":', statusError);
+          console.error('🔍 Status error details:', {
+            message: statusError instanceof Error ? statusError.message : 'Unknown error',
+            stack: statusError instanceof Error ? statusError.stack : undefined,
+            listId: currentListId,
+            domain: publisherDomain
+          });
+          // Don't throw - we don't want to fail the overall operation if status update fails
         }
+      } else {
+        console.log('⚠️ Skipping status update - missing listId or publisherDomain:', {
+          currentListId,
+          publisherDomain
+        });
       }
 
       toast({
