@@ -16,12 +16,25 @@ const ConversationsList: React.FC = () => {
   const { data: conversationsData, isLoading, error } = useQuery({
     queryKey: ['conversations', page, pageSize],
     queryFn: async () => {
-      const apiClient = await createApiClient(PublisherMessagingApi);
-      return await apiClient.apiV1PublisherMessagingConversationsGet({
-        page,
-        pageSize,
-      });
+      try {
+        console.log('Fetching conversations with auth...');
+        const apiClient = await createApiClient(PublisherMessagingApi);
+        const result = await apiClient.apiV1PublisherMessagingConversationsGet({
+          page,
+          pageSize,
+        });
+        console.log('Conversations fetched successfully:', result);
+        return result;
+      } catch (error) {
+        console.error('Failed to fetch conversations:', error);
+        if (error instanceof Error && error.message.includes('Failed to fetch')) {
+          throw new Error('Network error: Unable to connect to the conversations API. This may be due to CORS configuration issues.');
+        }
+        throw error;
+      }
     },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   const getStatusColor = (status?: string) => {
