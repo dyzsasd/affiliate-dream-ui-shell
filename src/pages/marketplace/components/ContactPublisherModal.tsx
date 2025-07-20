@@ -110,6 +110,11 @@ const ContactPublisherModal: React.FC<ContactPublisherModalProps> = ({
         title: t('marketplace.contactSuccess'),
         description: t('marketplace.contactSuccessDescription', { domain: publisherDomain }),
       });
+      
+      // Refresh the list by invalidating relevant queries
+      queryClient.invalidateQueries({ queryKey: ['favorite-publisher-list-items'] });
+      queryClient.invalidateQueries({ queryKey: ['favorite-publisher-lists'] });
+      
       handleClose();
     },
     onError: (error: any) => {
