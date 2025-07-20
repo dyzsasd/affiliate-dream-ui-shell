@@ -12,10 +12,10 @@ const PlatformOwnerDashboard: React.FC = () => {
 
   // Mock data for platform owner dashboard
   const platformStats = [
-    { title: "Total Organizations", value: "147", change: "+12" },
-    { title: "Active Advertisers", value: "89", change: "+8" },
-    { title: "Active Affiliates", value: "58", change: "+4" },
-    { title: "Platform Revenue", value: "$24,567", change: "+15.3%" },
+    { title: "Total Organizations", value: "0", change: "0" },
+    { title: "Active Advertisers", value: "0", change: "0" },
+    { title: "Active Affiliates", value: "0", change: "0" },
+    { title: "Platform Revenue", value: "$0", change: "0%" },
   ];
 
   const recentOrganizations = [

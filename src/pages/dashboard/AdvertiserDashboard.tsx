@@ -25,12 +25,12 @@ const AdvertiserDashboard: React.FC = () => {
     enabled: !!organization?.organizationId,
   });
 
-  // Multiply mock data by 10 and format dates for display
+  // Set all mock data to 0 and format dates for display
   const formattedData = mockPerformanceData.map(item => ({
     ...item,
-    clicks: item.clicks * 10,
-    conversions: item.conversions * 10,
-    revenue: item.revenue * 10,
+    clicks: 0,
+    conversions: 0,
+    revenue: 0,
     date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }));
 
@@ -40,10 +40,10 @@ const AdvertiserDashboard: React.FC = () => {
   const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks * 100).toFixed(2) : "0";
 
   const stats = [
-    { title: t("dashboard.totalClicks"), value: totalClicks.toLocaleString(), change: "+12.5%" },
-    { title: t("dashboard.conversions"), value: totalConversions.toLocaleString(), change: "+7.2%" },
-    { title: t("dashboard.revenue"), value: `$${totalRevenue.toLocaleString()}`, change: "+15.3%" },
-    { title: t("dashboard.conversionRate"), value: `${conversionRate}%`, change: "+2.4%" },
+    { title: t("dashboard.totalClicks"), value: totalClicks.toLocaleString(), change: "0%" },
+    { title: t("dashboard.conversions"), value: totalConversions.toLocaleString(), change: "0%" },
+    { title: t("dashboard.revenue"), value: `$${totalRevenue.toLocaleString()}`, change: "0%" },
+    { title: t("dashboard.conversionRate"), value: `${conversionRate}%`, change: "0%" },
   ];
 
   if (isLoadingAdvertisers) {

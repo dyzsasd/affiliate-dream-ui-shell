@@ -8,16 +8,16 @@ import { Link } from "react-router-dom";
 const AffiliateDashboard: React.FC = () => {
   // Mock data for affiliate dashboard
   const affiliateStats = [
-    { title: "Total Earnings", value: "$2,456", change: "+18.2%" },
-    { title: "Active Links", value: "23", change: "+3" },
-    { title: "Clicks This Month", value: "1,247", change: "+12.8%" },
-    { title: "Conversion Rate", value: "3.2%", change: "+0.5%" },
+    { title: "Total Earnings", value: "$0", change: "0%" },
+    { title: "Active Links", value: "0", change: "0" },
+    { title: "Clicks This Month", value: "0", change: "0%" },
+    { title: "Conversion Rate", value: "0%", change: "0%" },
   ];
 
   const recentLinks = [
-    { id: 1, campaign: "Summer Sale 2024", url: "https://track.example.com/abc123", clicks: 145, earnings: "$87.50" },
-    { id: 2, campaign: "Premium Subscription", url: "https://track.example.com/def456", clicks: 89, earnings: "$178.00" },
-    { id: 3, campaign: "Mobile App Promo", url: "https://track.example.com/ghi789", clicks: 234, earnings: "$156.80" },
+    { id: 1, campaign: "Summer Sale 2024", url: "https://track.example.com/abc123", clicks: 0, earnings: "$0" },
+    { id: 2, campaign: "Premium Subscription", url: "https://track.example.com/def456", clicks: 0, earnings: "$0" },
+    { id: 3, campaign: "Mobile App Promo", url: "https://track.example.com/ghi789", clicks: 0, earnings: "$0" },
   ];
 
   return (
