@@ -22,5 +22,7 @@
   "view": "檢視",
   "saveChanges": "儲存變更",
   "errorOccurred": "發生錯誤",
-  "tryAgain": "重試"
+  "tryAgain": "重試",
+  "optional": "可選",
+  "remove": "移除"
 }

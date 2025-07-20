@@ -67,16 +67,16 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorite-publisher-lists'] });
       toast({
-        title: "Success",
-        description: `${publisherDomain} has been added to your favorite list!`,
+        title: t('favoritePublishers.addSuccess'),
+        description: t('favoritePublishers.addSuccessDescription', { domain: publisherDomain }),
       });
       handleClose();
     },
     onError: (error: any) => {
       console.error('Error adding to favorites:', error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to add publisher to favorites. Please try again.",
+        title: t('common.error'),
+        description: error.message || t('favoritePublishers.addError'),
         variant: "destructive",
       });
     },
@@ -91,8 +91,8 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
   const handleSubmit = () => {
     if (!selectedListId) {
       toast({
-        title: "Please select a list",
-        description: "You need to select a favorite list to add this publisher to.",
+        title: t('favoritePublishers.selectListRequired'),
+        description: t('favoritePublishers.selectListRequiredDescription'),
         variant: "destructive",
       });
       return;
@@ -115,17 +115,17 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Star className="h-5 w-5 text-yellow-500" />
-            Add to Favorites
+            {t('favoritePublishers.addToFavorites')}
           </DialogTitle>
           <DialogDescription>
-            Add <strong>{publisherDomain}</strong> to one of your favorite publisher lists.
+            {t('favoritePublishers.addToFavoritesDescription', { domain: publisherDomain })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {/* Lists Selection */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium">Select a favorite list</Label>
+            <Label className="text-sm font-medium">{t('favoritePublishers.selectFavoriteList')}</Label>
             {isLoadingLists ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin" />
@@ -133,11 +133,11 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
             ) : !listsData || listsData.length === 0 ? (
               <div className="text-center py-8 space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  No favorite lists found. Create one first.
+                  {t('favoritePublishers.noFavoriteListsFound')}
                 </p>
                 <Button variant="outline" onClick={handleCreateNewList}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create New List
+                  {t('favoritePublishers.createNewList')}
                 </Button>
               </div>
             ) : (
@@ -163,7 +163,7 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
                               </div>
                             )}
                             <div className="text-xs text-muted-foreground">
-                              {list.items?.length || 0} publishers
+                              {t('favoritePublishers.publishersCount', { count: list.items?.length || 0 })}
                             </div>
                           </div>
                         </Label>
@@ -178,11 +178,11 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
           {/* Notes */}
           <div className="space-y-2">
             <Label htmlFor="notes" className="text-sm font-medium">
-              Notes (optional)
+              {t('favoritePublishers.notesOptional')}
             </Label>
             <Textarea
               id="notes"
-              placeholder="Add any notes about this publisher..."
+              placeholder={t('favoritePublishers.notesPlaceholder')}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
@@ -197,7 +197,7 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
                 className="w-full"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Create New List
+                {t('favoritePublishers.createNewList')}
               </Button>
             </div>
           )}
@@ -205,7 +205,7 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button 
             onClick={handleSubmit} 
@@ -214,12 +214,12 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
             {addToFavoritesMutation.isPending ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Adding...
+                {t('favoritePublishers.adding')}
               </>
             ) : (
               <>
                 <Star className="h-4 w-4 mr-2" />
-                Add to Favorites
+                {t('favoritePublishers.addToFavorites')}
               </>
             )}
           </Button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Check, Mail, UserPlus } from 'lucide-react';
 
@@ -7,16 +8,18 @@ interface PublisherStatusProgressProps {
   className?: string;
 }
 
-const steps = [
-  { key: 'added', label: 'Added', icon: UserPlus },
-  { key: 'contacted', label: 'Contacted', icon: Mail },
-  { key: 'accepted', label: 'Accepted', icon: Check }
+const getSteps = (t: any) => [
+  { key: 'added', label: t('favoritePublishers.statusAdded'), icon: UserPlus },
+  { key: 'contacted', label: t('favoritePublishers.statusContacted'), icon: Mail },
+  { key: 'accepted', label: t('favoritePublishers.statusAccepted'), icon: Check }
 ];
 
 const PublisherStatusProgress: React.FC<PublisherStatusProgressProps> = ({
   status,
   className
 }) => {
+  const { t } = useTranslation();
+  const steps = getSteps(t);
   const normalizedStatus = status?.toLowerCase();
   const currentStepIndex = steps.findIndex(step => step.key === normalizedStatus);
   

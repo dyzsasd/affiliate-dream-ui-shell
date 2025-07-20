@@ -84,5 +84,6 @@
   "fillAllFieldsDescription": "Both subject and message are required to send a message.",
   "contactSuccess": "Message Sent",
   "contactSuccessDescription": "Your message to {{domain}} has been sent successfully. The publisher status has been updated to 'contacted'.",
-  "contactError": "Failed to send message. Please try again."
+  "contactError": "Failed to send message. Please try again.",
+  "website": "Website"
 }

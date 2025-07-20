@@ -281,7 +281,7 @@ const FavoritePublisherListDetail: React.FC = () => {
                       {removePublisherMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        t('common.remove')
+                        t('favoritePublishers.removeFromList')
                       )}
                     </Button>
                   </div>

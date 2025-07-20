@@ -22,5 +22,7 @@
   "view": "View",
   "saveChanges": "Save Changes",
   "errorOccurred": "An error occurred",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "optional": "optional",
+  "remove": "Remove"
 }

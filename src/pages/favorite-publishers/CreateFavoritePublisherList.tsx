@@ -107,7 +107,7 @@ const CreateFavoritePublisherList: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">{t('favoritePublishers.description')} ({t('common.optional')})</Label>
+              <Label htmlFor="description">{t('favoritePublishers.description')} ({t('favoritePublishers.optional')})</Label>
               <Textarea
                 id="description"
                 {...register('description')}

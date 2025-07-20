@@ -72,5 +72,6 @@
   "description": "描述",
   "selectVertical": "选择垂直领域",
   "allVerticals": "所有垂直领域",
-  "vertical": "垂直领域"
+  "vertical": "垂直领域",
+  "website": "网站"
 }

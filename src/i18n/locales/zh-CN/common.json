@@ -22,5 +22,7 @@
   "view": "查看",
   "saveChanges": "保存更改",
   "errorOccurred": "发生错误",
-  "tryAgain": "重试"
+  "tryAgain": "重试",
+  "optional": "可选",
+  "remove": "移除"
 }
