@@ -257,6 +257,7 @@ const FavoritePublisherListDetail: React.FC = () => {
                     publisher={publisherResponse}
                     viewMode="list"
                     onViewDetails={() => setSelectedPublisher(publisherResponse)}
+                    hideAddToFavoritesButton={true}
                     listId={parseInt(listId)}
                   />
                   
