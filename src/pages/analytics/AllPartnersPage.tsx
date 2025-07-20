@@ -196,16 +196,6 @@ const AllPartnersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Failed Domains Alert */}
-      {failedDomains.size > 0 && (
-        <Card className="border-orange-200 bg-orange-50">
-          <CardContent className="p-4">
-            <p className="text-sm text-orange-800">
-              {t('analytics.somePartnersFailedToLoad', { count: failedDomains.size })}
-            </p>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Results Summary */}
       <div className="flex items-center justify-between">
