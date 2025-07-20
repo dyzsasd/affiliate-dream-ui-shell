@@ -105,6 +105,13 @@ const CampaignForm: React.FC = () => {
     try {
       console.log("Creating campaign with data:", data);
       
+      // Convert date strings to proper datetime format with timezone
+      const formatDateTime = (dateString?: string) => {
+        if (!dateString) return undefined;
+        // Add time and timezone to make it a valid datetime
+        return `${dateString}T00:00:00Z`;
+      };
+      
       // Create the request object matching the backend API structure
       const request: ModelsCreateCampaignRequest = {
         name: data.name,
@@ -112,8 +119,8 @@ const CampaignForm: React.FC = () => {
         advertiserId: 1, // Default for now - should be selected/configured
         status: data.status as ModelsCreateCampaignRequest['status'],
         description: data.description || undefined,
-        startDate: data.startDate || undefined,
-        endDate: data.endDate || undefined,
+        startDate: formatDateTime(data.startDate),
+        endDate: formatDateTime(data.endDate),
         destinationUrl: data.destinationUrl || undefined,
         thumbnailUrl: data.thumbnailUrl || undefined,
         previewUrl: data.previewUrl || undefined,
