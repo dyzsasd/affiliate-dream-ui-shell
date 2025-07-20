@@ -28,7 +28,7 @@ const PublisherStatusProgress: React.FC<PublisherStatusProgressProps> = ({
         const isCurrent = currentStepIndex === index;
         
         return (
-          <React.Fragment key={step.key}>
+          <div key={step.key} className="flex items-center">
             <div className="flex items-center">
               <div
                 className={cn(
@@ -59,14 +59,14 @@ const PublisherStatusProgress: React.FC<PublisherStatusProgressProps> = ({
             {index < steps.length - 1 && (
               <div
                 className={cn(
-                  "w-8 h-0.5 transition-colors duration-200",
+                  "w-8 h-0.5 transition-colors duration-200 ml-2",
                   isCompleted && currentStepIndex > index
                     ? "bg-primary"
                     : "bg-muted-foreground/30"
                 )}
               />
             )}
-          </React.Fragment>
+          </div>
         );
       })}
     </div>

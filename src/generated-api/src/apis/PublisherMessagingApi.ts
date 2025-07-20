@@ -100,6 +100,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+
         const response = await this.request({
             path: `/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'DELETE',
@@ -141,6 +143,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
@@ -178,6 +182,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
 
         const response = await this.request({
             path: `/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
@@ -220,6 +226,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -266,6 +274,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
@@ -309,6 +319,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+
         const response = await this.request({
             path: `/publisher-messaging/conversations`,
             method: 'GET',
@@ -343,6 +355,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
 
         headerParameters['Content-Type'] = 'application/json';
 
