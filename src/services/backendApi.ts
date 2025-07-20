@@ -146,9 +146,16 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   });
   
   // Create the client with proper configuration
+  console.log('🔨 Creating client instance with configuration:', {
+    basePath: configuration.basePath,
+    hasApiKey: !!configuration.apiKey,
+    configKeys: Object.keys(configuration)
+  });
+  
   const client = new ClientClass(configuration);
   
-  console.log('API client created successfully');
+  console.log('✅ API client created successfully with methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(client)));
+  console.log('🔍 Client instance created, checking if apiKey function is accessible');
   
   return client;
 };
