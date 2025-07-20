@@ -19,6 +19,8 @@ import enPlatformOwnerDashboard from './locales/en/platformOwnerDashboard.json';
 import enInfluencerSearch from './locales/en/influencerSearch.json';
 import enAnalytics from './locales/en/analytics.json';
 import enProfile from './locales/en/profile.json';
+import enFavoritePublishers from './locales/en/favoritePublishers.json';
+import enConversations from './locales/en/conversations.json';
 
 import frApp from './locales/fr/app.json';
 import frCommon from './locales/fr/common.json';
@@ -35,6 +37,8 @@ import frPlatformOwnerDashboard from './locales/fr/platformOwnerDashboard.json';
 import frInfluencerSearch from './locales/fr/influencerSearch.json';
 import frAnalytics from './locales/fr/analytics.json';
 import frProfile from './locales/fr/profile.json';
+import frFavoritePublishers from './locales/fr/favoritePublishers.json';
+import frConversations from './locales/fr/conversations.json';
 
 import zhCNApp from './locales/zh-CN/app.json';
 import zhCNCommon from './locales/zh-CN/common.json';
@@ -51,6 +55,8 @@ import zhCNPlatformOwnerDashboard from './locales/zh-CN/platformOwnerDashboard.j
 import zhCNInfluencerSearch from './locales/zh-CN/influencerSearch.json';
 import zhCNAnalytics from './locales/zh-CN/analytics.json';
 import zhCNProfile from './locales/zh-CN/profile.json';
+import zhCNFavoritePublishers from './locales/zh-CN/favoritePublishers.json';
+import zhCNConversations from './locales/zh-CN/conversations.json';
 
 import zhTWApp from './locales/zh-TW/app.json';
 import zhTWCommon from './locales/zh-TW/common.json';
@@ -67,6 +73,8 @@ import zhTWPlatformOwnerDashboard from './locales/zh-TW/platformOwnerDashboard.j
 import zhTWInfluencerSearch from './locales/zh-TW/influencerSearch.json';
 import zhTWAnalytics from './locales/zh-TW/analytics.json';
 import zhTWProfile from './locales/zh-TW/profile.json';
+import zhTWFavoritePublishers from './locales/zh-TW/favoritePublishers.json';
+import zhTWConversations from './locales/zh-TW/conversations.json';
 
 // Combine all translations into legacy format for compatibility
 const enTranslation = {
@@ -84,7 +92,9 @@ const enTranslation = {
   platformOwnerDashboard: enPlatformOwnerDashboard,
   influencerSearch: enInfluencerSearch,
   analytics: enAnalytics,
-  profile: enProfile
+  profile: enProfile,
+  favoritePublishers: enFavoritePublishers,
+  conversations: enConversations
 };
 
 const frTranslation = {
@@ -102,7 +112,9 @@ const frTranslation = {
   platformOwnerDashboard: frPlatformOwnerDashboard,
   influencerSearch: frInfluencerSearch,
   analytics: frAnalytics,
-  profile: frProfile
+  profile: frProfile,
+  favoritePublishers: frFavoritePublishers,
+  conversations: frConversations
 };
 
 const zhCNTranslation = {
@@ -120,7 +132,9 @@ const zhCNTranslation = {
   platformOwnerDashboard: zhCNPlatformOwnerDashboard,
   influencerSearch: zhCNInfluencerSearch,
   analytics: zhCNAnalytics,
-  profile: zhCNProfile
+  profile: zhCNProfile,
+  favoritePublishers: zhCNFavoritePublishers,
+  conversations: zhCNConversations
 };
 
 const zhTWTranslation = {
@@ -138,7 +152,9 @@ const zhTWTranslation = {
   platformOwnerDashboard: zhTWPlatformOwnerDashboard,
   influencerSearch: zhTWInfluencerSearch,
   analytics: zhTWAnalytics,
-  profile: zhTWProfile
+  profile: zhTWProfile,
+  favoritePublishers: zhTWFavoritePublishers,
+  conversations: zhTWConversations
 };
 
 // Language resources
