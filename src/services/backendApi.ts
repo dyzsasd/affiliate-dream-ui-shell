@@ -31,6 +31,9 @@ export const isTokenExpiringSoon = (expiresAt: number): boolean => {
   return currentTime + bufferTime >= expirationTime;
 };
 
+// Store ongoing refresh promise to prevent multiple simultaneous refresh calls
+let refreshPromise: Promise<any> | null = null;
+
 // Get the current valid auth tokens or refresh if needed
 export const getAuthTokens = async () => {
   const { data: { session } } = await supabase.auth.getSession();
@@ -45,19 +48,35 @@ export const getAuthTokens = async () => {
   if (session.expires_at && isTokenExpiringSoon(session.expires_at)) {
     console.log('Token is expiring soon, refreshing...');
     
+    // If a refresh is already in progress, wait for it
+    if (refreshPromise) {
+      console.log('Refresh already in progress, waiting...');
+      try {
+        const result = await refreshPromise;
+        return result.data?.session || null;
+      } catch (error) {
+        console.error('Error waiting for ongoing refresh:', error);
+        return null;
+      }
+    }
+    
     try {
-      // Attempt to refresh the session
-      const { data, error } = await supabase.auth.refreshSession();
+      // Start the refresh and store the promise
+      refreshPromise = supabase.auth.refreshSession();
+      const { data, error } = await refreshPromise;
       
       if (error) {
         console.error('Error refreshing token:', error);
+        refreshPromise = null;
         return null;
       }
       
       console.log('Token refreshed successfully');
+      refreshPromise = null;
       return data.session;
     } catch (refreshError) {
       console.error('Exception during token refresh:', refreshError);
+      refreshPromise = null;
       return null;
     }
   }
