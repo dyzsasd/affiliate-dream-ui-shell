@@ -214,37 +214,6 @@ const AdvertiserDashboard: React.FC = () => {
         </Card>
       </div>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">{t("dashboard.recentCampaignActivity")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">New conversion from Campaign: Summer Promotion</p>
-                <p className="text-xs text-muted-foreground">2 hours ago • $150.00</p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="h-2 w-2 rounded-full bg-blue-500 mr-2"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Campaign created: Premium Subscription</p>
-                <p className="text-xs text-muted-foreground">5 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">New conversion from Campaign: Premium Subscription</p>
-                <p className="text-xs text-muted-foreground">Yesterday • $300.00</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

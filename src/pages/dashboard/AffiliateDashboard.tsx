@@ -14,11 +14,6 @@ const AffiliateDashboard: React.FC = () => {
     { title: "Conversion Rate", value: "0%", change: "0%" },
   ];
 
-  const recentLinks = [
-    { id: 1, campaign: "Summer Sale 2024", url: "https://track.example.com/abc123", clicks: 0, earnings: "$0" },
-    { id: 2, campaign: "Premium Subscription", url: "https://track.example.com/def456", clicks: 0, earnings: "$0" },
-    { id: 3, campaign: "Mobile App Promo", url: "https://track.example.com/ghi789", clicks: 0, earnings: "$0" },
-  ];
 
   return (
     <div className="space-y-6">
@@ -110,31 +105,6 @@ const AffiliateDashboard: React.FC = () => {
         </Card>
       </div>
 
-      {/* Recent Tracking Links */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Recent Tracking Links</CardTitle>
-          <Link to="/tracking-links">
-            <Button variant="outline" size="sm">View All</Button>
-          </Link>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recentLinks.map((link) => (
-              <div key={link.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <h4 className="font-medium">{link.campaign}</h4>
-                  <p className="text-sm text-muted-foreground">{link.url}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium">{link.clicks} clicks</p>
-                  <p className="text-sm text-green-600">{link.earnings}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
