@@ -79,10 +79,18 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
     basePath: baseUrl,
     apiKey: async (name: string) => {
       if (name === 'Authorization') {
-        const session = await getAuthTokens();
-        if (session?.access_token) {
-          console.log('Using auth token for API request');
-          return `Bearer ${session.access_token}`;
+        try {
+          const session = await getAuthTokens();
+          if (session?.access_token) {
+            console.log('Using auth token for API request');
+            return `Bearer ${session.access_token}`;
+          } else {
+            console.warn('No valid session found for API request');
+            return '';
+          }
+        } catch (error) {
+          console.error('Error getting auth token:', error);
+          return '';
         }
       }
       return '';
