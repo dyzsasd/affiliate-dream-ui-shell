@@ -19,6 +19,9 @@ const ConversationsList: React.FC = () => {
       try {
         console.log('Fetching conversations with auth...');
         const apiClient = await createApiClient(PublisherMessagingApi);
+        
+        // Log the exact request details for debugging
+        console.log('Making request to conversations endpoint...');
         const result = await apiClient.apiV1PublisherMessagingConversationsGet({
           page,
           pageSize,
@@ -27,14 +30,40 @@ const ConversationsList: React.FC = () => {
         return result;
       } catch (error) {
         console.error('Failed to fetch conversations:', error);
-        if (error instanceof Error && error.message.includes('Failed to fetch')) {
-          throw new Error('Network error: Unable to connect to the conversations API. This may be due to CORS configuration issues.');
+        
+        // Provide specific error information
+        if (error instanceof Error) {
+          if (error.message.includes('Failed to fetch')) {
+            throw new Error(
+              'Unable to connect to the conversations API endpoint. ' +
+              'This endpoint may not be properly configured on the backend server. ' +
+              'Other API endpoints are working, but the conversations endpoint is not accessible.'
+            );
+          }
+          if (error.message.includes('NetworkError')) {
+            throw new Error('Network error when accessing conversations API.');
+          }
+          if (error.message.includes('404')) {
+            throw new Error('Conversations API endpoint not found (404). The endpoint may not be implemented.');
+          }
+          if (error.message.includes('500')) {
+            throw new Error('Server error (500) when accessing conversations API.');
+          }
         }
+        
         throw error;
       }
     },
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retry: (failureCount, error) => {
+      // Don't retry if it's clearly a backend configuration issue
+      if (error instanceof Error && 
+          (error.message.includes('endpoint may not be properly configured') ||
+           error.message.includes('endpoint not found'))) {
+        return false;
+      }
+      return failureCount < 2; // Reduced retries since other endpoints work
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
   });
 
   const getStatusColor = (status?: string) => {
