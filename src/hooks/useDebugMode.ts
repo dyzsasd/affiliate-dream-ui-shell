@@ -5,6 +5,7 @@ const BACKEND_URL_KEY = 'debug_backend_url';
 
 export const useDebugMode = () => {
   const [debugMode, setDebugMode] = useState<boolean>(() => {
+    // Debug mode is hidden by default - only enable if explicitly stored as true
     const stored = localStorage.getItem(DEBUG_MODE_KEY);
     return stored === 'true';
   });

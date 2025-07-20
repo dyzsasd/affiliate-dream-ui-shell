@@ -114,7 +114,7 @@ const AdvertiserList: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <p className="text-destructive font-medium">
-          {t('organization.noOrganization')}
+          {t('organizations.noOrganization')}
         </p>
       </div>
     );
@@ -127,10 +127,6 @@ const AdvertiserList: React.FC = () => {
           <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
           <p className="text-muted-foreground">{t('advertisers.description')}</p>
         </div>
-        <Button onClick={handleCreateAdvertiser}>
-          <Plus className="mr-2 h-4 w-4" />
-          {t('advertisers.createNew')}
-        </Button>
       </div>
 
       {advertisers.length === 0 ? (
@@ -141,12 +137,6 @@ const AdvertiserList: React.FC = () => {
               {t('advertisers.createYourFirst')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <Button onClick={handleCreateAdvertiser}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              {t('advertisers.createAdvertiser')}
-            </Button>
-          </CardContent>
         </Card>
       ) : (
         <Card>

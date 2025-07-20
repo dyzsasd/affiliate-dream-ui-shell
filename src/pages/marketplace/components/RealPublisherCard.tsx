@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import ContactPublisherModal from "./ContactPublisherModal";
+import AddToFavoritesModal from "./AddToFavoritesModal";
 import PublisherWebsitePreview from "./PublisherWebsitePreview";
 import PublisherDetails from "./PublisherDetails";
 import PublisherVerticalMix from "./PublisherVerticalMix";
@@ -10,14 +11,21 @@ interface RealPublisherCardProps {
   publisher: DomainAnalyticsPublisherResponse;
   viewMode: "grid" | "list";
   onViewDetails: () => void;
+  hideContactButton?: boolean;
+  hideAddToFavoritesButton?: boolean;
+  listId?: number;
 }
 
 const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
   publisher,
   viewMode,
-  onViewDetails
+  onViewDetails,
+  hideContactButton = false,
+  hideAddToFavoritesButton = false,
+  listId
 }) => {
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showAddToFavoritesModal, setShowAddToFavoritesModal] = useState(false);
 
   const publisherData = publisher.publisher;
   if (!publisherData) return null;
@@ -31,6 +39,8 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
             publisherData={publisherData}
             onViewDetails={onViewDetails}
             onContact={() => setShowContactModal(true)}
+            onAddToFavorites={hideAddToFavoritesButton ? undefined : () => setShowAddToFavoritesModal(true)}
+            hideContactButton={hideContactButton}
           />
 
           {/* Middle Section - Details */}
@@ -46,6 +56,14 @@ const RealPublisherCard: React.FC<RealPublisherCardProps> = ({
         publisher={publisher}
         isOpen={showContactModal}
         onClose={() => setShowContactModal(false)}
+        listId={listId}
+      />
+
+      {/* Add to Favorites Modal */}
+      <AddToFavoritesModal
+        publisher={publisher}
+        isOpen={showAddToFavoritesModal}
+        onClose={() => setShowAddToFavoritesModal(false)}
       />
     </Card>
   );

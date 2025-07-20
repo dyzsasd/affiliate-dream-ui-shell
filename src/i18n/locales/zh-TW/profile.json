@@ -1,3 +1,16 @@
 {
-  "notAssigned": "未分配"
+  "title": "個人資料",
+  "basicInfo": "基本資訊",
+  "contactInfo": "聯絡資訊",
+  "organizationInfo": "組織資訊",
+  "organization": "組織",
+  "role": "角色",
+  "notAssigned": "未分配",
+  "editProfile": "編輯個人資料",
+  "saveChanges": "儲存變更",
+  "saving": "儲存中...",
+  "adminOptions": "管理員選項",
+  "adminOptionsDescription": "管理工具和設定",
+  "adminMessage": "您擁有管理員權限。",
+  "manageUsers": "管理使用者"
 }

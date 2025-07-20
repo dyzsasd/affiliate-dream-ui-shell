@@ -1,5 +1,57 @@
 basePath: /api/v1
 definitions:
+  domain.AddExternalMessageRequest:
+    properties:
+      content:
+        maxLength: 5000
+        minLength: 1
+        type: string
+      conversation_id:
+        type: integer
+      external_message_id:
+        type: string
+      message_type:
+        enum:
+        - text
+        - system
+        - notification
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      sender_id:
+        type: string
+      sender_type:
+        enum:
+        - organization
+        - publisher
+        - system
+        type: string
+      sent_at:
+        type: string
+    required:
+    - content
+    - conversation_id
+    - sender_type
+    type: object
+  domain.AddPublisherToListRequest:
+    properties:
+      notes:
+        maxLength: 1000
+        type: string
+      publisher_domain:
+        maxLength: 255
+        minLength: 1
+        type: string
+      status:
+        enum:
+        - added
+        - contacted
+        - accepted
+        type: string
+    required:
+    - publisher_domain
+    type: object
   domain.Advertiser:
     properties:
       accounting_contact_email:
@@ -281,6 +333,69 @@ definitions:
         description: '"advertiser" or "publisher"'
         type: string
     type: object
+  domain.BillingAccount:
+    properties:
+      auto_recharge_amount:
+        type: number
+      auto_recharge_enabled:
+        type: boolean
+      auto_recharge_threshold:
+        type: number
+      balance:
+        description: Balance and Credit
+        type: number
+      billing_account_id:
+        type: integer
+      billing_address:
+        additionalProperties: true
+        type: object
+      billing_email:
+        type: string
+      billing_mode:
+        allOf:
+        - $ref: '#/definitions/domain.BillingMode'
+        description: Billing Configuration
+      created_at:
+        type: string
+      credit_limit:
+        type: number
+      currency:
+        type: string
+      default_payment_method_id:
+        description: Payment Configuration
+        type: string
+      invoice_day_of_month:
+        description: Invoice Configuration
+        type: integer
+      organization_id:
+        type: integer
+      payment_terms_days:
+        type: integer
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.BillingAccountStatus'
+        description: Status and Metadata
+      stripe_account_id:
+        type: string
+      stripe_customer_id:
+        description: Stripe Integration
+        type: string
+      tax_info:
+        additionalProperties: true
+        type: object
+      updated_at:
+        type: string
+    type: object
+  domain.BillingAccountStatus:
+    enum:
+    - active
+    - suspended
+    - closed
+    type: string
+    x-enum-varnames:
+    - BillingAccountStatusActive
+    - BillingAccountStatusSuspended
+    - BillingAccountStatusClosed
   domain.BillingAddress:
     properties:
       city:
@@ -297,6 +412,27 @@ definitions:
         type: string
       state:
         type: string
+    type: object
+  domain.BillingDashboardResponse:
+    properties:
+      billing_account:
+        $ref: '#/definitions/domain.BillingAccount'
+      current_balance:
+        type: number
+      monthly_spend:
+        type: number
+      payment_methods:
+        items:
+          $ref: '#/definitions/domain.StripePaymentMethod'
+        type: array
+      pending_invoices:
+        items:
+          $ref: '#/definitions/domain.Invoice'
+        type: array
+      recent_transactions:
+        items:
+          $ref: '#/definitions/domain.Transaction'
+        type: array
     type: object
   domain.BillingDetails:
     properties:
@@ -347,6 +483,17 @@ definitions:
     - BillingFrequencyQuarterly
     - BillingFrequencyManual
     - BillingFrequencyOther
+  domain.BillingMode:
+    enum:
+    - prepaid
+    - postpaid
+    type: string
+    x-enum-comments:
+      BillingModePostpaid: Monthly invoicing
+      BillingModePrepaid: Pay-as-you-go with balance
+    x-enum-varnames:
+    - BillingModePrepaid
+    - BillingModePostpaid
   domain.BillingSchedule:
     properties:
       day_of_month:
@@ -381,6 +528,34 @@ definitions:
           type: object
         type: array
     type: object
+  domain.ConversationListResponse:
+    properties:
+      conversations:
+        items:
+          $ref: '#/definitions/domain.PublisherConversation'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  domain.ConversationWithMessagesResponse:
+    properties:
+      conversation:
+        $ref: '#/definitions/domain.PublisherConversation'
+      messages:
+        items:
+          $ref: '#/definitions/domain.PublisherMessage'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
   domain.CountryRankingData:
     properties:
       count:
@@ -411,6 +586,179 @@ definitions:
           type: object
         type: array
     type: object
+  domain.CreateConversationRequest:
+    properties:
+      initial_message:
+        maxLength: 5000
+        minLength: 1
+        type: string
+      list_id:
+        type: integer
+      publisher_domain:
+        maxLength: 255
+        minLength: 1
+        type: string
+      subject:
+        maxLength: 500
+        minLength: 1
+        type: string
+    required:
+    - initial_message
+    - publisher_domain
+    - subject
+    type: object
+  domain.CreateFavoritePublisherListRequest:
+    properties:
+      description:
+        maxLength: 1000
+        type: string
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - name
+    type: object
+  domain.CreatePaymentMethodRequest:
+    properties:
+      nickname:
+        type: string
+      payment_method_id:
+        description: Stripe Payment Method ID
+        type: string
+      set_as_default:
+        type: boolean
+    required:
+    - payment_method_id
+    type: object
+  domain.FavoritePublisherList:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      items:
+        description: 'Optional: Include items when fetching with details'
+        items:
+          $ref: '#/definitions/domain.FavoritePublisherListItem'
+        type: array
+      list_id:
+        type: integer
+      name:
+        type: string
+      organization_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  domain.FavoritePublisherListItem:
+    properties:
+      added_at:
+        type: string
+      item_id:
+        type: integer
+      list_id:
+        type: integer
+      notes:
+        type: string
+      publisher:
+        allOf:
+        - $ref: '#/definitions/domain.AnalyticsPublisher'
+        description: 'Optional: Include publisher details when fetching with details'
+      publisher_domain:
+        type: string
+      status:
+        type: string
+    type: object
+  domain.Invoice:
+    properties:
+      amount_due:
+        type: number
+      amount_paid:
+        type: number
+      billing_account_id:
+        type: integer
+      created_at:
+        type: string
+      currency:
+        type: string
+      due_date:
+        type: string
+      invoice_date:
+        description: Dates
+        type: string
+      invoice_id:
+        type: integer
+      invoice_number:
+        description: Invoice Details
+        type: string
+      line_items:
+        description: Invoice Content
+        items:
+          $ref: '#/definitions/domain.InvoiceLineItem'
+        type: array
+      metadata:
+        additionalProperties: true
+        description: Metadata
+        type: object
+      notes:
+        type: string
+      organization_id:
+        type: integer
+      paid_at:
+        type: string
+      period_end:
+        type: string
+      period_start:
+        description: Billing Period
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.InvoiceStatus'
+        description: Status
+      stripe_invoice_id:
+        description: Stripe Integration
+        type: string
+      subtotal:
+        description: Financial Details
+        type: number
+      tax_amount:
+        type: number
+      total_amount:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  domain.InvoiceLineItem:
+    properties:
+      amount:
+        type: number
+      description:
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      quantity:
+        type: number
+      unit_price:
+        type: number
+    type: object
+  domain.InvoiceStatus:
+    enum:
+    - draft
+    - open
+    - paid
+    - void
+    - uncollectible
+    - overdue
+    type: string
+    x-enum-varnames:
+    - InvoiceStatusDraft
+    - InvoiceStatusOpen
+    - InvoiceStatusPaid
+    - InvoiceStatusVoid
+    - InvoiceStatusUncollectible
+    - InvoiceStatusOverdue
   domain.KeywordData:
     properties:
       count:
@@ -521,6 +869,18 @@ definitions:
     - PaymentDetailsTypePayPal
     - PaymentDetailsTypeCrypto
     - PaymentDetailsTypeOther
+  domain.PaymentMethodStatus:
+    enum:
+    - active
+    - inactive
+    - expired
+    - failed
+    type: string
+    x-enum-varnames:
+    - PaymentMethodStatusActive
+    - PaymentMethodStatusInactive
+    - PaymentMethodStatusExpired
+    - PaymentMethodStatusFailed
   domain.PaymentType:
     enum:
     - wire
@@ -563,6 +923,96 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.PublisherConversation:
+    properties:
+      conversation_id:
+        type: integer
+      created_at:
+        type: string
+      last_message_at:
+        type: string
+      list:
+        allOf:
+        - $ref: '#/definitions/domain.FavoritePublisherList'
+        description: 'Optional: Include list details'
+      list_id:
+        type: integer
+      message_count:
+        description: Computed fields
+        type: integer
+      messages:
+        description: 'Optional: Include messages when fetching with details'
+        items:
+          $ref: '#/definitions/domain.PublisherMessage'
+        type: array
+      organization_id:
+        type: integer
+      publisher:
+        allOf:
+        - $ref: '#/definitions/domain.AnalyticsPublisher'
+        description: 'Optional: Include publisher details'
+      publisher_domain:
+        type: string
+      status:
+        type: string
+      subject:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.PublisherMessage:
+    properties:
+      content:
+        type: string
+      conversation_id:
+        type: integer
+      external_message_id:
+        type: string
+      message_id:
+        type: integer
+      message_type:
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      sender_id:
+        type: string
+      sender_type:
+        type: string
+      sent_at:
+        type: string
+    type: object
+  domain.RechargeRequest:
+    properties:
+      amount:
+        type: number
+      currency:
+        type: string
+      description:
+        type: string
+      payment_method_id:
+        type: string
+    required:
+    - amount
+    type: object
+  domain.SendMessageRequest:
+    properties:
+      content:
+        maxLength: 5000
+        minLength: 1
+        type: string
+      message_type:
+        enum:
+        - text
+        - system
+        - notification
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+    required:
+    - content
+    type: object
   domain.SocialMediaData:
     properties:
       count:
@@ -575,6 +1025,197 @@ definitions:
         additionalProperties:
           type: string
         type: object
+    type: object
+  domain.StripePaymentMethod:
+    properties:
+      account_holder_type:
+        type: string
+      bank_name:
+        description: Bank Account Details
+        type: string
+      billing_account_id:
+        type: integer
+      brand:
+        type: string
+      created_at:
+        type: string
+      exp_month:
+        type: integer
+      exp_year:
+        type: integer
+      is_default:
+        description: Status and Configuration
+        type: boolean
+      last4:
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      nickname:
+        description: Metadata
+        type: string
+      organization_id:
+        type: integer
+      payment_method_id:
+        type: integer
+      status:
+        $ref: '#/definitions/domain.PaymentMethodStatus'
+      stripe_payment_method_id:
+        description: Stripe Integration
+        type: string
+      type:
+        description: Payment Method Details
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.Transaction:
+    properties:
+      amount:
+        type: number
+      balance_after:
+        type: number
+      balance_before:
+        description: Balance Tracking
+        type: number
+      billing_account_id:
+        type: integer
+      created_at:
+        type: string
+      currency:
+        type: string
+      description:
+        description: Metadata
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      organization_id:
+        type: integer
+      processed_at:
+        description: Timestamps
+        type: string
+      reference_id:
+        type: string
+      reference_type:
+        description: References
+        type: string
+      related_transaction_id:
+        type: integer
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.TransactionStatus'
+        description: Status
+      stripe_charge_id:
+        type: string
+      stripe_invoice_id:
+        type: string
+      stripe_payment_intent_id:
+        description: Stripe Integration
+        type: string
+      transaction_id:
+        type: integer
+      type:
+        allOf:
+        - $ref: '#/definitions/domain.TransactionType'
+        description: Transaction Details
+      updated_at:
+        type: string
+    type: object
+  domain.TransactionStatus:
+    enum:
+    - pending
+    - completed
+    - failed
+    - cancelled
+    - refunded
+    type: string
+    x-enum-varnames:
+    - TransactionStatusPending
+    - TransactionStatusCompleted
+    - TransactionStatusFailed
+    - TransactionStatusCancelled
+    - TransactionStatusRefunded
+  domain.TransactionType:
+    enum:
+    - recharge
+    - debit
+    - credit
+    - refund
+    - chargeback
+    - invoice_payment
+    - usage_charge
+    - affiliate_payout
+    - platform_fee
+    - adjustment
+    - transfer
+    type: string
+    x-enum-varnames:
+    - TransactionTypeRecharge
+    - TransactionTypeDebit
+    - TransactionTypeCredit
+    - TransactionTypeRefund
+    - TransactionTypeChargeback
+    - TransactionTypeInvoicePayment
+    - TransactionTypeUsageCharge
+    - TransactionTypeAffiliatePayout
+    - TransactionTypePlatformFee
+    - TransactionTypeAdjustment
+    - TransactionTypeTransfer
+  domain.UpdateBillingConfigRequest:
+    properties:
+      auto_recharge_amount:
+        type: number
+      auto_recharge_enabled:
+        type: boolean
+      auto_recharge_threshold:
+        type: number
+      billing_email:
+        type: string
+      billing_mode:
+        $ref: '#/definitions/domain.BillingMode'
+      invoice_day_of_month:
+        type: integer
+      payment_terms_days:
+        type: integer
+    type: object
+  domain.UpdateConversationStatusRequest:
+    properties:
+      status:
+        enum:
+        - active
+        - closed
+        - archived
+        type: string
+    required:
+    - status
+    type: object
+  domain.UpdateFavoritePublisherListRequest:
+    properties:
+      description:
+        maxLength: 1000
+        type: string
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+    type: object
+  domain.UpdatePublisherInListRequest:
+    properties:
+      notes:
+        maxLength: 1000
+        type: string
+    type: object
+  domain.UpdatePublisherStatusRequest:
+    properties:
+      status:
+        enum:
+        - added
+        - contacted
+        - accepted
+        type: string
+    required:
+    - status
     type: object
   domain.VerticalData:
     properties:
@@ -919,9 +1560,6 @@ definitions:
     properties:
       advertiser_id:
         type: integer
-      billing_model:
-        description: Payout and revenue configuration
-        type: string
       campaign_id:
         type: integer
       conversion_method:
@@ -941,6 +1579,13 @@ definitions:
         type: string
       end_date:
         type: string
+      fixed_click_amount:
+        type: number
+      fixed_conversion_amount:
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        type: number
       global_click_cap:
         type: integer
       global_conversion_cap:
@@ -958,15 +1603,9 @@ definitions:
         type: string
       organization_id:
         type: integer
-      payout_amount:
+      percentage_conversion_amount:
         type: number
-      payout_structure:
-        type: string
       preview_url:
-        type: string
-      revenue_amount:
-        type: number
-      revenue_structure:
         type: string
       session_definition:
         type: string
@@ -1045,12 +1684,6 @@ definitions:
     properties:
       advertiser_id:
         type: integer
-      billing_model:
-        description: Payout and revenue configuration
-        enum:
-        - click
-        - conversion
-        type: string
       conversion_method:
         enum:
         - server_postback
@@ -1069,6 +1702,16 @@ definitions:
         type: string
       end_date:
         type: string
+      fixed_click_amount:
+        minimum: 0
+        type: number
+      fixed_conversion_amount:
+        minimum: 0
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        minimum: 0
+        type: number
       global_click_cap:
         type: integer
       global_conversion_cap:
@@ -1086,23 +1729,11 @@ definitions:
         type: string
       organization_id:
         type: integer
-      payout_amount:
+      percentage_conversion_amount:
+        maximum: 100
         minimum: 0
         type: number
-      payout_structure:
-        enum:
-        - fixed
-        - percentage
-        type: string
       preview_url:
-        type: string
-      revenue_amount:
-        minimum: 0
-        type: number
-      revenue_structure:
-        enum:
-        - fixed
-        - percentage
         type: string
       session_definition:
         enum:
@@ -1442,12 +2073,6 @@ definitions:
     type: object
   models.UpdateCampaignRequest:
     properties:
-      billing_model:
-        description: Payout and revenue configuration
-        enum:
-        - click
-        - conversion
-        type: string
       conversion_method:
         enum:
         - server_postback
@@ -1466,6 +2091,16 @@ definitions:
         type: string
       end_date:
         type: string
+      fixed_click_amount:
+        minimum: 0
+        type: number
+      fixed_conversion_amount:
+        minimum: 0
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        minimum: 0
+        type: number
       global_click_cap:
         type: integer
       global_conversion_cap:
@@ -1481,23 +2116,11 @@ definitions:
         type: integer
       name:
         type: string
-      payout_amount:
+      percentage_conversion_amount:
+        maximum: 100
         minimum: 0
         type: number
-      payout_structure:
-        enum:
-        - fixed
-        - percentage
-        type: string
       preview_url:
-        type: string
-      revenue_amount:
-        minimum: 0
-        type: number
-      revenue_structure:
-        enum:
-        - fixed
-        - percentage
         type: string
       session_definition:
         enum:
@@ -2641,6 +3264,45 @@ paths:
       summary: Get publisher analytics data
       tags:
       - Analytics
+  /api/v1/analytics/affiliates/domain/{domain}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve detailed analytics data for a specific publisher (affiliate)
+        by domain name
+      parameters:
+      - description: Publisher domain name
+        in: path
+        name: domain
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Publisher analytics data
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.AnalyticsPublisherResponse'
+              type: object
+        "400":
+          description: Bad request - invalid domain
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Publisher not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get publisher analytics data by domain
+      tags:
+      - Analytics
   /api/v1/analytics/autocomplete:
     get:
       consumes:
@@ -2695,6 +3357,564 @@ paths:
       summary: Search organizations for autocompletion
       tags:
       - Analytics
+  /api/v1/favorite-publisher-lists/{list_id}/publishers/{domain}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Updates the status of a publisher in a favorite list (added ->
+        contacted -> accepted)
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Publisher domain
+        in: path
+        name: domain
+        required: true
+        type: string
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdatePublisherStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status updated successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: List or publisher not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update publisher status in favorite list
+      tags:
+      - favorite-publisher-lists
+  /api/v1/publisher-messaging/conversations:
+    get:
+      description: Retrieves a paginated list of conversations for the organization
+      parameters:
+      - description: Filter by conversation status (active, closed)
+        in: query
+        name: status
+        type: string
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 20)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversations retrieved successfully
+          schema:
+            $ref: '#/definitions/domain.ConversationListResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get conversations for organization
+      tags:
+      - Publisher Messaging
+    post:
+      consumes:
+      - application/json
+      description: Initiates a new conversation with a publisher from a favorite list
+      parameters:
+      - description: Conversation creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateConversationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Conversation created successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherConversation'
+        "400":
+          description: Invalid request body or validation error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Publisher or favorite list not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "409":
+          description: Active conversation with publisher already exists
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create a new conversation with a publisher
+      tags:
+      - Publisher Messaging
+  /api/v1/publisher-messaging/conversations/{conversation_id}:
+    delete:
+      description: Deletes a conversation and all associated messages
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Conversation deleted successfully
+        "400":
+          description: Invalid conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete conversation
+      tags:
+      - Publisher Messaging
+    get:
+      description: Retrieves a specific conversation along with its messages
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation retrieved successfully
+          schema:
+            $ref: '#/definitions/domain.ConversationWithMessagesResponse'
+        "400":
+          description: Invalid conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get conversation with messages
+      tags:
+      - Publisher Messaging
+  /api/v1/publisher-messaging/conversations/{conversation_id}/external-messages:
+    post:
+      consumes:
+      - application/json
+      description: Allows external services to add messages to existing conversations
+        (e.g., publisher replies)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: External message request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.AddExternalMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Message added successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherMessage'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Add external message to conversation
+      tags:
+      - Publisher Messaging
+  /api/v1/publisher-messaging/conversations/{conversation_id}/messages:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new message to an existing conversation
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: Message request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SendMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Message added successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherMessage'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Add message to conversation
+      tags:
+      - Publisher Messaging
+  /api/v1/publisher-messaging/conversations/{conversation_id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Updates the status of a conversation (e.g., close conversation)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateConversationStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation status updated successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherConversation'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update conversation status
+      tags:
+      - Publisher Messaging
+  /billing/config:
+    put:
+      consumes:
+      - application/json
+      description: Update billing configuration for the organization
+      parameters:
+      - description: Billing configuration
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateBillingConfigRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.BillingAccount'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update billing configuration
+      tags:
+      - billing
+  /billing/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Get billing dashboard data for the authenticated user's organization
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.BillingDashboardResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get billing dashboard
+      tags:
+      - billing
+  /billing/payment-methods:
+    post:
+      consumes:
+      - application/json
+      description: Add a new payment method for the organization
+      parameters:
+      - description: Payment method details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreatePaymentMethodRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.StripePaymentMethod'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add payment method
+      tags:
+      - billing
+  /billing/payment-methods/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a payment method from the organization
+      parameters:
+      - description: Payment Method ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Remove payment method
+      tags:
+      - billing
+  /billing/recharge:
+    post:
+      consumes:
+      - application/json
+      description: Add funds to the organization's account
+      parameters:
+      - description: Recharge details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RechargeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Recharge account
+      tags:
+      - billing
+  /billing/transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get transaction history for the organization
+      parameters:
+      - default: 20
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Transaction'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get transaction history
+      tags:
+      - billing
   /campaigns:
     post:
       consumes:
@@ -2865,6 +4085,406 @@ paths:
       summary: List tracking links by campaign
       tags:
       - tracking-links
+  /favorite-publisher-lists:
+    get:
+      description: Retrieves all favorite publisher lists for the user's organization
+        with statistics
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string, data: []domain.FavoritePublisherListWithStats'
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all favorite publisher lists
+      tags:
+      - favorite-publisher-lists
+    post:
+      consumes:
+      - application/json
+      description: Creates a new favorite publisher list for the user's organization
+      parameters:
+      - description: Create list request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateFavoritePublisherListRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'message: string, data: domain.FavoritePublisherList'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new favorite publisher list
+      tags:
+      - favorite-publisher-lists
+  /favorite-publisher-lists/{list_id}:
+    delete:
+      description: Deletes a favorite publisher list and all its items
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete favorite publisher list
+      tags:
+      - favorite-publisher-lists
+    get:
+      description: Retrieves a specific favorite publisher list by ID
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string, data: domain.FavoritePublisherList'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get favorite publisher list by ID
+      tags:
+      - favorite-publisher-lists
+    put:
+      consumes:
+      - application/json
+      description: Updates a favorite publisher list's name and/or description
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Update list request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateFavoritePublisherListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string, data: domain.FavoritePublisherList'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update favorite publisher list
+      tags:
+      - favorite-publisher-lists
+  /favorite-publisher-lists/{list_id}/publishers:
+    get:
+      description: Retrieves all publisher items in a favorite publisher list
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Include publisher details from analytics
+        in: query
+        name: include_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string, data: []domain.FavoritePublisherListItem'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get favorite list items
+      tags:
+      - favorite-publisher-lists
+    post:
+      consumes:
+      - application/json
+      description: Adds a publisher domain to a favorite publisher list
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Add publisher request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.AddPublisherToListRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'message: string, data: domain.FavoritePublisherListItem'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add publisher to favorite list
+      tags:
+      - favorite-publisher-lists
+  /favorite-publisher-lists/{list_id}/publishers/{domain}:
+    delete:
+      description: Removes a publisher domain from a favorite publisher list
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Publisher domain
+        in: path
+        name: domain
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Remove publisher from favorite list
+      tags:
+      - favorite-publisher-lists
+    put:
+      consumes:
+      - application/json
+      description: Updates the notes for a publisher in a favorite publisher list
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Publisher domain
+        in: path
+        name: domain
+        required: true
+        type: string
+      - description: Update publisher request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdatePublisherInListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update publisher notes in favorite list
+      tags:
+      - favorite-publisher-lists
+  /favorite-publisher-lists/search:
+    get:
+      description: Retrieves all favorite publisher lists that contain a specific
+        publisher domain
+      parameters:
+      - description: Publisher domain
+        in: query
+        name: domain
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: string, data: []domain.FavoritePublisherList'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get lists containing publisher
+      tags:
+      - favorite-publisher-lists
   /health:
     get:
       description: Returns the health status of the API

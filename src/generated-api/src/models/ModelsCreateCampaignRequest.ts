@@ -26,12 +26,6 @@ export interface ModelsCreateCampaignRequest {
      */
     advertiserId: number;
     /**
-     * Payout and revenue configuration
-     * @type {string}
-     * @memberof ModelsCreateCampaignRequest
-     */
-    billingModel?: ModelsCreateCampaignRequestBillingModelEnum;
-    /**
      * 
      * @type {string}
      * @memberof ModelsCreateCampaignRequest
@@ -73,6 +67,24 @@ export interface ModelsCreateCampaignRequest {
      * @memberof ModelsCreateCampaignRequest
      */
     endDate?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCreateCampaignRequest
+     */
+    fixedClickAmount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCreateCampaignRequest
+     */
+    fixedConversionAmount?: number;
+    /**
+     * Simplified billing configuration
+     * @type {number}
+     * @memberof ModelsCreateCampaignRequest
+     */
+    fixedRevenue?: number;
     /**
      * 
      * @type {number}
@@ -126,31 +138,13 @@ export interface ModelsCreateCampaignRequest {
      * @type {number}
      * @memberof ModelsCreateCampaignRequest
      */
-    payoutAmount?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsCreateCampaignRequest
-     */
-    payoutStructure?: ModelsCreateCampaignRequestPayoutStructureEnum;
+    percentageConversionAmount?: number;
     /**
      * 
      * @type {string}
      * @memberof ModelsCreateCampaignRequest
      */
     previewUrl?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsCreateCampaignRequest
-     */
-    revenueAmount?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsCreateCampaignRequest
-     */
-    revenueStructure?: ModelsCreateCampaignRequestRevenueStructureEnum;
     /**
      * 
      * @type {string}
@@ -211,38 +205,11 @@ export interface ModelsCreateCampaignRequest {
 /**
  * @export
  */
-export const ModelsCreateCampaignRequestBillingModelEnum = {
-    Click: 'click',
-    Conversion: 'conversion'
-} as const;
-export type ModelsCreateCampaignRequestBillingModelEnum = typeof ModelsCreateCampaignRequestBillingModelEnum[keyof typeof ModelsCreateCampaignRequestBillingModelEnum];
-
-/**
- * @export
- */
 export const ModelsCreateCampaignRequestConversionMethodEnum = {
     ServerPostback: 'server_postback',
     Pixel: 'pixel'
 } as const;
 export type ModelsCreateCampaignRequestConversionMethodEnum = typeof ModelsCreateCampaignRequestConversionMethodEnum[keyof typeof ModelsCreateCampaignRequestConversionMethodEnum];
-
-/**
- * @export
- */
-export const ModelsCreateCampaignRequestPayoutStructureEnum = {
-    Fixed: 'fixed',
-    Percentage: 'percentage'
-} as const;
-export type ModelsCreateCampaignRequestPayoutStructureEnum = typeof ModelsCreateCampaignRequestPayoutStructureEnum[keyof typeof ModelsCreateCampaignRequestPayoutStructureEnum];
-
-/**
- * @export
- */
-export const ModelsCreateCampaignRequestRevenueStructureEnum = {
-    Fixed: 'fixed',
-    Percentage: 'percentage'
-} as const;
-export type ModelsCreateCampaignRequestRevenueStructureEnum = typeof ModelsCreateCampaignRequestRevenueStructureEnum[keyof typeof ModelsCreateCampaignRequestRevenueStructureEnum];
 
 /**
  * @export
@@ -298,7 +265,6 @@ export function ModelsCreateCampaignRequestFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'advertiserId': json['advertiser_id'],
-        'billingModel': json['billing_model'] == null ? undefined : json['billing_model'],
         'conversionMethod': json['conversion_method'] == null ? undefined : json['conversion_method'],
         'currencyId': json['currency_id'] == null ? undefined : json['currency_id'],
         'dailyClickCap': json['daily_click_cap'] == null ? undefined : json['daily_click_cap'],
@@ -306,6 +272,9 @@ export function ModelsCreateCampaignRequestFromJSONTyped(json: any, ignoreDiscri
         'description': json['description'] == null ? undefined : json['description'],
         'destinationUrl': json['destination_url'] == null ? undefined : json['destination_url'],
         'endDate': json['end_date'] == null ? undefined : json['end_date'],
+        'fixedClickAmount': json['fixed_click_amount'] == null ? undefined : json['fixed_click_amount'],
+        'fixedConversionAmount': json['fixed_conversion_amount'] == null ? undefined : json['fixed_conversion_amount'],
+        'fixedRevenue': json['fixed_revenue'] == null ? undefined : json['fixed_revenue'],
         'globalClickCap': json['global_click_cap'] == null ? undefined : json['global_click_cap'],
         'globalConversionCap': json['global_conversion_cap'] == null ? undefined : json['global_conversion_cap'],
         'internalNotes': json['internal_notes'] == null ? undefined : json['internal_notes'],
@@ -314,11 +283,8 @@ export function ModelsCreateCampaignRequestFromJSONTyped(json: any, ignoreDiscri
         'monthlyConversionCap': json['monthly_conversion_cap'] == null ? undefined : json['monthly_conversion_cap'],
         'name': json['name'],
         'organizationId': json['organization_id'],
-        'payoutAmount': json['payout_amount'] == null ? undefined : json['payout_amount'],
-        'payoutStructure': json['payout_structure'] == null ? undefined : json['payout_structure'],
+        'percentageConversionAmount': json['percentage_conversion_amount'] == null ? undefined : json['percentage_conversion_amount'],
         'previewUrl': json['preview_url'] == null ? undefined : json['preview_url'],
-        'revenueAmount': json['revenue_amount'] == null ? undefined : json['revenue_amount'],
-        'revenueStructure': json['revenue_structure'] == null ? undefined : json['revenue_structure'],
         'sessionDefinition': json['session_definition'] == null ? undefined : json['session_definition'],
         'sessionDuration': json['session_duration'] == null ? undefined : json['session_duration'],
         'startDate': json['start_date'] == null ? undefined : json['start_date'],
@@ -343,7 +309,6 @@ export function ModelsCreateCampaignRequestToJSONTyped(value?: ModelsCreateCampa
     return {
         
         'advertiser_id': value['advertiserId'],
-        'billing_model': value['billingModel'],
         'conversion_method': value['conversionMethod'],
         'currency_id': value['currencyId'],
         'daily_click_cap': value['dailyClickCap'],
@@ -351,6 +316,9 @@ export function ModelsCreateCampaignRequestToJSONTyped(value?: ModelsCreateCampa
         'description': value['description'],
         'destination_url': value['destinationUrl'],
         'end_date': value['endDate'],
+        'fixed_click_amount': value['fixedClickAmount'],
+        'fixed_conversion_amount': value['fixedConversionAmount'],
+        'fixed_revenue': value['fixedRevenue'],
         'global_click_cap': value['globalClickCap'],
         'global_conversion_cap': value['globalConversionCap'],
         'internal_notes': value['internalNotes'],
@@ -359,11 +327,8 @@ export function ModelsCreateCampaignRequestToJSONTyped(value?: ModelsCreateCampa
         'monthly_conversion_cap': value['monthlyConversionCap'],
         'name': value['name'],
         'organization_id': value['organizationId'],
-        'payout_amount': value['payoutAmount'],
-        'payout_structure': value['payoutStructure'],
+        'percentage_conversion_amount': value['percentageConversionAmount'],
         'preview_url': value['previewUrl'],
-        'revenue_amount': value['revenueAmount'],
-        'revenue_structure': value['revenueStructure'],
         'session_definition': value['sessionDefinition'],
         'session_duration': value['sessionDuration'],
         'start_date': value['startDate'],

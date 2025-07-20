@@ -30,18 +30,21 @@ export interface CampaignDetail {
   previewUrl?: string;
   visibility?: string;
   currencyId?: string;
-  billingModel?: string;
-  payoutType?: string;
-  payoutAmount?: number;
-  payoutStructure?: string;
-  revenueType?: string;
-  revenueAmount?: number;
-  revenueStructure?: string;
   conversionMethod?: string;
   sessionDefinition?: string;
   sessionDuration?: number;
   termsAndConditions?: string;
   internalNotes?: string;
+  
+  // Simplified billing configuration
+  fixedRevenue?: number;
+  
+  // Click-based payout amounts
+  fixedClickAmount?: number;
+  
+  // Conversion-based payout amounts  
+  fixedConversionAmount?: number;
+  percentageConversionAmount?: number;
   
   // Caps and limits
   isCapsEnabled?: boolean;

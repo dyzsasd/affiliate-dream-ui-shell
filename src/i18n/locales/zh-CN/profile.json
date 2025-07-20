@@ -1,3 +1,16 @@
 {
-  "notAssigned": "未分配"
+  "title": "个人资料",
+  "basicInfo": "基本信息",
+  "contactInfo": "联系信息",
+  "organizationInfo": "组织信息",
+  "organization": "组织",
+  "role": "角色",
+  "notAssigned": "未分配",
+  "editProfile": "编辑个人资料",
+  "saveChanges": "保存更改",
+  "saving": "保存中...",
+  "adminOptions": "管理员选项",
+  "adminOptionsDescription": "管理工具和设置",
+  "adminMessage": "您拥有管理员权限。",
+  "manageUsers": "管理用户"
 }

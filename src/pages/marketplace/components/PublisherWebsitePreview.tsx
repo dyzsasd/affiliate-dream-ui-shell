@@ -2,19 +2,23 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Globe, Users, Star, Eye, Mail } from "lucide-react";
+import { ExternalLink, Globe, Users, Star, Eye, Mail, Heart } from "lucide-react";
 import type { DomainAnalyticsPublisherResponsePublisher } from '@/generated-api/src/models';
 
 interface PublisherWebsitePreviewProps {
   publisherData: DomainAnalyticsPublisherResponsePublisher;
   onViewDetails: () => void;
   onContact: () => void;
+  onAddToFavorites?: () => void;
+  hideContactButton?: boolean;
 }
 
 const PublisherWebsitePreview: React.FC<PublisherWebsitePreviewProps> = ({
   publisherData,
   onViewDetails,
-  onContact
+  onContact,
+  onAddToFavorites,
+  hideContactButton = false
 }) => {
   const { t } = useTranslation();
 
@@ -101,10 +105,18 @@ const PublisherWebsitePreview: React.FC<PublisherWebsitePreviewProps> = ({
           <Eye className="h-3 w-3 mr-1" />
           {t("marketplace.viewDetails")}
         </Button>
-        <Button variant="default" size="sm" onClick={onContact}>
-          <Mail className="h-3 w-3 mr-1" />
-          Contact
-        </Button>
+        {!hideContactButton && (
+          <Button variant="default" size="sm" onClick={onContact}>
+            <Mail className="h-3 w-3 mr-1" />
+            Contact
+          </Button>
+        )}
+        {onAddToFavorites && (
+          <Button variant="outline" size="sm" onClick={onAddToFavorites}>
+            <Heart className="h-3 w-3 mr-1" />
+            Add to Favorites
+          </Button>
+        )}
       </div>
     </div>
   );

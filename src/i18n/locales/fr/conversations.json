@@ -1,0 +1,9 @@
+{
+  "title": "Conversations",
+  "description": "Gérez vos conversations avec les éditeurs.",
+  "noConversations": "Aucune Conversation",
+  "noConversationsDescription": "Commencez des conversations en contactant des éditeurs de vos listes favorites.",
+  "loadError": "Échec du chargement des conversations. Veuillez réessayer.",
+  "messages": "messages",
+  "loadMore": "Charger Plus"
+}

@@ -46,16 +46,7 @@ const CampaignDetail: React.FC = () => {
         const campaignData = await campaignService.getCampaign(id);
         console.log('Campaign detail fetched:', campaignData);
         
-        // Add demo default values for billing model and structures
-        const campaignWithDefaults = {
-          ...campaignData,
-          billingModel: campaignData?.billingModel || 'conversion', // Default demo value
-          payoutStructure: campaignData?.payoutStructure || 'percentage', // Default demo value
-          payoutAmount: campaignData?.payoutAmount || 15.5, // Default demo value
-          revenueStructure: campaignData?.revenueStructure || 'fixed', // Default demo value
-          revenueAmount: campaignData?.revenueAmount || 25.00, // Default demo value
-          currencyId: campaignData?.currencyId || 'USD' // Default demo value
-        };
+        const campaignWithDefaults = campaignData;
         
         setCampaign(campaignWithDefaults);
       } catch (error) {
@@ -119,27 +110,13 @@ const CampaignDetail: React.FC = () => {
   };
 
   const formatCurrency = (amount?: number, currency?: string) => {
-    if (amount === undefined) return t("campaigns.notSet");
+    if (amount === undefined || amount === 0) return t("campaigns.notSet");
     return `${currency || "USD"} ${amount.toFixed(2)}`;
   };
 
-  const formatPayoutAmount = (amount?: number, type?: string, currency?: string) => {
-    if (amount === undefined) return t("campaigns.notSet");
-    if (type === 'percentage') {
-      return `${amount.toFixed(2)}%`;
-    }
-    return `${currency || "USD"} ${amount.toFixed(2)}`;
-  };
-
-  const getBillingModelDisplay = (billingModel?: string) => {
-    if (!billingModel) return t("campaigns.notSet");
-    return billingModel === 'click' ? 'Click' : 'Conversion';
-  };
-
-  const getPayoutTypeDisplay = (payoutType?: string, billingModel?: string) => {
-    if (!payoutType) return t("campaigns.notSet");
-    if (billingModel === 'click') return 'Fixed';
-    return payoutType === 'percentage' ? 'Percentage' : 'Fixed';
+  const formatPercentage = (amount?: number) => {
+    if (amount === undefined || amount === 0) return t("campaigns.notSet");
+    return `${amount.toFixed(2)}%`;
   };
 
   if (loading) {
@@ -239,7 +216,7 @@ const CampaignDetail: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Billing Model & Payout Information */}
+          {/* Payout Information */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -249,36 +226,32 @@ const CampaignDetail: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Billing Model */}
+                {/* Revenue */}
                 <div>
-                  <h4 className="font-medium text-purple-700 mb-3">Billing Model</h4>
+                  <h4 className="font-medium text-purple-700 mb-3">Revenue</h4>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Model Type</h3>
-                    <p className="mt-1 font-semibold uppercase">{getBillingModelDisplay(campaign.billingModel)}</p>
+                    <h3 className="text-sm font-medium text-gray-500">Fixed Revenue</h3>
+                    <p className="mt-1 font-semibold">{formatCurrency(campaign.fixedRevenue, campaign.currencyId)}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <h4 className="font-medium text-green-700">{t("campaigns.payoutInformation")}</h4>
+                    <h4 className="font-medium text-green-700">Click-based Payout</h4>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.payoutType")}</h3>
-                      <p className="mt-1">{getPayoutTypeDisplay(campaign.payoutStructure, campaign.billingModel)}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.payoutAmount")}</h3>
-                      <p className="mt-1 font-semibold">{formatPayoutAmount(campaign.payoutAmount, campaign.payoutStructure, campaign.currencyId)}</p>
+                      <h3 className="text-sm font-medium text-gray-500">Fixed Click Amount</h3>
+                      <p className="mt-1 font-semibold">{formatCurrency(campaign.fixedClickAmount, campaign.currencyId)}</p>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="font-medium text-blue-700">{t("campaigns.revenueInformation")}</h4>
+                    <h4 className="font-medium text-blue-700">Conversion-based Payout</h4>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.revenueType")}</h3>
-                      <p className="mt-1">{getPayoutTypeDisplay(campaign.revenueStructure, campaign.billingModel)}</p>
+                      <h3 className="text-sm font-medium text-gray-500">Fixed Conversion Amount</h3>
+                      <p className="mt-1 font-semibold">{formatCurrency(campaign.fixedConversionAmount, campaign.currencyId)}</p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">{t("campaigns.revenueAmount")}</h3>
-                      <p className="mt-1 font-semibold">{formatPayoutAmount(campaign.revenueAmount, campaign.revenueStructure, campaign.currencyId)}</p>
+                      <h3 className="text-sm font-medium text-gray-500">Percentage Conversion Amount</h3>
+                      <p className="mt-1 font-semibold">{formatPercentage(campaign.percentageConversionAmount)}</p>
                     </div>
                   </div>
                 </div>
@@ -425,7 +398,7 @@ const CampaignDetail: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500">{t("campaigns.revenue")}</span>
-                  <span className="font-medium">$645.00</span>
+                  <span className="font-medium">{formatCurrency(campaign.fixedRevenue, campaign.currencyId)}</span>
                 </div>
 
                 <Separator className="my-2" />

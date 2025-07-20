@@ -22,5 +22,7 @@
   "view": "Voir",
   "saveChanges": "Enregistrer les modifications",
   "errorOccurred": "Une erreur s'est produite",
-  "tryAgain": "Réessayer"
+  "tryAgain": "Réessayer",
+  "optional": "optionnel",
+  "remove": "Supprimer"
 }

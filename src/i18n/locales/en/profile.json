@@ -1,3 +1,16 @@
 {
-  "notAssigned": "Not assigned"
+  "title": "Profile",
+  "basicInfo": "Basic Information",
+  "contactInfo": "Contact Information",
+  "organizationInfo": "Organization Information",
+  "organization": "Organization",
+  "role": "Role",
+  "notAssigned": "Not assigned",
+  "editProfile": "Edit Profile",
+  "saveChanges": "Save Changes",
+  "saving": "Saving...",
+  "adminOptions": "Admin Options",
+  "adminOptionsDescription": "Administrative tools and settings",
+  "adminMessage": "You have administrative privileges.",
+  "manageUsers": "Manage Users"
 }

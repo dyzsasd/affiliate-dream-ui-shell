@@ -1,3 +1,16 @@
 {
-  "notAssigned": "Non assigné"
+  "title": "Profil",
+  "basicInfo": "Informations de base",
+  "contactInfo": "Informations de contact",
+  "organizationInfo": "Informations sur l'organisation",
+  "organization": "Organisation",
+  "role": "Rôle",
+  "notAssigned": "Non assigné",
+  "editProfile": "Modifier le profil",
+  "saveChanges": "Enregistrer les modifications",
+  "saving": "Enregistrement...",
+  "adminOptions": "Options d'administration",
+  "adminOptionsDescription": "Outils et paramètres administratifs",
+  "adminMessage": "Vous avez des privilèges d'administrateur.",
+  "manageUsers": "Gérer les utilisateurs"
 }

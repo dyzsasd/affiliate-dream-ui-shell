@@ -12,18 +12,12 @@ const PlatformOwnerDashboard: React.FC = () => {
 
   // Mock data for platform owner dashboard
   const platformStats = [
-    { title: "Total Organizations", value: "147", change: "+12" },
-    { title: "Active Advertisers", value: "89", change: "+8" },
-    { title: "Active Affiliates", value: "58", change: "+4" },
-    { title: "Platform Revenue", value: "$24,567", change: "+15.3%" },
+    { title: "Total Organizations", value: "0", change: "0" },
+    { title: "Active Advertisers", value: "0", change: "0" },
+    { title: "Active Affiliates", value: "0", change: "0" },
+    { title: "Platform Revenue", value: "$0", change: "0%" },
   ];
 
-  const recentOrganizations = [
-    { id: 1, name: "TechCorp Inc.", type: "advertiser", status: "active", joinedDate: "2024-01-15" },
-    { id: 2, name: "Marketing Pro", type: "affiliate", status: "pending", joinedDate: "2024-01-14" },
-    { id: 3, name: "E-commerce Plus", type: "advertiser", status: "active", joinedDate: "2024-01-13" },
-    { id: 4, name: "Affiliate Network", type: "affiliate", status: "inactive", joinedDate: "2024-01-12" },
-  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -134,40 +128,6 @@ const PlatformOwnerDashboard: React.FC = () => {
         </Card>
       </div>
 
-      {/* Recent Organizations */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Recent Organizations</CardTitle>
-          <Button variant="outline" size="sm">View All</Button>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recentOrganizations.map((org) => (
-              <div key={org.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    <h4 className="font-medium">{org.name}</h4>
-                    <Badge className={getTypeColor(org.type)}>
-                      {org.type}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Joined: {new Date(org.joinedDate).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant={getStatusColor(org.status)}>
-                    {org.status}
-                  </Badge>
-                  <Button variant="ghost" size="sm">
-                    <Settings className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

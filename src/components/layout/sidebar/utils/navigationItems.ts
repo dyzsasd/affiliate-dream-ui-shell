@@ -9,7 +9,10 @@ import {
   TrendingUp,
   PieChart,
   Store,
-  Users
+  Users,
+  CreditCard,
+  Heart,
+  MessageCircle
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -47,24 +50,24 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: Store
       },
       {
-        name: t("sidebar.influencerSearch"),
-        path: "/influencer",
-        icon: Users
-      },
-      {
         name: t("sidebar.analytics"),
         path: "/analytics/advertiser",
         icon: TrendingUp
       },
       {
+        name: t("sidebar.favoritePublishers"),
+        path: "/favorite_publisher",
+        icon: Heart
+      },
+      {
+        name: t("sidebar.conversations"),
+        path: "/conversations",
+        icon: MessageCircle
+      },
+      {
         name: t("sidebar.reports"),
         path: "/reporting",
         icon: BarChart3
-      },
-      {
-        name: t("sidebar.invitations"),
-        path: "/invitations",
-        icon: Mail
       },
       {
         name: t("sidebar.myProfile"),
@@ -96,11 +99,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: PieChart
       },
       {
-        name: t("sidebar.invitations"),
-        path: "/invitations",
-        icon: Mail
-      },
-      {
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
@@ -125,11 +123,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: TrendingUp
       },
       {
-        name: t("sidebar.invitations"),
-        path: "/invitations",
-        icon: Mail
-      },
-      {
         name: t("sidebar.reports"),
         path: "/reporting",
         icon: BarChart3
@@ -145,11 +138,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
   // Default fallback
   return [
     ...baseItems,
-    {
-      name: t("sidebar.invitations"),
-      path: "/invitations",
-      icon: Mail
-    },
     {
       name: t("sidebar.myProfile"),
       path: "/profile",

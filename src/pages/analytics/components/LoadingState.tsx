@@ -3,12 +3,13 @@ import React from 'react';
 import { DomainAutocompleteResult } from '@/generated-api/src/models/DomainAutocompleteResult';
 
 interface LoadingStateProps {
-  advertiser: DomainAutocompleteResult;
+  advertiser: DomainAutocompleteResult | null;
 }
 
 const LoadingState: React.FC<LoadingStateProps> = ({ advertiser }) => {
-  const getDisplayName = (advertiser: DomainAutocompleteResult) => {
-    return advertiser.name || advertiser.domain || '';
+  const getDisplayName = (advertiser: DomainAutocompleteResult | null) => {
+    if (!advertiser) return 'Unknown Advertiser';
+    return advertiser.name || advertiser.domain || 'Unknown Advertiser';
   };
 
   return (

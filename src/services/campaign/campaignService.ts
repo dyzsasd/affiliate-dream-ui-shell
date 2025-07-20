@@ -32,7 +32,14 @@ class CampaignService {
     return mapToCampaignDetail(response);
   }
   
-  // Create a new campaign
+  
+  // Create a new campaign from a form request
+  async createCampaignFromRequest(request: ModelsCreateCampaignRequest): Promise<Campaign> {
+    const response = await this.apiClient.createCampaign(request);
+    return mapToCampaign(response);
+  }
+  
+  // Create a new campaign (legacy method)
   async createCampaign(campaignData: Partial<Campaign>): Promise<Campaign> {
     // Create a valid request object
     const request: ModelsCreateCampaignRequest = {

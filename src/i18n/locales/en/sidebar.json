@@ -10,6 +10,9 @@
   "myProfile": "My Profile",
   "trackingLinks": "Tracking Links",
   "conversions": "Conversions",
+  "billing": "Billing",
+  "favoritePublishers": "Favorite Publishers",
+  "conversations": "Conversations",
   "organizations": "Organizations",
   "users": "Users"
 }

@@ -26,12 +26,6 @@ export interface ModelsCampaignResponse {
      */
     advertiserId?: number;
     /**
-     * Payout and revenue configuration
-     * @type {string}
-     * @memberof ModelsCampaignResponse
-     */
-    billingModel?: string;
-    /**
      * 
      * @type {number}
      * @memberof ModelsCampaignResponse
@@ -90,6 +84,24 @@ export interface ModelsCampaignResponse {
      * @type {number}
      * @memberof ModelsCampaignResponse
      */
+    fixedClickAmount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCampaignResponse
+     */
+    fixedConversionAmount?: number;
+    /**
+     * Simplified billing configuration
+     * @type {number}
+     * @memberof ModelsCampaignResponse
+     */
+    fixedRevenue?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCampaignResponse
+     */
     globalClickCap?: number;
     /**
      * 
@@ -138,31 +150,13 @@ export interface ModelsCampaignResponse {
      * @type {number}
      * @memberof ModelsCampaignResponse
      */
-    payoutAmount?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsCampaignResponse
-     */
-    payoutStructure?: string;
+    percentageConversionAmount?: number;
     /**
      * 
      * @type {string}
      * @memberof ModelsCampaignResponse
      */
     previewUrl?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsCampaignResponse
-     */
-    revenueAmount?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsCampaignResponse
-     */
-    revenueStructure?: string;
     /**
      * 
      * @type {string}
@@ -243,7 +237,6 @@ export function ModelsCampaignResponseFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'advertiserId': json['advertiser_id'] == null ? undefined : json['advertiser_id'],
-        'billingModel': json['billing_model'] == null ? undefined : json['billing_model'],
         'campaignId': json['campaign_id'] == null ? undefined : json['campaign_id'],
         'conversionMethod': json['conversion_method'] == null ? undefined : json['conversion_method'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
@@ -253,6 +246,9 @@ export function ModelsCampaignResponseFromJSONTyped(json: any, ignoreDiscriminat
         'description': json['description'] == null ? undefined : json['description'],
         'destinationUrl': json['destination_url'] == null ? undefined : json['destination_url'],
         'endDate': json['end_date'] == null ? undefined : json['end_date'],
+        'fixedClickAmount': json['fixed_click_amount'] == null ? undefined : json['fixed_click_amount'],
+        'fixedConversionAmount': json['fixed_conversion_amount'] == null ? undefined : json['fixed_conversion_amount'],
+        'fixedRevenue': json['fixed_revenue'] == null ? undefined : json['fixed_revenue'],
         'globalClickCap': json['global_click_cap'] == null ? undefined : json['global_click_cap'],
         'globalConversionCap': json['global_conversion_cap'] == null ? undefined : json['global_conversion_cap'],
         'internalNotes': json['internal_notes'] == null ? undefined : json['internal_notes'],
@@ -261,11 +257,8 @@ export function ModelsCampaignResponseFromJSONTyped(json: any, ignoreDiscriminat
         'monthlyConversionCap': json['monthly_conversion_cap'] == null ? undefined : json['monthly_conversion_cap'],
         'name': json['name'] == null ? undefined : json['name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
-        'payoutAmount': json['payout_amount'] == null ? undefined : json['payout_amount'],
-        'payoutStructure': json['payout_structure'] == null ? undefined : json['payout_structure'],
+        'percentageConversionAmount': json['percentage_conversion_amount'] == null ? undefined : json['percentage_conversion_amount'],
         'previewUrl': json['preview_url'] == null ? undefined : json['preview_url'],
-        'revenueAmount': json['revenue_amount'] == null ? undefined : json['revenue_amount'],
-        'revenueStructure': json['revenue_structure'] == null ? undefined : json['revenue_structure'],
         'sessionDefinition': json['session_definition'] == null ? undefined : json['session_definition'],
         'sessionDuration': json['session_duration'] == null ? undefined : json['session_duration'],
         'startDate': json['start_date'] == null ? undefined : json['start_date'],
@@ -291,7 +284,6 @@ export function ModelsCampaignResponseToJSONTyped(value?: ModelsCampaignResponse
     return {
         
         'advertiser_id': value['advertiserId'],
-        'billing_model': value['billingModel'],
         'campaign_id': value['campaignId'],
         'conversion_method': value['conversionMethod'],
         'created_at': value['createdAt'],
@@ -301,6 +293,9 @@ export function ModelsCampaignResponseToJSONTyped(value?: ModelsCampaignResponse
         'description': value['description'],
         'destination_url': value['destinationUrl'],
         'end_date': value['endDate'],
+        'fixed_click_amount': value['fixedClickAmount'],
+        'fixed_conversion_amount': value['fixedConversionAmount'],
+        'fixed_revenue': value['fixedRevenue'],
         'global_click_cap': value['globalClickCap'],
         'global_conversion_cap': value['globalConversionCap'],
         'internal_notes': value['internalNotes'],
@@ -309,11 +304,8 @@ export function ModelsCampaignResponseToJSONTyped(value?: ModelsCampaignResponse
         'monthly_conversion_cap': value['monthlyConversionCap'],
         'name': value['name'],
         'organization_id': value['organizationId'],
-        'payout_amount': value['payoutAmount'],
-        'payout_structure': value['payoutStructure'],
+        'percentage_conversion_amount': value['percentageConversionAmount'],
         'preview_url': value['previewUrl'],
-        'revenue_amount': value['revenueAmount'],
-        'revenue_structure': value['revenueStructure'],
         'session_definition': value['sessionDefinition'],
         'session_duration': value['sessionDuration'],
         'start_date': value['startDate'],
