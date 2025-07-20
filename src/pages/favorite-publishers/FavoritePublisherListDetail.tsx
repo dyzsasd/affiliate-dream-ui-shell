@@ -197,7 +197,7 @@ const FavoritePublisherListDetail: React.FC = () => {
       </div>
 
       {/* Statistics */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-1">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('favoritePublishers.totalPublishers')}</CardTitle>
@@ -205,28 +205,6 @@ const FavoritePublisherListDetail: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{publishers.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('favoritePublishers.createdDate')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-lg">
-              {listData?.createdAt ? new Date(listData.createdAt).toLocaleDateString() : '-'}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('favoritePublishers.lastUpdated')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-lg">
-              {listData?.updatedAt ? new Date(listData.updatedAt).toLocaleDateString() : '-'}
-            </div>
           </CardContent>
         </Card>
       </div>
