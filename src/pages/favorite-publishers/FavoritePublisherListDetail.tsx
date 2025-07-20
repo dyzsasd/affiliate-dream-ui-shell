@@ -13,7 +13,7 @@ import type { DomainFavoritePublisherList, DomainFavoritePublisherListItem, Doma
 import RealPublisherCard from '@/pages/marketplace/components/RealPublisherCard';
 import RealPublisherDetailPanel from '@/pages/marketplace/components/RealPublisherDetailPanel';
 import PublisherStatusProgress from './components/PublisherStatusProgress';
-import ConversationsSection from './components/ConversationsSection';
+
 import { useToast } from '@/hooks/use-toast';
 
 const FavoritePublisherListDetail: React.FC = () => {
@@ -291,8 +291,6 @@ const FavoritePublisherListDetail: React.FC = () => {
         </div>
       )}
 
-      {/* Conversations Section */}
-      <ConversationsSection listId={parseInt(listId)} />
 
       {/* Publisher Detail Panel */}
       {selectedPublisher && (
