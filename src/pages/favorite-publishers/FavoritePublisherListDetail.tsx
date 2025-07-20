@@ -180,10 +180,6 @@ const FavoritePublisherListDetail: React.FC = () => {
             <p className="text-muted-foreground">{listData.description}</p>
           )}
         </div>
-        <Button variant="outline">
-          <Plus className="h-4 w-4 mr-2" />
-          {t('favoritePublishers.addPublisher')}
-        </Button>
       </div>
 
       {/* Statistics */}
