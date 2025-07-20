@@ -49,12 +49,14 @@ const FavoritePublisherListDetail: React.FC = () => {
     queryFn: async () => {
       if (!listId) return [];
       
+      console.log(`Fetching list items for listId: ${listId}`);
       const apiClient = await createApiClient(FavoritePublisherListsApi);
       const response = await apiClient.favoritePublisherListsListIdPublishersGet({
         listId: parseInt(listId),
         includeDetails: true
       });
       
+      console.log('List items response:', response);
       return response.data as DomainFavoritePublisherListItem[];
     },
     enabled: !!listId,
@@ -63,31 +65,40 @@ const FavoritePublisherListDetail: React.FC = () => {
   // Fetch detailed publisher information for items that don't have publisher details
   React.useEffect(() => {
     const fetchPublisherDetails = async () => {
+      console.log('fetchPublisherDetails called with listItems:', listItems);
+      
       if (!listItems || listItems.length === 0) {
+        console.log('No listItems found, setting empty publishers array');
         setPublishers([]);
         return;
       }
 
+      console.log(`Found ${listItems.length} list items, fetching publisher details...`);
       setLoadingPublishers(true);
-      const apiClient = await createApiClient(AnalyticsApi);
       const publisherResponses: DomainAnalyticsPublisherResponse[] = [];
 
       for (const item of listItems) {
+        console.log('Processing item:', item);
         try {
           let publisherResponse: DomainAnalyticsPublisherResponse;
           
           if (item.publisher) {
+            console.log(`Publisher details already available for ${item.publisherDomain}`);
             // If publisher details are already included, convert them to the expected type
             publisherResponse = {
               publisher: item.publisher as any // Type conversion needed due to API type differences
             };
           } else if (item.publisherDomain) {
+            console.log(`Fetching publisher details for domain: ${item.publisherDomain}`);
             // Fetch publisher details by domain
+            const apiClient = await createApiClient(AnalyticsApi);
             const response = await apiClient.apiV1AnalyticsAffiliatesDomainDomainGet({
               domain: item.publisherDomain
             });
             publisherResponse = response.data;
+            console.log(`Fetched publisher details for ${item.publisherDomain}:`, publisherResponse);
           } else {
+            console.log('Item has no publisher or publisherDomain, skipping');
             continue; // Skip items without domain or publisher data
           }
 
@@ -97,6 +108,7 @@ const FavoritePublisherListDetail: React.FC = () => {
         }
       }
 
+      console.log(`Final publisherResponses:`, publisherResponses);
       setPublishers(publisherResponses);
       setLoadingPublishers(false);
     };
