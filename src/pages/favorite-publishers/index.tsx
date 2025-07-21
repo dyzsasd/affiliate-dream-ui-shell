@@ -120,7 +120,7 @@ const FavoritePublisherLists: React.FC = () => {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {listsData.map((list) => (
-            <Card key={list.listId} className="hover:shadow-md transition-shadow">
+            <Card key={(list as any).list_id || list.listId} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg line-clamp-1">{list.name}</CardTitle>
@@ -130,9 +130,9 @@ const FavoritePublisherLists: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         className="text-muted-foreground hover:text-destructive"
-                        disabled={deletingListId === list.listId}
+                        disabled={deletingListId === ((list as any).list_id || list.listId)}
                       >
-                        {deletingListId === list.listId ? (
+                        {deletingListId === ((list as any).list_id || list.listId) ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
                           <Trash2 className="h-4 w-4" />
@@ -149,7 +149,12 @@ const FavoritePublisherLists: React.FC = () => {
                       <AlertDialogFooter>
                         <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                         <AlertDialogAction 
-                          onClick={() => handleDelete(list.listId!)}
+                          onClick={() => {
+                            const listId = (list as any).list_id || list.listId;
+                            if (listId) {
+                              handleDelete(listId);
+                            }
+                          }}
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
                           {t('common.delete')}
@@ -165,9 +170,9 @@ const FavoritePublisherLists: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {list.items?.length || 0} {t('favoritePublishers.publishers')}
-                  </span>
+                   <span className="text-sm text-muted-foreground">
+                     {(list as any).publisher_count || list.items?.length || 0} {t('favoritePublishers.publishers')}
+                   </span>
                 </div>
                 
                 {list.createdAt && (
