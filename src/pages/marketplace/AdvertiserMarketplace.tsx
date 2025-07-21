@@ -222,6 +222,7 @@ const AdvertiserMarketplace: React.FC = () => {
                 publisher={publisher}
                 viewMode={viewMode}
                 onViewDetails={() => setSelectedPublisher(publisher)}
+                hideContactButton={true}
               />
             ))}
           </div>
