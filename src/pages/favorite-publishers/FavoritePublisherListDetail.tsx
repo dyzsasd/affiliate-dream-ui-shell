@@ -257,7 +257,7 @@ const FavoritePublisherListDetail: React.FC = () => {
                   />
                   
                   {/* Status Progress Indicator */}
-                  <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm z-10">
+                  <div className="absolute bottom-4 right-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-sm z-10">
                     <PublisherStatusProgress status={item.status || 'added'} />
                   </div>
                   
