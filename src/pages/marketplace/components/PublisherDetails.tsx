@@ -16,7 +16,7 @@ const PublisherDetails: React.FC<PublisherDetailsProps> = ({ publisherData }) =>
     <div className="space-y-4 lg:col-span-1">
       <div>
         <h3 className="font-semibold text-lg mb-2">
-          {publisherData.promotype?.value || t("marketplace.website")}
+          {publisherData.domain || t("marketplace.website")}
         </h3>
         <p className="text-sm text-muted-foreground line-clamp-3">
           {description}
