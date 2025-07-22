@@ -279,119 +279,119 @@ const CampaignForm: React.FC = () => {
 
               {/* URLs Section */}
               <Card className="p-4 bg-muted/50">
-                <h3 className="text-lg font-semibold mb-4">Campaign URLs</h3>
+                <h3 className="text-lg font-semibold mb-4">{t("campaigns.campaignUrls")}</h3>
                 <div className="grid gap-4">
-                  <FormField
-                    control={form.control}
-                    name="destinationUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Destination URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://example.com/landing" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name="destinationUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("campaigns.destinationUrlLabel")}</FormLabel>
+                          <FormControl>
+                            <Input placeholder={t("campaigns.destinationUrlPlaceholder")} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   
                   <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="thumbnailUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Thumbnail URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://example.com/thumb.jpg" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="previewUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Preview URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://example.com/preview.jpg" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="thumbnailUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("campaigns.thumbnailUrlLabel")}</FormLabel>
+                            <FormControl>
+                              <Input placeholder={t("campaigns.thumbnailUrlPlaceholder")} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="previewUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("campaigns.previewUrlLabel")}</FormLabel>
+                            <FormControl>
+                              <Input placeholder={t("campaigns.previewUrlPlaceholder")} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                   </div>
                 </div>
               </Card>
 
               {/* Payout & Revenue Section */}
               <Card className="p-4 bg-muted/50">
-                <h3 className="text-lg font-semibold mb-4">Payout & Revenue Configuration</h3>
+                <h3 className="text-lg font-semibold mb-4">{t("campaigns.payoutRevenueConfiguration")}</h3>
                 <div className="grid gap-4">
                   <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="currencyId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Currency</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select currency" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="USD">USD</SelectItem>
-                              <SelectItem value="EUR">EUR</SelectItem>
-                              <SelectItem value="GBP">GBP</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="visibility"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Visibility</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select visibility" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="public">Public</SelectItem>
-                              <SelectItem value="require_approval">Require Approval</SelectItem>
-                              <SelectItem value="private">Private</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="currencyId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("campaigns.currencyLabel")}</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t("campaigns.selectCurrency")} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="USD">USD</SelectItem>
+                                <SelectItem value="EUR">EUR</SelectItem>
+                                <SelectItem value="GBP">GBP</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="visibility"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("campaigns.visibilityLabel")}</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={t("campaigns.selectVisibilityPlaceholder")} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="public">{t("campaigns.visibilityPublic")}</SelectItem>
+                                <SelectItem value="require_approval">Require Approval</SelectItem>
+                                <SelectItem value="private">{t("campaigns.visibilityPrivate")}</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                   </div>
                   
                   <div className="space-y-4">
-                    <h4 className="font-medium">Revenue</h4>
+                    <h4 className="font-medium">{t("campaigns.revenueLabel")}</h4>
                     <FormField
                       control={form.control}
                       name="fixedRevenue"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Fixed Revenue</FormLabel>
+                          <FormLabel>{t("campaigns.fixedRevenueLabel")}</FormLabel>
                           <FormControl>
                             <Input 
                               type="number" 
                               step="0.01"
-                              placeholder="0.00"
+                              placeholder={t("campaigns.fixedRevenuePlaceholder")}
                               value={field.value || ''}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                             />
@@ -404,18 +404,18 @@ const CampaignForm: React.FC = () => {
                   
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-4">
-                      <h4 className="font-medium">Click-based Payout</h4>
+                      <h4 className="font-medium">{t("campaigns.clickBasedPayout")}</h4>
                       <FormField
                         control={form.control}
                         name="fixedClickAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Fixed Click Amount</FormLabel>
+                            <FormLabel>{t("campaigns.fixedClickAmountLabel")}</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
                                 step="0.01"
-                                placeholder="0.00"
+                                placeholder={t("campaigns.fixedClickAmountPlaceholder")}
                                 value={field.value || ''}
                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                               />
@@ -427,18 +427,18 @@ const CampaignForm: React.FC = () => {
                     </div>
                     
                     <div className="space-y-4">
-                      <h4 className="font-medium">Conversion-based Payout</h4>
+                      <h4 className="font-medium">{t("campaigns.conversionBasedPayout")}</h4>
                       <FormField
                         control={form.control}
                         name="fixedConversionAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Fixed Conversion Amount</FormLabel>
+                            <FormLabel>{t("campaigns.fixedConversionAmountLabel")}</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
                                 step="0.01"
-                                placeholder="0.00"
+                                placeholder={t("campaigns.fixedConversionAmountPlaceholder")}
                                 value={field.value || ''}
                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                               />
@@ -453,12 +453,12 @@ const CampaignForm: React.FC = () => {
                         name="percentageConversionAmount"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Percentage Conversion Amount (%)</FormLabel>
+                            <FormLabel>{t("campaigns.percentageConversionAmountLabel")}</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
                                 step="0.01"
-                                placeholder="0.00"
+                                placeholder={t("campaigns.percentageConversionAmountPlaceholder")}
                                 value={field.value || ''}
                                 onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                               />
@@ -474,23 +474,23 @@ const CampaignForm: React.FC = () => {
 
               {/* Tracking Configuration */}
               <Card className="p-4 bg-muted/50">
-                <h3 className="text-lg font-semibold mb-4">Tracking Configuration</h3>
+                <h3 className="text-lg font-semibold mb-4">{t("campaigns.trackingConfiguration")}</h3>
                 <div className="grid gap-4 md:grid-cols-3">
                   <FormField
                     control={form.control}
                     name="conversionMethod"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Conversion Method</FormLabel>
+                        <FormLabel>{t("campaigns.conversionMethodLabel")}</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select method" />
+                              <SelectValue placeholder={t("campaigns.selectMethodPlaceholder")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="server_postback">Server Postback</SelectItem>
-                            <SelectItem value="pixel">Pixel</SelectItem>
+                            <SelectItem value="server_postback">{t("campaigns.serverPostback")}</SelectItem>
+                            <SelectItem value="pixel">{t("campaigns.pixel")}</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -503,17 +503,17 @@ const CampaignForm: React.FC = () => {
                     name="sessionDefinition"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Session Definition</FormLabel>
+                        <FormLabel>{t("campaigns.sessionDefinitionLabel")}</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select definition" />
+                              <SelectValue placeholder={t("campaigns.selectDefinitionPlaceholder")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="cookie">Cookie</SelectItem>
-                            <SelectItem value="ip">IP</SelectItem>
-                            <SelectItem value="fingerprint">Fingerprint</SelectItem>
+                            <SelectItem value="cookie">{t("campaigns.cookie")}</SelectItem>
+                            <SelectItem value="ip">{t("campaigns.ip")}</SelectItem>
+                            <SelectItem value="fingerprint">{t("campaigns.fingerprint")}</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -526,7 +526,7 @@ const CampaignForm: React.FC = () => {
                     name="sessionDuration"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Session Duration (minutes)</FormLabel>
+                        <FormLabel>{t("campaigns.sessionDurationLabel")}</FormLabel>
                         <FormControl>
                           <Input 
                             type="number" 
@@ -544,16 +544,16 @@ const CampaignForm: React.FC = () => {
 
               {/* Additional Information */}
               <Card className="p-4 bg-muted/50">
-                <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
+                <h3 className="text-lg font-semibold mb-4">{t("campaigns.additionalInformation")}</h3>
                 <div className="grid gap-4">
                   <FormField
                     control={form.control}
                     name="termsAndConditions"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Terms and Conditions</FormLabel>
+                        <FormLabel>{t("campaigns.termsAndConditionsLabel")}</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Enter terms and conditions..." {...field} />
+                          <Textarea placeholder={t("campaigns.termsAndConditionsPlaceholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -565,9 +565,9 @@ const CampaignForm: React.FC = () => {
                     name="internalNotes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Internal Notes</FormLabel>
+                        <FormLabel>{t("campaigns.internalNotesLabel")}</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Internal notes for team members..." {...field} />
+                          <Textarea placeholder={t("campaigns.internalNotesPlaceholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -593,7 +593,7 @@ const CampaignForm: React.FC = () => {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      {t("campaigns.createCampaign")}
+                      {t("campaigns.create")}
                     </>
                   )}
                 </Button>
