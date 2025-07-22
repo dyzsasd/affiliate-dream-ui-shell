@@ -136,10 +136,42 @@ export const useMockAuthOperations = (
     }
   };
 
+  // Mock forgot password
+  const forgotPassword = async (email: string) => {
+    setIsSubmitting(true);
+    try {
+      console.log('Mock auth: Forgot password for', email);
+      // Simulate successful email sending
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error('Mock auth: Forgot password error', error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Mock reset password
+  const resetPassword = async (newPassword: string) => {
+    setIsSubmitting(true);
+    try {
+      console.log('Mock auth: Reset password');
+      // Simulate successful password reset
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error('Mock auth: Reset password error', error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return {
     signIn,
     signUp,
-    signOut
+    signOut,
+    forgotPassword,
+    resetPassword
   };
 };
 

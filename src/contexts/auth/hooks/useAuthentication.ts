@@ -181,6 +181,62 @@ export const useAuthentication = () => {
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Reset email sent",
+        description: "Please check your email for password reset instructions.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error sending reset email",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetPassword = async (newPassword: string) => {
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Password updated successfully",
+        description: "Your password has been changed.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error updating password",
+        description: error.message || "Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return {
     session,
     setSession,
@@ -193,6 +249,8 @@ export const useAuthentication = () => {
     signIn,
     signUp,
     signOut,
+    forgotPassword,
+    resetPassword,
     supabase // Expose the supabase client
   };
 };
