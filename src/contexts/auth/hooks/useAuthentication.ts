@@ -149,27 +149,35 @@ export const useAuthentication = () => {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
-        throw error;
+        // If session_not_found, still clear local state since session is invalid
+        if (error.message?.includes('session_not_found') || error.message?.includes('Session from session_id claim')) {
+          console.log('Session already invalid on server, clearing local state');
+        } else {
+          throw error;
+        }
       }
-
-      // Clear debug mode settings on sign out
+    } catch (error: any) {
+      // Only show error for non-session issues
+      if (!error.message?.includes('session_not_found') && !error.message?.includes('Session from session_id claim')) {
+        toast({
+          title: "Error signing out",
+          description: error.message || "Please try again.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      // Always clear local state and storage, regardless of server response
       localStorage.removeItem('debug_mode_enabled');
       localStorage.removeItem('debug_backend_url');
-
+      
       setSession(null);
       setUser(null);
+      setIsLoading(false);
+      setIsSubmitting(false);
+      
       toast({
         title: "Signed out successfully",
       });
-    } catch (error: any) {
-      toast({
-        title: "Error signing out",
-        description: error.message || "Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-      setIsSubmitting(false);
     }
   };
 
