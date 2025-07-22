@@ -21,6 +21,7 @@ import enAnalytics from './locales/en/analytics.json';
 import enProfile from './locales/en/profile.json';
 import enFavoritePublishers from './locales/en/favoritePublishers.json';
 import enConversations from './locales/en/conversations.json';
+import enTrackingLinks from './locales/en/trackingLinks.json';
 
 import frApp from './locales/fr/app.json';
 import frCommon from './locales/fr/common.json';
@@ -39,6 +40,7 @@ import frAnalytics from './locales/fr/analytics.json';
 import frProfile from './locales/fr/profile.json';
 import frFavoritePublishers from './locales/fr/favoritePublishers.json';
 import frConversations from './locales/fr/conversations.json';
+import frTrackingLinks from './locales/fr/trackingLinks.json';
 
 import zhCNApp from './locales/zh-CN/app.json';
 import zhCNCommon from './locales/zh-CN/common.json';
@@ -57,6 +59,7 @@ import zhCNAnalytics from './locales/zh-CN/analytics.json';
 import zhCNProfile from './locales/zh-CN/profile.json';
 import zhCNFavoritePublishers from './locales/zh-CN/favoritePublishers.json';
 import zhCNConversations from './locales/zh-CN/conversations.json';
+import zhCNTrackingLinks from './locales/zh-CN/trackingLinks.json';
 
 import zhTWApp from './locales/zh-TW/app.json';
 import zhTWCommon from './locales/zh-TW/common.json';
@@ -75,6 +78,7 @@ import zhTWAnalytics from './locales/zh-TW/analytics.json';
 import zhTWProfile from './locales/zh-TW/profile.json';
 import zhTWFavoritePublishers from './locales/zh-TW/favoritePublishers.json';
 import zhTWConversations from './locales/zh-TW/conversations.json';
+import zhTWTrackingLinks from './locales/zh-TW/trackingLinks.json';
 
 // Combine all translations into legacy format for compatibility
 const enTranslation = {
@@ -94,7 +98,8 @@ const enTranslation = {
   analytics: enAnalytics,
   profile: enProfile,
   favoritePublishers: enFavoritePublishers,
-  conversations: enConversations
+  conversations: enConversations,
+  trackingLinks: enTrackingLinks
 };
 
 const frTranslation = {
@@ -114,7 +119,8 @@ const frTranslation = {
   analytics: frAnalytics,
   profile: frProfile,
   favoritePublishers: frFavoritePublishers,
-  conversations: frConversations
+  conversations: frConversations,
+  trackingLinks: frTrackingLinks
 };
 
 const zhCNTranslation = {
@@ -134,7 +140,8 @@ const zhCNTranslation = {
   analytics: zhCNAnalytics,
   profile: zhCNProfile,
   favoritePublishers: zhCNFavoritePublishers,
-  conversations: zhCNConversations
+  conversations: zhCNConversations,
+  trackingLinks: zhCNTrackingLinks
 };
 
 const zhTWTranslation = {
@@ -154,7 +161,8 @@ const zhTWTranslation = {
   analytics: zhTWAnalytics,
   profile: zhTWProfile,
   favoritePublishers: zhTWFavoritePublishers,
-  conversations: zhTWConversations
+  conversations: zhTWConversations,
+  trackingLinks: zhTWTrackingLinks
 };
 
 // Language resources
