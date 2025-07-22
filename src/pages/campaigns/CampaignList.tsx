@@ -24,6 +24,7 @@ import { campaignService } from "@/services/campaign";
 import { Campaign } from "@/types/api";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/auth";
 
 const CampaignList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,15 +33,21 @@ const CampaignList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { organization } = useAuth();
 
   // Fetch campaigns from backend API
   useEffect(() => {
+    if (!organization?.organizationId) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchCampaigns = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        console.log('Fetching campaigns from API...');
-        const data = await campaignService.getCampaigns();
+        console.log('Fetching campaigns from API for organization:', organization.organizationId);
+        const data = await campaignService.getCampaigns(organization.organizationId);
         console.log('Campaigns fetched successfully:', data);
         setCampaigns(data);
       } catch (err) {
@@ -57,7 +64,7 @@ const CampaignList: React.FC = () => {
     };
 
     fetchCampaigns();
-  }, [toast]);
+  }, [organization?.organizationId, toast]);
 
   // Filter campaigns based on search term
   const filteredCampaigns = campaigns.filter((campaign) =>

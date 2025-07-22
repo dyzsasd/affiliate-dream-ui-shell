@@ -15,7 +15,7 @@ class CampaignService {
   }
 
   // Get all campaigns - using real API with organizationsOrganizationIdCampaignsGet
-  async getCampaigns(organizationId: number = 2): Promise<Campaign[]> {
+  async getCampaigns(organizationId: number): Promise<Campaign[]> {
     const response = await this.apiClient.getCampaignsByOrganization(organizationId);
     
     if (!response.campaigns) {

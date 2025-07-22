@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/auth";
 import { campaignService } from "@/services/campaign";
 import { Campaign } from "@/types/api";
 import LinkGeneratorForm from "./components/LinkGeneratorForm";
@@ -40,6 +41,7 @@ const TrackingLinkGenerator: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { organization } = useAuth();
   
   // Get campaign ID and affiliate ID from URL if they exist
   const urlCampaignId = searchParams.get("campaignId");
@@ -64,11 +66,16 @@ const TrackingLinkGenerator: React.FC = () => {
 
   // Fetch campaigns from backend API
   useEffect(() => {
+    if (!organization?.organizationId) {
+      setIsLoadingCampaigns(false);
+      return;
+    }
+
     const fetchCampaigns = async () => {
       setIsLoadingCampaigns(true);
       try {
         console.log('Fetching campaigns for tracking link generator...');
-        const data = await campaignService.getCampaigns();
+        const data = await campaignService.getCampaigns(organization.organizationId);
         console.log('Campaigns fetched for tracking:', data);
         setCampaigns(data);
       } catch (error) {
@@ -84,7 +91,7 @@ const TrackingLinkGenerator: React.FC = () => {
     };
 
     fetchCampaigns();
-  }, [toast, t]);
+  }, [organization?.organizationId, toast, t]);
 
   const handleGenerateLink = async () => {
     if (!campaignId || !affiliateId) {
