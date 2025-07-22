@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/toaster";
 import AppLayout from "@/components/layout/AppLayout";
 import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
 import Dashboard from "@/pages/Dashboard";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
@@ -57,6 +59,8 @@ function App() {
               {/* Auth routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               
               {/* Protected routes */}
               <Route element={<AppLayout />}>

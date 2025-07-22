@@ -30,7 +30,7 @@ export const useMockAuth = (): AuthContextType => {
   } = useMockUserState();
 
   // Get auth operations
-  const { signIn, signUp, signOut } = useMockAuthOperations(
+  const { signIn, signUp, signOut, forgotPassword, resetPassword } = useMockAuthOperations(
     setUser,
     setSession,
     setProfile,
@@ -70,6 +70,8 @@ export const useMockAuth = (): AuthContextType => {
     fetchOrganization,
     signIn,
     signUp,
-    signOut
+    signOut,
+    forgotPassword,
+    resetPassword
   };
 };

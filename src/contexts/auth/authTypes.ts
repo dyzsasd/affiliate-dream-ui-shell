@@ -41,4 +41,6 @@ export interface AuthContextType {
     organizationId?: number;
   }) => Promise<void>;
   signOut: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (newPassword: string) => Promise<void>;
 }

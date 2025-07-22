@@ -79,7 +79,7 @@ const LoginForm: React.FC = () => {
           </label>
           <Link
             to="/forgot-password"
-            className="text-xs text-affiliate-primary hover:underline"
+            className="text-xs text-primary hover:underline"
           >
             {t("auth.forgotPassword")}
           </Link>
@@ -102,9 +102,9 @@ const LoginForm: React.FC = () => {
             tabIndex={-1}
           >
             {showPassword ? (
-              <EyeOff className="h-4 w-4 text-gray-500" />
+              <EyeOff className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <Eye className="h-4 w-4 text-gray-500" />
+              <Eye className="h-4 w-4 text-muted-foreground" />
             )}
           </button>
         </div>
@@ -126,7 +126,7 @@ const LoginForm: React.FC = () => {
       
       <Button
         type="submit"
-        className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90"
+        className="w-full"
         disabled={isSubmitting}
       >
         {isSubmitting ? (

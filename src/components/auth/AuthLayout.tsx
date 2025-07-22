@@ -25,15 +25,15 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="w-full max-w-md px-4">
         <div className="absolute top-4 right-4">
           <LanguageSelector />
         </div>
         
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-affiliate-primary">{t("appName")}</h1>
-          <p className="mt-2 text-gray-600">{t("appDescription")}</p>
+          <h1 className="text-3xl font-bold text-primary">{t("appName")}</h1>
+          <p className="mt-2 text-muted-foreground">{t("appDescription")}</p>
         </div>
         
         <Card>
@@ -47,9 +47,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
             {children}
           </CardContent>
           <CardFooter>
-            <p className="text-center text-sm text-gray-600 w-full">
+            <p className="text-center text-sm text-muted-foreground w-full">
               {footerText}{" "}
-              <Link to={footerLinkTo} className="text-affiliate-primary hover:underline">
+              <Link to={footerLinkTo} className="text-primary hover:underline">
                 {footerLinkText}
               </Link>
             </p>
