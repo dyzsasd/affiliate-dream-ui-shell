@@ -36,19 +36,8 @@ interface PartnerInformation {
   };
 }
 
-// Mock partners data - this would eventually come from API
-const mockPartners = [
-  { id: 1, name: "TechReview Pro", type: "blog", joinDate: "2024-01-15", performance: "high" as const },
-  { id: 2, name: "Student Deals Hub", type: "student", joinDate: "2024-02-20", performance: "medium" as const },
-  { id: 3, name: "Cashback Central", type: "incentive", joinDate: "2024-03-10", performance: "high" as const },
-  { id: 4, name: "Digital Marketing Blog", type: "blog", joinDate: "2024-01-25", performance: "medium" as const },
-  { id: 5, name: "University Network", type: "student", joinDate: "2024-02-15", performance: "high" as const },
-  { id: 6, name: "Tech Forum Community", type: "forum", joinDate: "2024-03-05", performance: "low" as const },
-  { id: 7, name: "Content Creator Hub", type: "content", joinDate: "2024-02-28", performance: "medium" as const },
-  { id: 8, name: "Campus Deals", type: "student", joinDate: "2024-01-30", performance: "high" as const },
-  { id: 9, name: "Reward Portal", type: "incentive", joinDate: "2024-03-12", performance: "medium" as const },
-  { id: 10, name: "Tech News Daily", type: "blog", joinDate: "2024-02-10", performance: "high" as const }
-];
+// Empty partners data since mock data removed
+const partners: any[] = [];
 
 const COLORS = {
   student: '#ef4444',
@@ -166,7 +155,7 @@ const AdvertiserAnalytics: React.FC = () => {
           <PartnersModal 
             isOpen={isPartnersModalOpen}
             onClose={() => setIsPartnersModalOpen(false)}
-            partners={mockPartners}
+            partners={partners}
             advertiserName={getDisplayName(currentAdvertiser)}
           />
         </>

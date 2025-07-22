@@ -30,17 +30,14 @@ const PerformanceReport: React.FC = () => {
   const [dateRange, setDateRange] = useState("7days");
   const [campaignFilter, setCampaignFilter] = useState("all");
   
-  // Format dates for display
-  const formattedData = mockPerformanceData.map(item => ({
-    ...item,
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  }));
+  // Format dates for display - empty data since mock removed
+  const formattedData: any[] = [];
 
-  // Calculate totals
-  const totalClicks = mockPerformanceData.reduce((sum, item) => sum + item.clicks, 0);
-  const totalImpressions = mockPerformanceData.reduce((sum, item) => sum + item.impressions, 0);
-  const totalConversions = mockPerformanceData.reduce((sum, item) => sum + item.conversions, 0);
-  const totalRevenue = mockPerformanceData.reduce((sum, item) => sum + item.revenue, 0);
+  // Calculate totals - all zero since no data
+  const totalClicks = 0;
+  const totalImpressions = 0;
+  const totalConversions = 0;
+  const totalRevenue = 0;
   
   const conversionRate = totalClicks > 0 
     ? ((totalConversions / totalClicks) * 100).toFixed(2) 

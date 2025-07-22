@@ -13,14 +13,14 @@ import {
   Mail, 
   Edit
 } from "lucide-react";
-import InfluencerService from "./services/influencerService";
 
 const InfluencerDetailPage: React.FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  const influencer = id ? InfluencerService.getInfluencerById(id) : null;
+  // Since mock data is removed, always return null for now
+  const influencer = null;
   
   if (!influencer) {
     return (

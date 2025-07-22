@@ -15,14 +15,8 @@ interface PublisherCardProps {
   onViewDetails: () => void;
 }
 
-// Mock logos mapping
-const mockLogos: { [key: string]: string } = {
-  "TechReview Pro": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=100&h=100&fit=crop&crop=center",
-  "Student Deals Hub": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=100&h=100&fit=crop&crop=center",
-  "Cashback Central": "https://images.unsplash.com/photo-1493962853295-0fd70327578a?w=100&h=100&fit=crop&crop=center",
-  "Digital Marketing Blog": "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=100&h=100&fit=crop&crop=center",
-  "University Network": "https://images.unsplash.com/photo-1498936178812-4b2e558d2937?w=100&h=100&fit=crop&crop=center"
-};
+// Default placeholder for logos
+const defaultLogo = "/placeholder.svg";
 
 const PublisherCard: React.FC<PublisherCardProps> = ({
   publisher,
@@ -30,7 +24,7 @@ const PublisherCard: React.FC<PublisherCardProps> = ({
   onViewDetails
 }) => {
   const { t } = useTranslation();
-  const logoUrl = mockLogos[publisher.name] || publisher.logo;
+  const logoUrl = publisher.logo || defaultLogo;
 
   if (viewMode === "list") {
     return (

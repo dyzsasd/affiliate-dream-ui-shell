@@ -16,14 +16,14 @@ import { Search, Filter, Grid, List, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import InfluencerCard from "./components/InfluencerCard";
 import InfluencerFilters from "./components/InfluencerFilters";
-import { mockInfluencers } from "./data/mockInfluencers";
-import { SearchFilters } from "./types/influencer";
+import { SearchFilters, Influencer } from "./types/influencer";
 
 const InfluencerSearch: React.FC = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [showFilters, setShowFilters] = useState(false);
+  const [influencers] = useState<Influencer[]>([]); // Empty array since mock data removed
   const [filters, setFilters] = useState<SearchFilters>({
     profileType: 'creators',
     gender: 'all',
@@ -49,7 +49,7 @@ const InfluencerSearch: React.FC = () => {
   });
 
   // Filter influencers based on search and filters
-  const filteredInfluencers = mockInfluencers.filter(influencer => {
+  const filteredInfluencers = influencers.filter(influencer => {
     const matchesSearch = influencer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          influencer.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          influencer.industries.some(industry => industry.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -99,9 +99,9 @@ const InfluencerSearch: React.FC = () => {
     return count;
   };
 
-  // Hardcoded results count to show 100+
+  // Results count based on filtered influencers
   const getResultsCount = () => {
-    return "100+";
+    return filteredInfluencers.length.toString();
   };
 
   return (

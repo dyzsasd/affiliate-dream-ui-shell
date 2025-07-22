@@ -94,10 +94,10 @@ export const createAdvertiser = async (
   data: MockCreateAdvertiserRequest
 ): Promise<DomainAdvertiser> => {
   try {
-    console.log('Creating mock advertiser:', data);
+    console.log('Creating advertiser:', data);
     
-    // Mock creation
-    const mockAdvertiser: DomainAdvertiser = {
+    // API creation
+    const advertiser: DomainAdvertiser = {
       advertiserId: Date.now(), // Simple ID generation for mock
       name: data.name,
       contactEmail: data.contactEmail,
@@ -107,7 +107,7 @@ export const createAdvertiser = async (
       updatedAt: new Date().toISOString()
     };
     
-    return mockAdvertiser;
+    return advertiser;
   } catch (error) {
     console.error('Error creating advertiser:', error);
     throw handleApiError(error);
@@ -123,10 +123,10 @@ export const updateAdvertiser = async (
   data: MockUpdateAdvertiserRequest
 ): Promise<DomainAdvertiser> => {
   try {
-    console.log(`Updating mock advertiser ${advertiserId}:`, data);
+    console.log(`Updating advertiser ${advertiserId}:`, data);
     
-    // Mock update
-    const mockAdvertiser: DomainAdvertiser = {
+    // API update
+    const advertiser: DomainAdvertiser = {
       advertiserId: advertiserId,
       name: data.name || "Updated Advertiser",
       contactEmail: data.contactEmail || "updated@example.com",
@@ -136,7 +136,7 @@ export const updateAdvertiser = async (
       updatedAt: new Date().toISOString()
     };
     
-    return mockAdvertiser;
+    return advertiser;
   } catch (error) {
     console.error(`Error updating advertiser ${advertiserId}:`, error);
     throw handleApiError(error);

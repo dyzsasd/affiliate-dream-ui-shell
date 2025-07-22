@@ -2,15 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useAuthentication } from './hooks/useAuthentication';
 import { useProfile } from './hooks/useProfile';
-import { useMockAuth } from './hooks/useMockAuth';
 import { Session, User } from '@/types/auth';
 import { AuthContextType } from './authTypes';
 
-export const useAuthProvider = (mockMode = false): AuthContextType => {
-  // Use mock authentication in development if mockMode is enabled
-  if (mockMode) {
-    return useMockAuth();
-  }
+export const useAuthProvider = (): AuthContextType => {
 
   // Use real authentication with Supabase
   const auth = useAuthentication();

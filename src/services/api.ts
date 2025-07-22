@@ -72,9 +72,8 @@ class ApiClient {
 // Create a singleton instance
 export const apiClient = new ApiClient(API_BASE_URL);
 
-// Mock data for development
+// Empty data exports since mock data removed
 export const mockCampaigns: Campaign[] = [];
-
 export const mockCampaignDetail: CampaignDetail = {
   id: '1',
   name: '',
@@ -86,11 +85,8 @@ export const mockCampaignDetail: CampaignDetail = {
   updatedAt: '',
   offers: []
 };
-
 export const mockPerformanceData: PerformanceData[] = [];
-
 export const mockConversions: Conversion[] = [];
-
 export const mockPaginatedConversions: PaginatedResponse<Conversion> = {
   data: [],
   meta: {

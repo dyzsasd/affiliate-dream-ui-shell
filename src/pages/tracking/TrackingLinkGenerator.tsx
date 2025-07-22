@@ -9,33 +9,8 @@ import { Campaign } from "@/types/api";
 import LinkGeneratorForm from "./components/LinkGeneratorForm";
 import LinkDisplay from "./components/LinkDisplay";
 
-// Mock affiliates data
-const mockAffiliates = [
-  {
-    id: "1",
-    name: "Digital Marketing Pro",
-    email: "contact@digitalmarketingpro.com",
-    status: "active"
-  },
-  {
-    id: "2", 
-    name: "Performance Network",
-    email: "partners@performancenetwork.com",
-    status: "active"
-  },
-  {
-    id: "3",
-    name: "Global Affiliates Inc",
-    email: "team@globalaffiliates.com", 
-    status: "active"
-  },
-  {
-    id: "4",
-    name: "Traffic Masters",
-    email: "hello@trafficmasters.com",
-    status: "active"
-  }
-];
+// Empty affiliates data since mock removed
+const mockAffiliates: any[] = [];
 
 const TrackingLinkGenerator: React.FC = () => {
   const [searchParams] = useSearchParams();

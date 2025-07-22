@@ -25,7 +25,7 @@ const AdvertiserDashboard: React.FC = () => {
     enabled: !!organization?.organizationId,
   });
 
-  // Set all mock data to 0 and format dates for display
+  // Set all data to 0 and format dates for display
   const formattedData = mockPerformanceData.map(item => ({
     ...item,
     clicks: 0,

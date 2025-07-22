@@ -3,7 +3,6 @@ import React from "react";
 import { useAuth } from "@/contexts/auth";
 import { Loader2 } from "lucide-react";
 import AdvertiserDashboard from "./dashboard/AdvertiserDashboard";
-import AffiliateDashboard from "./dashboard/AffiliateDashboard";
 import PlatformOwnerDashboard from "./dashboard/PlatformOwnerDashboard";
 
 const Dashboard: React.FC = () => {
@@ -29,7 +28,7 @@ const Dashboard: React.FC = () => {
     case 'advertiser':
       return <AdvertiserDashboard />;
     case 'affiliate':
-      return <AffiliateDashboard />;
+      return <AdvertiserDashboard />; // Use advertiser dashboard for now
     case 'platform_owner':
       return <PlatformOwnerDashboard />;
     default:
