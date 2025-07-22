@@ -5,5 +5,18 @@
   "noConversationsDescription": "透過聯絡您收藏列表中的發布商來開始對話。",
   "loadError": "載入對話失敗。請重試。",
   "messages": "訊息",
-  "loadMore": "載入更多"
+  "loadMore": "載入更多",
+  "backToConversations": "返回對話",
+  "conversation": "對話",
+  "publisher": "發布商",
+  "created": "建立時間",
+  "status": "狀態",
+  "messageCount": "訊息數",
+  "noMessages": "此對話中暫無訊息。",
+  "typeMessage": "輸入您的訊息...",
+  "messageSent": "訊息已發送",
+  "messageSentDescription": "您的訊息已成功發送。",
+  "messageError": "發送訊息失敗。請重試。",
+  "loadConversationError": "載入對話詳情失敗。",
+  "you": "您"
 }

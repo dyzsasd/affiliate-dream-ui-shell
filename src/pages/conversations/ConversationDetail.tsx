@@ -15,7 +15,7 @@ import { DomainSendMessageRequest } from '@/generated-api/src/models/DomainSendM
 
 const ConversationDetail: React.FC = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
-  const { t } = useTranslation('conversations');
+  const { t } = useTranslation(['conversations', 'common']);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [newMessage, setNewMessage] = useState('');
@@ -49,14 +49,14 @@ const ConversationDetail: React.FC = () => {
       setNewMessage('');
       queryClient.invalidateQueries({ queryKey: ['conversation', conversationId] });
       toast({
-        title: 'Message sent',
-        description: 'Your message has been sent successfully.',
+        title: t('messageSent'),
+        description: t('messageSentDescription'),
       });
     },
     onError: (error) => {
       toast({
-        title: 'Error',
-        description: 'Failed to send message. Please try again.',
+        title: t('common:error'),
+        description: t('messageError'),
         variant: 'destructive',
       });
       console.error('Failed to send message:', error);
@@ -115,9 +115,9 @@ const ConversationDetail: React.FC = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-destructive">Failed to load conversation details.</p>
+              <p className="text-destructive">{t('loadConversationError')}</p>
               <Button variant="outline" className="mt-4" asChild>
-                <Link to="/conversations">Back to Conversations</Link>
+                <Link to="/conversations">{t('backToConversations')}</Link>
               </Button>
             </div>
           </CardContent>
@@ -136,7 +136,7 @@ const ConversationDetail: React.FC = () => {
         <Button variant="ghost" size="sm" asChild>
           <Link to="/conversations">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Conversations
+            {t('backToConversations')}
           </Link>
         </Button>
       </div>
@@ -146,10 +146,10 @@ const ConversationDetail: React.FC = () => {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div>
-              <CardTitle className="text-xl">{conversation?.subject || 'Conversation'}</CardTitle>
+              <CardTitle className="text-xl">{conversation?.subject || t('conversation')}</CardTitle>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-sm text-muted-foreground">
-                  Publisher: {conversation?.publisherDomain}
+                  {t('publisher')}: {conversation?.publisherDomain}
                 </span>
                 {conversation?.status && (
                   <Badge variant="secondary" className={getStatusColor(conversation.status)}>
@@ -159,8 +159,8 @@ const ConversationDetail: React.FC = () => {
               </div>
             </div>
             <div className="text-sm text-muted-foreground">
-              <div>Created: {formatDate(conversation?.createdAt)}</div>
-              <div>Messages: {conversation?.messageCount || 0}</div>
+              <div>{t('created')}: {formatDate(conversation?.createdAt)}</div>
+              <div>{t('messageCount')}: {conversation?.messageCount || 0}</div>
             </div>
           </div>
         </CardHeader>
@@ -169,13 +169,13 @@ const ConversationDetail: React.FC = () => {
       {/* Messages */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg">Messages</CardTitle>
+          <CardTitle className="text-lg">{t('messages')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {messages.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
-                No messages in this conversation yet.
+                {t('noMessages')}
               </p>
             ) : (
               messages.map((message, index) => (
@@ -189,7 +189,7 @@ const ConversationDetail: React.FC = () => {
                       <p className="text-sm">{message.content}</p>
                       <div className="flex items-center justify-between mt-1">
                         <span className="text-xs opacity-70">
-                          {message.senderType === 'advertiser' ? 'You' : 'Publisher'}
+                          {message.senderType === 'advertiser' ? t('you') : t('publisher')}
                         </span>
                         <span className="text-xs opacity-70">
                           {message.sentAt ? formatDate(message.sentAt) : ''}
@@ -210,7 +210,7 @@ const ConversationDetail: React.FC = () => {
         <CardContent className="pt-6">
           <div className="flex gap-2">
             <Input
-              placeholder="Type your message..."
+              placeholder={t('typeMessage')}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}

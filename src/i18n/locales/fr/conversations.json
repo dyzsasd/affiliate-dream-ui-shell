@@ -5,5 +5,18 @@
   "noConversationsDescription": "Commencez des conversations en contactant des éditeurs de vos listes favorites.",
   "loadError": "Échec du chargement des conversations. Veuillez réessayer.",
   "messages": "messages",
-  "loadMore": "Charger Plus"
+  "loadMore": "Charger Plus",
+  "backToConversations": "Retour aux Conversations",
+  "conversation": "Conversation",
+  "publisher": "Éditeur",
+  "created": "Créé",
+  "status": "Statut",
+  "messageCount": "Messages",
+  "noMessages": "Aucun message dans cette conversation pour le moment.",
+  "typeMessage": "Tapez votre message...",
+  "messageSent": "Message envoyé",
+  "messageSentDescription": "Votre message a été envoyé avec succès.",
+  "messageError": "Échec de l'envoi du message. Veuillez réessayer.",
+  "loadConversationError": "Échec du chargement des détails de la conversation.",
+  "you": "Vous"
 }

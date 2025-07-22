@@ -5,5 +5,18 @@
   "noConversationsDescription": "Start conversations by contacting publishers from your favorite lists.",
   "loadError": "Failed to load conversations. Please try again.",
   "messages": "messages",
-  "loadMore": "Load More"
+  "loadMore": "Load More",
+  "backToConversations": "Back to Conversations",
+  "conversation": "Conversation",
+  "publisher": "Publisher",
+  "created": "Created",
+  "status": "Status",
+  "messageCount": "Messages",
+  "noMessages": "No messages in this conversation yet.",
+  "typeMessage": "Type your message...",
+  "messageSent": "Message sent",
+  "messageSentDescription": "Your message has been sent successfully.",
+  "messageError": "Failed to send message. Please try again.",
+  "loadConversationError": "Failed to load conversation details.",
+  "you": "You"
 }

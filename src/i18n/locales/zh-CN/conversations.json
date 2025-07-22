@@ -5,5 +5,18 @@
   "noConversationsDescription": "通过联系您收藏列表中的发布商来开始对话。",
   "loadError": "加载对话失败。请重试。",
   "messages": "消息",
-  "loadMore": "加载更多"
+  "loadMore": "加载更多",
+  "backToConversations": "返回对话",
+  "conversation": "对话",
+  "publisher": "发布商",
+  "created": "创建时间",
+  "status": "状态",
+  "messageCount": "消息数",
+  "noMessages": "此对话中暂无消息。",
+  "typeMessage": "输入您的消息...",
+  "messageSent": "消息已发送",
+  "messageSentDescription": "您的消息已成功发送。",
+  "messageError": "发送消息失败。请重试。",
+  "loadConversationError": "加载对话详情失败。",
+  "you": "您"
 }
