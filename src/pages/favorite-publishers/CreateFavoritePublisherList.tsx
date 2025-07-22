@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,7 @@ const CreateFavoritePublisherList: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -41,6 +42,9 @@ const CreateFavoritePublisherList: React.FC = () => {
       return await apiClient.favoritePublisherListsPost({ request });
     },
     onSuccess: (response) => {
+      // Invalidate cache to refresh the list page
+      queryClient.invalidateQueries({ queryKey: ['favorite-publisher-lists'] });
+      
       toast({
         title: t('favoritePublishers.createSuccess'),
         description: t('favoritePublishers.createSuccessDescription'),
