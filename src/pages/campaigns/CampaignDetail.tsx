@@ -221,16 +221,16 @@ const CampaignDetail: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5" />
-                {t("campaigns.payoutRevenue")}
+                {t("campaigns.payout")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {/* Revenue */}
                 <div>
-                  <h4 className="font-medium text-purple-700 mb-3">Revenue</h4>
+                  <h4 className="font-medium text-purple-700 mb-3">{t("campaigns.fixedFee")}</h4>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Fixed Revenue</h3>
+                    <h3 className="text-sm font-medium text-gray-500">{t("campaigns.fixedFee")}</h3>
                     <p className="mt-1 font-semibold">{formatCurrency(campaign.fixedRevenue, campaign.currencyId)}</p>
                   </div>
                 </div>
