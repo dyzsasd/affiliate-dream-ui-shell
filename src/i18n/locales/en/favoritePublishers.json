@@ -45,7 +45,7 @@
   "removeFromList": "Remove",
   "optional": "optional",
   "addToFavorites": "Add to Favorites",
-  "addToFavoritesDescription": "Add <strong>{{domain}}</strong> to one of your favorite publisher lists.",
+  "addToFavoritesDescription": "Add {{domain}} to one of your favorite publisher lists.",
   "selectFavoriteList": "Select a favorite list",
   "noFavoriteListsFound": "No favorite lists found. Create one first.",
   "publishersCount": "{{count}} publishers",

@@ -45,7 +45,7 @@
   "removeFromList": "移除",
   "optional": "可选",
   "addToFavorites": "添加到收藏",
-  "addToFavoritesDescription": "将 <strong>{{domain}}</strong> 添加到您的收藏发布商列表中。",
+  "addToFavoritesDescription": "将 {{domain}} 添加到您的收藏发布商列表中。",
   "selectFavoriteList": "选择收藏列表",
   "noFavoriteListsFound": "未找到收藏列表。请先创建一个。",
   "publishersCount": "{{count}} 个发布商",

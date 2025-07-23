@@ -118,7 +118,7 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
             {t('favoritePublishers.addToFavorites')}
           </DialogTitle>
           <DialogDescription>
-            {t('favoritePublishers.addToFavoritesDescription', { domain: publisherDomain })}
+            {t('favoritePublishers.addToFavoritesDescription', { domain: publisherDomain }).replace(/<strong>(.*?)<\/strong>/g, '$1')}
           </DialogDescription>
         </DialogHeader>
 
@@ -163,7 +163,7 @@ const AddToFavoritesModal: React.FC<AddToFavoritesModalProps> = ({
                               </div>
                             )}
                             <div className="text-xs text-muted-foreground">
-                              {t('favoritePublishers.publishersCount', { count: list.items?.length || 0 })}
+                              {t('favoritePublishers.publishersCount', { count: (list as any).publisher_count || 0 })}
                             </div>
                           </div>
                         </Label>
