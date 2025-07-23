@@ -27,9 +27,9 @@ const Login: React.FC = () => {
     <AuthLayout
       title={t("auth.signIn")}
       description=""
-      footerText={t("auth.dontHaveAccount")}
-      footerLinkText={t("auth.signUp")}
-      footerLinkTo="/signup"
+      footerText=""
+      footerLinkText=""
+      footerLinkTo=""
     >
       <LoginForm />
     </AuthLayout>
