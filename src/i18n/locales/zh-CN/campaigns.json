@@ -139,5 +139,6 @@
   "termsAndConditionsPlaceholder": "输入条款与条件...",
   "internalNotesLabel": "内部备注",
   "internalNotesPlaceholder": "团队成员的内部备注...",
-  "createCampaign": "创建营销活动"
+  "createCampaign": "创建营销活动",
+  "noDataAvailable": "无数据"
 }

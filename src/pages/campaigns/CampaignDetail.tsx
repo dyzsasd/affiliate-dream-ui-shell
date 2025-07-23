@@ -386,15 +386,15 @@ const CampaignDetail: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500">{t("campaigns.clicks")}</span>
-                  <span className="font-medium">1,245</span>
+                  <span className="font-medium">{t("campaigns.noDataAvailable")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500">{t("campaigns.conversions")}</span>
-                  <span className="font-medium">32</span>
+                  <span className="font-medium">{t("campaigns.noDataAvailable")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500">{t("campaigns.conversionRate")}</span>
-                  <span className="font-medium">2.57%</span>
+                  <span className="font-medium">{t("campaigns.noDataAvailable")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500">{t("campaigns.revenue")}</span>

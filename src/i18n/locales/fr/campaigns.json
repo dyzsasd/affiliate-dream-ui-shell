@@ -138,5 +138,6 @@
   "termsAndConditionsPlaceholder": "Saisir les conditions générales...",
   "internalNotesLabel": "Notes internes",
   "internalNotesPlaceholder": "Notes internes pour les membres de l'équipe...",
-  "createCampaign": "Créer une campagne"
+  "createCampaign": "Créer une campagne",
+  "noDataAvailable": "Aucune donnée disponible"
 }

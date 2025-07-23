@@ -139,5 +139,6 @@
   "termsAndConditionsPlaceholder": "Enter terms and conditions...",
   "internalNotesLabel": "Internal Notes",
   "internalNotesPlaceholder": "Internal notes for team members...",
-  "createCampaign": "Create Campaign"
+  "createCampaign": "Create Campaign",
+  "noDataAvailable": "No data available"
 }

@@ -139,5 +139,6 @@
   "termsAndConditionsPlaceholder": "輸入條款與條件...",
   "internalNotesLabel": "內部備註",
   "internalNotesPlaceholder": "團隊成員的內部備註...",
-  "createCampaign": "創建營銷活動"
+  "createCampaign": "創建營銷活動",
+  "noDataAvailable": "無數據可用"
 }
