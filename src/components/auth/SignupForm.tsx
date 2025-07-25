@@ -15,11 +15,23 @@ const SignupForm: React.FC = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
+
+  // Parse invitation token from URL
+  const invitationToken = searchParams.get('invitation');
+  let invitationData = null;
+
+  if (invitationToken && invitationToken !== 'true') {
+    try {
+      invitationData = JSON.parse(atob(invitationToken));
+    } catch (error) {
+      console.error('Invalid invitation token');
+    }
+  }
   
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "",
+    email: invitationData?.email || "",
     password: "",
     confirmPassword: "",
   });
@@ -77,13 +89,23 @@ const SignupForm: React.FC = () => {
     
     try {
       setIsSubmittingForm(true);
+      const orgId = invitationData?.organizationId || (organizationId ? parseInt(organizationId) : undefined);
+      
       await signUp({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        organizationId: organizationId ? parseInt(organizationId) : undefined,
+        organizationId: orgId,
       });
+
+      // If from invitation, show success message
+      if (invitationData) {
+        toast({
+          title: "Welcome to the platform!",
+          description: `You've successfully joined ${invitationData.organizationName} as an affiliate.`,
+        });
+      }
     } catch (error) {
       console.error("Signup error:", error);
       // Error is handled in the auth context
@@ -156,10 +178,10 @@ const SignupForm: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             className="w-full"
-            disabled={isSubmittingForm || !!invitedEmail}
+            disabled={isSubmittingForm || !!invitedEmail || !!invitationData}
             autoComplete="email"
           />
-          {invitedEmail && (
+          {(invitedEmail || invitationData) && (
             <p className="text-xs text-muted-foreground">
               This email was provided in your invitation
             </p>
@@ -237,6 +259,7 @@ const SignupForm: React.FC = () => {
               {t("auth.creatingAccount")}
             </>
           ) : (
+            invitationData ? `Join ${invitationData.organizationName}` : 
             isInvitation ? "Join Organization" : t("auth.createAccount")
           )}
         </Button>

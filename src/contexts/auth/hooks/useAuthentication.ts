@@ -110,6 +110,7 @@ export const useAuthentication = () => {
             firstName: credentials.firstName,
             lastName: credentials.lastName,
             organizationId: credentials.organizationId,
+            roleId: data.user.user_metadata?.role_id || undefined, // Use role from metadata if available
           };
 
           // Upsert profile in backend - assumes the backend API has this functionality
