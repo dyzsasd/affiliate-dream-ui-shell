@@ -172,35 +172,42 @@ const CampaignForm: React.FC = () => {
       
       if (isEditMode && id) {
         // Update existing campaign  
+        // Convert date strings to proper datetime format with timezone
+        const formatDateTime = (dateString?: string) => {
+          if (!dateString) return undefined;
+          // Add time and timezone to make it a valid datetime
+          return `${dateString}T00:00:00Z`;
+        };
+        
         const updateData = {
           name: data.name,
           description: data.description,
           status: data.status === "archived" ? "paused" : data.status as "draft" | "active" | "paused",
-          startDate: data.startDate,
-          endDate: data.endDate,
-          destinationUrl: data.destinationUrl,
-          thumbnailUrl: data.thumbnailUrl,
-          previewUrl: data.previewUrl,
+          startDate: formatDateTime(data.startDate),
+          endDate: formatDateTime(data.endDate),
+          destinationUrl: data.destinationUrl || undefined,
+          thumbnailUrl: data.thumbnailUrl || undefined,
+          previewUrl: data.previewUrl || undefined,
           visibility: data.visibility,
-          currencyId: data.currencyId,
+          currencyId: data.currencyId || undefined,
           conversionMethod: data.conversionMethod,
           sessionDefinition: data.sessionDefinition,
-          sessionDuration: data.sessionDuration,
-          fixedRevenue: data.fixedRevenue,
-          fixedClickAmount: data.fixedClickAmount,
-          fixedConversionAmount: data.fixedConversionAmount,
-          percentageConversionAmount: data.percentageConversionAmount,
-          isCapsEnabled: data.isCapsEnabled,
-          dailyClickCap: data.dailyClickCap,
-          weeklyClickCap: data.weeklyClickCap,
-          monthlyClickCap: data.monthlyClickCap,
-          dailyConversionCap: data.dailyConversionCap,
-          weeklyConversionCap: data.weeklyConversionCap,
-          monthlyConversionCap: data.monthlyConversionCap,
-          globalClickCap: data.globalClickCap,
-          globalConversionCap: data.globalConversionCap,
-          termsAndConditions: data.termsAndConditions,
-          internalNotes: data.internalNotes,
+          sessionDuration: data.sessionDuration || undefined,
+          fixedRevenue: data.fixedRevenue || undefined,
+          fixedClickAmount: data.fixedClickAmount || undefined,
+          fixedConversionAmount: data.fixedConversionAmount || undefined,
+          percentageConversionAmount: data.percentageConversionAmount || undefined,
+          isCapsEnabled: data.isCapsEnabled || false,
+          dailyClickCap: data.dailyClickCap || undefined,
+          weeklyClickCap: data.weeklyClickCap || undefined,
+          monthlyClickCap: data.monthlyClickCap || undefined,
+          dailyConversionCap: data.dailyConversionCap || undefined,
+          weeklyConversionCap: data.weeklyConversionCap || undefined,
+          monthlyConversionCap: data.monthlyConversionCap || undefined,
+          globalClickCap: data.globalClickCap || undefined,
+          globalConversionCap: data.globalConversionCap || undefined,
+          termsAndConditions: data.termsAndConditions || undefined,
+          internalNotes: data.internalNotes || undefined,
         };
         
         const campaign = await campaignService.updateCampaign(id, updateData);
