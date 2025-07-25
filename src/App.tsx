@@ -71,6 +71,7 @@ function App() {
                 <Route path="/campaigns" element={<CampaignList />} />
                 <Route path="/campaigns/new" element={<CampaignForm />} />
                 <Route path="/campaigns/:id" element={<CampaignDetail />} />
+                <Route path="/campaigns/:id/edit" element={<CampaignForm />} />
                 
                 {/* Advertiser routes - use the AdvertiserRoutes component */}
                 <Route path="/advertisers/*" element={<AdvertiserRoutes />} />

@@ -423,9 +423,11 @@ const CampaignDetail: React.FC = () => {
                     {t("campaigns.generateTrackingLink")}
                   </Button>
                 </Link>
-                <Button variant="outline" className="w-full">
-                  {t("campaigns.editCampaign")}
-                </Button>
+                <Link to={`/campaigns/${campaign.campaignId}/edit`}>
+                  <Button variant="outline" className="w-full">
+                    {t("campaigns.editCampaign")}
+                  </Button>
+                </Link>
                 {campaign.status === "active" ? (
                   <Button variant="outline" className="w-full text-yellow-600">
                     <PauseCircle className="mr-2 h-4 w-4" />
