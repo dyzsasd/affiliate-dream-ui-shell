@@ -27,9 +27,9 @@ const Login: React.FC = () => {
     <AuthLayout
       title={t("auth.signIn")}
       description=""
-      footerText=""
-      footerLinkText=""
-      footerLinkTo=""
+      footerText="New to the platform?"
+      footerLinkText="Join as Affiliate"
+      footerLinkTo="/onboard"
     >
       <LoginForm />
     </AuthLayout>
