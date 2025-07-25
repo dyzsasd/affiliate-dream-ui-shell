@@ -140,5 +140,10 @@
   "internalNotesLabel": "Internal Notes",
   "internalNotesPlaceholder": "Internal notes for team members...",
   "createCampaign": "Create Campaign",
-  "noDataAvailable": "No data available"
+  "noDataAvailable": "No data available",
+  "updateSuccess": "Campaign updated successfully!",
+  "updateSuccessDescription": "Your campaign has been updated with the latest changes.",
+  "updating": "Updating...",
+  "update": "Update Campaign",
+  "fixedRevenueLabel": "Fixed Revenue"
 }

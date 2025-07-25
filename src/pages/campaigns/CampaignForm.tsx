@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -55,7 +55,11 @@ const CampaignForm: React.FC = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { organization } = useAuth();
+  const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const isEditMode = !!id;
 
   const form = useForm<CampaignFormData>({
     resolver: zodResolver(campaignSchema),
@@ -91,6 +95,67 @@ const CampaignForm: React.FC = () => {
     },
   });
 
+  // Load campaign data when in edit mode
+  useEffect(() => {
+    const loadCampaignData = async () => {
+      if (isEditMode && id) {
+        setIsLoading(true);
+        try {
+          const campaign = await campaignService.getCampaign(id);
+          if (campaign) {
+            // Convert dates from ISO format to date input format
+            const formatDate = (dateString?: string) => {
+              if (!dateString) return "";
+              return dateString.split('T')[0];
+            };
+
+            form.reset({
+              name: campaign.name || "",
+              description: campaign.description || "",
+              status: campaign.status,
+              startDate: formatDate(campaign.startDate),
+              endDate: formatDate(campaign.endDate),
+              destinationUrl: campaign.destinationUrl || "",
+              thumbnailUrl: campaign.thumbnailUrl || "",
+              previewUrl: campaign.previewUrl || "",
+              visibility: (campaign.visibility as "public" | "require_approval" | "private") || "public",
+              currencyId: campaign.currencyId || "USD",
+              conversionMethod: (campaign.conversionMethod as "server_postback" | "pixel") || "server_postback",
+              sessionDefinition: (campaign.sessionDefinition as "cookie" | "ip" | "fingerprint") || "cookie",
+              sessionDuration: campaign.sessionDuration || 30,
+              fixedRevenue: campaign.fixedRevenue || 0,
+              fixedClickAmount: campaign.fixedClickAmount || 0,
+              fixedConversionAmount: campaign.fixedConversionAmount || 0,
+              percentageConversionAmount: campaign.percentageConversionAmount || 0,
+              isCapsEnabled: campaign.isCapsEnabled || false,
+              dailyClickCap: campaign.dailyClickCap || 0,
+              weeklyClickCap: campaign.weeklyClickCap || 0,
+              monthlyClickCap: campaign.monthlyClickCap || 0,
+              dailyConversionCap: campaign.dailyConversionCap || 0,
+              weeklyConversionCap: campaign.weeklyConversionCap || 0,
+              monthlyConversionCap: campaign.monthlyConversionCap || 0,
+              globalClickCap: campaign.globalClickCap || 0,
+              globalConversionCap: campaign.globalConversionCap || 0,
+              termsAndConditions: campaign.termsAndConditions || "",
+              internalNotes: campaign.internalNotes || "",
+            });
+          }
+        } catch (error) {
+          console.error("Error loading campaign:", error);
+          toast({
+            title: t("common.error"),
+            description: "Failed to load campaign data",
+            variant: "destructive",
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadCampaignData();
+  }, [isEditMode, id, form, toast, t]);
+
   const onSubmit = async (data: CampaignFormData) => {
     if (!organization?.organizationId) {
       toast({
@@ -103,59 +168,105 @@ const CampaignForm: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      console.log("Creating campaign with data:", data);
+      console.log(`${isEditMode ? 'Updating' : 'Creating'} campaign with data:`, data);
       
-      // Convert date strings to proper datetime format with timezone
-      const formatDateTime = (dateString?: string) => {
-        if (!dateString) return undefined;
-        // Add time and timezone to make it a valid datetime
-        return `${dateString}T00:00:00Z`;
-      };
-      
-      // Create the request object matching the backend API structure
-      const request: ModelsCreateCampaignRequest = {
-        name: data.name,
-        organizationId: organization.organizationId,
-        advertiserId: 1, // Default for now - should be selected/configured
-        status: data.status as ModelsCreateCampaignRequest['status'],
-        description: data.description || undefined,
-        startDate: formatDateTime(data.startDate),
-        endDate: formatDateTime(data.endDate),
-        destinationUrl: data.destinationUrl || undefined,
-        thumbnailUrl: data.thumbnailUrl || undefined,
-        previewUrl: data.previewUrl || undefined,
-        visibility: data.visibility as ModelsCreateCampaignRequest['visibility'],
-        currencyId: data.currencyId || undefined,
-        fixedRevenue: data.fixedRevenue || undefined,
-        fixedClickAmount: data.fixedClickAmount || undefined,
-        fixedConversionAmount: data.fixedConversionAmount || undefined,
-        percentageConversionAmount: data.percentageConversionAmount || undefined,
-        conversionMethod: data.conversionMethod as ModelsCreateCampaignRequest['conversionMethod'],
-        sessionDefinition: data.sessionDefinition as ModelsCreateCampaignRequest['sessionDefinition'],
-        sessionDuration: data.sessionDuration || undefined,
-        isCapsEnabled: data.isCapsEnabled || false,
-        dailyClickCap: data.dailyClickCap || undefined,
-        weeklyClickCap: data.weeklyClickCap || undefined,
-        monthlyClickCap: data.monthlyClickCap || undefined,
-        dailyConversionCap: data.dailyConversionCap || undefined,
-        weeklyConversionCap: data.weeklyConversionCap || undefined,
-        monthlyConversionCap: data.monthlyConversionCap || undefined,
-        globalClickCap: data.globalClickCap || undefined,
-        globalConversionCap: data.globalConversionCap || undefined,
-        termsAndConditions: data.termsAndConditions || undefined,
-        internalNotes: data.internalNotes || undefined,
-      };
-      
-      const campaign = await campaignService.createCampaignFromRequest(request);
-      console.log("Campaign created successfully:", campaign);
-      
-      toast({
-        title: t("campaigns.createSuccess"),
-        description: t("campaigns.createSuccessDescription"),
-      });
-      
-      // Navigate to the campaign detail page
-      navigate(`/campaigns/${campaign.id}`);
+      if (isEditMode && id) {
+        // Update existing campaign  
+        const updateData = {
+          name: data.name,
+          description: data.description,
+          status: data.status === "archived" ? "paused" : data.status as "draft" | "active" | "paused",
+          startDate: data.startDate,
+          endDate: data.endDate,
+          destinationUrl: data.destinationUrl,
+          thumbnailUrl: data.thumbnailUrl,
+          previewUrl: data.previewUrl,
+          visibility: data.visibility,
+          currencyId: data.currencyId,
+          conversionMethod: data.conversionMethod,
+          sessionDefinition: data.sessionDefinition,
+          sessionDuration: data.sessionDuration,
+          fixedRevenue: data.fixedRevenue,
+          fixedClickAmount: data.fixedClickAmount,
+          fixedConversionAmount: data.fixedConversionAmount,
+          percentageConversionAmount: data.percentageConversionAmount,
+          isCapsEnabled: data.isCapsEnabled,
+          dailyClickCap: data.dailyClickCap,
+          weeklyClickCap: data.weeklyClickCap,
+          monthlyClickCap: data.monthlyClickCap,
+          dailyConversionCap: data.dailyConversionCap,
+          weeklyConversionCap: data.weeklyConversionCap,
+          monthlyConversionCap: data.monthlyConversionCap,
+          globalClickCap: data.globalClickCap,
+          globalConversionCap: data.globalConversionCap,
+          termsAndConditions: data.termsAndConditions,
+          internalNotes: data.internalNotes,
+        };
+        
+        const campaign = await campaignService.updateCampaign(id, updateData);
+        console.log("Campaign updated successfully:", campaign);
+        
+        toast({
+          title: t("campaigns.updateSuccess"),
+          description: t("campaigns.updateSuccessDescription"),
+        });
+        
+        // Navigate to the campaign detail page
+        navigate(`/campaigns/${id}`);
+      } else {
+        // Create new campaign
+        // Convert date strings to proper datetime format with timezone
+        const formatDateTime = (dateString?: string) => {
+          if (!dateString) return undefined;
+          // Add time and timezone to make it a valid datetime
+          return `${dateString}T00:00:00Z`;
+        };
+        
+        // Create the request object matching the backend API structure
+        const request: ModelsCreateCampaignRequest = {
+          name: data.name,
+          organizationId: organization.organizationId,
+          advertiserId: 1, // Default for now - should be selected/configured
+          status: data.status as ModelsCreateCampaignRequest['status'],
+          description: data.description || undefined,
+          startDate: formatDateTime(data.startDate),
+          endDate: formatDateTime(data.endDate),
+          destinationUrl: data.destinationUrl || undefined,
+          thumbnailUrl: data.thumbnailUrl || undefined,
+          previewUrl: data.previewUrl || undefined,
+          visibility: data.visibility as ModelsCreateCampaignRequest['visibility'],
+          currencyId: data.currencyId || undefined,
+          fixedRevenue: data.fixedRevenue || undefined,
+          fixedClickAmount: data.fixedClickAmount || undefined,
+          fixedConversionAmount: data.fixedConversionAmount || undefined,
+          percentageConversionAmount: data.percentageConversionAmount || undefined,
+          conversionMethod: data.conversionMethod as ModelsCreateCampaignRequest['conversionMethod'],
+          sessionDefinition: data.sessionDefinition as ModelsCreateCampaignRequest['sessionDefinition'],
+          sessionDuration: data.sessionDuration || undefined,
+          isCapsEnabled: data.isCapsEnabled || false,
+          dailyClickCap: data.dailyClickCap || undefined,
+          weeklyClickCap: data.weeklyClickCap || undefined,
+          monthlyClickCap: data.monthlyClickCap || undefined,
+          dailyConversionCap: data.dailyConversionCap || undefined,
+          weeklyConversionCap: data.weeklyConversionCap || undefined,
+          monthlyConversionCap: data.monthlyConversionCap || undefined,
+          globalClickCap: data.globalClickCap || undefined,
+          globalConversionCap: data.globalConversionCap || undefined,
+          termsAndConditions: data.termsAndConditions || undefined,
+          internalNotes: data.internalNotes || undefined,
+        };
+        
+        const campaign = await campaignService.createCampaignFromRequest(request);
+        console.log("Campaign created successfully:", campaign);
+        
+        toast({
+          title: t("campaigns.createSuccess"),
+          description: t("campaigns.createSuccessDescription"),
+        });
+        
+        // Navigate to the campaign detail page
+        navigate(`/campaigns/${campaign.id}`);
+      }
     } catch (error) {
       console.error("Error creating campaign:", error);
       toast({
@@ -167,6 +278,35 @@ const CampaignForm: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/campaigns")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t("common.back")}
+          </Button>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {t("campaigns.editCampaign")}
+          </h1>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center p-12">
+            <div className="flex items-center gap-3">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span>{t("common.loading")}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -180,7 +320,9 @@ const CampaignForm: React.FC = () => {
           <ArrowLeft className="h-4 w-4" />
           {t("common.back")}
         </Button>
-        <h1 className="text-2xl font-bold tracking-tight">{t("campaigns.createNew")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {isEditMode ? t("campaigns.editCampaign") : t("campaigns.createNew")}
+        </h1>
       </div>
 
       <Card>
@@ -584,16 +726,16 @@ const CampaignForm: React.FC = () => {
                 >
                   {t("common.cancel")}
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting || isLoading}>
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {t("campaigns.creating")}
+                      {isEditMode ? t("campaigns.updating") : t("campaigns.creating")}
                     </>
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      {t("campaigns.create")}
+                      {isEditMode ? t("campaigns.update") : t("campaigns.create")}
                     </>
                   )}
                 </Button>
