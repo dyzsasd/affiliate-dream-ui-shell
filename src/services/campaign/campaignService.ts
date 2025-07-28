@@ -59,14 +59,37 @@ class CampaignService {
   }
   
   // Update an existing campaign
-  async updateCampaign(id: string, campaignData: Partial<Campaign>): Promise<Campaign> {
-    // Create a valid request object
+  async updateCampaign(id: string, campaignData: Partial<CampaignDetail>): Promise<Campaign> {
+    // Create a valid request object with all available fields
     const request: ModelsUpdateCampaignRequest = {
       name: campaignData.name || '',
       description: campaignData.description,
-      status: campaignData.status || 'draft',
+      status: (campaignData.status || 'draft') as any,
       startDate: campaignData.startDate,
-      endDate: campaignData.endDate
+      endDate: campaignData.endDate,
+      destinationUrl: campaignData.destinationUrl,
+      thumbnailUrl: campaignData.thumbnailUrl,
+      previewUrl: campaignData.previewUrl,
+      visibility: campaignData.visibility as any,
+      currencyId: campaignData.currencyId,
+      conversionMethod: campaignData.conversionMethod as any,
+      sessionDefinition: campaignData.sessionDefinition as any,
+      sessionDuration: campaignData.sessionDuration,
+      fixedRevenue: campaignData.fixedRevenue,
+      fixedClickAmount: campaignData.fixedClickAmount,
+      fixedConversionAmount: campaignData.fixedConversionAmount,
+      percentageConversionAmount: campaignData.percentageConversionAmount,
+      isCapsEnabled: campaignData.isCapsEnabled,
+      dailyClickCap: campaignData.dailyClickCap,
+      weeklyClickCap: campaignData.weeklyClickCap,
+      monthlyClickCap: campaignData.monthlyClickCap,
+      dailyConversionCap: campaignData.dailyConversionCap,
+      weeklyConversionCap: campaignData.weeklyConversionCap,
+      monthlyConversionCap: campaignData.monthlyConversionCap,
+      globalClickCap: campaignData.globalClickCap,
+      globalConversionCap: campaignData.globalConversionCap,
+      termsAndConditions: campaignData.termsAndConditions,
+      internalNotes: campaignData.internalNotes
     };
     
     const response = await this.apiClient.updateCampaign(Number(id), request);
