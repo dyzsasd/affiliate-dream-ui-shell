@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/auth";
 import { Loader2 } from "lucide-react";
 import AdvertiserDashboard from "./dashboard/AdvertiserDashboard";
 import PlatformOwnerDashboard from "./dashboard/PlatformOwnerDashboard";
+import AgencyDashboard from "./dashboard/AgencyDashboard";
 
 const Dashboard: React.FC = () => {
   const { organization, isOrganizationLoading, isProfileLoading } = useAuth();
@@ -29,6 +30,8 @@ const Dashboard: React.FC = () => {
       return <AdvertiserDashboard />;
     case 'affiliate':
       return <AdvertiserDashboard />; // Use advertiser dashboard for now
+    case 'agency':
+      return <AgencyDashboard />;
     case 'platform_owner':
       return <PlatformOwnerDashboard />;
     default:
