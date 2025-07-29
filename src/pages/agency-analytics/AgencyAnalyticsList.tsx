@@ -13,27 +13,35 @@ const AgencyAnalyticsList: React.FC = () => {
   const analyticsDashboards = [
     {
       id: "1",
-      name: "Main Performance Dashboard",
-      description: "Overall system performance monitoring",
+      name: "Campaign Performance Analytics",
+      description: "Track campaign ROI, conversion rates, and audience engagement",
       status: "active",
       lastUpdated: "2024-01-15T10:30:00Z",
-      metrics: 12
+      metrics: 15
     },
     {
       id: "2", 
-      name: "Database Analytics",
-      description: "Database performance and query monitoring",
+      name: "Audience Demographics Dashboard",
+      description: "Analyze target audience behavior and market penetration",
       status: "active",
       lastUpdated: "2024-01-15T09:15:00Z",
-      metrics: 8
+      metrics: 12
     },
     {
       id: "3",
-      name: "Network Traffic Analysis", 
-      description: "Network performance and traffic patterns",
+      name: "Market Share Analysis", 
+      description: "Monitor competitive positioning and market trends",
+      status: "active",
+      lastUpdated: "2024-01-15T08:20:00Z",
+      metrics: 10
+    },
+    {
+      id: "4",
+      name: "Customer Acquisition Cost",
+      description: "Track cost efficiency across marketing channels",
       status: "inactive",
       lastUpdated: "2024-01-14T16:45:00Z",
-      metrics: 6
+      metrics: 8
     }
   ];
 
@@ -45,7 +53,7 @@ const AgencyAnalyticsList: React.FC = () => {
             {t("agencyAnalytics.analyticsList")}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Monitor and analyze system performance metrics
+            Monitor and analyze marketing performance and market insights
           </p>
         </div>
         <Link to="/agency-analytics/create">

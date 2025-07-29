@@ -13,7 +13,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
   const { analyticsId } = useParams();
   const [timeRange, setTimeRange] = useState("1h");
 
-  // Mock time series data
+  // Mock time series data generator
   const generateTimeSeriesData = (points: number, baseValue: number, variance: number) => {
     return Array.from({ length: points }, (_, i) => ({
       time: new Date(Date.now() - (points - i) * 60000).toISOString().substr(11, 5),
@@ -21,15 +21,15 @@ const AgencyAnalyticsDetail: React.FC = () => {
     }));
   };
 
-  const performanceData = generateTimeSeriesData(60, 85, 15);
-  const throughputData = generateTimeSeriesData(60, 1200, 300);
-  const connectionData = generateTimeSeriesData(60, 45, 10);
-  const cpuData = generateTimeSeriesData(60, 65, 20);
-  const memoryData = generateTimeSeriesData(60, 78, 12);
-  const networkData = generateTimeSeriesData(60, 150, 50);
-
-  const queryData = generateTimeSeriesData(60, 500, 200);
-  const cacheData = generateTimeSeriesData(60, 92, 8);
+  // Market analytics data
+  const revenueData = generateTimeSeriesData(60, 15000, 3000);
+  const impressionsData = generateTimeSeriesData(60, 450000, 80000);
+  const clicksData = generateTimeSeriesData(60, 8500, 1500);
+  const conversionsData = generateTimeSeriesData(60, 185, 35);
+  const costData = generateTimeSeriesData(60, 2800, 500);
+  const roasData = generateTimeSeriesData(60, 4.2, 0.8);
+  const cpmData = generateTimeSeriesData(60, 12.5, 2.5);
+  const ctrData = generateTimeSeriesData(60, 1.9, 0.4);
 
   const chartConfig = {
     value: {
@@ -84,18 +84,18 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* Performance Section */}
+      {/* Revenue & Performance Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-600">{t("agencyAnalytics.performance")}</CardTitle>
+          <CardTitle className="text-blue-600">Revenue & Campaign Performance</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.slowQueryRate")}</h4>
+              <h4 className="text-sm font-medium mb-3">Revenue ($)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={performanceData}>
+                  <LineChart data={revenueData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -112,10 +112,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
               </ChartContainer>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.queryRuntime")}</h4>
+              <h4 className="text-sm font-medium mb-3">Return on Ad Spend (ROAS)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={queryData}>
+                  <AreaChart data={roasData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -135,18 +135,18 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Throughput Section */}
+      {/* Audience & Engagement Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-600">{t("agencyAnalytics.throughput")}</CardTitle>
+          <CardTitle className="text-blue-600">Audience & Engagement</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.selectQueries")}</h4>
+              <h4 className="text-sm font-medium mb-3">Total Impressions</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={throughputData}>
+                  <LineChart data={impressionsData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -163,10 +163,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
               </ChartContainer>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.insertQueries")}</h4>
+              <h4 className="text-sm font-medium mb-3">Click-Through Rate (%)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={connectionData}>
+                  <AreaChart data={ctrData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -186,18 +186,18 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* System Resources Section */}
+      {/* Cost & Conversion Metrics */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-orange-600">{t("agencyAnalytics.systemResources")}</CardTitle>
+          <CardTitle className="text-orange-600">Cost & Conversion Metrics</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.cpuUsage")}</h4>
+              <h4 className="text-sm font-medium mb-3">Total Clicks</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={cpuData}>
+                  <BarChart data={clicksData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -208,10 +208,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
               </ChartContainer>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.systemMemory")}</h4>
+              <h4 className="text-sm font-medium mb-3">Conversion Count</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={memoryData}>
+                  <LineChart data={conversionsData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -228,10 +228,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
               </ChartContainer>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">{t("agencyAnalytics.networkTraffic")}</h4>
+              <h4 className="text-sm font-medium mb-3">Ad Spend ($)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={networkData}>
+                  <AreaChart data={costData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -251,16 +251,16 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Cache Section */}
+      {/* Efficiency Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-green-600">{t("agencyAnalytics.cacheUtilization")}</CardTitle>
+            <CardTitle className="text-green-600">Cost Per Mille (CPM)</CardTitle>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-48">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={cacheData}>
+                <LineChart data={cpmData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="time" />
                   <YAxis />
@@ -280,12 +280,12 @@ const AgencyAnalyticsDetail: React.FC = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle className="text-green-600">{t("agencyAnalytics.dataReadsWrites")}</CardTitle>
+            <CardTitle className="text-green-600">Market Share Trend</CardTitle>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-48">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={performanceData}>
+                <AreaChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="time" />
                   <YAxis />
