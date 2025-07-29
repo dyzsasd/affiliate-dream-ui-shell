@@ -23,6 +23,13 @@ const AgencyAnalyticsForm: React.FC = () => {
     refreshInterval: "60",
     status: "active",
     enableAlerts: true,
+    filters: {
+      advertiserOrganizations: isEditing ? ["org-1", "org-3"] : [],
+      campaigns: isEditing ? ["campaign-1", "campaign-2"] : [],
+      dateRange: "last_30_days",
+      regions: isEditing ? ["us", "uk"] : [],
+      channels: isEditing ? ["facebook", "google"] : []
+    },
     metrics: isEditing ? [
       { id: "1", name: "Revenue Tracking", selectedMetric: "Revenue Tracking", type: "line", enabled: true },
       { id: "2", name: "Conversion Rate", selectedMetric: "Conversion Rate", type: "area", enabled: true },
@@ -55,6 +62,70 @@ const AgencyAnalyticsForm: React.FC = () => {
     "Competitive Analysis",
     "Market Penetration"
   ];
+
+  // Mock data for filtering options
+  const availableAdvertiserOrganizations = [
+    { id: "org-1", name: "TechCorp Inc." },
+    { id: "org-2", name: "HealthPlus Solutions" },
+    { id: "org-3", name: "RetailMax Group" },
+    { id: "org-4", name: "FinanceFirst Ltd." },
+    { id: "org-5", name: "EduLearn Academy" }
+  ];
+
+  const availableCampaigns = [
+    { id: "campaign-1", name: "Summer Sale 2024", organizationId: "org-1" },
+    { id: "campaign-2", name: "Product Launch Q3", organizationId: "org-1" },
+    { id: "campaign-3", name: "Brand Awareness Drive", organizationId: "org-2" },
+    { id: "campaign-4", name: "Holiday Shopping", organizationId: "org-3" },
+    { id: "campaign-5", name: "Back to School", organizationId: "org-5" },
+    { id: "campaign-6", name: "Black Friday Special", organizationId: "org-3" }
+  ];
+
+  const availableRegions = [
+    { id: "us", name: "United States" },
+    { id: "uk", name: "United Kingdom" },
+    { id: "ca", name: "Canada" },
+    { id: "au", name: "Australia" },
+    { id: "de", name: "Germany" },
+    { id: "fr", name: "France" }
+  ];
+
+  const availableChannels = [
+    { id: "facebook", name: "Facebook Ads" },
+    { id: "google", name: "Google Ads" },
+    { id: "instagram", name: "Instagram" },
+    { id: "linkedin", name: "LinkedIn" },
+    { id: "twitter", name: "Twitter/X" },
+    { id: "tiktok", name: "TikTok" }
+  ];
+
+  const handleFilterChange = (filterType: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      filters: { ...prev.filters, [filterType]: value }
+    }));
+  };
+
+  const handleMultiSelectChange = (filterType: string, selectedValues: string[]) => {
+    setFormData(prev => ({
+      ...prev,
+      filters: { ...prev.filters, [filterType]: selectedValues }
+    }));
+  };
+
+  const toggleFilterValue = (filterType: string, value: string) => {
+    setFormData(prev => {
+      const currentValues = prev.filters[filterType] || [];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(v => v !== value)
+        : [...currentValues, value];
+      
+      return {
+        ...prev,
+        filters: { ...prev.filters, [filterType]: newValues }
+      };
+    });
+  };
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -184,6 +255,118 @@ const AgencyAnalyticsForm: React.FC = () => {
                   onCheckedChange={(checked) => handleInputChange("enableAlerts", checked)}
                 />
                 <Label htmlFor="enableAlerts">Enable Alerts</Label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Filters Configuration */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Filters</CardTitle>
+            <p className="text-sm text-muted-foreground">Configure which data should be included in your analytics dashboard</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Advertiser Organizations */}
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Advertiser Organizations</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {availableAdvertiserOrganizations.map((org) => (
+                  <div key={org.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`org-${org.id}`}
+                      checked={formData.filters.advertiserOrganizations.includes(org.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          toggleFilterValue("advertiserOrganizations", org.id);
+                        } else {
+                          toggleFilterValue("advertiserOrganizations", org.id);
+                        }
+                      }}
+                    />
+                    <Label htmlFor={`org-${org.id}`} className="text-sm font-normal cursor-pointer">
+                      {org.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Campaigns */}
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Campaigns</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {availableCampaigns.map((campaign) => (
+                  <div key={campaign.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`campaign-${campaign.id}`}
+                      checked={formData.filters.campaigns.includes(campaign.id)}
+                      onCheckedChange={() => toggleFilterValue("campaigns", campaign.id)}
+                    />
+                    <Label htmlFor={`campaign-${campaign.id}`} className="text-sm font-normal cursor-pointer">
+                      {campaign.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Date Range */}
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Date Range</Label>
+              <Select 
+                value={formData.filters.dateRange} 
+                onValueChange={(value) => handleFilterChange("dateRange", value)}
+              >
+                <SelectTrigger className="bg-background max-w-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-background border z-50">
+                  <SelectItem value="last_7_days">Last 7 days</SelectItem>
+                  <SelectItem value="last_30_days">Last 30 days</SelectItem>
+                  <SelectItem value="last_90_days">Last 90 days</SelectItem>
+                  <SelectItem value="last_6_months">Last 6 months</SelectItem>
+                  <SelectItem value="last_12_months">Last 12 months</SelectItem>
+                  <SelectItem value="custom">Custom range</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Geographic Regions */}
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Geographic Regions</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {availableRegions.map((region) => (
+                  <div key={region.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`region-${region.id}`}
+                      checked={formData.filters.regions.includes(region.id)}
+                      onCheckedChange={() => toggleFilterValue("regions", region.id)}
+                    />
+                    <Label htmlFor={`region-${region.id}`} className="text-sm font-normal cursor-pointer">
+                      {region.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Marketing Channels */}
+            <div>
+              <Label className="text-sm font-medium mb-3 block">Marketing Channels</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {availableChannels.map((channel) => (
+                  <div key={channel.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`channel-${channel.id}`}
+                      checked={formData.filters.channels.includes(channel.id)}
+                      onCheckedChange={() => toggleFilterValue("channels", channel.id)}
+                    />
+                    <Label htmlFor={`channel-${channel.id}`} className="text-sm font-normal cursor-pointer">
+                      {channel.name}
+                    </Label>
+                  </div>
+                ))}
               </div>
             </div>
           </CardContent>
