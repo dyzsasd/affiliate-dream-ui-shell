@@ -22,6 +22,7 @@ import enProfile from './locales/en/profile.json';
 import enFavoritePublishers from './locales/en/favoritePublishers.json';
 import enConversations from './locales/en/conversations.json';
 import enTrackingLinks from './locales/en/trackingLinks.json';
+import enAgencyDashboard from './locales/en/agencyDashboard.json';
 
 import frApp from './locales/fr/app.json';
 import frCommon from './locales/fr/common.json';
@@ -41,6 +42,7 @@ import frProfile from './locales/fr/profile.json';
 import frFavoritePublishers from './locales/fr/favoritePublishers.json';
 import frConversations from './locales/fr/conversations.json';
 import frTrackingLinks from './locales/fr/trackingLinks.json';
+import frAgencyDashboard from './locales/fr/agencyDashboard.json';
 
 import zhCNApp from './locales/zh-CN/app.json';
 import zhCNCommon from './locales/zh-CN/common.json';
@@ -60,6 +62,7 @@ import zhCNProfile from './locales/zh-CN/profile.json';
 import zhCNFavoritePublishers from './locales/zh-CN/favoritePublishers.json';
 import zhCNConversations from './locales/zh-CN/conversations.json';
 import zhCNTrackingLinks from './locales/zh-CN/trackingLinks.json';
+import zhCNAgencyDashboard from './locales/zh-CN/agencyDashboard.json';
 
 import zhTWApp from './locales/zh-TW/app.json';
 import zhTWCommon from './locales/zh-TW/common.json';
@@ -79,6 +82,7 @@ import zhTWProfile from './locales/zh-TW/profile.json';
 import zhTWFavoritePublishers from './locales/zh-TW/favoritePublishers.json';
 import zhTWConversations from './locales/zh-TW/conversations.json';
 import zhTWTrackingLinks from './locales/zh-TW/trackingLinks.json';
+import zhTWAgencyDashboard from './locales/zh-TW/agencyDashboard.json';
 
 // Combine all translations into legacy format for compatibility
 const enTranslation = {
@@ -99,7 +103,8 @@ const enTranslation = {
   profile: enProfile,
   favoritePublishers: enFavoritePublishers,
   conversations: enConversations,
-  trackingLinks: enTrackingLinks
+  trackingLinks: enTrackingLinks,
+  agencyDashboard: enAgencyDashboard
 };
 
 const frTranslation = {
@@ -120,7 +125,8 @@ const frTranslation = {
   profile: frProfile,
   favoritePublishers: frFavoritePublishers,
   conversations: frConversations,
-  trackingLinks: frTrackingLinks
+  trackingLinks: frTrackingLinks,
+  agencyDashboard: frAgencyDashboard
 };
 
 const zhCNTranslation = {
@@ -141,7 +147,8 @@ const zhCNTranslation = {
   profile: zhCNProfile,
   favoritePublishers: zhCNFavoritePublishers,
   conversations: zhCNConversations,
-  trackingLinks: zhCNTrackingLinks
+  trackingLinks: zhCNTrackingLinks,
+  agencyDashboard: zhCNAgencyDashboard
 };
 
 const zhTWTranslation = {
@@ -162,7 +169,8 @@ const zhTWTranslation = {
   profile: zhTWProfile,
   favoritePublishers: zhTWFavoritePublishers,
   conversations: zhTWConversations,
-  trackingLinks: zhTWTrackingLinks
+  trackingLinks: zhTWTrackingLinks,
+  agencyDashboard: zhTWAgencyDashboard
 };
 
 // Language resources
