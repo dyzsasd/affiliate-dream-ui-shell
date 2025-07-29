@@ -114,6 +114,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: Activity
       },
       {
+        name: "Agency Campaigns",
+        path: "/agency-campaigns",
+        icon: LayoutDashboard
+      },
+      {
         name: t("sidebar.marketplace"),
         path: "/advertiser/marketplace",
         icon: Store

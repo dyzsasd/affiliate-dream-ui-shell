@@ -40,6 +40,7 @@ import ConversationsList from "@/pages/conversations";
 // Import the component directly with a different syntax to ensure it loads
 import ConversationDetail from "./pages/conversations/ConversationDetail";
 import AgencyAnalyticsRoutes from "@/pages/agency-analytics";
+import AgencyCampaignsRoutes from "@/pages/agency-campaigns";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -95,6 +96,9 @@ function App() {
                 
                 {/* Agency Analytics routes */}
                 <Route path="/agency-analytics/*" element={<AgencyAnalyticsRoutes />} />
+                
+                {/* Agency Campaigns routes */}
+                <Route path="/agency-campaigns/*" element={<AgencyCampaignsRoutes />} />
                 
                 {/* Tracking routes */}
                 <Route path="/tracking-links" element={<TrackingLinkGenerator />} />
