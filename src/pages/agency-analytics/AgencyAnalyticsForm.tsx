@@ -26,7 +26,6 @@ const AgencyAnalyticsForm: React.FC = () => {
     filters: {
       advertiserOrganizations: isEditing ? ["org-1", "org-3"] : [],
       campaigns: isEditing ? ["campaign-1", "campaign-2"] : [],
-      dateRange: "last_30_days",
       regions: isEditing ? ["us", "uk"] : [],
       channels: isEditing ? ["facebook", "google"] : []
     },
@@ -270,64 +269,39 @@ const AgencyAnalyticsForm: React.FC = () => {
             {/* Advertiser Organizations */}
             <div>
               <Label className="text-sm font-medium mb-3 block">Advertiser Organizations</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {availableAdvertiserOrganizations.map((org) => (
-                  <div key={org.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`org-${org.id}`}
-                      checked={formData.filters.advertiserOrganizations.includes(org.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          toggleFilterValue("advertiserOrganizations", org.id);
-                        } else {
-                          toggleFilterValue("advertiserOrganizations", org.id);
-                        }
-                      }}
-                    />
-                    <Label htmlFor={`org-${org.id}`} className="text-sm font-normal cursor-pointer">
+              <Select
+                value={formData.filters.advertiserOrganizations[0] || ""}
+                onValueChange={(value) => handleMultiSelectChange("advertiserOrganizations", value ? [value] : [])}
+              >
+                <SelectTrigger className="bg-background max-w-xs">
+                  <SelectValue placeholder="Select organization" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border z-50">
+                  {availableAdvertiserOrganizations.map((org) => (
+                    <SelectItem key={org.id} value={org.id}>
                       {org.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Campaigns */}
             <div>
               <Label className="text-sm font-medium mb-3 block">Campaigns</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {availableCampaigns.map((campaign) => (
-                  <div key={campaign.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`campaign-${campaign.id}`}
-                      checked={formData.filters.campaigns.includes(campaign.id)}
-                      onCheckedChange={() => toggleFilterValue("campaigns", campaign.id)}
-                    />
-                    <Label htmlFor={`campaign-${campaign.id}`} className="text-sm font-normal cursor-pointer">
-                      {campaign.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Date Range */}
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Date Range</Label>
-              <Select 
-                value={formData.filters.dateRange} 
-                onValueChange={(value) => handleFilterChange("dateRange", value)}
+              <Select
+                value={formData.filters.campaigns[0] || ""}
+                onValueChange={(value) => handleMultiSelectChange("campaigns", value ? [value] : [])}
               >
                 <SelectTrigger className="bg-background max-w-xs">
-                  <SelectValue />
+                  <SelectValue placeholder="Select campaign" />
                 </SelectTrigger>
                 <SelectContent className="bg-background border z-50">
-                  <SelectItem value="last_7_days">Last 7 days</SelectItem>
-                  <SelectItem value="last_30_days">Last 30 days</SelectItem>
-                  <SelectItem value="last_90_days">Last 90 days</SelectItem>
-                  <SelectItem value="last_6_months">Last 6 months</SelectItem>
-                  <SelectItem value="last_12_months">Last 12 months</SelectItem>
-                  <SelectItem value="custom">Custom range</SelectItem>
+                  {availableCampaigns.map((campaign) => (
+                    <SelectItem key={campaign.id} value={campaign.id}>
+                      {campaign.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -335,39 +309,41 @@ const AgencyAnalyticsForm: React.FC = () => {
             {/* Geographic Regions */}
             <div>
               <Label className="text-sm font-medium mb-3 block">Geographic Regions</Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {availableRegions.map((region) => (
-                  <div key={region.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`region-${region.id}`}
-                      checked={formData.filters.regions.includes(region.id)}
-                      onCheckedChange={() => toggleFilterValue("regions", region.id)}
-                    />
-                    <Label htmlFor={`region-${region.id}`} className="text-sm font-normal cursor-pointer">
+              <Select
+                value={formData.filters.regions[0] || ""}
+                onValueChange={(value) => handleMultiSelectChange("regions", value ? [value] : [])}
+              >
+                <SelectTrigger className="bg-background max-w-xs">
+                  <SelectValue placeholder="Select region" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border z-50">
+                  {availableRegions.map((region) => (
+                    <SelectItem key={region.id} value={region.id}>
                       {region.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Marketing Channels */}
             <div>
               <Label className="text-sm font-medium mb-3 block">Marketing Channels</Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {availableChannels.map((channel) => (
-                  <div key={channel.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`channel-${channel.id}`}
-                      checked={formData.filters.channels.includes(channel.id)}
-                      onCheckedChange={() => toggleFilterValue("channels", channel.id)}
-                    />
-                    <Label htmlFor={`channel-${channel.id}`} className="text-sm font-normal cursor-pointer">
+              <Select
+                value={formData.filters.channels[0] || ""}
+                onValueChange={(value) => handleMultiSelectChange("channels", value ? [value] : [])}
+              >
+                <SelectTrigger className="bg-background max-w-xs">
+                  <SelectValue placeholder="Select channel" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border z-50">
+                  {availableChannels.map((channel) => (
+                    <SelectItem key={channel.id} value={channel.id}>
                       {channel.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
