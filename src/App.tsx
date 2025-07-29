@@ -39,6 +39,7 @@ import CreateFavoritePublisherList from "@/pages/favorite-publishers/CreateFavor
 import ConversationsList from "@/pages/conversations";
 // Import the component directly with a different syntax to ensure it loads
 import ConversationDetail from "./pages/conversations/ConversationDetail";
+import AgencyAnalyticsRoutes from "@/pages/agency-analytics";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -91,6 +92,9 @@ function App() {
                 <Route path="/analytics/advertiser/:advertiserId/all_partners" element={<AllPartnersPage />} />
             <Route path="/analytics/advertiser/:advertiserId/new_partners" element={<NewPartnersPage />} />
             <Route path="/analytics/advertiser/:advertiserId/lost_partners" element={<LostPartnersPage />} />
+                
+                {/* Agency Analytics routes */}
+                <Route path="/agency-analytics/*" element={<AgencyAnalyticsRoutes />} />
                 
                 {/* Tracking routes */}
                 <Route path="/tracking-links" element={<TrackingLinkGenerator />} />

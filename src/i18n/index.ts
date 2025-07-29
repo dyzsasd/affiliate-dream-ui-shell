@@ -23,6 +23,7 @@ import enFavoritePublishers from './locales/en/favoritePublishers.json';
 import enConversations from './locales/en/conversations.json';
 import enTrackingLinks from './locales/en/trackingLinks.json';
 import enAgencyDashboard from './locales/en/agencyDashboard.json';
+import enAgencyAnalytics from './locales/en/agencyAnalytics.json';
 
 import frApp from './locales/fr/app.json';
 import frCommon from './locales/fr/common.json';
@@ -43,6 +44,7 @@ import frFavoritePublishers from './locales/fr/favoritePublishers.json';
 import frConversations from './locales/fr/conversations.json';
 import frTrackingLinks from './locales/fr/trackingLinks.json';
 import frAgencyDashboard from './locales/fr/agencyDashboard.json';
+import frAgencyAnalytics from './locales/fr/agencyAnalytics.json';
 
 import zhCNApp from './locales/zh-CN/app.json';
 import zhCNCommon from './locales/zh-CN/common.json';
@@ -63,6 +65,7 @@ import zhCNFavoritePublishers from './locales/zh-CN/favoritePublishers.json';
 import zhCNConversations from './locales/zh-CN/conversations.json';
 import zhCNTrackingLinks from './locales/zh-CN/trackingLinks.json';
 import zhCNAgencyDashboard from './locales/zh-CN/agencyDashboard.json';
+import zhCNAgencyAnalytics from './locales/zh-CN/agencyAnalytics.json';
 
 import zhTWApp from './locales/zh-TW/app.json';
 import zhTWCommon from './locales/zh-TW/common.json';
@@ -83,6 +86,7 @@ import zhTWFavoritePublishers from './locales/zh-TW/favoritePublishers.json';
 import zhTWConversations from './locales/zh-TW/conversations.json';
 import zhTWTrackingLinks from './locales/zh-TW/trackingLinks.json';
 import zhTWAgencyDashboard from './locales/zh-TW/agencyDashboard.json';
+import zhTWAgencyAnalytics from './locales/zh-TW/agencyAnalytics.json';
 
 // Combine all translations into legacy format for compatibility
 const enTranslation = {
@@ -104,7 +108,8 @@ const enTranslation = {
   favoritePublishers: enFavoritePublishers,
   conversations: enConversations,
   trackingLinks: enTrackingLinks,
-  agencyDashboard: enAgencyDashboard
+  agencyDashboard: enAgencyDashboard,
+  agencyAnalytics: enAgencyAnalytics
 };
 
 const frTranslation = {
@@ -126,7 +131,8 @@ const frTranslation = {
   favoritePublishers: frFavoritePublishers,
   conversations: frConversations,
   trackingLinks: frTrackingLinks,
-  agencyDashboard: frAgencyDashboard
+  agencyDashboard: frAgencyDashboard,
+  agencyAnalytics: frAgencyAnalytics
 };
 
 const zhCNTranslation = {
@@ -148,7 +154,8 @@ const zhCNTranslation = {
   favoritePublishers: zhCNFavoritePublishers,
   conversations: zhCNConversations,
   trackingLinks: zhCNTrackingLinks,
-  agencyDashboard: zhCNAgencyDashboard
+  agencyDashboard: zhCNAgencyDashboard,
+  agencyAnalytics: zhCNAgencyAnalytics
 };
 
 const zhTWTranslation = {
@@ -170,7 +177,8 @@ const zhTWTranslation = {
   favoritePublishers: zhTWFavoritePublishers,
   conversations: zhTWConversations,
   trackingLinks: zhTWTrackingLinks,
-  agencyDashboard: zhTWAgencyDashboard
+  agencyDashboard: zhTWAgencyDashboard,
+  agencyAnalytics: zhTWAgencyAnalytics
 };
 
 // Language resources

@@ -12,7 +12,8 @@ import {
   Users,
   CreditCard,
   Heart,
-  MessageCircle
+  MessageCircle,
+  Activity
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -97,6 +98,40 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.conversions"),
         path: "/reporting/conversions",
         icon: PieChart
+      },
+      {
+        name: t("sidebar.myProfile"),
+        path: "/profile",
+        icon: User
+      }
+    ];
+  } else if (organizationType === 'agency') {
+    return [
+      ...baseItems,
+      {
+        name: t("agencyAnalytics.title"),
+        path: "/agency-analytics",
+        icon: Activity
+      },
+      {
+        name: t("sidebar.analytics"),
+        path: "/analytics/advertiser",
+        icon: TrendingUp
+      },
+      {
+        name: t("sidebar.conversations"),
+        path: "/conversations",
+        icon: MessageCircle
+      },
+      {
+        name: t("sidebar.organizations"),
+        path: "/organizations",
+        icon: Building2
+      },
+      {
+        name: t("sidebar.billing"),
+        path: "/billing",
+        icon: CreditCard
       },
       {
         name: t("sidebar.myProfile"),
