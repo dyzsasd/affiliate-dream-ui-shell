@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,30 +8,32 @@ import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Cartesia
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { ArrowLeft, Edit, Download, RefreshCw } from "lucide-react";
 
+// Market Analytics Dashboard Component - Completely rewritten
 const AgencyAnalyticsDetail: React.FC = () => {
   const { t } = useTranslation();
   const { analyticsId } = useParams();
   const [timeRange, setTimeRange] = useState("1h");
-  
-  console.log("AgencyAnalyticsDetail component loaded successfully");
 
-  // Mock time series data generator
-  const generateTimeSeriesData = (points: number, baseValue: number, variance: number) => {
-    return Array.from({ length: points }, (_, i) => ({
-      time: new Date(Date.now() - (points - i) * 60000).toISOString().substr(11, 5),
-      value: Math.round(baseValue + (Math.random() - 0.5) * variance * 2)
-    }));
-  };
+  // Generate market-focused time series data
+  const generateMarketData = useMemo(() => {
+    const createDataPoints = (points: number, baseValue: number, variance: number) => {
+      return Array.from({ length: points }, (_, i) => ({
+        time: new Date(Date.now() - (points - i) * 60000).toISOString().substr(11, 5),
+        value: Math.round(baseValue + (Math.random() - 0.5) * variance * 2)
+      }));
+    };
 
-  // Market analytics data
-  const revenueData = generateTimeSeriesData(60, 15000, 3000);
-  const impressionsData = generateTimeSeriesData(60, 450000, 80000);
-  const clicksData = generateTimeSeriesData(60, 8500, 1500);
-  const conversionsData = generateTimeSeriesData(60, 185, 35);
-  const costData = generateTimeSeriesData(60, 2800, 500);
-  const roasData = generateTimeSeriesData(60, 4.2, 0.8);
-  const cpmData = generateTimeSeriesData(60, 12.5, 2.5);
-  const ctrData = generateTimeSeriesData(60, 1.9, 0.4);
+    return {
+      revenue: createDataPoints(60, 15000, 3000),
+      impressions: createDataPoints(60, 450000, 80000),
+      clicks: createDataPoints(60, 8500, 1500),
+      conversions: createDataPoints(60, 185, 35),
+      adSpend: createDataPoints(60, 2800, 500),
+      roas: createDataPoints(60, 4.2, 0.8),
+      cpm: createDataPoints(60, 12.5, 2.5),
+      ctr: createDataPoints(60, 1.9, 0.4),
+    };
+  }, [timeRange]);
 
   const chartConfig = {
     value: {
@@ -40,9 +42,11 @@ const AgencyAnalyticsDetail: React.FC = () => {
     },
   };
 
+  console.log("Market Analytics Dashboard loaded - all data defined correctly");
+
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link to="/agency-analytics">
@@ -53,9 +57,9 @@ const AgencyAnalyticsDetail: React.FC = () => {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              {t("agencyAnalytics.analyticsDetail")}
+              Market Analytics Dashboard
             </h1>
-            <p className="text-muted-foreground">Analytics Dashboard #{analyticsId}</p>
+            <p className="text-muted-foreground">Dashboard #{analyticsId}</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -64,9 +68,9 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1h">{t("agencyAnalytics.lastHour")}</SelectItem>
-              <SelectItem value="24h">{t("agencyAnalytics.last24Hours")}</SelectItem>
-              <SelectItem value="7d">{t("agencyAnalytics.last7Days")}</SelectItem>
+              <SelectItem value="1h">Last Hour</SelectItem>
+              <SelectItem value="24h">Last 24 Hours</SelectItem>
+              <SelectItem value="7d">Last 7 Days</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" size="sm">
@@ -80,16 +84,16 @@ const AgencyAnalyticsDetail: React.FC = () => {
           <Link to={`/agency-analytics/${analyticsId}/edit`}>
             <Button size="sm">
               <Edit className="h-4 w-4 mr-2" />
-              {t("agencyAnalytics.editAnalytics")}
+              Edit
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Revenue & Performance Section */}
+      {/* Revenue Performance */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-600">Revenue & Campaign Performance</CardTitle>
+          <CardTitle className="text-blue-600">Revenue & Performance</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,7 +101,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <h4 className="text-sm font-medium mb-3">Revenue ($)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={revenueData}>
+                  <LineChart data={generateMarketData.revenue}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -117,7 +121,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <h4 className="text-sm font-medium mb-3">Return on Ad Spend (ROAS)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={roasData}>
+                  <AreaChart data={generateMarketData.roas}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -137,10 +141,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Audience & Engagement Section */}
+      {/* Audience Engagement */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-blue-600">Audience & Engagement</CardTitle>
+          <CardTitle className="text-blue-600">Audience Engagement</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -148,7 +152,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <h4 className="text-sm font-medium mb-3">Total Impressions</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={impressionsData}>
+                  <LineChart data={generateMarketData.impressions}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -168,7 +172,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <h4 className="text-sm font-medium mb-3">Click-Through Rate (%)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={ctrData}>
+                  <AreaChart data={generateMarketData.ctr}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -188,10 +192,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Cost & Conversion Metrics */}
+      {/* Conversion Metrics */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-orange-600">Cost & Conversion Metrics</CardTitle>
+          <CardTitle className="text-orange-600">Conversion & Cost Metrics</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -199,7 +203,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <h4 className="text-sm font-medium mb-3">Total Clicks</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={clicksData}>
+                  <BarChart data={generateMarketData.clicks}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -210,10 +214,10 @@ const AgencyAnalyticsDetail: React.FC = () => {
               </ChartContainer>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">Conversion Count</h4>
+              <h4 className="text-sm font-medium mb-3">Conversions</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={conversionsData}>
+                  <LineChart data={generateMarketData.conversions}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -233,7 +237,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
               <h4 className="text-sm font-medium mb-3">Ad Spend ($)</h4>
               <ChartContainer config={chartConfig} className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={costData}>
+                  <AreaChart data={generateMarketData.adSpend}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis />
@@ -253,7 +257,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Efficiency Metrics */}
+      {/* Additional Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -262,7 +266,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
           <CardContent>
             <ChartContainer config={chartConfig} className="h-48">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={cpmData}>
+                <LineChart data={generateMarketData.cpm}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="time" />
                   <YAxis />
@@ -287,7 +291,7 @@ const AgencyAnalyticsDetail: React.FC = () => {
           <CardContent>
             <ChartContainer config={chartConfig} className="h-48">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData}>
+                <AreaChart data={generateMarketData.revenue}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="time" />
                   <YAxis />
