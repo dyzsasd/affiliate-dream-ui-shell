@@ -103,7 +103,7 @@ const mockCampaigns: CampaignStats[] = [
 ];
 
 const AgencyDashboard: React.FC = () => {
-  const { t } = useTranslation("agencyDashboard");
+  const { t } = useTranslation();
   
   const [selectedAdvertisers, setSelectedAdvertisers] = useState<number[]>([]);
   const [dateRange, setDateRange] = useState<'7days' | '30days' | 'custom'>('7days');
@@ -166,7 +166,7 @@ const AgencyDashboard: React.FC = () => {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-foreground">{t("agencyDashboard")}</h1>
+        <h1 className="text-3xl font-bold text-foreground">{t("agencyDashboard.agencyDashboard")}</h1>
       </div>
 
       {/* Filters */}
@@ -174,7 +174,7 @@ const AgencyDashboard: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FilterIcon className="w-5 h-5" />
-            {t("filters")}
+            {t("agencyDashboard.filters")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -182,15 +182,15 @@ const AgencyDashboard: React.FC = () => {
             {/* Advertiser Organizations Filter */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">
-                {t("advertiserOrganizations")}
+                {t("agencyDashboard.advertiserOrganizations")}
               </label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
                     {selectedAdvertisers.length === 0 
-                      ? t("selectAdvertisers")
+                      ? t("agencyDashboard.selectAdvertisers")
                       : selectedAdvertisers.length === mockAdvertiserOrgs.length
-                        ? t("allAdvertisers")
+                        ? t("agencyDashboard.allAdvertisers")
                         : `${selectedAdvertisers.length} selected`
                     }
                   </Button>
@@ -204,7 +204,7 @@ const AgencyDashboard: React.FC = () => {
                         onCheckedChange={handleSelectAllAdvertisers}
                       />
                       <label htmlFor="select-all" className="text-sm font-medium">
-                        {t("allAdvertisers")}
+                        {t("agencyDashboard.allAdvertisers")}
                       </label>
                     </div>
                     {mockAdvertiserOrgs.map((org) => (
@@ -227,7 +227,7 @@ const AgencyDashboard: React.FC = () => {
             {/* Date Range Filter */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">
-                {t("dateRange")}
+                {t("agencyDashboard.dateRange")}
               </label>
               <div className="flex gap-2">
                 <Button
@@ -235,14 +235,14 @@ const AgencyDashboard: React.FC = () => {
                   size="sm"
                   onClick={() => setDateRange('7days')}
                 >
-                  {t("last7Days")}
+                  {t("agencyDashboard.last7Days")}
                 </Button>
                 <Button
                   variant={dateRange === '30days' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setDateRange('30days')}
                 >
-                  {t("last30Days")}
+                  {t("agencyDashboard.last30Days")}
                 </Button>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -251,7 +251,7 @@ const AgencyDashboard: React.FC = () => {
                       size="sm"
                     >
                       <CalendarIcon className="w-4 h-4 mr-2" />
-                      {t("customRange")}
+                      {t("agencyDashboard.customRange")}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -280,12 +280,12 @@ const AgencyDashboard: React.FC = () => {
 
       {/* Performance Stats */}
       <div>
-        <h2 className="text-xl font-semibold text-foreground mb-4">{t("performanceOverview")}</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("agencyDashboard.performanceOverview")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("totalConversions")}
+                {t("agencyDashboard.totalConversions")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -298,7 +298,7 @@ const AgencyDashboard: React.FC = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("totalClicks")}
+                {t("agencyDashboard.totalClicks")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -311,7 +311,7 @@ const AgencyDashboard: React.FC = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("conversionsPerDay")}
+                {t("agencyDashboard.conversionsPerDay")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -324,7 +324,7 @@ const AgencyDashboard: React.FC = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("clicksPerDay")}
+                {t("agencyDashboard.clicksPerDay")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -337,7 +337,7 @@ const AgencyDashboard: React.FC = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("totalEarnings")}
+                {t("agencyDashboard.totalEarnings")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -352,23 +352,23 @@ const AgencyDashboard: React.FC = () => {
       {/* Campaigns Table */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("campaignsOverview")}</CardTitle>
+          <CardTitle>{t("agencyDashboard.campaignsOverview")}</CardTitle>
         </CardHeader>
         <CardContent>
           {filteredCampaigns.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              {t("noCampaigns")}
+              {t("agencyDashboard.noCampaigns")}
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t("campaignName")}</TableHead>
-                  <TableHead>{t("advertiserOrgId")}</TableHead>
-                  <TableHead>{t("status")}</TableHead>
-                  <TableHead className="text-right">{t("clicks")}</TableHead>
-                  <TableHead className="text-right">{t("conversions")}</TableHead>
-                  <TableHead className="text-right">{t("totalCost")}</TableHead>
+                  <TableHead>{t("agencyDashboard.campaignName")}</TableHead>
+                  <TableHead>{t("agencyDashboard.advertiserOrgId")}</TableHead>
+                  <TableHead>{t("agencyDashboard.status")}</TableHead>
+                  <TableHead className="text-right">{t("agencyDashboard.clicks")}</TableHead>
+                  <TableHead className="text-right">{t("agencyDashboard.conversions")}</TableHead>
+                  <TableHead className="text-right">{t("agencyDashboard.totalCost")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -380,7 +380,7 @@ const AgencyDashboard: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Badge variant={getStatusBadgeVariant(campaign.status)}>
-                        {t(campaign.status)}
+                        {t(`agencyDashboard.${campaign.status}`)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">{campaign.clicks.toLocaleString()}</TableCell>
