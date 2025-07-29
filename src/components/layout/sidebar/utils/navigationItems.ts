@@ -124,11 +124,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: MessageCircle
       },
       {
-        name: t("sidebar.organizations"),
-        path: "/organizations",
-        icon: Building2
-      },
-      {
         name: t("sidebar.billing"),
         path: "/billing",
         icon: CreditCard
