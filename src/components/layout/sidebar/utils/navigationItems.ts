@@ -129,6 +129,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: TrendingUp
       },
       {
+        name: t("sidebar.favoritePublishers"),
+        path: "/favorite_publisher",
+        icon: Heart
+      },
+      {
         name: t("sidebar.conversations"),
         path: "/conversations",
         icon: MessageCircle
