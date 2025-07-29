@@ -12,6 +12,8 @@ const AgencyAnalyticsDetail: React.FC = () => {
   const { t } = useTranslation();
   const { analyticsId } = useParams();
   const [timeRange, setTimeRange] = useState("1h");
+  
+  console.log("AgencyAnalyticsDetail component loaded successfully");
 
   // Mock time series data generator
   const generateTimeSeriesData = (points: number, baseValue: number, variance: number) => {
