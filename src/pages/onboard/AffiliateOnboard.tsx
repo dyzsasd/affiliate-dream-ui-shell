@@ -37,18 +37,8 @@ export const AffiliateOnboard: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Create organization
-      const organizationsApi = await createApiClient(OrganizationsApi);
-      const createOrgRequest: HandlersCreateOrganizationRequest = {
-        name: data.domain,
-        type: 'affiliate'
-      };
-      
-      const organization = await organizationsApi.organizationsPost({
-        request: createOrgRequest
-      });
-
-      // Send invitation email with encrypted token
+      // Send invitation email directly without creating organization first
+      // The organization will be created when the user accepts the invitation
       const response = await fetch('https://plhilkfckdgcdewulspe.supabase.co/functions/v1/send-invitation', {
         method: 'POST',
         headers: {
@@ -56,8 +46,8 @@ export const AffiliateOnboard: React.FC = () => {
         },
         body: JSON.stringify({
           email: data.email,
-          organizationId: organization.organizationId,
-          organizationName: organization.name,
+          organizationName: data.domain,
+          organizationType: 'affiliate',
         }),
       });
 
@@ -67,12 +57,12 @@ export const AffiliateOnboard: React.FC = () => {
 
       setIsSuccess(true);
       toast({
-        title: "Organization created successfully",
-        description: `We've sent an invitation email to ${data.email}. Please check your inbox to complete the registration.`,
+        title: "Invitation sent successfully",
+        description: `We've sent an invitation email to ${data.email}. Please check your inbox to complete the registration and create your organization.`,
       });
     } catch (error: any) {
       toast({
-        title: "Error creating organization",
+        title: "Error sending invitation",
         description: error.message || "Please try again.",
         variant: "destructive",
       });
