@@ -55,7 +55,8 @@ export const HandlersAffiliateExtraInfoRequestAffiliateTypeEnum = {
     Incentive: 'incentive',
     Content: 'content',
     Forum: 'forum',
-    SubAffiliateNetwork: 'sub_affiliate_network'
+    SubAffiliateNetwork: 'sub_affiliate_network',
+    Other: 'other'
 } as const;
 export type HandlersAffiliateExtraInfoRequestAffiliateTypeEnum = typeof HandlersAffiliateExtraInfoRequestAffiliateTypeEnum[keyof typeof HandlersAffiliateExtraInfoRequestAffiliateTypeEnum];
 

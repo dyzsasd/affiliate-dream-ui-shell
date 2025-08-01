@@ -1436,6 +1436,14 @@ definitions:
     type: object
   handlers.AdvertiserExtraInfoRequest:
     properties:
+      company_size:
+        enum:
+        - startup
+        - small
+        - medium
+        - large
+        - enterprise
+        type: string
       website:
         type: string
       website_type:
@@ -1444,6 +1452,7 @@ definitions:
         - amazon
         - shopline
         - tiktok_shop
+        - other
         type: string
     type: object
   handlers.AffiliateExtraInfoRequest:
@@ -1456,6 +1465,7 @@ definitions:
         - content
         - forum
         - sub_affiliate_network
+        - other
         type: string
       logo_url:
         type: string

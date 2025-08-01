@@ -24,6 +24,12 @@ export interface HandlersAdvertiserExtraInfoRequest {
      * @type {string}
      * @memberof HandlersAdvertiserExtraInfoRequest
      */
+    companySize?: HandlersAdvertiserExtraInfoRequestCompanySizeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof HandlersAdvertiserExtraInfoRequest
+     */
     website?: string;
     /**
      * 
@@ -37,11 +43,24 @@ export interface HandlersAdvertiserExtraInfoRequest {
 /**
  * @export
  */
+export const HandlersAdvertiserExtraInfoRequestCompanySizeEnum = {
+    Startup: 'startup',
+    Small: 'small',
+    Medium: 'medium',
+    Large: 'large',
+    Enterprise: 'enterprise'
+} as const;
+export type HandlersAdvertiserExtraInfoRequestCompanySizeEnum = typeof HandlersAdvertiserExtraInfoRequestCompanySizeEnum[keyof typeof HandlersAdvertiserExtraInfoRequestCompanySizeEnum];
+
+/**
+ * @export
+ */
 export const HandlersAdvertiserExtraInfoRequestWebsiteTypeEnum = {
     Shopify: 'shopify',
     Amazon: 'amazon',
     Shopline: 'shopline',
-    TiktokShop: 'tiktok_shop'
+    TiktokShop: 'tiktok_shop',
+    Other: 'other'
 } as const;
 export type HandlersAdvertiserExtraInfoRequestWebsiteTypeEnum = typeof HandlersAdvertiserExtraInfoRequestWebsiteTypeEnum[keyof typeof HandlersAdvertiserExtraInfoRequestWebsiteTypeEnum];
 
@@ -63,6 +82,7 @@ export function HandlersAdvertiserExtraInfoRequestFromJSONTyped(json: any, ignor
     }
     return {
         
+        'companySize': json['company_size'] == null ? undefined : json['company_size'],
         'website': json['website'] == null ? undefined : json['website'],
         'websiteType': json['website_type'] == null ? undefined : json['website_type'],
     };
@@ -79,6 +99,7 @@ export function HandlersAdvertiserExtraInfoRequestToJSONTyped(value?: HandlersAd
 
     return {
         
+        'company_size': value['companySize'],
         'website': value['website'],
         'website_type': value['websiteType'],
     };
