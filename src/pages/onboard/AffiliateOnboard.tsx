@@ -29,7 +29,7 @@ type OnboardFormData = z.infer<typeof onboardSchema>;
 
 export const AffiliateOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
+  const { user, fetchBackendProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -80,6 +80,9 @@ export const AffiliateOnboard: React.FC = () => {
           }
         });
       }
+
+      // Refresh the profile to update auth context
+      await fetchBackendProfile();
 
       toast({
         title: "Organization created successfully",

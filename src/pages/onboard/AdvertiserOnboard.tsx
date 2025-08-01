@@ -37,7 +37,7 @@ type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 
 export const AdvertiserOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
+  const { user, fetchBackendProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -101,6 +101,9 @@ export const AdvertiserOnboard: React.FC = () => {
           }
         });
       }
+
+      // Refresh the profile to update auth context
+      await fetchBackendProfile();
 
       toast({
         title: t('organizations.organizationCreated'),
