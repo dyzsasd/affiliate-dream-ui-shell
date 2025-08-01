@@ -19,7 +19,6 @@ import { ArrowLeft, Building2, Mail } from 'lucide-react';
 
 const onboardSchema = z.object({
   domain: z.string().min(1, 'Domain is required').regex(/^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.[a-zA-Z]{2,}$/, 'Please enter a valid domain'),
-  email: z.string().email('Please enter a valid email address'),
   affiliateType: z.string().min(1, 'Please select an affiliate type'),
   website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
   selfDescription: z.string().min(10, 'Please provide at least 10 characters description'),
@@ -60,7 +59,7 @@ export const AffiliateOnboard: React.FC = () => {
       const createOrgRequest: HandlersCreateOrganizationRequest = {
         name: data.domain,
         type: 'affiliate',
-        contactEmail: data.email,
+        contactEmail: user?.email || '',
         affiliateExtraInfo: affiliateExtraInfo
       };
       
@@ -130,23 +129,6 @@ export const AffiliateOnboard: React.FC = () => {
               )}
               <p className="text-xs text-muted-foreground">
                 This will be used as your organization name
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                {...register('email')}
-                className={errors.email ? "border-destructive" : ""}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
-              )}
-              <p className="text-xs text-muted-foreground">
-                We'll send an invitation to this email
               </p>
             </div>
 
