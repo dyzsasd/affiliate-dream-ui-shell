@@ -44,7 +44,7 @@ export const AffiliateOnboard: React.FC = () => {
         type: 'affiliate'
       };
       
-      const organization = await organizationsApi.organizationsPost({
+      const organization = await organizationsApi.apiV1OrganizationsPost({
         request: createOrgRequest
       });
 
