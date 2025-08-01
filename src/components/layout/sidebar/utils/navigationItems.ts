@@ -80,6 +80,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: "Organization Settings",
         path: "/organization/edit",
         icon: Settings
+      },
+      {
+        name: "Affiliate Associations",
+        path: "/associations",
+        icon: Users
       }
     ];
   } else if (organizationType === 'affiliate') {

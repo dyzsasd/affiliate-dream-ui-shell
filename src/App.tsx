@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -30,6 +29,8 @@ import LostPartnersPage from "@/pages/analytics/LostPartnersPage";
 import InvitationManagement from "@/pages/invitations";
 import OrganizationList from "@/pages/organizations";
 import OrganizationEdit from "@/pages/organization/OrganizationEdit";
+import AssociationsManagement from "@/pages/associations/AssociationsManagement";
+import AffiliateDetails from "@/pages/associations/AffiliateDetails";
 import UserList from "@/pages/users";
 import CreateAffiliateAccount from "@/pages/affiliate/CreateAffiliateAccount";
 import MarketplacePage from "@/pages/marketplace";
@@ -141,7 +142,9 @@ function App() {
                 {/* Other routes */}
                 <Route path="/invitations" element={<InvitationManagement />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/organization/edit" element={<OrganizationEdit />} />
+          <Route path="/organization/edit" element={<OrganizationEdit />} />
+          <Route path="/associations" element={<AssociationsManagement />} />
+          <Route path="/affiliates/:affiliateOrgId/details" element={<AffiliateDetails />} />
               </Route>
               
               {/* 404 route */}
