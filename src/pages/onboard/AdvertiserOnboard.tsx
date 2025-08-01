@@ -17,11 +17,15 @@ import { HandlersCreateOrganizationRequest, HandlersAdvertiserExtraInfoRequest }
 import { createPublicApiClient, createApiClient } from '@/services/backendApi';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Target } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const advertiserSchema = z.object({
   organizationName: z.string().min(1, 'Organization name is required'),
   description: z.string().optional(),
   website: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  websiteType: z.enum(['shopify', 'amazon', 'shopline', 'tiktok_shop'], {
+    required_error: 'Please select a website type',
+  }),
   industry: z.string().min(1, 'Industry is required'),
   companySize: z.string().min(1, 'Company size is required'),
   contactEmail: z.string().email('Please enter a valid email'),
@@ -42,6 +46,7 @@ export const AdvertiserOnboard: React.FC = () => {
       organizationName: '',
       description: '',
       website: '',
+      websiteType: 'shopify' as const,
       industry: '',
       companySize: '',
       contactEmail: user?.email || '',
@@ -65,7 +70,7 @@ export const AdvertiserOnboard: React.FC = () => {
       
       const advertiserExtraInfo: HandlersAdvertiserExtraInfoRequest = {
         website: data.website || undefined,
-        websiteType: 'shopify' as any, // Default to shopify for now
+        websiteType: data.websiteType as any,
       };
 
       const createRequest: HandlersCreateOrganizationRequest = {
@@ -161,6 +166,29 @@ export const AdvertiserOnboard: React.FC = () => {
               {form.formState.errors.website && (
                 <p className="text-sm text-destructive">
                   {form.formState.errors.website.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="websiteType">Website Type</Label>
+              <Select
+                value={form.watch('websiteType')}
+                onValueChange={(value) => form.setValue('websiteType', value as any)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your website type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="shopify">Shopify</SelectItem>
+                  <SelectItem value="amazon">Amazon</SelectItem>
+                  <SelectItem value="shopline">Shopline</SelectItem>
+                  <SelectItem value="tiktok_shop">TikTok Shop</SelectItem>
+                </SelectContent>
+              </Select>
+              {form.formState.errors.websiteType && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.websiteType.message}
                 </p>
               )}
             </div>
