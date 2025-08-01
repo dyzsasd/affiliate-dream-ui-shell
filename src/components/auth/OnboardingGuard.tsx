@@ -25,8 +25,13 @@ export const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) =>
     return <Navigate to="/login" replace />;
   }
 
-  // If user is authenticated but has no profile, redirect to onboarding
+  // If user is authenticated but has no profile, allow access to onboarding pages
   if (isAuthenticated && !profile && !isProfileLoading) {
+    // User needs onboarding - allow access to onboard pages
+    if (location.pathname.startsWith('/onboard')) {
+      return <>{children}</>;
+    }
+    // User is not on onboard page but needs onboarding - redirect them
     return <Navigate to="/onboard" replace />;
   }
 
