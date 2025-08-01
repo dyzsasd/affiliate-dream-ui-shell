@@ -13,7 +13,8 @@ import {
   CreditCard,
   Heart,
   MessageCircle,
-  Activity
+  Activity,
+  Settings
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -74,6 +75,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: "Organization Settings",
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   } else if (organizationType === 'affiliate') {
@@ -103,6 +109,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: "Organization Settings",
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   } else if (organizationType === 'agency') {
@@ -142,6 +153,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: "Organization Settings",
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   } else if (organizationType === 'platform_owner') {
@@ -171,6 +187,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: "Organization Settings",
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   }
@@ -182,6 +203,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       name: t("sidebar.myProfile"),
       path: "/profile",
       icon: User
+    },
+    {
+      name: "Organization Settings",
+      path: "/organization/edit",
+      icon: Settings
     }
   ];
 };

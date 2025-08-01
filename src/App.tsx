@@ -29,7 +29,7 @@ import NewPartnersPage from "@/pages/analytics/NewPartnersPage";
 import LostPartnersPage from "@/pages/analytics/LostPartnersPage";
 import InvitationManagement from "@/pages/invitations";
 import OrganizationList from "@/pages/organizations";
-import OrganizationEdit from "@/pages/organizations/OrganizationEdit";
+import OrganizationEdit from "@/pages/organization/OrganizationEdit";
 import UserList from "@/pages/users";
 import CreateAffiliateAccount from "@/pages/affiliate/CreateAffiliateAccount";
 import MarketplacePage from "@/pages/marketplace";
@@ -141,6 +141,7 @@ function App() {
                 {/* Other routes */}
                 <Route path="/invitations" element={<InvitationManagement />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/organization/edit" element={<OrganizationEdit />} />
               </Route>
               
               {/* 404 route */}

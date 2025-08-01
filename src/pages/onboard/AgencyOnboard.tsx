@@ -29,7 +29,7 @@ type AgencyFormData = z.infer<typeof agencySchema>;
 
 export const AgencyOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
+  const { user, fetchBackendProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ export const AgencyOnboard: React.FC = () => {
         name: data.organizationName,
         description: data.description,
         contactEmail: data.contactEmail,
-        type: 'Agency' as any,
+        type: 'agency' as any,
       };
 
       const response = await organizationsApi.publicOrganizationsPost({
@@ -83,6 +83,9 @@ export const AgencyOnboard: React.FC = () => {
           }
         });
       }
+
+      // Refresh the profile to update auth context
+      await fetchBackendProfile();
 
       toast({
         title: t('organizations.organizationCreated'),
