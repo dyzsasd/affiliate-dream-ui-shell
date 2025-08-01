@@ -13,12 +13,51 @@
  */
 
 import { mapValues } from '../runtime';
+import type { HandlersAffiliateExtraInfoRequest } from './HandlersAffiliateExtraInfoRequest';
+import {
+    HandlersAffiliateExtraInfoRequestFromJSON,
+    HandlersAffiliateExtraInfoRequestFromJSONTyped,
+    HandlersAffiliateExtraInfoRequestToJSON,
+    HandlersAffiliateExtraInfoRequestToJSONTyped,
+} from './HandlersAffiliateExtraInfoRequest';
+import type { HandlersAdvertiserExtraInfoRequest } from './HandlersAdvertiserExtraInfoRequest';
+import {
+    HandlersAdvertiserExtraInfoRequestFromJSON,
+    HandlersAdvertiserExtraInfoRequestFromJSONTyped,
+    HandlersAdvertiserExtraInfoRequestToJSON,
+    HandlersAdvertiserExtraInfoRequestToJSONTyped,
+} from './HandlersAdvertiserExtraInfoRequest';
+
 /**
  * 
  * @export
  * @interface HandlersUpdateOrganizationRequest
  */
 export interface HandlersUpdateOrganizationRequest {
+    /**
+     * 
+     * @type {HandlersAdvertiserExtraInfoRequest}
+     * @memberof HandlersUpdateOrganizationRequest
+     */
+    advertiserExtraInfo?: HandlersAdvertiserExtraInfoRequest;
+    /**
+     * 
+     * @type {HandlersAffiliateExtraInfoRequest}
+     * @memberof HandlersUpdateOrganizationRequest
+     */
+    affiliateExtraInfo?: HandlersAffiliateExtraInfoRequest;
+    /**
+     * 
+     * @type {string}
+     * @memberof HandlersUpdateOrganizationRequest
+     */
+    contactEmail?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HandlersUpdateOrganizationRequest
+     */
+    description?: string;
     /**
      * 
      * @type {string}
@@ -40,7 +79,8 @@ export interface HandlersUpdateOrganizationRequest {
 export const HandlersUpdateOrganizationRequestTypeEnum = {
     Advertiser: 'advertiser',
     Affiliate: 'affiliate',
-    PlatformOwner: 'platform_owner'
+    PlatformOwner: 'platform_owner',
+    Agency: 'agency'
 } as const;
 export type HandlersUpdateOrganizationRequestTypeEnum = typeof HandlersUpdateOrganizationRequestTypeEnum[keyof typeof HandlersUpdateOrganizationRequestTypeEnum];
 
@@ -64,6 +104,10 @@ export function HandlersUpdateOrganizationRequestFromJSONTyped(json: any, ignore
     }
     return {
         
+        'advertiserExtraInfo': json['advertiser_extra_info'] == null ? undefined : HandlersAdvertiserExtraInfoRequestFromJSON(json['advertiser_extra_info']),
+        'affiliateExtraInfo': json['affiliate_extra_info'] == null ? undefined : HandlersAffiliateExtraInfoRequestFromJSON(json['affiliate_extra_info']),
+        'contactEmail': json['contact_email'] == null ? undefined : json['contact_email'],
+        'description': json['description'] == null ? undefined : json['description'],
         'name': json['name'],
         'type': json['type'],
     };
@@ -80,6 +124,10 @@ export function HandlersUpdateOrganizationRequestToJSONTyped(value?: HandlersUpd
 
     return {
         
+        'advertiser_extra_info': HandlersAdvertiserExtraInfoRequestToJSON(value['advertiserExtraInfo']),
+        'affiliate_extra_info': HandlersAffiliateExtraInfoRequestToJSON(value['affiliateExtraInfo']),
+        'contact_email': value['contactEmail'],
+        'description': value['description'],
         'name': value['name'],
         'type': value['type'],
     };

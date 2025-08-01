@@ -32,11 +32,35 @@ export interface DomainCampaign {
      */
     campaignId?: number;
     /**
+     * 'server_postback', 'pixel', etc.
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    conversionMethod?: string;
+    /**
      * 
      * @type {string}
      * @memberof DomainCampaign
      */
     createdAt?: string;
+    /**
+     * 'USD', 'EUR', etc.
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    currencyId?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    dailyClickCap?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    dailyConversionCap?: number;
     /**
      * 
      * @type {string}
@@ -44,11 +68,71 @@ export interface DomainCampaign {
      */
     description?: string;
     /**
+     * Core campaign fields (provider-agnostic)
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    destinationUrl?: string;
+    /**
      * 
      * @type {string}
      * @memberof DomainCampaign
      */
     endDate?: string;
+    /**
+     * Fixed amount paid to affiliates per click
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    fixedClickAmount?: number;
+    /**
+     * Fixed amount paid to affiliates per conversion
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    fixedConversionAmount?: number;
+    /**
+     * Simplified billing configuration
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    fixedRevenue?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    globalClickCap?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    globalConversionCap?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    internalNotes?: string;
+    /**
+     * Caps and limits
+     * @type {boolean}
+     * @memberof DomainCampaign
+     */
+    isCapsEnabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    monthlyClickCap?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    monthlyConversionCap?: number;
     /**
      * 
      * @type {string}
@@ -61,6 +145,30 @@ export interface DomainCampaign {
      * @memberof DomainCampaign
      */
     organizationId?: number;
+    /**
+     * Percentage of revenue paid to affiliates per conversion (0-100)
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    percentageConversionAmount?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    previewUrl?: string;
+    /**
+     * 'cookie', 'ip', 'fingerprint'
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    sessionDefinition?: string;
+    /**
+     * in hours
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    sessionDuration?: number;
     /**
      * 
      * @type {string}
@@ -78,7 +186,37 @@ export interface DomainCampaign {
      * @type {string}
      * @memberof DomainCampaign
      */
+    termsAndConditions?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    thumbnailUrl?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DomainCampaign
+     */
     updatedAt?: string;
+    /**
+     * 'public', 'require_approval', 'private'
+     * @type {string}
+     * @memberof DomainCampaign
+     */
+    visibility?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    weeklyClickCap?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DomainCampaign
+     */
+    weeklyConversionCap?: number;
 }
 
 /**
@@ -100,14 +238,37 @@ export function DomainCampaignFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'advertiserId': json['advertiser_id'] == null ? undefined : json['advertiser_id'],
         'campaignId': json['campaign_id'] == null ? undefined : json['campaign_id'],
+        'conversionMethod': json['conversion_method'] == null ? undefined : json['conversion_method'],
         'createdAt': json['created_at'] == null ? undefined : json['created_at'],
+        'currencyId': json['currency_id'] == null ? undefined : json['currency_id'],
+        'dailyClickCap': json['daily_click_cap'] == null ? undefined : json['daily_click_cap'],
+        'dailyConversionCap': json['daily_conversion_cap'] == null ? undefined : json['daily_conversion_cap'],
         'description': json['description'] == null ? undefined : json['description'],
+        'destinationUrl': json['destination_url'] == null ? undefined : json['destination_url'],
         'endDate': json['end_date'] == null ? undefined : json['end_date'],
+        'fixedClickAmount': json['fixed_click_amount'] == null ? undefined : json['fixed_click_amount'],
+        'fixedConversionAmount': json['fixed_conversion_amount'] == null ? undefined : json['fixed_conversion_amount'],
+        'fixedRevenue': json['fixed_revenue'] == null ? undefined : json['fixed_revenue'],
+        'globalClickCap': json['global_click_cap'] == null ? undefined : json['global_click_cap'],
+        'globalConversionCap': json['global_conversion_cap'] == null ? undefined : json['global_conversion_cap'],
+        'internalNotes': json['internal_notes'] == null ? undefined : json['internal_notes'],
+        'isCapsEnabled': json['is_caps_enabled'] == null ? undefined : json['is_caps_enabled'],
+        'monthlyClickCap': json['monthly_click_cap'] == null ? undefined : json['monthly_click_cap'],
+        'monthlyConversionCap': json['monthly_conversion_cap'] == null ? undefined : json['monthly_conversion_cap'],
         'name': json['name'] == null ? undefined : json['name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
+        'percentageConversionAmount': json['percentage_conversion_amount'] == null ? undefined : json['percentage_conversion_amount'],
+        'previewUrl': json['preview_url'] == null ? undefined : json['preview_url'],
+        'sessionDefinition': json['session_definition'] == null ? undefined : json['session_definition'],
+        'sessionDuration': json['session_duration'] == null ? undefined : json['session_duration'],
         'startDate': json['start_date'] == null ? undefined : json['start_date'],
         'status': json['status'] == null ? undefined : json['status'],
+        'termsAndConditions': json['terms_and_conditions'] == null ? undefined : json['terms_and_conditions'],
+        'thumbnailUrl': json['thumbnail_url'] == null ? undefined : json['thumbnail_url'],
         'updatedAt': json['updated_at'] == null ? undefined : json['updated_at'],
+        'visibility': json['visibility'] == null ? undefined : json['visibility'],
+        'weeklyClickCap': json['weekly_click_cap'] == null ? undefined : json['weekly_click_cap'],
+        'weeklyConversionCap': json['weekly_conversion_cap'] == null ? undefined : json['weekly_conversion_cap'],
     };
 }
 
@@ -124,14 +285,37 @@ export function DomainCampaignToJSONTyped(value?: DomainCampaign | null, ignoreD
         
         'advertiser_id': value['advertiserId'],
         'campaign_id': value['campaignId'],
+        'conversion_method': value['conversionMethod'],
         'created_at': value['createdAt'],
+        'currency_id': value['currencyId'],
+        'daily_click_cap': value['dailyClickCap'],
+        'daily_conversion_cap': value['dailyConversionCap'],
         'description': value['description'],
+        'destination_url': value['destinationUrl'],
         'end_date': value['endDate'],
+        'fixed_click_amount': value['fixedClickAmount'],
+        'fixed_conversion_amount': value['fixedConversionAmount'],
+        'fixed_revenue': value['fixedRevenue'],
+        'global_click_cap': value['globalClickCap'],
+        'global_conversion_cap': value['globalConversionCap'],
+        'internal_notes': value['internalNotes'],
+        'is_caps_enabled': value['isCapsEnabled'],
+        'monthly_click_cap': value['monthlyClickCap'],
+        'monthly_conversion_cap': value['monthlyConversionCap'],
         'name': value['name'],
         'organization_id': value['organizationId'],
+        'percentage_conversion_amount': value['percentageConversionAmount'],
+        'preview_url': value['previewUrl'],
+        'session_definition': value['sessionDefinition'],
+        'session_duration': value['sessionDuration'],
         'start_date': value['startDate'],
         'status': value['status'],
+        'terms_and_conditions': value['termsAndConditions'],
+        'thumbnail_url': value['thumbnailUrl'],
         'updated_at': value['updatedAt'],
+        'visibility': value['visibility'],
+        'weekly_click_cap': value['weeklyClickCap'],
+        'weekly_conversion_cap': value['weeklyConversionCap'],
     };
 }
 
