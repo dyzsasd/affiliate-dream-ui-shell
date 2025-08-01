@@ -9,7 +9,11 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import OrganizationTypeSelection from "@/pages/onboard/OrganizationTypeSelection";
 import { AffiliateOnboard } from "@/pages/onboard/AffiliateOnboard";
+import AdvertiserOnboard from "@/pages/onboard/AdvertiserOnboard";
+import AgencyOnboard from "@/pages/onboard/AgencyOnboard";
+import { OnboardingGuard } from "@/components/auth/OnboardingGuard";
 import Dashboard from "@/pages/Dashboard";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
@@ -64,10 +68,15 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/affiliate-onboard" element={<AffiliateOnboard />} />
+              
+              {/* Onboarding routes */}
+              <Route path="/onboard" element={<OrganizationTypeSelection />} />
+              <Route path="/onboard/affiliate" element={<AffiliateOnboard />} />
+              <Route path="/onboard/advertiser" element={<AdvertiserOnboard />} />
+              <Route path="/onboard/agency" element={<AgencyOnboard />} />
               
               {/* Protected routes */}
-              <Route element={<AppLayout />}>
+              <Route element={<OnboardingGuard><AppLayout /></OnboardingGuard>}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 

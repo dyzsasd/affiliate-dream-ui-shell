@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { OrganizationsApi } from '@/generated-api/src/apis';
 import { HandlersCreateOrganizationRequest, HandlersAffiliateExtraInfoRequest, HandlersAffiliateExtraInfoRequestAffiliateTypeEnum } from '@/generated-api/src/models';
 import { createPublicApiClient } from '@/services/backendApi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Building2, Mail } from 'lucide-react';
 
 const onboardSchema = z.object({
@@ -28,7 +28,7 @@ type OnboardFormData = z.infer<typeof onboardSchema>;
 
 export const AffiliateOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const {
@@ -65,28 +65,14 @@ export const AffiliateOnboard: React.FC = () => {
         request: createOrgRequest
       });
 
-      // Send invitation email with organization details
-      const response = await fetch('https://plhilkfckdgcdewulspe.supabase.co/functions/v1/send-invitation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: data.email,
-          organizationId: organization.organizationId,
-          organizationName: organization.name,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send invitation email');
-      }
-
-      setIsSuccess(true);
       toast({
         title: "Organization created successfully",
-        description: `We've sent an invitation email to ${data.email}. Please check your inbox to complete the registration.`,
+        description: "Your affiliate organization has been created.",
       });
+
+      // Navigate to dashboard after successful creation
+      navigate('/');
+
     } catch (error: any) {
       toast({
         title: "Error creating organization",
@@ -98,34 +84,6 @@ export const AffiliateOnboard: React.FC = () => {
     }
   };
 
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-              <Mail className="w-8 h-8 text-primary" />
-            </div>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
-            <CardDescription>
-              We've sent you an invitation email with instructions to complete your registration.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="text-center text-sm text-muted-foreground">
-              Didn't receive the email? Check your spam folder or contact support.
-            </div>
-            <Button asChild className="w-full" variant="outline">
-              <Link to="/auth/login">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Login
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
@@ -236,23 +194,23 @@ export const AffiliateOnboard: React.FC = () => {
               )}
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Creating Organization..." : "Create Organization & Send Invitation"}
-            </Button>
+            <div className="flex gap-4">
+              <Link to="/onboard" className="flex-1">
+                <Button type="button" variant="outline" className="w-full">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                {isSubmitting ? "Creating..." : "Create Organization"}
+              </Button>
+            </div>
           </form>
 
-          <div className="mt-6 text-center">
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/auth/login">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Login
-              </Link>
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
