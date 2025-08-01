@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { OrganizationsApi } from '@/generated-api/src/apis';
-import { HandlersCreateOrganizationRequest } from '@/generated-api/src/models';
+import { HandlersCreateOrganizationRequest, HandlersAffiliateExtraInfoRequest, HandlersAffiliateExtraInfoRequestAffiliateTypeEnum } from '@/generated-api/src/models';
 import { createApiClient } from '@/services/backendApi';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Building2, Mail } from 'lucide-react';
@@ -16,6 +18,10 @@ import { ArrowLeft, Building2, Mail } from 'lucide-react';
 const onboardSchema = z.object({
   domain: z.string().min(1, 'Domain is required').regex(/^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.[a-zA-Z]{2,}$/, 'Please enter a valid domain'),
   email: z.string().email('Please enter a valid email address'),
+  affiliateType: z.string().min(1, 'Please select an affiliate type'),
+  website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
+  selfDescription: z.string().min(10, 'Please provide at least 10 characters description'),
+  logoUrl: z.string().url('Please enter a valid logo URL').optional().or(z.literal(''))
 });
 
 type OnboardFormData = z.infer<typeof onboardSchema>;
@@ -28,6 +34,7 @@ export const AffiliateOnboard: React.FC = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<OnboardFormData>({
     resolver: zodResolver(onboardSchema),
@@ -37,14 +44,24 @@ export const AffiliateOnboard: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Create organization
+      // Create organization with affiliate extra info
       const organizationsApi = await createApiClient(OrganizationsApi);
+      
+      const affiliateExtraInfo: HandlersAffiliateExtraInfoRequest = {
+        affiliateType: data.affiliateType as HandlersAffiliateExtraInfoRequestAffiliateTypeEnum,
+        website: data.website || undefined,
+        selfDescription: data.selfDescription,
+        logoUrl: data.logoUrl || undefined
+      };
+
       const createOrgRequest: HandlersCreateOrganizationRequest = {
         name: data.domain,
-        type: 'affiliate'
+        type: 'affiliate',
+        contactEmail: data.email,
+        affiliateExtraInfo: affiliateExtraInfo
       };
       
-      const organization = await organizationsApi.apiV1OrganizationsPost({
+      const organization = await organizationsApi.apiV1PublicOrganizationsPost({
         request: createOrgRequest
       });
 
@@ -156,6 +173,67 @@ export const AffiliateOnboard: React.FC = () => {
               <p className="text-xs text-muted-foreground">
                 We'll send an invitation to this email
               </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="affiliateType">Affiliate Type</Label>
+              <Select onValueChange={(value) => setValue('affiliateType', value)}>
+                <SelectTrigger className={errors.affiliateType ? "border-destructive" : ""}>
+                  <SelectValue placeholder="Select your affiliate type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cashback">Cashback</SelectItem>
+                  <SelectItem value="blog">Blog</SelectItem>
+                  <SelectItem value="influencer">Influencer</SelectItem>
+                  <SelectItem value="comparison">Comparison</SelectItem>
+                  <SelectItem value="coupon">Coupon</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.affiliateType && (
+                <p className="text-sm text-destructive">{errors.affiliateType.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="website">Website (Optional)</Label>
+              <Input
+                id="website"
+                type="url"
+                placeholder="https://your-website.com"
+                {...register('website')}
+                className={errors.website ? "border-destructive" : ""}
+              />
+              {errors.website && (
+                <p className="text-sm text-destructive">{errors.website.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="selfDescription">Description</Label>
+              <Textarea
+                id="selfDescription"
+                placeholder="Tell us about your affiliate business and audience..."
+                {...register('selfDescription')}
+                className={errors.selfDescription ? "border-destructive" : ""}
+                rows={4}
+              />
+              {errors.selfDescription && (
+                <p className="text-sm text-destructive">{errors.selfDescription.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="logoUrl">Logo URL (Optional)</Label>
+              <Input
+                id="logoUrl"
+                type="url"
+                placeholder="https://your-logo.com/logo.png"
+                {...register('logoUrl')}
+                className={errors.logoUrl ? "border-destructive" : ""}
+              />
+              {errors.logoUrl && (
+                <p className="text-sm text-destructive">{errors.logoUrl.message}</p>
+              )}
             </div>
 
             <Button 

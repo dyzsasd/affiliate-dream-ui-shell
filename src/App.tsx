@@ -64,7 +64,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/onboard" element={<AffiliateOnboard />} />
+              <Route path="/affiliate-onboard" element={<AffiliateOnboard />} />
               
               {/* Protected routes */}
               <Route element={<AppLayout />}>
