@@ -69,11 +69,11 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               
-              {/* Onboarding routes */}
-              <Route path="/onboard" element={<OrganizationTypeSelection />} />
-              <Route path="/onboard/affiliate" element={<AffiliateOnboard />} />
-              <Route path="/onboard/advertiser" element={<AdvertiserOnboard />} />
-              <Route path="/onboard/agency" element={<AgencyOnboard />} />
+              {/* Onboarding routes - protected to redirect users with profiles */}
+              <Route path="/onboard" element={<OnboardingGuard><OrganizationTypeSelection /></OnboardingGuard>} />
+              <Route path="/onboard/affiliate" element={<OnboardingGuard><AffiliateOnboard /></OnboardingGuard>} />
+              <Route path="/onboard/advertiser" element={<OnboardingGuard><AdvertiserOnboard /></OnboardingGuard>} />
+              <Route path="/onboard/agency" element={<OnboardingGuard><AgencyOnboard /></OnboardingGuard>} />
               
               {/* Protected routes */}
               <Route element={<OnboardingGuard><AppLayout /></OnboardingGuard>}>
