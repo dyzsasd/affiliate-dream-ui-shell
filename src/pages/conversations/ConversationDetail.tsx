@@ -27,7 +27,7 @@ const ConversationDetail: React.FC = () => {
       if (!conversationId) throw new Error('Conversation ID is required');
       
       const apiClient = await createApiClient(PublisherMessagingApi);
-      return await apiClient.apiV1PublisherMessagingConversationsConversationIdGet({
+      return await apiClient.publisherMessagingConversationsConversationIdGet({
         conversationId: parseInt(conversationId),
       });
     },
@@ -40,7 +40,7 @@ const ConversationDetail: React.FC = () => {
       if (!conversationId) throw new Error('Conversation ID is required');
       
       const apiClient = await createApiClient(PublisherMessagingApi);
-      return await apiClient.apiV1PublisherMessagingConversationsConversationIdMessagesPost({
+      return await apiClient.publisherMessagingConversationsConversationIdMessagesPost({
         conversationId: parseInt(conversationId),
         request: messageData,
       });

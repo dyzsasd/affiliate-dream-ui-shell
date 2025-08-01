@@ -63,7 +63,7 @@ export const AffiliateOnboard: React.FC = () => {
         affiliateExtraInfo: affiliateExtraInfo
       };
       
-      const organization = await organizationsApi.apiV1PublicOrganizationsPost({
+      const organization = await organizationsApi.publicOrganizationsPost({
         request: createOrgRequest
       });
 

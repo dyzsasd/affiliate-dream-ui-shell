@@ -22,7 +22,7 @@ const ConversationsSection: React.FC<ConversationsSectionProps> = ({ listId }) =
     queryKey: ['conversations'],
     queryFn: async () => {
       const apiClient = await createApiClient(PublisherMessagingApi);
-      const response = await apiClient.apiV1PublisherMessagingConversationsGet({
+      const response = await apiClient.publisherMessagingConversationsGet({
         page: 1,
         pageSize: 20
       });

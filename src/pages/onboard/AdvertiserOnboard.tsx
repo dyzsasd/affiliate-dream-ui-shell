@@ -76,7 +76,7 @@ export const AdvertiserOnboard: React.FC = () => {
         advertiserExtraInfo,
       };
 
-      const response = await organizationsApi.apiV1PublicOrganizationsPost({
+      const response = await organizationsApi.publicOrganizationsPost({
         request: createRequest,
       });
 

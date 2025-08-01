@@ -23,7 +23,7 @@ const ConversationsList: React.FC = () => {
         
         // Log the exact request details for debugging
         console.log('Making request to conversations endpoint...');
-        const result = await apiClient.apiV1PublisherMessagingConversationsGet({
+        const result = await apiClient.publisherMessagingConversationsGet({
           page,
           pageSize,
         });

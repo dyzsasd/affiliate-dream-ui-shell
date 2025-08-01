@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
 import { Loader2 } from 'lucide-react';
 
@@ -9,6 +9,7 @@ interface OnboardingGuardProps {
 
 export const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) => {
   const { isAuthenticated, isLoading, profile, organization, isProfileLoading, isOrganizationLoading } = useAuth();
+  const location = useLocation();
 
   // Show loading while auth is being established
   if (isLoading || isProfileLoading || isOrganizationLoading) {
@@ -29,6 +30,11 @@ export const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) =>
     return <Navigate to="/onboard" replace />;
   }
 
-  // User is authenticated and has an organization, show the protected content
+  // If user has profile and tries to access onboard page, redirect to home
+  if (isAuthenticated && profile && location.pathname === '/onboard') {
+    return <Navigate to="/" replace />;
+  }
+
+  // User is authenticated and has a profile, show the protected content
   return <>{children}</>;
 };

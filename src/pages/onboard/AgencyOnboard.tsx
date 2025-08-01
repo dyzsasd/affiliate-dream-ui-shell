@@ -66,7 +66,7 @@ export const AgencyOnboard: React.FC = () => {
         type: 'Agency' as any,
       };
 
-      const response = await organizationsApi.apiV1PublicOrganizationsPost({
+      const response = await organizationsApi.publicOrganizationsPost({
         request: createRequest,
       });
 

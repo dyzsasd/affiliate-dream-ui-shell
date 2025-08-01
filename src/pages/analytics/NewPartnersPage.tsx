@@ -39,7 +39,7 @@ const NewPartnersPage: React.FC = () => {
       if (!advertiserId) return null;
       
       const apiClient = await createApiClient(AnalyticsApi);
-      const response = await apiClient.apiV1AnalyticsAdvertisersIdGet({
+      const response = await apiClient.analyticsAdvertisersIdGet({
         id: parseInt(advertiserId)
       });
       
@@ -67,7 +67,7 @@ const NewPartnersPage: React.FC = () => {
     const apiClient = await createApiClient(AnalyticsApi);
     const publisherPromises = domains.map(async (domain) => {
       try {
-        const response = await apiClient.apiV1AnalyticsAffiliatesDomainDomainGet({
+        const response = await apiClient.analyticsAffiliatesDomainDomainGet({
           domain
         });
         return response.data;

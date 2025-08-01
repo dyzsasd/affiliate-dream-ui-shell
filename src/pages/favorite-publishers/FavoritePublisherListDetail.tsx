@@ -94,7 +94,7 @@ const FavoritePublisherListDetail: React.FC = () => {
             console.log(`Fetching publisher details for domain: ${domain}`);
             // Fetch publisher details by domain
             const apiClient = await createApiClient(AnalyticsApi);
-            const response = await apiClient.apiV1AnalyticsAffiliatesDomainDomainGet({
+            const response = await apiClient.analyticsAffiliatesDomainDomainGet({
               domain: domain
             });
             publisherResponse = response.data;
