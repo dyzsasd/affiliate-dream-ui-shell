@@ -119,7 +119,7 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   
   // Create configuration with proper authentication and retry logic
   const configuration = new Configuration({
-    basePath: baseUrl,
+    basePath: `${baseUrl}/api/v1`,
     apiKey: async (name: string) => {
       console.log('🔐 API Key requested for parameter:', name);
       console.log('🔍 Request stack trace:', new Error().stack?.split('\n').slice(1, 4).join('\n'));
@@ -179,7 +179,7 @@ export const createPublicApiClient = <T>(ClientClass: new (configuration?: Confi
   
   // Create configuration without authentication
   const configuration = new Configuration({
-    basePath: baseUrl,
+    basePath: `${baseUrl}/api/v1`,
     // No apiKey function - public endpoint
   });
   
