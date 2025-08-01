@@ -122,12 +122,8 @@ export class FavoritePublisherListsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/favorite-publisher-lists/{list_id}/publishers/{domain}/status`.replace(`{${"list_id"}}`, encodeURIComponent(String(requestParameters['listId']))).replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
+            path: `/api/v1/favorite-publisher-lists/{list_id}/publishers/{domain}/status`.replace(`{${"list_id"}}`, encodeURIComponent(String(requestParameters['listId']))).replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,

@@ -92,10 +92,6 @@ export class CampaignsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
             path: `/advertisers/{advertiser_id}/campaigns`.replace(`{${"advertiser_id"}}`, encodeURIComponent(String(requestParameters['advertiserId']))),
             method: 'GET',
@@ -131,10 +127,6 @@ export class CampaignsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
             path: `/campaigns/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
@@ -168,10 +160,6 @@ export class CampaignsApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
 
         const response = await this.request({
             path: `/campaigns/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -215,10 +203,6 @@ export class CampaignsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
@@ -256,10 +240,6 @@ export class CampaignsApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
 
         headerParameters['Content-Type'] = 'application/json';
 
@@ -306,12 +286,6 @@ export class CampaignsApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        console.log('🔐 CampaignsApi: Authorization header set for organizationsOrganizationIdCampaignsGet:', headerParameters["Authorization"] ? 'Present' : 'Missing');
 
         const response = await this.request({
             path: `/organizations/{organization_id}/campaigns`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),

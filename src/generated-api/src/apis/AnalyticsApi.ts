@@ -90,12 +90,8 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/analytics/advertisers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/v1/analytics/advertisers/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -129,14 +125,10 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/analytics/advertisers`,
+            path: `/api/v1/analytics/advertisers`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -171,12 +163,8 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/analytics/affiliates/domain/{domain}`.replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
+            path: `/api/v1/analytics/affiliates/domain/{domain}`.replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -210,12 +198,8 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/analytics/affiliates/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/v1/analytics/affiliates/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -249,14 +233,10 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/analytics/affiliates`,
+            path: `/api/v1/analytics/affiliates`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -303,12 +283,8 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
         const response = await this.request({
-            path: `/analytics/autocomplete`,
+            path: `/api/v1/analytics/autocomplete`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
