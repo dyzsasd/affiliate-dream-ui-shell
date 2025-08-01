@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { OrganizationsApi } from '@/generated-api/src/apis';
 import { HandlersCreateOrganizationRequest, HandlersAffiliateExtraInfoRequest, HandlersAffiliateExtraInfoRequestAffiliateTypeEnum } from '@/generated-api/src/models';
-import { createApiClient } from '@/services/backendApi';
+import { createPublicApiClient } from '@/services/backendApi';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Building2, Mail } from 'lucide-react';
 
@@ -44,8 +44,8 @@ export const AffiliateOnboard: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Create organization with affiliate extra info
-      const organizationsApi = await createApiClient(OrganizationsApi);
+      // Create organization with affiliate extra info using public endpoint
+      const organizationsApi = createPublicApiClient(OrganizationsApi);
       
       const affiliateExtraInfo: HandlersAffiliateExtraInfoRequest = {
         affiliateType: data.affiliateType as HandlersAffiliateExtraInfoRequestAffiliateTypeEnum,

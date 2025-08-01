@@ -166,6 +166,30 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   return client;
 };
 
+// Create public API client (no authentication required)
+export const createPublicApiClient = <T>(ClientClass: new (configuration?: Configuration) => T): T => {
+  console.log('🔧 Creating public API client for:', ClientClass.name);
+  
+  if (!ClientClass) {
+    throw new Error('API client not initialized. Please run "npm run generate-api" first.');
+  }
+  
+  const baseUrl = getApiBase();
+  console.log('🌐 Creating public API client with base URL:', baseUrl);
+  
+  // Create configuration without authentication
+  const configuration = new Configuration({
+    basePath: baseUrl,
+    // No apiKey function - public endpoint
+  });
+  
+  const client = new ClientClass(configuration);
+  
+  console.log('✅ Public API client created successfully');
+  
+  return client;
+};
+
 export const handleApiError = (error: unknown): ApiError => {
   console.error('API Error:', error);
   
