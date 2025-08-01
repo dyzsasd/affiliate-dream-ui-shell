@@ -22,6 +22,7 @@ import {
 } from '@/generated-api/src/models';
 import { createApiClient } from '@/services/backendApi';
 import { ArrowLeft, Building2, Target, Users } from 'lucide-react';
+import { InviteUserSection } from '@/components/organization/InviteUserSection';
 
 const baseSchema = z.object({
   name: z.string().min(1, 'Organization name is required'),
@@ -253,8 +254,9 @@ export const OrganizationEdit: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-4">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card className="w-full">
         <CardHeader className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
             {getIcon()}
@@ -490,7 +492,16 @@ export const OrganizationEdit: React.FC = () => {
             </div>
           </form>
         </CardContent>
-      </Card>
+        </Card>
+
+        {/* Invite User Section */}
+        {organization && (
+          <InviteUserSection
+            organizationId={organization.organizationId}
+            organizationName={organization.name || 'Organization'}
+          />
+        )}
+      </div>
     </div>
   );
 };
