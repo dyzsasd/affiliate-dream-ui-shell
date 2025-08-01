@@ -63,12 +63,9 @@ export const useProfile = (user: User | null) => {
             }
           }
         } else {
-          // Create fallback profile from user metadata
-          if (user.user_metadata) {
-            const fallbackProfile = createFallbackProfile(user.user_metadata);
-            setProfile(fallbackProfile);
-            console.log("Created fallback profile:", fallbackProfile);
-          }
+          // Backend profile not found (404) - keep profile as null to trigger onboarding
+          console.log("No backend profile found - user needs onboarding");
+          setProfile(null);
         }
       } catch (error) {
         console.error('Error loading profile:', error);
