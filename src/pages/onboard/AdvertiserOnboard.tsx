@@ -80,7 +80,7 @@ export const AdvertiserOnboard: React.FC = () => {
         name: data.organizationName,
         description: data.description,
         contactEmail: data.contactEmail,
-        type: 'Advertiser' as any,
+        type: 'advertiser' as any,
         advertiserExtraInfo,
       };
 
