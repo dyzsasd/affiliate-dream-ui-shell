@@ -28,8 +28,8 @@ const Login: React.FC = () => {
       title={t("auth.signIn")}
       description=""
       footerText="New to the platform?"
-      footerLinkText="Join as Affiliate"
-      footerLinkTo="/onboard"
+      footerLinkText="Sign Up"
+      footerLinkTo="/signup"
     >
       <LoginForm />
     </AuthLayout>

@@ -19,13 +19,13 @@ export const OnboardingGuard: React.FC<OnboardingGuardProps> = ({ children }) =>
     );
   }
 
-  // Redirect to signup if not authenticated
+  // Redirect to signin if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/signup" replace />;
+    return <Navigate to="/login" replace />;
   }
 
-  // If user is authenticated but has no organization, redirect to onboarding
-  if (isAuthenticated && !organization) {
+  // If user is authenticated but has no profile, redirect to onboarding
+  if (isAuthenticated && !profile) {
     return <Navigate to="/onboard" replace />;
   }
 
