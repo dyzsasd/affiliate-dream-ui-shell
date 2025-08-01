@@ -23,11 +23,13 @@ const advertiserSchema = z.object({
   organizationName: z.string().min(1, 'Organization name is required'),
   description: z.string().optional(),
   website: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  websiteType: z.enum(['shopify', 'amazon', 'shopline', 'tiktok_shop'], {
+  websiteType: z.enum(['shopify', 'amazon', 'shopline', 'tiktok_shop', 'other'], {
     required_error: 'Please select a website type',
   }),
   industry: z.string().min(1, 'Industry is required'),
-  companySize: z.string().min(1, 'Company size is required'),
+  companySize: z.enum(['startup', 'small', 'medium', 'large', 'enterprise'], {
+    required_error: 'Please select a company size',
+  }),
   contactEmail: z.string().email('Please enter a valid email'),
 });
 
@@ -48,7 +50,7 @@ export const AdvertiserOnboard: React.FC = () => {
       website: '',
       websiteType: 'shopify' as const,
       industry: '',
-      companySize: '',
+      companySize: 'startup' as const,
       contactEmail: user?.email || '',
     },
   });
@@ -71,6 +73,7 @@ export const AdvertiserOnboard: React.FC = () => {
       const advertiserExtraInfo: HandlersAdvertiserExtraInfoRequest = {
         website: data.website || undefined,
         websiteType: data.websiteType as any,
+        companySize: data.companySize as any,
       };
 
       const createRequest: HandlersCreateOrganizationRequest = {
@@ -184,6 +187,7 @@ export const AdvertiserOnboard: React.FC = () => {
                   <SelectItem value="amazon">Amazon</SelectItem>
                   <SelectItem value="shopline">Shopline</SelectItem>
                   <SelectItem value="tiktok_shop">TikTok Shop</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
               {form.formState.errors.websiteType && (
@@ -209,11 +213,21 @@ export const AdvertiserOnboard: React.FC = () => {
 
             <div className="space-y-2">
               <Label htmlFor="companySize">{t('organizations.companySize')}</Label>
-              <Input
-                id="companySize"
-                {...form.register('companySize')}
-                placeholder="e.g. 1-10, 11-50, 51-200"
-              />
+              <Select
+                value={form.watch('companySize')}
+                onValueChange={(value) => form.setValue('companySize', value as any)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your company size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="startup">Startup (1-10 employees)</SelectItem>
+                  <SelectItem value="small">Small (11-50 employees)</SelectItem>
+                  <SelectItem value="medium">Medium (51-200 employees)</SelectItem>
+                  <SelectItem value="large">Large (201-1000 employees)</SelectItem>
+                  <SelectItem value="enterprise">Enterprise (1000+ employees)</SelectItem>
+                </SelectContent>
+              </Select>
               {form.formState.errors.companySize && (
                 <p className="text-sm text-destructive">
                   {form.formState.errors.companySize.message}

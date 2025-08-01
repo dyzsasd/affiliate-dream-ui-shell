@@ -145,6 +145,7 @@ export const AffiliateOnboard: React.FC = () => {
                   <SelectItem value="content">Content</SelectItem>
                   <SelectItem value="forum">Forum</SelectItem>
                   <SelectItem value="sub_affiliate_network">Sub Affiliate Network</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
               {errors.affiliateType && (
