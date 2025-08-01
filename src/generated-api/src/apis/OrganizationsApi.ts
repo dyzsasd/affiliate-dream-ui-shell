@@ -28,14 +28,6 @@ import {
     HandlersUpdateOrganizationRequestToJSON,
 } from '../models/index';
 
-export interface ApiV1OrganizationsPostRequest {
-    request: HandlersCreateOrganizationRequest;
-}
-
-export interface ApiV1PublicOrganizationsPostRequest {
-    request: HandlersCreateOrganizationRequest;
-}
-
 export interface OrganizationsGetRequest {
     page?: number;
     pageSize?: number;
@@ -54,90 +46,18 @@ export interface OrganizationsIdPutRequest {
     request: HandlersUpdateOrganizationRequest;
 }
 
+export interface OrganizationsPostRequest {
+    request: HandlersCreateOrganizationRequest;
+}
+
+export interface PublicOrganizationsPostRequest {
+    request: HandlersCreateOrganizationRequest;
+}
+
 /**
  * 
  */
 export class OrganizationsApi extends runtime.BaseAPI {
-
-    /**
-     * Creates a new organization with the given name. Requires Admin role.
-     * Create a new organization (Admin only)
-     */
-    async apiV1OrganizationsPostRaw(requestParameters: ApiV1OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling apiV1OrganizationsPost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/v1/organizations`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: HandlersCreateOrganizationRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationFromJSON(jsonValue));
-    }
-
-    /**
-     * Creates a new organization with the given name. Requires Admin role.
-     * Create a new organization (Admin only)
-     */
-    async apiV1OrganizationsPost(requestParameters: ApiV1OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
-        const response = await this.apiV1OrganizationsPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Creates a new organization with the given name and optional extra info. No authentication required.
-     * Create a new organization (Public)
-     */
-    async apiV1PublicOrganizationsPostRaw(requestParameters: ApiV1PublicOrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling apiV1PublicOrganizationsPost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/v1/public/organizations`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: HandlersCreateOrganizationRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationFromJSON(jsonValue));
-    }
-
-    /**
-     * Creates a new organization with the given name and optional extra info. No authentication required.
-     * Create a new organization (Public)
-     */
-    async apiV1PublicOrganizationsPost(requestParameters: ApiV1PublicOrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
-        const response = await this.apiV1PublicOrganizationsPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      * Retrieves a list of organizations with pagination
@@ -302,6 +222,86 @@ export class OrganizationsApi extends runtime.BaseAPI {
      */
     async organizationsIdPut(requestParameters: OrganizationsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
         const response = await this.organizationsIdPutRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates a new organization with the given name. Requires Admin role.
+     * Create a new organization (Admin only)
+     */
+    async organizationsPostRaw(requestParameters: OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling organizationsPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/organizations`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HandlersCreateOrganizationRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a new organization with the given name. Requires Admin role.
+     * Create a new organization (Admin only)
+     */
+    async organizationsPost(requestParameters: OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
+        const response = await this.organizationsPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates a new organization with the given name and optional extra info. No authentication required.
+     * Create a new organization (Public)
+     */
+    async publicOrganizationsPostRaw(requestParameters: PublicOrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling publicOrganizationsPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/public/organizations`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HandlersCreateOrganizationRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a new organization with the given name and optional extra info. No authentication required.
+     * Create a new organization (Public)
+     */
+    async publicOrganizationsPost(requestParameters: PublicOrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
+        const response = await this.publicOrganizationsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

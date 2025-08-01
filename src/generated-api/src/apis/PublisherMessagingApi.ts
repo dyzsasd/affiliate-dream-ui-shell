@@ -46,36 +46,36 @@ import {
     HandlersErrorResponseToJSON,
 } from '../models/index';
 
-export interface ApiV1PublisherMessagingConversationsConversationIdDeleteRequest {
+export interface PublisherMessagingConversationsConversationIdDeleteRequest {
     conversationId: number;
 }
 
-export interface ApiV1PublisherMessagingConversationsConversationIdExternalMessagesPostRequest {
+export interface PublisherMessagingConversationsConversationIdExternalMessagesPostRequest {
     conversationId: number;
     request: DomainAddExternalMessageRequest;
 }
 
-export interface ApiV1PublisherMessagingConversationsConversationIdGetRequest {
+export interface PublisherMessagingConversationsConversationIdGetRequest {
     conversationId: number;
 }
 
-export interface ApiV1PublisherMessagingConversationsConversationIdMessagesPostRequest {
+export interface PublisherMessagingConversationsConversationIdMessagesPostRequest {
     conversationId: number;
     request: DomainSendMessageRequest;
 }
 
-export interface ApiV1PublisherMessagingConversationsConversationIdStatusPutRequest {
+export interface PublisherMessagingConversationsConversationIdStatusPutRequest {
     conversationId: number;
     request: DomainUpdateConversationStatusRequest;
 }
 
-export interface ApiV1PublisherMessagingConversationsGetRequest {
+export interface PublisherMessagingConversationsGetRequest {
     status?: string;
     page?: number;
     pageSize?: number;
 }
 
-export interface ApiV1PublisherMessagingConversationsPostRequest {
+export interface PublisherMessagingConversationsPostRequest {
     request: DomainCreateConversationRequest;
 }
 
@@ -88,11 +88,11 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Deletes a conversation and all associated messages
      * Delete conversation
      */
-    async apiV1PublisherMessagingConversationsConversationIdDeleteRaw(requestParameters: ApiV1PublisherMessagingConversationsConversationIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async publisherMessagingConversationsConversationIdDeleteRaw(requestParameters: PublisherMessagingConversationsConversationIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['conversationId'] == null) {
             throw new runtime.RequiredError(
                 'conversationId',
-                'Required parameter "conversationId" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdDelete().'
+                'Required parameter "conversationId" was null or undefined when calling publisherMessagingConversationsConversationIdDelete().'
             );
         }
 
@@ -101,7 +101,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -114,26 +114,26 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Deletes a conversation and all associated messages
      * Delete conversation
      */
-    async apiV1PublisherMessagingConversationsConversationIdDelete(requestParameters: ApiV1PublisherMessagingConversationsConversationIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiV1PublisherMessagingConversationsConversationIdDeleteRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsConversationIdDelete(requestParameters: PublisherMessagingConversationsConversationIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.publisherMessagingConversationsConversationIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      * Allows external services to add messages to existing conversations (e.g., publisher replies)
      * Add external message to conversation
      */
-    async apiV1PublisherMessagingConversationsConversationIdExternalMessagesPostRaw(requestParameters: ApiV1PublisherMessagingConversationsConversationIdExternalMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherMessage>> {
+    async publisherMessagingConversationsConversationIdExternalMessagesPostRaw(requestParameters: PublisherMessagingConversationsConversationIdExternalMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherMessage>> {
         if (requestParameters['conversationId'] == null) {
             throw new runtime.RequiredError(
                 'conversationId',
-                'Required parameter "conversationId" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdExternalMessagesPost().'
+                'Required parameter "conversationId" was null or undefined when calling publisherMessagingConversationsConversationIdExternalMessagesPost().'
             );
         }
 
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdExternalMessagesPost().'
+                'Required parameter "request" was null or undefined when calling publisherMessagingConversationsConversationIdExternalMessagesPost().'
             );
         }
 
@@ -144,7 +144,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}/external-messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}/external-messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -158,8 +158,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Allows external services to add messages to existing conversations (e.g., publisher replies)
      * Add external message to conversation
      */
-    async apiV1PublisherMessagingConversationsConversationIdExternalMessagesPost(requestParameters: ApiV1PublisherMessagingConversationsConversationIdExternalMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherMessage> {
-        const response = await this.apiV1PublisherMessagingConversationsConversationIdExternalMessagesPostRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsConversationIdExternalMessagesPost(requestParameters: PublisherMessagingConversationsConversationIdExternalMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherMessage> {
+        const response = await this.publisherMessagingConversationsConversationIdExternalMessagesPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -167,11 +167,11 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Retrieves a specific conversation along with its messages
      * Get conversation with messages
      */
-    async apiV1PublisherMessagingConversationsConversationIdGetRaw(requestParameters: ApiV1PublisherMessagingConversationsConversationIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainConversationWithMessagesResponse>> {
+    async publisherMessagingConversationsConversationIdGetRaw(requestParameters: PublisherMessagingConversationsConversationIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainConversationWithMessagesResponse>> {
         if (requestParameters['conversationId'] == null) {
             throw new runtime.RequiredError(
                 'conversationId',
-                'Required parameter "conversationId" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdGet().'
+                'Required parameter "conversationId" was null or undefined when calling publisherMessagingConversationsConversationIdGet().'
             );
         }
 
@@ -180,7 +180,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -193,8 +193,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Retrieves a specific conversation along with its messages
      * Get conversation with messages
      */
-    async apiV1PublisherMessagingConversationsConversationIdGet(requestParameters: ApiV1PublisherMessagingConversationsConversationIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainConversationWithMessagesResponse> {
-        const response = await this.apiV1PublisherMessagingConversationsConversationIdGetRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsConversationIdGet(requestParameters: PublisherMessagingConversationsConversationIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainConversationWithMessagesResponse> {
+        const response = await this.publisherMessagingConversationsConversationIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -202,18 +202,18 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Adds a new message to an existing conversation
      * Add message to conversation
      */
-    async apiV1PublisherMessagingConversationsConversationIdMessagesPostRaw(requestParameters: ApiV1PublisherMessagingConversationsConversationIdMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherMessage>> {
+    async publisherMessagingConversationsConversationIdMessagesPostRaw(requestParameters: PublisherMessagingConversationsConversationIdMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherMessage>> {
         if (requestParameters['conversationId'] == null) {
             throw new runtime.RequiredError(
                 'conversationId',
-                'Required parameter "conversationId" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdMessagesPost().'
+                'Required parameter "conversationId" was null or undefined when calling publisherMessagingConversationsConversationIdMessagesPost().'
             );
         }
 
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdMessagesPost().'
+                'Required parameter "request" was null or undefined when calling publisherMessagingConversationsConversationIdMessagesPost().'
             );
         }
 
@@ -224,7 +224,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}/messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}/messages`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -238,8 +238,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Adds a new message to an existing conversation
      * Add message to conversation
      */
-    async apiV1PublisherMessagingConversationsConversationIdMessagesPost(requestParameters: ApiV1PublisherMessagingConversationsConversationIdMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherMessage> {
-        const response = await this.apiV1PublisherMessagingConversationsConversationIdMessagesPostRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsConversationIdMessagesPost(requestParameters: PublisherMessagingConversationsConversationIdMessagesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherMessage> {
+        const response = await this.publisherMessagingConversationsConversationIdMessagesPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -247,18 +247,18 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Updates the status of a conversation (e.g., close conversation)
      * Update conversation status
      */
-    async apiV1PublisherMessagingConversationsConversationIdStatusPutRaw(requestParameters: ApiV1PublisherMessagingConversationsConversationIdStatusPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherConversation>> {
+    async publisherMessagingConversationsConversationIdStatusPutRaw(requestParameters: PublisherMessagingConversationsConversationIdStatusPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherConversation>> {
         if (requestParameters['conversationId'] == null) {
             throw new runtime.RequiredError(
                 'conversationId',
-                'Required parameter "conversationId" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdStatusPut().'
+                'Required parameter "conversationId" was null or undefined when calling publisherMessagingConversationsConversationIdStatusPut().'
             );
         }
 
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1PublisherMessagingConversationsConversationIdStatusPut().'
+                'Required parameter "request" was null or undefined when calling publisherMessagingConversationsConversationIdStatusPut().'
             );
         }
 
@@ -269,7 +269,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations/{conversation_id}/status`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
+            path: `/publisher-messaging/conversations/{conversation_id}/status`.replace(`{${"conversation_id"}}`, encodeURIComponent(String(requestParameters['conversationId']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -283,8 +283,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Updates the status of a conversation (e.g., close conversation)
      * Update conversation status
      */
-    async apiV1PublisherMessagingConversationsConversationIdStatusPut(requestParameters: ApiV1PublisherMessagingConversationsConversationIdStatusPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherConversation> {
-        const response = await this.apiV1PublisherMessagingConversationsConversationIdStatusPutRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsConversationIdStatusPut(requestParameters: PublisherMessagingConversationsConversationIdStatusPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherConversation> {
+        const response = await this.publisherMessagingConversationsConversationIdStatusPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -292,7 +292,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Retrieves a paginated list of conversations for the organization
      * Get conversations for organization
      */
-    async apiV1PublisherMessagingConversationsGetRaw(requestParameters: ApiV1PublisherMessagingConversationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainConversationListResponse>> {
+    async publisherMessagingConversationsGetRaw(requestParameters: PublisherMessagingConversationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainConversationListResponse>> {
         const queryParameters: any = {};
 
         if (requestParameters['status'] != null) {
@@ -310,7 +310,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations`,
+            path: `/publisher-messaging/conversations`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -323,8 +323,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Retrieves a paginated list of conversations for the organization
      * Get conversations for organization
      */
-    async apiV1PublisherMessagingConversationsGet(requestParameters: ApiV1PublisherMessagingConversationsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainConversationListResponse> {
-        const response = await this.apiV1PublisherMessagingConversationsGetRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsGet(requestParameters: PublisherMessagingConversationsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainConversationListResponse> {
+        const response = await this.publisherMessagingConversationsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -332,11 +332,11 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Initiates a new conversation with a publisher from a favorite list
      * Create a new conversation with a publisher
      */
-    async apiV1PublisherMessagingConversationsPostRaw(requestParameters: ApiV1PublisherMessagingConversationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherConversation>> {
+    async publisherMessagingConversationsPostRaw(requestParameters: PublisherMessagingConversationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainPublisherConversation>> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1PublisherMessagingConversationsPost().'
+                'Required parameter "request" was null or undefined when calling publisherMessagingConversationsPost().'
             );
         }
 
@@ -347,7 +347,7 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/publisher-messaging/conversations`,
+            path: `/publisher-messaging/conversations`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -361,8 +361,8 @@ export class PublisherMessagingApi extends runtime.BaseAPI {
      * Initiates a new conversation with a publisher from a favorite list
      * Create a new conversation with a publisher
      */
-    async apiV1PublisherMessagingConversationsPost(requestParameters: ApiV1PublisherMessagingConversationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherConversation> {
-        const response = await this.apiV1PublisherMessagingConversationsPostRaw(requestParameters, initOverrides);
+    async publisherMessagingConversationsPost(requestParameters: PublisherMessagingConversationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainPublisherConversation> {
+        const response = await this.publisherMessagingConversationsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

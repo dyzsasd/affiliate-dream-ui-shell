@@ -37,62 +37,62 @@ import {
     HandlersErrorResponseToJSON,
 } from '../models/index';
 
-export interface ApiV1OrganizationAssociationsGetRequest {
+export interface OrganizationAssociationsGetRequest {
     advertiserOrgId?: number;
     affiliateOrgId?: number;
-    status?: ApiV1OrganizationAssociationsGetStatusEnum;
-    associationType?: ApiV1OrganizationAssociationsGetAssociationTypeEnum;
+    status?: OrganizationAssociationsGetStatusEnum;
+    associationType?: OrganizationAssociationsGetAssociationTypeEnum;
     limit?: number;
     offset?: number;
     withDetails?: boolean;
 }
 
-export interface ApiV1OrganizationAssociationsIdApprovePostRequest {
+export interface OrganizationAssociationsIdApprovePostRequest {
     id: number;
 }
 
-export interface ApiV1OrganizationAssociationsIdGetRequest {
+export interface OrganizationAssociationsIdGetRequest {
     id: number;
 }
 
-export interface ApiV1OrganizationAssociationsIdReactivatePostRequest {
+export interface OrganizationAssociationsIdReactivatePostRequest {
     id: number;
 }
 
-export interface ApiV1OrganizationAssociationsIdRejectPostRequest {
+export interface OrganizationAssociationsIdRejectPostRequest {
     id: number;
 }
 
-export interface ApiV1OrganizationAssociationsIdSuspendPostRequest {
+export interface OrganizationAssociationsIdSuspendPostRequest {
     id: number;
 }
 
-export interface ApiV1OrganizationAssociationsIdVisibilityPutRequest {
+export interface OrganizationAssociationsIdVisibilityPutRequest {
     id: number;
     request: DomainUpdateAssociationRequest;
 }
 
-export interface ApiV1OrganizationAssociationsInvitationsPostRequest {
+export interface OrganizationAssociationsInvitationsPostRequest {
     request: DomainCreateAssociationRequest;
 }
 
-export interface ApiV1OrganizationAssociationsRequestsPostRequest {
+export interface OrganizationAssociationsRequestsPostRequest {
     request: DomainCreateAssociationRequest;
 }
 
-export interface ApiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRequest {
+export interface OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRequest {
     advertiserOrgId: number;
     affiliateOrgId?: number;
 }
 
-export interface ApiV1OrganizationsAffiliateOrgIdVisibleCampaignsGetRequest {
+export interface OrganizationsAffiliateOrgIdVisibleCampaignsGetRequest {
     affiliateOrgId: number;
     advertiserOrgId?: number;
 }
 
-export interface ApiV1OrganizationsIdAssociationsGetRequest {
+export interface OrganizationsIdAssociationsGetRequest {
     id: number;
-    status?: ApiV1OrganizationsIdAssociationsGetStatusEnum;
+    status?: OrganizationsIdAssociationsGetStatusEnum;
     withDetails?: boolean;
 }
 
@@ -105,7 +105,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * List organization associations with optional filtering
      * List associations
      */
-    async apiV1OrganizationAssociationsGetRaw(requestParameters: ApiV1OrganizationAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainOrganizationAssociation>>> {
+    async organizationAssociationsGetRaw(requestParameters: OrganizationAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainOrganizationAssociation>>> {
         const queryParameters: any = {};
 
         if (requestParameters['advertiserOrgId'] != null) {
@@ -139,7 +139,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organization-associations`,
+            path: `/organization-associations`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -152,8 +152,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * List organization associations with optional filtering
      * List associations
      */
-    async apiV1OrganizationAssociationsGet(requestParameters: ApiV1OrganizationAssociationsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainOrganizationAssociation>> {
-        const response = await this.apiV1OrganizationAssociationsGetRaw(requestParameters, initOverrides);
+    async organizationAssociationsGet(requestParameters: OrganizationAssociationsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainOrganizationAssociation>> {
+        const response = await this.organizationAssociationsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -161,11 +161,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Approve a pending organization association
      * Approve association
      */
-    async apiV1OrganizationAssociationsIdApprovePostRaw(requestParameters: ApiV1OrganizationAssociationsIdApprovePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsIdApprovePostRaw(requestParameters: OrganizationAssociationsIdApprovePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationAssociationsIdApprovePost().'
+                'Required parameter "id" was null or undefined when calling organizationAssociationsIdApprovePost().'
             );
         }
 
@@ -174,7 +174,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/{id}/approve`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organization-associations/{id}/approve`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -187,8 +187,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Approve a pending organization association
      * Approve association
      */
-    async apiV1OrganizationAssociationsIdApprovePost(requestParameters: ApiV1OrganizationAssociationsIdApprovePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsIdApprovePostRaw(requestParameters, initOverrides);
+    async organizationAssociationsIdApprovePost(requestParameters: OrganizationAssociationsIdApprovePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsIdApprovePostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -196,11 +196,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get an organization association by ID
      * Get association
      */
-    async apiV1OrganizationAssociationsIdGetRaw(requestParameters: ApiV1OrganizationAssociationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsIdGetRaw(requestParameters: OrganizationAssociationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationAssociationsIdGet().'
+                'Required parameter "id" was null or undefined when calling organizationAssociationsIdGet().'
             );
         }
 
@@ -209,7 +209,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organization-associations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -222,8 +222,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get an organization association by ID
      * Get association
      */
-    async apiV1OrganizationAssociationsIdGet(requestParameters: ApiV1OrganizationAssociationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsIdGetRaw(requestParameters, initOverrides);
+    async organizationAssociationsIdGet(requestParameters: OrganizationAssociationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -231,11 +231,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Reactivate a suspended organization association
      * Reactivate association
      */
-    async apiV1OrganizationAssociationsIdReactivatePostRaw(requestParameters: ApiV1OrganizationAssociationsIdReactivatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsIdReactivatePostRaw(requestParameters: OrganizationAssociationsIdReactivatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationAssociationsIdReactivatePost().'
+                'Required parameter "id" was null or undefined when calling organizationAssociationsIdReactivatePost().'
             );
         }
 
@@ -244,7 +244,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/{id}/reactivate`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organization-associations/{id}/reactivate`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -257,8 +257,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Reactivate a suspended organization association
      * Reactivate association
      */
-    async apiV1OrganizationAssociationsIdReactivatePost(requestParameters: ApiV1OrganizationAssociationsIdReactivatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsIdReactivatePostRaw(requestParameters, initOverrides);
+    async organizationAssociationsIdReactivatePost(requestParameters: OrganizationAssociationsIdReactivatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsIdReactivatePostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -266,11 +266,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Reject a pending organization association
      * Reject association
      */
-    async apiV1OrganizationAssociationsIdRejectPostRaw(requestParameters: ApiV1OrganizationAssociationsIdRejectPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsIdRejectPostRaw(requestParameters: OrganizationAssociationsIdRejectPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationAssociationsIdRejectPost().'
+                'Required parameter "id" was null or undefined when calling organizationAssociationsIdRejectPost().'
             );
         }
 
@@ -279,7 +279,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/{id}/reject`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organization-associations/{id}/reject`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -292,8 +292,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Reject a pending organization association
      * Reject association
      */
-    async apiV1OrganizationAssociationsIdRejectPost(requestParameters: ApiV1OrganizationAssociationsIdRejectPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsIdRejectPostRaw(requestParameters, initOverrides);
+    async organizationAssociationsIdRejectPost(requestParameters: OrganizationAssociationsIdRejectPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsIdRejectPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -301,11 +301,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Suspend an active organization association
      * Suspend association
      */
-    async apiV1OrganizationAssociationsIdSuspendPostRaw(requestParameters: ApiV1OrganizationAssociationsIdSuspendPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsIdSuspendPostRaw(requestParameters: OrganizationAssociationsIdSuspendPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationAssociationsIdSuspendPost().'
+                'Required parameter "id" was null or undefined when calling organizationAssociationsIdSuspendPost().'
             );
         }
 
@@ -314,7 +314,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/{id}/suspend`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organization-associations/{id}/suspend`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -327,8 +327,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Suspend an active organization association
      * Suspend association
      */
-    async apiV1OrganizationAssociationsIdSuspendPost(requestParameters: ApiV1OrganizationAssociationsIdSuspendPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsIdSuspendPostRaw(requestParameters, initOverrides);
+    async organizationAssociationsIdSuspendPost(requestParameters: OrganizationAssociationsIdSuspendPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsIdSuspendPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -336,18 +336,18 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Update the visibility settings of an organization association
      * Update visibility
      */
-    async apiV1OrganizationAssociationsIdVisibilityPutRaw(requestParameters: ApiV1OrganizationAssociationsIdVisibilityPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsIdVisibilityPutRaw(requestParameters: OrganizationAssociationsIdVisibilityPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationAssociationsIdVisibilityPut().'
+                'Required parameter "id" was null or undefined when calling organizationAssociationsIdVisibilityPut().'
             );
         }
 
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1OrganizationAssociationsIdVisibilityPut().'
+                'Required parameter "request" was null or undefined when calling organizationAssociationsIdVisibilityPut().'
             );
         }
 
@@ -358,7 +358,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/{id}/visibility`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organization-associations/{id}/visibility`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -372,8 +372,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Update the visibility settings of an organization association
      * Update visibility
      */
-    async apiV1OrganizationAssociationsIdVisibilityPut(requestParameters: ApiV1OrganizationAssociationsIdVisibilityPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsIdVisibilityPutRaw(requestParameters, initOverrides);
+    async organizationAssociationsIdVisibilityPut(requestParameters: OrganizationAssociationsIdVisibilityPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsIdVisibilityPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -381,11 +381,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Create a new invitation from advertiser organization to affiliate organization
      * Create invitation
      */
-    async apiV1OrganizationAssociationsInvitationsPostRaw(requestParameters: ApiV1OrganizationAssociationsInvitationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsInvitationsPostRaw(requestParameters: OrganizationAssociationsInvitationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1OrganizationAssociationsInvitationsPost().'
+                'Required parameter "request" was null or undefined when calling organizationAssociationsInvitationsPost().'
             );
         }
 
@@ -396,7 +396,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/invitations`,
+            path: `/organization-associations/invitations`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -410,8 +410,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Create a new invitation from advertiser organization to affiliate organization
      * Create invitation
      */
-    async apiV1OrganizationAssociationsInvitationsPost(requestParameters: ApiV1OrganizationAssociationsInvitationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsInvitationsPostRaw(requestParameters, initOverrides);
+    async organizationAssociationsInvitationsPost(requestParameters: OrganizationAssociationsInvitationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsInvitationsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -419,11 +419,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Create a new request from affiliate organization to advertiser organization
      * Create request
      */
-    async apiV1OrganizationAssociationsRequestsPostRaw(requestParameters: ApiV1OrganizationAssociationsRequestsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
+    async organizationAssociationsRequestsPostRaw(requestParameters: OrganizationAssociationsRequestsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationAssociation>> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1OrganizationAssociationsRequestsPost().'
+                'Required parameter "request" was null or undefined when calling organizationAssociationsRequestsPost().'
             );
         }
 
@@ -434,7 +434,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/organization-associations/requests`,
+            path: `/organization-associations/requests`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -448,8 +448,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Create a new request from affiliate organization to advertiser organization
      * Create request
      */
-    async apiV1OrganizationAssociationsRequestsPost(requestParameters: ApiV1OrganizationAssociationsRequestsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
-        const response = await this.apiV1OrganizationAssociationsRequestsPostRaw(requestParameters, initOverrides);
+    async organizationAssociationsRequestsPost(requestParameters: OrganizationAssociationsRequestsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationAssociation> {
+        const response = await this.organizationAssociationsRequestsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -457,11 +457,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get all affiliates from affiliate organizations that are visible to the specified advertiser organization based on active associations
      * Get visible affiliates for advertiser
      */
-    async apiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRaw(requestParameters: ApiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainAffiliate>>> {
+    async organizationsAdvertiserOrgIdVisibleAffiliatesGetRaw(requestParameters: OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainAffiliate>>> {
         if (requestParameters['advertiserOrgId'] == null) {
             throw new runtime.RequiredError(
                 'advertiserOrgId',
-                'Required parameter "advertiserOrgId" was null or undefined when calling apiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGet().'
+                'Required parameter "advertiserOrgId" was null or undefined when calling organizationsAdvertiserOrgIdVisibleAffiliatesGet().'
             );
         }
 
@@ -474,7 +474,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organizations/{advertiser_org_id}/visible-affiliates`.replace(`{${"advertiser_org_id"}}`, encodeURIComponent(String(requestParameters['advertiserOrgId']))),
+            path: `/organizations/{advertiser_org_id}/visible-affiliates`.replace(`{${"advertiser_org_id"}}`, encodeURIComponent(String(requestParameters['advertiserOrgId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -487,8 +487,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get all affiliates from affiliate organizations that are visible to the specified advertiser organization based on active associations
      * Get visible affiliates for advertiser
      */
-    async apiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGet(requestParameters: ApiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainAffiliate>> {
-        const response = await this.apiV1OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRaw(requestParameters, initOverrides);
+    async organizationsAdvertiserOrgIdVisibleAffiliatesGet(requestParameters: OrganizationsAdvertiserOrgIdVisibleAffiliatesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainAffiliate>> {
+        const response = await this.organizationsAdvertiserOrgIdVisibleAffiliatesGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -496,11 +496,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get all campaigns from advertiser organizations that are visible to the specified affiliate organization based on active associations
      * Get visible campaigns for affiliate
      */
-    async apiV1OrganizationsAffiliateOrgIdVisibleCampaignsGetRaw(requestParameters: ApiV1OrganizationsAffiliateOrgIdVisibleCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainCampaign>>> {
+    async organizationsAffiliateOrgIdVisibleCampaignsGetRaw(requestParameters: OrganizationsAffiliateOrgIdVisibleCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainCampaign>>> {
         if (requestParameters['affiliateOrgId'] == null) {
             throw new runtime.RequiredError(
                 'affiliateOrgId',
-                'Required parameter "affiliateOrgId" was null or undefined when calling apiV1OrganizationsAffiliateOrgIdVisibleCampaignsGet().'
+                'Required parameter "affiliateOrgId" was null or undefined when calling organizationsAffiliateOrgIdVisibleCampaignsGet().'
             );
         }
 
@@ -513,7 +513,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organizations/{affiliate_org_id}/visible-campaigns`.replace(`{${"affiliate_org_id"}}`, encodeURIComponent(String(requestParameters['affiliateOrgId']))),
+            path: `/organizations/{affiliate_org_id}/visible-campaigns`.replace(`{${"affiliate_org_id"}}`, encodeURIComponent(String(requestParameters['affiliateOrgId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -526,8 +526,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get all campaigns from advertiser organizations that are visible to the specified affiliate organization based on active associations
      * Get visible campaigns for affiliate
      */
-    async apiV1OrganizationsAffiliateOrgIdVisibleCampaignsGet(requestParameters: ApiV1OrganizationsAffiliateOrgIdVisibleCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainCampaign>> {
-        const response = await this.apiV1OrganizationsAffiliateOrgIdVisibleCampaignsGetRaw(requestParameters, initOverrides);
+    async organizationsAffiliateOrgIdVisibleCampaignsGet(requestParameters: OrganizationsAffiliateOrgIdVisibleCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainCampaign>> {
+        const response = await this.organizationsAffiliateOrgIdVisibleCampaignsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -535,11 +535,11 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get all associations for a specific organization (advertiser or affiliate)
      * Get associations for organization
      */
-    async apiV1OrganizationsIdAssociationsGetRaw(requestParameters: ApiV1OrganizationsIdAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainOrganizationAssociation>>> {
+    async organizationsIdAssociationsGetRaw(requestParameters: OrganizationsIdAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainOrganizationAssociation>>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1OrganizationsIdAssociationsGet().'
+                'Required parameter "id" was null or undefined when calling organizationsIdAssociationsGet().'
             );
         }
 
@@ -556,7 +556,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/organizations/{id}/associations`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/organizations/{id}/associations`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -569,8 +569,8 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * Get all associations for a specific organization (advertiser or affiliate)
      * Get associations for organization
      */
-    async apiV1OrganizationsIdAssociationsGet(requestParameters: ApiV1OrganizationsIdAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainOrganizationAssociation>> {
-        const response = await this.apiV1OrganizationsIdAssociationsGetRaw(requestParameters, initOverrides);
+    async organizationsIdAssociationsGet(requestParameters: OrganizationsIdAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainOrganizationAssociation>> {
+        const response = await this.organizationsIdAssociationsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -579,28 +579,28 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 /**
  * @export
  */
-export const ApiV1OrganizationAssociationsGetStatusEnum = {
+export const OrganizationAssociationsGetStatusEnum = {
     Pending: 'pending',
     Active: 'active',
     Suspended: 'suspended',
     Rejected: 'rejected'
 } as const;
-export type ApiV1OrganizationAssociationsGetStatusEnum = typeof ApiV1OrganizationAssociationsGetStatusEnum[keyof typeof ApiV1OrganizationAssociationsGetStatusEnum];
+export type OrganizationAssociationsGetStatusEnum = typeof OrganizationAssociationsGetStatusEnum[keyof typeof OrganizationAssociationsGetStatusEnum];
 /**
  * @export
  */
-export const ApiV1OrganizationAssociationsGetAssociationTypeEnum = {
+export const OrganizationAssociationsGetAssociationTypeEnum = {
     Invitation: 'invitation',
     Request: 'request'
 } as const;
-export type ApiV1OrganizationAssociationsGetAssociationTypeEnum = typeof ApiV1OrganizationAssociationsGetAssociationTypeEnum[keyof typeof ApiV1OrganizationAssociationsGetAssociationTypeEnum];
+export type OrganizationAssociationsGetAssociationTypeEnum = typeof OrganizationAssociationsGetAssociationTypeEnum[keyof typeof OrganizationAssociationsGetAssociationTypeEnum];
 /**
  * @export
  */
-export const ApiV1OrganizationsIdAssociationsGetStatusEnum = {
+export const OrganizationsIdAssociationsGetStatusEnum = {
     Pending: 'pending',
     Active: 'active',
     Suspended: 'suspended',
     Rejected: 'rejected'
 } as const;
-export type ApiV1OrganizationsIdAssociationsGetStatusEnum = typeof ApiV1OrganizationsIdAssociationsGetStatusEnum[keyof typeof ApiV1OrganizationsIdAssociationsGetStatusEnum];
+export type OrganizationsIdAssociationsGetStatusEnum = typeof OrganizationsIdAssociationsGetStatusEnum[keyof typeof OrganizationsIdAssociationsGetStatusEnum];

@@ -18,11 +18,11 @@ src/apis/TrackingLinksApi.ts
 src/apis/WebhooksApi.ts
 src/apis/index.ts
 src/index.ts
-src/models/ApiV1AnalyticsAdvertisersIdGet200Response.ts
-src/models/ApiV1AnalyticsAdvertisersPost201Response.ts
-src/models/ApiV1AnalyticsAffiliatesIdGet200Response.ts
-src/models/ApiV1AnalyticsAffiliatesPost201Response.ts
-src/models/ApiV1AnalyticsAutocompleteGet200Response.ts
+src/models/AnalyticsAdvertisersIdGet200Response.ts
+src/models/AnalyticsAdvertisersPost201Response.ts
+src/models/AnalyticsAffiliatesIdGet200Response.ts
+src/models/AnalyticsAffiliatesPost201Response.ts
+src/models/AnalyticsAutocompleteGet200Response.ts
 src/models/DomainAddExternalMessageRequest.ts
 src/models/DomainAddPublisherToListRequest.ts
 src/models/DomainAdvertiser.ts

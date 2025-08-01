@@ -1,10 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
-export * from './ApiV1AnalyticsAdvertisersIdGet200Response';
-export * from './ApiV1AnalyticsAdvertisersPost201Response';
-export * from './ApiV1AnalyticsAffiliatesIdGet200Response';
-export * from './ApiV1AnalyticsAffiliatesPost201Response';
-export * from './ApiV1AnalyticsAutocompleteGet200Response';
+export * from './AnalyticsAdvertisersIdGet200Response';
+export * from './AnalyticsAdvertisersPost201Response';
+export * from './AnalyticsAffiliatesIdGet200Response';
+export * from './AnalyticsAffiliatesPost201Response';
+export * from './AnalyticsAutocompleteGet200Response';
 export * from './DomainAddExternalMessageRequest';
 export * from './DomainAddPublisherToListRequest';
 export * from './DomainAdvertiser';

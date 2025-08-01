@@ -3358,7 +3358,7 @@ paths:
       summary: Search affiliates by domain, country, partner domains, and verticals
       tags:
       - affiliates
-  /api/v1/analytics/advertisers:
+  /analytics/advertisers:
     post:
       consumes:
       - application/json
@@ -3393,7 +3393,7 @@ paths:
       summary: Create advertiser analytics data
       tags:
       - Analytics
-  /api/v1/analytics/advertisers/{id}:
+  /analytics/advertisers/{id}:
     get:
       consumes:
       - application/json
@@ -3431,7 +3431,7 @@ paths:
       summary: Get advertiser analytics data
       tags:
       - Analytics
-  /api/v1/analytics/affiliates:
+  /analytics/affiliates:
     post:
       consumes:
       - application/json
@@ -3466,7 +3466,7 @@ paths:
       summary: Create publisher analytics data
       tags:
       - Analytics
-  /api/v1/analytics/affiliates/{id}:
+  /analytics/affiliates/{id}:
     get:
       consumes:
       - application/json
@@ -3504,7 +3504,7 @@ paths:
       summary: Get publisher analytics data
       tags:
       - Analytics
-  /api/v1/analytics/affiliates/domain/{domain}:
+  /analytics/affiliates/domain/{domain}:
     get:
       consumes:
       - application/json
@@ -3543,7 +3543,7 @@ paths:
       summary: Get publisher analytics data by domain
       tags:
       - Analytics
-  /api/v1/analytics/autocomplete:
+  /analytics/autocomplete:
     get:
       consumes:
       - application/json
@@ -3597,939 +3597,6 @@ paths:
       summary: Search organizations for autocompletion
       tags:
       - Analytics
-  /api/v1/favorite-publisher-lists/{list_id}/publishers/{domain}/status:
-    patch:
-      consumes:
-      - application/json
-      description: Updates the status of a publisher in a favorite list (added ->
-        contacted -> accepted)
-      parameters:
-      - description: List ID
-        in: path
-        name: list_id
-        required: true
-        type: integer
-      - description: Publisher domain
-        in: path
-        name: domain
-        required: true
-        type: string
-      - description: Status update request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.UpdatePublisherStatusRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Status updated successfully
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Invalid request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: List or publisher not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update publisher status in favorite list
-      tags:
-      - favorite-publisher-lists
-  /api/v1/organization-associations:
-    get:
-      consumes:
-      - application/json
-      description: List organization associations with optional filtering
-      parameters:
-      - description: Advertiser organization ID
-        in: query
-        name: advertiser_org_id
-        type: integer
-      - description: Affiliate organization ID
-        in: query
-        name: affiliate_org_id
-        type: integer
-      - description: Association status
-        enum:
-        - pending
-        - active
-        - suspended
-        - rejected
-        in: query
-        name: status
-        type: string
-      - description: Association type
-        enum:
-        - invitation
-        - request
-        in: query
-        name: association_type
-        type: string
-      - default: 50
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: false
-        description: Include organization and user details
-        in: query
-        name: with_details
-        type: boolean
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/domain.OrganizationAssociation'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: List associations
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get an organization association by ID
-      parameters:
-      - description: Association ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get association
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/{id}/approve:
-    post:
-      consumes:
-      - application/json
-      description: Approve a pending organization association
-      parameters:
-      - description: Association ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Approve association
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/{id}/reactivate:
-    post:
-      consumes:
-      - application/json
-      description: Reactivate a suspended organization association
-      parameters:
-      - description: Association ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Reactivate association
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/{id}/reject:
-    post:
-      consumes:
-      - application/json
-      description: Reject a pending organization association
-      parameters:
-      - description: Association ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Reject association
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/{id}/suspend:
-    post:
-      consumes:
-      - application/json
-      description: Suspend an active organization association
-      parameters:
-      - description: Association ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Suspend association
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/{id}/visibility:
-    put:
-      consumes:
-      - application/json
-      description: Update the visibility settings of an organization association
-      parameters:
-      - description: Association ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Update visibility request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.UpdateAssociationRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update visibility
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/invitations:
-    post:
-      consumes:
-      - application/json
-      description: Create a new invitation from advertiser organization to affiliate
-        organization
-      parameters:
-      - description: Create invitation request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.CreateAssociationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Create invitation
-      tags:
-      - organization-associations
-  /api/v1/organization-associations/requests:
-    post:
-      consumes:
-      - application/json
-      description: Create a new request from affiliate organization to advertiser
-        organization
-      parameters:
-      - description: Create request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.CreateAssociationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/domain.OrganizationAssociation'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Create request
-      tags:
-      - organization-associations
-  /api/v1/organizations:
-    post:
-      consumes:
-      - application/json
-      description: Creates a new organization with the given name. Requires Admin
-        role.
-      parameters:
-      - description: Organization details
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handlers.CreateOrganizationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created organization
-          schema:
-            $ref: '#/definitions/domain.Organization'
-        "400":
-          description: Invalid request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "403":
-          description: Forbidden - Only admins can create organizations
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      security:
-      - BearerAuth: []
-      summary: Create a new organization (Admin only)
-      tags:
-      - organizations
-  /api/v1/organizations/{advertiser_org_id}/visible-affiliates:
-    get:
-      consumes:
-      - application/json
-      description: Get all affiliates from affiliate organizations that are visible
-        to the specified advertiser organization based on active associations
-      parameters:
-      - description: Advertiser Organization ID
-        in: path
-        name: advertiser_org_id
-        required: true
-        type: integer
-      - description: Filter by specific affiliate organization ID
-        in: query
-        name: affiliate_org_id
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/domain.Affiliate'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get visible affiliates for advertiser
-      tags:
-      - organization-associations
-  /api/v1/organizations/{affiliate_org_id}/visible-campaigns:
-    get:
-      consumes:
-      - application/json
-      description: Get all campaigns from advertiser organizations that are visible
-        to the specified affiliate organization based on active associations
-      parameters:
-      - description: Affiliate Organization ID
-        in: path
-        name: affiliate_org_id
-        required: true
-        type: integer
-      - description: Filter by specific advertiser organization ID
-        in: query
-        name: advertiser_org_id
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/domain.Campaign'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get visible campaigns for affiliate
-      tags:
-      - organization-associations
-  /api/v1/organizations/{id}/associations:
-    get:
-      consumes:
-      - application/json
-      description: Get all associations for a specific organization (advertiser or
-        affiliate)
-      parameters:
-      - description: Organization ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Association status
-        enum:
-        - pending
-        - active
-        - suspended
-        - rejected
-        in: query
-        name: status
-        type: string
-      - default: false
-        description: Include organization and user details
-        in: query
-        name: with_details
-        type: boolean
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/domain.OrganizationAssociation'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get associations for organization
-      tags:
-      - organization-associations
-  /api/v1/public/organizations:
-    post:
-      consumes:
-      - application/json
-      description: Creates a new organization with the given name and optional extra
-        info. No authentication required.
-      parameters:
-      - description: Organization details
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handlers.CreateOrganizationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created organization
-          schema:
-            $ref: '#/definitions/domain.Organization'
-        "400":
-          description: Invalid request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Create a new organization (Public)
-      tags:
-      - organizations
-  /api/v1/publisher-messaging/conversations:
-    get:
-      description: Retrieves a paginated list of conversations for the organization
-      parameters:
-      - description: Filter by conversation status (active, closed)
-        in: query
-        name: status
-        type: string
-      - description: 'Page number (default: 1)'
-        in: query
-        name: page
-        type: integer
-      - description: 'Page size (default: 20)'
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Conversations retrieved successfully
-          schema:
-            $ref: '#/definitions/domain.ConversationListResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get conversations for organization
-      tags:
-      - Publisher Messaging
-    post:
-      consumes:
-      - application/json
-      description: Initiates a new conversation with a publisher from a favorite list
-      parameters:
-      - description: Conversation creation request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.CreateConversationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Conversation created successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherConversation'
-        "400":
-          description: Invalid request body or validation error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Publisher or favorite list not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "409":
-          description: Active conversation with publisher already exists
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Create a new conversation with a publisher
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}:
-    delete:
-      description: Deletes a conversation and all associated messages
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: Conversation deleted successfully
-        "400":
-          description: Invalid conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Delete conversation
-      tags:
-      - Publisher Messaging
-    get:
-      description: Retrieves a specific conversation along with its messages
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Conversation retrieved successfully
-          schema:
-            $ref: '#/definitions/domain.ConversationWithMessagesResponse'
-        "400":
-          description: Invalid conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get conversation with messages
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}/external-messages:
-    post:
-      consumes:
-      - application/json
-      description: Allows external services to add messages to existing conversations
-        (e.g., publisher replies)
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      - description: External message request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.AddExternalMessageRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Message added successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherMessage'
-        "400":
-          description: Invalid request body or conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Add external message to conversation
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}/messages:
-    post:
-      consumes:
-      - application/json
-      description: Adds a new message to an existing conversation
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      - description: Message request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.SendMessageRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Message added successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherMessage'
-        "400":
-          description: Invalid request body or conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Add message to conversation
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}/status:
-    put:
-      consumes:
-      - application/json
-      description: Updates the status of a conversation (e.g., close conversation)
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      - description: Status update request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.UpdateConversationStatusRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Conversation status updated successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherConversation'
-        "400":
-          description: Invalid request body or conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update conversation status
-      tags:
-      - Publisher Messaging
   /billing/config:
     put:
       consumes:
@@ -5305,6 +4372,56 @@ paths:
       summary: Update publisher notes in favorite list
       tags:
       - favorite-publisher-lists
+  /favorite-publisher-lists/{list_id}/publishers/{domain}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Updates the status of a publisher in a favorite list (added ->
+        contacted -> accepted)
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Publisher domain
+        in: path
+        name: domain
+        required: true
+        type: string
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdatePublisherStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status updated successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: List or publisher not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update publisher status in favorite list
+      tags:
+      - favorite-publisher-lists
   /favorite-publisher-lists/search:
     get:
       description: Retrieves all favorite publisher lists that contain a specific
@@ -5355,6 +4472,405 @@ paths:
       summary: Health check endpoint
       tags:
       - system
+  /organization-associations:
+    get:
+      consumes:
+      - application/json
+      description: List organization associations with optional filtering
+      parameters:
+      - description: Advertiser organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      - description: Affiliate organization ID
+        in: query
+        name: affiliate_org_id
+        type: integer
+      - description: Association status
+        enum:
+        - pending
+        - active
+        - suspended
+        - rejected
+        in: query
+        name: status
+        type: string
+      - description: Association type
+        enum:
+        - invitation
+        - request
+        in: query
+        name: association_type
+        type: string
+      - default: 50
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrganizationAssociation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: List associations
+      tags:
+      - organization-associations
+  /organization-associations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an organization association by ID
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/approve:
+    post:
+      consumes:
+      - application/json
+      description: Approve a pending organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Approve association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/reactivate:
+    post:
+      consumes:
+      - application/json
+      description: Reactivate a suspended organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Reactivate association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Reject a pending organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Reject association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/suspend:
+    post:
+      consumes:
+      - application/json
+      description: Suspend an active organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Suspend association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/visibility:
+    put:
+      consumes:
+      - application/json
+      description: Update the visibility settings of an organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update visibility request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateAssociationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update visibility
+      tags:
+      - organization-associations
+  /organization-associations/invitations:
+    post:
+      consumes:
+      - application/json
+      description: Create a new invitation from advertiser organization to affiliate
+        organization
+      parameters:
+      - description: Create invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateAssociationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create invitation
+      tags:
+      - organization-associations
+  /organization-associations/requests:
+    post:
+      consumes:
+      - application/json
+      description: Create a new request from affiliate organization to advertiser
+        organization
+      parameters:
+      - description: Create request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateAssociationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create request
+      tags:
+      - organization-associations
   /organizations:
     get:
       consumes:
@@ -5389,6 +4905,136 @@ paths:
       summary: List organizations
       tags:
       - organizations
+    post:
+      consumes:
+      - application/json
+      description: Creates a new organization with the given name. Requires Admin
+        role.
+      parameters:
+      - description: Organization details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created organization
+          schema:
+            $ref: '#/definitions/domain.Organization'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden - Only admins can create organizations
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new organization (Admin only)
+      tags:
+      - organizations
+  /organizations/{advertiser_org_id}/visible-affiliates:
+    get:
+      consumes:
+      - application/json
+      description: Get all affiliates from affiliate organizations that are visible
+        to the specified advertiser organization based on active associations
+      parameters:
+      - description: Advertiser Organization ID
+        in: path
+        name: advertiser_org_id
+        required: true
+        type: integer
+      - description: Filter by specific affiliate organization ID
+        in: query
+        name: affiliate_org_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Affiliate'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get visible affiliates for advertiser
+      tags:
+      - organization-associations
+  /organizations/{affiliate_org_id}/visible-campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Get all campaigns from advertiser organizations that are visible
+        to the specified affiliate organization based on active associations
+      parameters:
+      - description: Affiliate Organization ID
+        in: path
+        name: affiliate_org_id
+        required: true
+        type: integer
+      - description: Filter by specific advertiser organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Campaign'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get visible campaigns for affiliate
+      tags:
+      - organization-associations
   /organizations/{id}:
     delete:
       consumes:
@@ -5628,6 +5274,56 @@ paths:
       summary: List affiliates by organization
       tags:
       - affiliates
+  /organizations/{id}/associations:
+    get:
+      consumes:
+      - application/json
+      description: Get all associations for a specific organization (advertiser or
+        affiliate)
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Association status
+        enum:
+        - pending
+        - active
+        - suspended
+        - rejected
+        in: query
+        name: status
+        type: string
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrganizationAssociation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get associations for organization
+      tags:
+      - organization-associations
   /organizations/{organization_id}/campaigns:
     get:
       description: Retrieve campaigns for a specific organization with pagination
@@ -6174,6 +5870,41 @@ paths:
       summary: Upsert a profile
       tags:
       - profile
+  /public/organizations:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new organization with the given name and optional extra
+        info. No authentication required.
+      parameters:
+      - description: Organization details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created organization
+          schema:
+            $ref: '#/definitions/domain.Organization'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new organization (Public)
+      tags:
+      - organizations
   /public/webhooks/supabase/new-user:
     post:
       consumes:
@@ -6210,6 +5941,274 @@ paths:
       summary: Handle Supabase new user webhook
       tags:
       - webhooks
+  /publisher-messaging/conversations:
+    get:
+      description: Retrieves a paginated list of conversations for the organization
+      parameters:
+      - description: Filter by conversation status (active, closed)
+        in: query
+        name: status
+        type: string
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 20)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversations retrieved successfully
+          schema:
+            $ref: '#/definitions/domain.ConversationListResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get conversations for organization
+      tags:
+      - Publisher Messaging
+    post:
+      consumes:
+      - application/json
+      description: Initiates a new conversation with a publisher from a favorite list
+      parameters:
+      - description: Conversation creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateConversationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Conversation created successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherConversation'
+        "400":
+          description: Invalid request body or validation error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Publisher or favorite list not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "409":
+          description: Active conversation with publisher already exists
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create a new conversation with a publisher
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}:
+    delete:
+      description: Deletes a conversation and all associated messages
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Conversation deleted successfully
+        "400":
+          description: Invalid conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete conversation
+      tags:
+      - Publisher Messaging
+    get:
+      description: Retrieves a specific conversation along with its messages
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation retrieved successfully
+          schema:
+            $ref: '#/definitions/domain.ConversationWithMessagesResponse'
+        "400":
+          description: Invalid conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get conversation with messages
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}/external-messages:
+    post:
+      consumes:
+      - application/json
+      description: Allows external services to add messages to existing conversations
+        (e.g., publisher replies)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: External message request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.AddExternalMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Message added successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherMessage'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Add external message to conversation
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}/messages:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new message to an existing conversation
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: Message request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SendMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Message added successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherMessage'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Add message to conversation
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Updates the status of a conversation (e.g., close conversation)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateConversationStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation status updated successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherConversation'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update conversation status
+      tags:
+      - Publisher Messaging
   /users/me:
     get:
       consumes:
