@@ -12,8 +12,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { OrganizationsApi } from '@/generated-api/src/apis';
+import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { HandlersCreateOrganizationRequest } from '@/generated-api/src/models';
-import { createPublicApiClient } from '@/services/backendApi';
+import { createPublicApiClient, createApiClient } from '@/services/backendApi';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Building2 } from 'lucide-react';
 
@@ -69,9 +70,23 @@ export const AgencyOnboard: React.FC = () => {
         request: createRequest,
       });
 
+      // Create profile for the user
+      if (response.organizationId) {
+        const profileApi = await createApiClient(ProfileApi);
+        await profileApi.profilesPost({
+          profile: {
+            email: user.email,
+            firstName: user.user_metadata?.first_name,
+            lastName: user.user_metadata?.last_name,
+            organizationId: response.organizationId,
+            roleId: 1 // Default role, adjust as needed
+          }
+        });
+      }
+
       toast({
         title: t('organizations.organizationCreated'),
-        description: "Your agency organization has been created successfully",
+        description: "Your agency organization and profile have been created successfully",
       });
 
       // Navigate to dashboard after successful creation

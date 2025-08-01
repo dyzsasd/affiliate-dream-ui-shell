@@ -10,8 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { OrganizationsApi } from '@/generated-api/src/apis';
+import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { HandlersCreateOrganizationRequest, HandlersAffiliateExtraInfoRequest, HandlersAffiliateExtraInfoRequestAffiliateTypeEnum } from '@/generated-api/src/models';
-import { createPublicApiClient } from '@/services/backendApi';
+import { createPublicApiClient, createApiClient } from '@/services/backendApi';
+import { useAuth } from '@/contexts/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Building2, Mail } from 'lucide-react';
 
@@ -28,6 +30,7 @@ type OnboardFormData = z.infer<typeof onboardSchema>;
 
 export const AffiliateOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -65,9 +68,23 @@ export const AffiliateOnboard: React.FC = () => {
         request: createOrgRequest
       });
 
+      // Create profile for the user
+      if (user && organization.organizationId) {
+        const profileApi = await createApiClient(ProfileApi);
+        await profileApi.profilesPost({
+          profile: {
+            email: user.email,
+            firstName: user.user_metadata?.first_name,
+            lastName: user.user_metadata?.last_name,
+            organizationId: organization.organizationId,
+            roleId: 1 // Default role, adjust as needed
+          }
+        });
+      }
+
       toast({
         title: "Organization created successfully",
-        description: "Your affiliate organization has been created.",
+        description: "Your affiliate organization and profile have been created.",
       });
 
       // Navigate to dashboard after successful creation
