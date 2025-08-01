@@ -9,6 +9,7 @@ src/apis/AnalyticsApi.ts
 src/apis/BillingApi.ts
 src/apis/CampaignsApi.ts
 src/apis/FavoritePublisherListsApi.ts
+src/apis/OrganizationAssociationsApi.ts
 src/apis/OrganizationsApi.ts
 src/apis/ProfileApi.ts
 src/apis/PublisherMessagingApi.ts
@@ -37,6 +38,8 @@ src/models/DomainAnalyticsPublisherResponse.ts
 src/models/DomainAnalyticsPublisherResponsePublisher.ts
 src/models/DomainAnalyticsPublisherResponsePublisherKnown.ts
 src/models/DomainAnalyticsPublisherResponsePublisherPromotype.ts
+src/models/DomainAssociationStatus.ts
+src/models/DomainAssociationType.ts
 src/models/DomainAutocompleteResult.ts
 src/models/DomainBillingAccount.ts
 src/models/DomainBillingAccountStatus.ts
@@ -46,12 +49,14 @@ src/models/DomainBillingDetails.ts
 src/models/DomainBillingFrequency.ts
 src/models/DomainBillingMode.ts
 src/models/DomainBillingSchedule.ts
+src/models/DomainCampaign.ts
 src/models/DomainContactEmailData.ts
 src/models/DomainContactEmailDataValueInner.ts
 src/models/DomainConversationListResponse.ts
 src/models/DomainConversationWithMessagesResponse.ts
 src/models/DomainCountryRankingData.ts
 src/models/DomainCountryRankingDataHighestValue.ts
+src/models/DomainCreateAssociationRequest.ts
 src/models/DomainCreateConversationRequest.ts
 src/models/DomainCreateFavoritePublisherListRequest.ts
 src/models/DomainCreatePaymentMethodRequest.ts
@@ -64,6 +69,7 @@ src/models/DomainKeywordData.ts
 src/models/DomainKeywordDataSampleValueInner.ts
 src/models/DomainMetaData.ts
 src/models/DomainOrganization.ts
+src/models/DomainOrganizationAssociation.ts
 src/models/DomainOrganizationType.ts
 src/models/DomainPaymentDetails.ts
 src/models/DomainPaymentDetailsType.ts
@@ -79,6 +85,7 @@ src/models/DomainStripePaymentMethod.ts
 src/models/DomainTransaction.ts
 src/models/DomainTransactionStatus.ts
 src/models/DomainTransactionType.ts
+src/models/DomainUpdateAssociationRequest.ts
 src/models/DomainUpdateBillingConfigRequest.ts
 src/models/DomainUpdateConversationStatusRequest.ts
 src/models/DomainUpdateFavoritePublisherListRequest.ts
@@ -86,6 +93,8 @@ src/models/DomainUpdatePublisherInListRequest.ts
 src/models/DomainUpdatePublisherStatusRequest.ts
 src/models/DomainVerticalData.ts
 src/models/DomainVerticalDataSampleValue.ts
+src/models/HandlersAdvertiserExtraInfoRequest.ts
+src/models/HandlersAffiliateExtraInfoRequest.ts
 src/models/HandlersAffiliatesSearchRequest.ts
 src/models/HandlersAffiliatesSearchResponse.ts
 src/models/HandlersCreateAdvertiserRequest.ts
