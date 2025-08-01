@@ -32,6 +32,10 @@ export interface ApiV1OrganizationsPostRequest {
     request: HandlersCreateOrganizationRequest;
 }
 
+export interface ApiV1PublicOrganizationsPostRequest {
+    request: HandlersCreateOrganizationRequest;
+}
+
 export interface OrganizationsGetRequest {
     page?: number;
     pageSize?: number;
@@ -56,8 +60,8 @@ export interface OrganizationsIdPutRequest {
 export class OrganizationsApi extends runtime.BaseAPI {
 
     /**
-     * Creates a new organization with the given name and optional extra info. No authentication required.
-     * Create a new organization (Public)
+     * Creates a new organization with the given name. Requires Admin role.
+     * Create a new organization (Admin only)
      */
     async apiV1OrganizationsPostRaw(requestParameters: ApiV1OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
         if (requestParameters['request'] == null) {
@@ -73,8 +77,50 @@ export class OrganizationsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/api/v1/organizations`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HandlersCreateOrganizationRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates a new organization with the given name. Requires Admin role.
+     * Create a new organization (Admin only)
+     */
+    async apiV1OrganizationsPost(requestParameters: ApiV1OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
+        const response = await this.apiV1OrganizationsPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates a new organization with the given name and optional extra info. No authentication required.
+     * Create a new organization (Public)
+     */
+    async apiV1PublicOrganizationsPostRaw(requestParameters: ApiV1PublicOrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling apiV1PublicOrganizationsPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v1/public/organizations`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -88,8 +134,8 @@ export class OrganizationsApi extends runtime.BaseAPI {
      * Creates a new organization with the given name and optional extra info. No authentication required.
      * Create a new organization (Public)
      */
-    async apiV1OrganizationsPost(requestParameters: ApiV1OrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
-        const response = await this.apiV1OrganizationsPostRaw(requestParameters, initOverrides);
+    async apiV1PublicOrganizationsPost(requestParameters: ApiV1PublicOrganizationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
+        const response = await this.apiV1PublicOrganizationsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

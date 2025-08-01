@@ -4050,8 +4050,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new organization with the given name and optional extra
-        info. No authentication required.
+      description: Creates a new organization with the given name. Requires Admin
+        role.
       parameters:
       - description: Organization details
         in: body
@@ -4072,13 +4072,21 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "403":
+          description: Forbidden - Only admins can create organizations
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal server error
           schema:
             additionalProperties:
               type: string
             type: object
-      summary: Create a new organization (Public)
+      security:
+      - BearerAuth: []
+      summary: Create a new organization (Admin only)
       tags:
       - organizations
   /api/v1/organizations/{advertiser_org_id}/visible-affiliates:
@@ -4219,6 +4227,41 @@ paths:
       summary: Get associations for organization
       tags:
       - organization-associations
+  /api/v1/public/organizations:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new organization with the given name and optional extra
+        info. No authentication required.
+      parameters:
+      - description: Organization details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateOrganizationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created organization
+          schema:
+            $ref: '#/definitions/domain.Organization'
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new organization (Public)
+      tags:
+      - organizations
   /api/v1/publisher-messaging/conversations:
     get:
       description: Retrieves a paginated list of conversations for the organization
