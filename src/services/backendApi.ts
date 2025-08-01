@@ -117,9 +117,16 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   const baseUrl = getApiBase();
   console.log('🌐 Creating API client with base URL:', baseUrl);
   
+  // Determine the correct basePath based on the API client
+  let basePath = baseUrl;
+  if (ClientClass.name === 'ProfileApi') {
+    basePath = `${baseUrl}/api/v1`;
+    console.log('🎯 Using v1 API path for ProfileApi:', basePath);
+  }
+  
   // Create configuration with proper authentication and retry logic
   const configuration = new Configuration({
-    basePath: `${baseUrl}/api/v1`,
+    basePath: basePath,
     apiKey: async (name: string) => {
       console.log('🔐 API Key requested for parameter:', name);
       console.log('🔍 Request stack trace:', new Error().stack?.split('\n').slice(1, 4).join('\n'));
@@ -179,7 +186,7 @@ export const createPublicApiClient = <T>(ClientClass: new (configuration?: Confi
   
   // Create configuration without authentication
   const configuration = new Configuration({
-    basePath: `${baseUrl}/api/v1`,
+    basePath: baseUrl,
     // No apiKey function - public endpoint
   });
   
