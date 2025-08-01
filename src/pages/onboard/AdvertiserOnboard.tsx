@@ -65,7 +65,7 @@ export const AdvertiserOnboard: React.FC = () => {
       
       const advertiserExtraInfo: HandlersAdvertiserExtraInfoRequest = {
         website: data.website || undefined,
-        websiteType: 'Shopify' as any, // Default to Shopify for now
+        websiteType: 'shopify' as any, // Default to shopify for now
       };
 
       const createRequest: HandlersCreateOrganizationRequest = {
