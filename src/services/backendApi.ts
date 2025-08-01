@@ -117,12 +117,9 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   const baseUrl = getApiBase();
   console.log('🌐 Creating API client with base URL:', baseUrl);
   
-  // Determine the correct basePath based on the API client
-  let basePath = baseUrl;
-  if (ClientClass.name === 'ProfileApi' || ClientClass.name === 'OrganizationsApi') {
-    basePath = `${baseUrl}/api/v1`;
-    console.log('🎯 Using v1 API path for', ClientClass.name + ':', basePath);
-  }
+  // All API clients use /api/v1 prefix
+  const basePath = `${baseUrl}/api/v1`;
+  console.log('🎯 Using v1 API path for', ClientClass.name + ':', basePath);
   
   // Create configuration with proper authentication and retry logic
   const configuration = new Configuration({
@@ -184,12 +181,9 @@ export const createPublicApiClient = <T>(ClientClass: new (configuration?: Confi
   const baseUrl = getApiBase();
   console.log('🌐 Creating public API client with base URL:', baseUrl);
   
-  // Determine the correct basePath based on the API client
-  let basePath = baseUrl;
-  if (ClientClass.name === 'OrganizationsApi') {
-    basePath = `${baseUrl}/api/v1`;
-    console.log('🎯 Using v1 API path for public', ClientClass.name + ':', basePath);
-  }
+  // All public API clients use /api/v1 prefix
+  const basePath = `${baseUrl}/api/v1`;
+  console.log('🎯 Using v1 API path for public', ClientClass.name + ':', basePath);
   
   // Create configuration without authentication
   const configuration = new Configuration({
