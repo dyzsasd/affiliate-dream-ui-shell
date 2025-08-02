@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Building2, Users, Target } from 'lucide-react';
+import { Building2, Users, Target, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/auth';
 
 const OrganizationTypeSelection: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { signOut } = useAuth();
 
   const organizationTypes = [
     {
@@ -36,6 +38,17 @@ const OrganizationTypeSelection: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
+        <div className="flex justify-end mb-4">
+          <Button 
+            variant="outline" 
+            onClick={signOut}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </Button>
+        </div>
+        
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Welcome to the Platform
