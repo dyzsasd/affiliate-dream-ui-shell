@@ -26,8 +26,10 @@ src/models/AnalyticsAutocompleteGet200Response.ts
 src/models/DomainAddExternalMessageRequest.ts
 src/models/DomainAddPublisherToListRequest.ts
 src/models/DomainAdvertiser.ts
+src/models/DomainAdvertiserExtraInfo.ts
 src/models/DomainAdvertiserProviderMapping.ts
 src/models/DomainAffiliate.ts
+src/models/DomainAffiliateExtraInfo.ts
 src/models/DomainAffiliateNetworkData.ts
 src/models/DomainAffiliateProviderMapping.ts
 src/models/DomainAnalyticsAdvertiser.ts
@@ -71,6 +73,7 @@ src/models/DomainMetaData.ts
 src/models/DomainOrganization.ts
 src/models/DomainOrganizationAssociation.ts
 src/models/DomainOrganizationType.ts
+src/models/DomainOrganizationWithExtraInfo.ts
 src/models/DomainPaymentDetails.ts
 src/models/DomainPaymentDetailsType.ts
 src/models/DomainPaymentMethodStatus.ts

@@ -53,6 +53,7 @@ export interface OrganizationAssociationsIdApprovePostRequest {
 
 export interface OrganizationAssociationsIdGetRequest {
     id: number;
+    withDetails?: boolean;
 }
 
 export interface OrganizationAssociationsIdReactivatePostRequest {
@@ -205,6 +206,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['withDetails'] != null) {
+            queryParameters['with_details'] = requestParameters['withDetails'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

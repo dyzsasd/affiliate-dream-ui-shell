@@ -99,6 +99,25 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.AdvertiserExtraInfo:
+    properties:
+      company_size:
+        description: '''startup'', ''small'', ''medium'', ''large'', ''enterprise'''
+        type: string
+      created_at:
+        type: string
+      extra_info_id:
+        type: integer
+      organization_id:
+        type: integer
+      updated_at:
+        type: string
+      website:
+        type: string
+      website_type:
+        description: '''shopify'', ''amazon'', ''shopline'', ''tiktok_shop'''
+        type: string
+    type: object
   domain.AdvertiserProviderMapping:
     properties:
       advertiser_id:
@@ -167,6 +186,27 @@ definitions:
         description: '''active'', ''pending'', ''rejected'', ''inactive'''
         type: string
       updated_at:
+        type: string
+    type: object
+  domain.AffiliateExtraInfo:
+    properties:
+      affiliate_type:
+        description: '''cashback'', ''blog'', ''incentive'', ''content'', ''forum'',
+          ''sub_affiliate_network'''
+        type: string
+      created_at:
+        type: string
+      extra_info_id:
+        type: integer
+      logo_url:
+        type: string
+      organization_id:
+        type: integer
+      self_description:
+        type: string
+      updated_at:
+        type: string
+      website:
         type: string
     type: object
   domain.AffiliateNetworkData:
@@ -989,6 +1029,23 @@ definitions:
     - OrganizationTypeAffiliate
     - OrganizationTypePlatformOwner
     - OrganizationTypeAgency
+  domain.OrganizationWithExtraInfo:
+    properties:
+      advertiser_extra_info:
+        $ref: '#/definitions/domain.AdvertiserExtraInfo'
+      affiliate_extra_info:
+        $ref: '#/definitions/domain.AffiliateExtraInfo'
+      created_at:
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      type:
+        $ref: '#/definitions/domain.OrganizationType'
+      updated_at:
+        type: string
+    type: object
   domain.PaymentDetails:
     properties:
       account_number:
@@ -4562,6 +4619,11 @@ paths:
         name: id
         required: true
         type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
       produces:
       - application/json
       responses:
@@ -5093,20 +5155,24 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieves an organization by its ID
+      description: Retrieves an organization by its ID, optionally with extra info
       parameters:
       - description: Organization ID
         in: path
         name: id
         required: true
         type: integer
+      - description: Include extra info (advertiser_extra_info or affiliate_extra_info)
+        in: query
+        name: with_extra
+        type: boolean
       produces:
       - application/json
       responses:
         "200":
-          description: Organization details
+          description: Organization details (with extra info)
           schema:
-            $ref: '#/definitions/domain.Organization'
+            $ref: '#/definitions/domain.OrganizationWithExtraInfo'
         "400":
           description: Invalid organization ID
           schema:

@@ -16,12 +16,15 @@
 import * as runtime from '../runtime';
 import type {
   DomainOrganization,
+  DomainOrganizationWithExtraInfo,
   HandlersCreateOrganizationRequest,
   HandlersUpdateOrganizationRequest,
 } from '../models/index';
 import {
     DomainOrganizationFromJSON,
     DomainOrganizationToJSON,
+    DomainOrganizationWithExtraInfoFromJSON,
+    DomainOrganizationWithExtraInfoToJSON,
     HandlersCreateOrganizationRequestFromJSON,
     HandlersCreateOrganizationRequestToJSON,
     HandlersUpdateOrganizationRequestFromJSON,
@@ -39,6 +42,7 @@ export interface OrganizationsIdDeleteRequest {
 
 export interface OrganizationsIdGetRequest {
     id: number;
+    withExtra?: boolean;
 }
 
 export interface OrganizationsIdPutRequest {
@@ -138,10 +142,10 @@ export class OrganizationsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves an organization by its ID
+     * Retrieves an organization by its ID, optionally with extra info
      * Get organization by ID
      */
-    async organizationsIdGetRaw(requestParameters: OrganizationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganization>> {
+    async organizationsIdGetRaw(requestParameters: OrganizationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainOrganizationWithExtraInfo>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -150,6 +154,10 @@ export class OrganizationsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['withExtra'] != null) {
+            queryParameters['with_extra'] = requestParameters['withExtra'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -164,14 +172,14 @@ export class OrganizationsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainOrganizationWithExtraInfoFromJSON(jsonValue));
     }
 
     /**
-     * Retrieves an organization by its ID
+     * Retrieves an organization by its ID, optionally with extra info
      * Get organization by ID
      */
-    async organizationsIdGet(requestParameters: OrganizationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganization> {
+    async organizationsIdGet(requestParameters: OrganizationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainOrganizationWithExtraInfo> {
         const response = await this.organizationsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
