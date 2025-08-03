@@ -14,7 +14,8 @@ import {
   Heart,
   MessageCircle,
   Activity,
-  Settings
+  Settings,
+  Send
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -55,6 +56,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.analytics"),
         path: "/analytics/advertiser",
         icon: TrendingUp
+      },
+      {
+        name: "Invitations",
+        path: "/invitations",
+        icon: Send
       },
       {
         name: t("sidebar.favoritePublishers"),
