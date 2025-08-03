@@ -70,6 +70,9 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               
+              {/* Public invitation route (no auth required) - must be before protected routes */}
+              <Route path="/invitations/:token" element={<PublicInvitation />} />
+              
               {/* Onboarding routes - protected to redirect users with profiles */}
               <Route path="/onboard" element={<OnboardingGuard><OrganizationTypeSelection /></OnboardingGuard>} />
               <Route path="/onboard/affiliate" element={<OnboardingGuard><AffiliateOnboard /></OnboardingGuard>} />
@@ -146,9 +149,6 @@ function App() {
           <Route path="/associations" element={<AssociationsManagement />} />
           <Route path="/affiliates/:affiliateOrgId/details" element={<AffiliateDetails />} />
               </Route>
-              
-              {/* Public invitation route (no auth required) */}
-              <Route path="/invitations/public/:token" element={<PublicInvitation />} />
               
               {/* 404 route */}
               <Route path="*" element={<NotFound />} />
