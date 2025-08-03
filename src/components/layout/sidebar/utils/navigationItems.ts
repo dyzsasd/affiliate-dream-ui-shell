@@ -127,6 +127,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: Settings
       },
       {
+        name: "Affiliates",
+        path: "/affiliates",
+        icon: Users
+      },
+      {
         name: "Associations",
         path: "/associations",
         icon: Users

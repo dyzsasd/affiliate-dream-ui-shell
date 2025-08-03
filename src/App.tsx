@@ -18,6 +18,7 @@ import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
 import CampaignForm from "@/pages/campaigns/CampaignForm";
 import AdvertiserRoutes from "@/pages/advertisers";
+import AffiliatesRoutes from "@/pages/affiliates";
 import ProfilePage from "@/pages/profile";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
@@ -92,6 +93,9 @@ function App() {
                 
                 {/* Advertiser routes - use the AdvertiserRoutes component */}
                 <Route path="/advertisers/*" element={<AdvertiserRoutes />} />
+                
+                {/* Affiliate routes - use the AffiliatesRoutes component */}
+                <Route path="/affiliates/*" element={<AffiliatesRoutes />} />
                 
                 {/* Marketplace routes */}
                 <Route path="/advertiser/marketplace" element={<MarketplacePage />} />
