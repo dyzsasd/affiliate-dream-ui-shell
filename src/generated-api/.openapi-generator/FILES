@@ -2,6 +2,7 @@
 .npmignore
 README.md
 package.json
+src/apis/AdvertiserAssociationInvitationsApi.ts
 src/apis/AdvertiserProviderMappingsApi.ts
 src/apis/AdvertisersApi.ts
 src/apis/AffiliatesApi.ts
@@ -26,6 +27,8 @@ src/models/AnalyticsAutocompleteGet200Response.ts
 src/models/DomainAddExternalMessageRequest.ts
 src/models/DomainAddPublisherToListRequest.ts
 src/models/DomainAdvertiser.ts
+src/models/DomainAdvertiserAssociationInvitation.ts
+src/models/DomainAdvertiserAssociationInvitationWithDetails.ts
 src/models/DomainAdvertiserExtraInfo.ts
 src/models/DomainAdvertiserProviderMapping.ts
 src/models/DomainAffiliate.ts
@@ -61,9 +64,12 @@ src/models/DomainCountryRankingDataHighestValue.ts
 src/models/DomainCreateAssociationRequest.ts
 src/models/DomainCreateConversationRequest.ts
 src/models/DomainCreateFavoritePublisherListRequest.ts
+src/models/DomainCreateInvitationRequest.ts
 src/models/DomainCreatePaymentMethodRequest.ts
 src/models/DomainFavoritePublisherList.ts
 src/models/DomainFavoritePublisherListItem.ts
+src/models/DomainInvitationStatus.ts
+src/models/DomainInvitationUsageLog.ts
 src/models/DomainInvoice.ts
 src/models/DomainInvoiceLineItem.ts
 src/models/DomainInvoiceStatus.ts
@@ -92,8 +98,11 @@ src/models/DomainUpdateAssociationRequest.ts
 src/models/DomainUpdateBillingConfigRequest.ts
 src/models/DomainUpdateConversationStatusRequest.ts
 src/models/DomainUpdateFavoritePublisherListRequest.ts
+src/models/DomainUpdateInvitationRequest.ts
 src/models/DomainUpdatePublisherInListRequest.ts
 src/models/DomainUpdatePublisherStatusRequest.ts
+src/models/DomainUseInvitationRequest.ts
+src/models/DomainUseInvitationResponse.ts
 src/models/DomainVerticalData.ts
 src/models/DomainVerticalDataSampleValue.ts
 src/models/HandlersAdvertiserExtraInfoRequest.ts

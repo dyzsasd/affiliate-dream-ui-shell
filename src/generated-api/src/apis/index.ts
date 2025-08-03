@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './AdvertiserAssociationInvitationsApi';
 export * from './AdvertiserProviderMappingsApi';
 export * from './AdvertisersApi';
 export * from './AffiliatesApi';

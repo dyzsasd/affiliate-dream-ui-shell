@@ -99,6 +99,112 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.AdvertiserAssociationInvitation:
+    properties:
+      advertiser_org_id:
+        type: integer
+      allowed_affiliate_org_ids:
+        description: Access control
+        type: string
+      created_at:
+        type: string
+      created_by_user_id:
+        type: string
+      current_uses:
+        type: integer
+      default_all_affiliates_visible:
+        description: Default visibility settings for associations created through
+          this invitation
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        description: JSONB array
+        type: string
+      default_visible_campaign_ids:
+        description: JSONB array
+        type: string
+      description:
+        type: string
+      expires_at:
+        description: Expiration
+        type: string
+      invitation_id:
+        type: integer
+      invitation_token:
+        type: string
+      max_uses:
+        description: Usage limits
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.InvitationStatus'
+        description: Status and metadata
+      updated_at:
+        type: string
+    type: object
+  domain.AdvertiserAssociationInvitationWithDetails:
+    properties:
+      advertiser_org_id:
+        type: integer
+      advertiser_organization:
+        $ref: '#/definitions/domain.Organization'
+      allowed_affiliate_org_ids:
+        description: Access control
+        type: string
+      created_at:
+        type: string
+      created_by_user:
+        $ref: '#/definitions/domain.Profile'
+      created_by_user_id:
+        type: string
+      current_uses:
+        type: integer
+      default_all_affiliates_visible:
+        description: Default visibility settings for associations created through
+          this invitation
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        description: JSONB array
+        type: string
+      default_visible_campaign_ids:
+        description: JSONB array
+        type: string
+      description:
+        type: string
+      expires_at:
+        description: Expiration
+        type: string
+      invitation_id:
+        type: integer
+      invitation_token:
+        type: string
+      max_uses:
+        description: Usage limits
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+      recent_usages:
+        items:
+          $ref: '#/definitions/domain.InvitationUsageLog'
+        type: array
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.InvitationStatus'
+        description: Status and metadata
+      updated_at:
+        type: string
+      usage_count:
+        type: integer
+    type: object
   domain.AdvertiserExtraInfo:
     properties:
       company_size:
@@ -792,6 +898,40 @@ definitions:
     required:
     - name
     type: object
+  domain.CreateInvitationRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      allowed_affiliate_org_ids:
+        items:
+          type: integer
+        type: array
+      default_all_affiliates_visible:
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        items:
+          type: integer
+        type: array
+      default_visible_campaign_ids:
+        items:
+          type: integer
+        type: array
+      description:
+        type: string
+      expires_at:
+        type: string
+      max_uses:
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+    required:
+    - advertiser_org_id
+    - name
+    type: object
   domain.CreatePaymentMethodRequest:
     properties:
       nickname:
@@ -841,6 +981,40 @@ definitions:
       publisher_domain:
         type: string
       status:
+        type: string
+    type: object
+  domain.InvitationStatus:
+    enum:
+    - active
+    - disabled
+    - expired
+    type: string
+    x-enum-varnames:
+    - InvitationStatusActive
+    - InvitationStatusDisabled
+    - InvitationStatusExpired
+  domain.InvitationUsageLog:
+    properties:
+      affiliate_org_id:
+        type: integer
+      association_id:
+        type: integer
+      error_message:
+        type: string
+      invitation_id:
+        type: integer
+      ip_address:
+        description: Usage metadata
+        type: string
+      success:
+        type: boolean
+      usage_id:
+        type: integer
+      used_at:
+        type: string
+      used_by_user_id:
+        type: string
+      user_agent:
         type: string
     type: object
   domain.Invoice:
@@ -1449,6 +1623,37 @@ definitions:
         minLength: 1
         type: string
     type: object
+  domain.UpdateInvitationRequest:
+    properties:
+      allowed_affiliate_org_ids:
+        items:
+          type: integer
+        type: array
+      default_all_affiliates_visible:
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        items:
+          type: integer
+        type: array
+      default_visible_campaign_ids:
+        items:
+          type: integer
+        type: array
+      description:
+        type: string
+      expires_at:
+        type: string
+      max_uses:
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+      status:
+        $ref: '#/definitions/domain.InvitationStatus'
+    type: object
   domain.UpdatePublisherInListRequest:
     properties:
       notes:
@@ -1465,6 +1670,33 @@ definitions:
         type: string
     required:
     - status
+    type: object
+  domain.UseInvitationRequest:
+    properties:
+      affiliate_org_id:
+        type: integer
+      invitation_token:
+        type: string
+      ip_address:
+        type: string
+      message:
+        type: string
+      user_agent:
+        type: string
+    required:
+    - affiliate_org_id
+    - invitation_token
+    type: object
+  domain.UseInvitationResponse:
+    properties:
+      association:
+        $ref: '#/definitions/domain.OrganizationAssociation'
+      error_message:
+        type: string
+      invitation:
+        $ref: '#/definitions/domain.AdvertiserAssociationInvitation'
+      success:
+        type: boolean
     type: object
   domain.VerticalData:
     properties:
@@ -2478,6 +2710,330 @@ info:
   title: Affiliate Backend API
   version: "1.0"
 paths:
+  /advertiser-association-invitations:
+    get:
+      consumes:
+      - application/json
+      description: List advertiser association invitations with optional filters
+      parameters:
+      - description: Advertiser Organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      - description: Invitation Status
+        enum:
+        - active
+        - disabled
+        - expired
+        in: query
+        name: status
+        type: string
+      - description: Created By User ID
+        in: query
+        name: created_by_user_id
+        type: string
+      - description: Include Expired Invitations
+        in: query
+        name: include_expired
+        type: boolean
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AdvertiserAssociationInvitationWithDetails'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List invitations
+      tags:
+      - advertiser-association-invitations
+    post:
+      consumes:
+      - application/json
+      description: Create a new advertiser association invitation link
+      parameters:
+      - description: Create invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateInvitationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create invitation
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an advertiser association invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete invitation
+      tags:
+      - advertiser-association-invitations
+    get:
+      consumes:
+      - application/json
+      description: Get an advertiser association invitation by ID
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitationWithDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get invitation
+      tags:
+      - advertiser-association-invitations
+    put:
+      consumes:
+      - application/json
+      description: Update an advertiser association invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateInvitationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update invitation
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/{id}/link:
+    get:
+      consumes:
+      - application/json
+      description: Generate a full invitation link for sharing
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Base URL (defaults to request host)
+        in: query
+        name: base_url
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Generate invitation link
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/{id}/usage-history:
+    get:
+      consumes:
+      - application/json
+      description: Get usage history for an advertiser association invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Limit (default 50)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.InvitationUsageLog'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get invitation usage history
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/use:
+    post:
+      consumes:
+      - application/json
+      description: Use an invitation link to create an organization association request
+      parameters:
+      - description: Use invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UseInvitationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.UseInvitationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Use invitation
+      tags:
+      - advertiser-association-invitations
   /advertiser-provider-mappings:
     post:
       consumes:
@@ -6016,6 +6572,36 @@ paths:
       summary: Upsert a profile
       tags:
       - profile
+  /public/invitations/{token}:
+    get:
+      consumes:
+      - application/json
+      description: Get an advertiser association invitation by token (public endpoint
+        for invitation links)
+      parameters:
+      - description: Invitation Token
+        in: path
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitationWithDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get invitation by token
+      tags:
+      - advertiser-association-invitations
   /public/webhooks/supabase/new-user:
     post:
       consumes:
