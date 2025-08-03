@@ -183,10 +183,15 @@ const AssociationsManagement: React.FC = () => {
 
   const getActionButtons = (association: DomainOrganizationAssociation) => {
     const isLoading = actionLoading === association.associationId?.toString();
+    const isAffiliate = organization?.type === 'affiliate';
+    const isRequestType = association.associationType === 'request';
+    
+    // Affiliates cannot approve/reject their own requests
+    const canApproveReject = !(isAffiliate && isRequestType);
     
     return (
       <div className="flex space-x-2">
-        {association.status === 'pending' && (
+        {association.status === 'pending' && canApproveReject && (
           <>
             <Button
               size="sm"
