@@ -35,8 +35,12 @@ const AssociationsManagement: React.FC = () => {
       setLoading(true);
       const api = await createApiClient(OrganizationAssociationsApi);
       
+      const queryParams = organization?.type === 'affiliate' 
+        ? { affiliateOrgId: organization.organizationId }
+        : { advertiserOrgId: organization.organizationId };
+
       const response = await api.organizationAssociationsGet({
-        advertiserOrgId: organization?.organizationId,
+        ...queryParams,
         associationType: OrganizationAssociationsGetAssociationTypeEnum.Request,
         withDetails: true,
       });
