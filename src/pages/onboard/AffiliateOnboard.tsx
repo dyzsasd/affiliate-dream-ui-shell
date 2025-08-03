@@ -16,13 +16,14 @@ import { createPublicApiClient, createApiClient } from '@/services/backendApi';
 import { useAuth } from '@/contexts/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Building2, Mail } from 'lucide-react';
+import { MediaUpload } from '@/components/ui/media-upload';
 
 const onboardSchema = z.object({
   domain: z.string().min(1, 'Domain is required').regex(/^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.[a-zA-Z]{2,}$/, 'Please enter a valid domain'),
   affiliateType: z.string().min(1, 'Please select an affiliate type'),
   website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
   selfDescription: z.string().min(10, 'Please provide at least 10 characters description'),
-  logoUrl: z.string().url('Please enter a valid logo URL').optional().or(z.literal(''))
+  logoUrl: z.string().optional()
 });
 
 type OnboardFormData = z.infer<typeof onboardSchema>;
@@ -184,19 +185,12 @@ export const AffiliateOnboard: React.FC = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="logoUrl">Logo URL (Optional)</Label>
-              <Input
-                id="logoUrl"
-                type="url"
-                placeholder="https://your-logo.com/logo.png"
-                {...register('logoUrl')}
-                className={errors.logoUrl ? "border-destructive" : ""}
-              />
-              {errors.logoUrl && (
-                <p className="text-sm text-destructive">{errors.logoUrl.message}</p>
-              )}
-            </div>
+            <MediaUpload
+              label="Organization Logo (Optional)"
+              onUpload={(url) => setValue('logoUrl', url)}
+              organizationId="temp-affiliate"
+              className="space-y-2"
+            />
 
             <div className="flex gap-4">
               <Link to="/onboard" className="flex-1">

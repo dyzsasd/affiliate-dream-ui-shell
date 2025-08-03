@@ -23,6 +23,7 @@ import {
 import { createApiClient } from '@/services/backendApi';
 import { ArrowLeft, Building2, Target, Users } from 'lucide-react';
 import { InviteUserSection } from '@/components/organization/InviteUserSection';
+import { MediaUpload } from '@/components/ui/media-upload';
 
 const baseSchema = z.object({
   name: z.string().min(1, 'Organization name is required'),
@@ -34,7 +35,7 @@ const affiliateSchema = baseSchema.extend({
   affiliateType: z.string().min(1, 'Please select an affiliate type'),
   website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
   selfDescription: z.string().min(10, 'Please provide at least 10 characters description'),
-  logoUrl: z.string().url('Please enter a valid logo URL').optional().or(z.literal(''))
+  logoUrl: z.string().optional()
 });
 
 const advertiserSchema = baseSchema.extend({
@@ -371,20 +372,13 @@ export const OrganizationEdit: React.FC = () => {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="logoUrl">Logo URL (Optional)</Label>
-                  <Input
-                    id="logoUrl"
-                    type="url"
-                    placeholder="https://your-logo.com/logo.png"
-                    {...form.register('logoUrl')}
-                  />
-                  {form.formState.errors.logoUrl && (
-                    <p className="text-sm text-destructive">
-                      {form.formState.errors.logoUrl.message}
-                    </p>
-                  )}
-                </div>
+                <MediaUpload
+                  label="Organization Logo (Optional)"
+                  onUpload={(url) => form.setValue('logoUrl', url)}
+                  currentUrl={form.watch('logoUrl')}
+                  organizationId={organization?.organizationId?.toString()}
+                  className="space-y-2"
+                />
               </>
             )}
 
