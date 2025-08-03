@@ -68,7 +68,7 @@ export const AdvertiserOnboard: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      const organizationsApi = createPublicApiClient(OrganizationsApi);
+      const organizationsApi = await createApiClient(OrganizationsApi);
       
       const advertiserExtraInfo: HandlersAdvertiserExtraInfoRequest = {
         website: data.website || undefined,
@@ -80,11 +80,11 @@ export const AdvertiserOnboard: React.FC = () => {
         name: data.organizationName,
         description: data.description,
         contactEmail: data.contactEmail,
-        type: 'advertiser' as any,
+        type: 'advertiser',
         advertiserExtraInfo,
       };
 
-      const response = await organizationsApi.publicOrganizationsPost({
+      const response = await organizationsApi.organizationsPost({
         request: createRequest,
       });
 

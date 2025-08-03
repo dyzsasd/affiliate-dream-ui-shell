@@ -57,16 +57,16 @@ export const AgencyOnboard: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      const organizationsApi = createPublicApiClient(OrganizationsApi);
+      const organizationsApi = await createApiClient(OrganizationsApi);
       
       const createRequest: HandlersCreateOrganizationRequest = {
         name: data.organizationName,
         description: data.description,
         contactEmail: data.contactEmail,
-        type: 'agency' as any,
+        type: 'agency',
       };
 
-      const response = await organizationsApi.publicOrganizationsPost({
+      const response = await organizationsApi.organizationsPost({
         request: createRequest,
       });
 

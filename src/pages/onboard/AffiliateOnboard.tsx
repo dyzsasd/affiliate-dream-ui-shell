@@ -46,8 +46,8 @@ export const AffiliateOnboard: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Create organization with affiliate extra info using public endpoint
-      const organizationsApi = createPublicApiClient(OrganizationsApi);
+      // Create organization with affiliate extra info
+      const organizationsApi = await createApiClient(OrganizationsApi);
       
       const affiliateExtraInfo: HandlersAffiliateExtraInfoRequest = {
         affiliateType: data.affiliateType as HandlersAffiliateExtraInfoRequestAffiliateTypeEnum,
@@ -63,7 +63,7 @@ export const AffiliateOnboard: React.FC = () => {
         affiliateExtraInfo: affiliateExtraInfo
       };
       
-      const organization = await organizationsApi.publicOrganizationsPost({
+      const organization = await organizationsApi.organizationsPost({
         request: createOrgRequest
       });
 
