@@ -26,7 +26,7 @@ import AdvertiserAnalytics from "@/pages/analytics/AdvertiserAnalytics";
 import AllPartnersPage from "@/pages/analytics/AllPartnersPage";
 import NewPartnersPage from "@/pages/analytics/NewPartnersPage";
 import LostPartnersPage from "@/pages/analytics/LostPartnersPage";
-import InvitationManagement from "@/pages/invitations";
+import InvitationManagement, { PublicInvitation } from "@/pages/invitations";
 import OrganizationList from "@/pages/organizations";
 import OrganizationEdit from "@/pages/organization/OrganizationEdit";
 import AssociationsManagement from "@/pages/associations/AssociationsManagement";
@@ -140,12 +140,15 @@ function App() {
           <Route path="/conversations/:conversationId" element={<ConversationDetail />} />
                 
                 {/* Other routes */}
-                <Route path="/invitations" element={<InvitationManagement />} />
+                <Route path="/invitations/*" element={<InvitationManagement />} />
                 <Route path="/profile" element={<ProfilePage />} />
           <Route path="/organization/edit" element={<OrganizationEdit />} />
           <Route path="/associations" element={<AssociationsManagement />} />
           <Route path="/affiliates/:affiliateOrgId/details" element={<AffiliateDetails />} />
               </Route>
+              
+              {/* Public invitation route (no auth required) */}
+              <Route path="/invitations/public/:token" element={<PublicInvitation />} />
               
               {/* 404 route */}
               <Route path="*" element={<NotFound />} />
