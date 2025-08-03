@@ -125,6 +125,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: "Organization Settings",
         path: "/organization/edit",
         icon: Settings
+      },
+      {
+        name: "Associations",
+        path: "/associations",
+        icon: Users
       }
     ];
   } else if (organizationType === 'agency') {
