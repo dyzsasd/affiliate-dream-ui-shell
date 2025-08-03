@@ -123,6 +123,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/affiliates/{id}/tracking-links`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
@@ -165,6 +169,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/campaigns/{id}/tracking-links`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -210,6 +218,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links/generate`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
             method: 'POST',
@@ -253,6 +265,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
@@ -298,6 +314,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
             method: 'POST',
@@ -341,6 +361,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
             method: 'DELETE',
@@ -381,6 +405,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
@@ -433,6 +461,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
             method: 'PUT',
@@ -475,6 +507,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}/qr`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
@@ -521,6 +557,10 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}/regenerate`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),

@@ -139,6 +139,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organization-associations`,
             method: 'GET',
@@ -173,6 +177,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organization-associations/{id}/approve`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -213,6 +221,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organization-associations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
@@ -247,6 +259,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organization-associations/{id}/reactivate`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -283,6 +299,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organization-associations/{id}/reject`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'POST',
@@ -317,6 +337,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organization-associations/{id}/suspend`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
@@ -362,6 +386,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organization-associations/{id}/visibility`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
@@ -400,6 +428,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organization-associations/invitations`,
             method: 'POST',
@@ -437,6 +469,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organization-associations/requests`,
@@ -478,6 +514,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/organizations/{advertiser_org_id}/visible-affiliates`.replace(`{${"advertiser_org_id"}}`, encodeURIComponent(String(requestParameters['advertiserOrgId']))),
             method: 'GET',
@@ -516,6 +556,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organizations/{affiliate_org_id}/visible-campaigns`.replace(`{${"affiliate_org_id"}}`, encodeURIComponent(String(requestParameters['affiliateOrgId']))),
@@ -559,6 +603,10 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/organizations/{id}/associations`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),

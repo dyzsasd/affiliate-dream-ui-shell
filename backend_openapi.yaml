@@ -2669,6 +2669,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List campaigns by advertiser
       tags:
       - campaigns
@@ -3379,6 +3381,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List tracking links by affiliate
       tags:
       - tracking-links
@@ -3457,6 +3461,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create advertiser analytics data
       tags:
       - Analytics
@@ -3495,6 +3501,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get advertiser analytics data
       tags:
       - Analytics
@@ -3530,6 +3538,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create publisher analytics data
       tags:
       - Analytics
@@ -3568,6 +3578,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get publisher analytics data
       tags:
       - Analytics
@@ -3607,6 +3619,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get publisher analytics data by domain
       tags:
       - Analytics
@@ -3661,6 +3675,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Search organizations for autocompletion
       tags:
       - Analytics
@@ -3931,6 +3947,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new campaign
       tags:
       - campaigns
@@ -3958,6 +3976,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Delete a campaign
       tags:
       - campaigns
@@ -3988,6 +4008,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get a campaign by ID
       tags:
       - campaigns
@@ -4026,6 +4048,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update a campaign
       tags:
       - campaigns
@@ -4071,6 +4095,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List tracking links by campaign
       tags:
       - tracking-links
@@ -4486,6 +4512,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update publisher status in favorite list
       tags:
       - favorite-publisher-lists
@@ -4605,6 +4633,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List associations
       tags:
       - organization-associations
@@ -4651,6 +4681,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get association
       tags:
       - organization-associations
@@ -4692,6 +4724,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Approve association
       tags:
       - organization-associations
@@ -4733,6 +4767,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Reactivate association
       tags:
       - organization-associations
@@ -4774,6 +4810,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Reject association
       tags:
       - organization-associations
@@ -4815,6 +4853,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Suspend association
       tags:
       - organization-associations
@@ -4862,6 +4902,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update visibility
       tags:
       - organization-associations
@@ -4901,6 +4943,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create invitation
       tags:
       - organization-associations
@@ -4940,6 +4984,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create request
       tags:
       - organization-associations
@@ -4980,8 +5026,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new organization with the given name. Requires Admin
-        role.
+      description: Creates a new organization with the given name and optional extra
+        info. Requires JWT authentication.
       parameters:
       - description: Organization details
         in: body
@@ -5002,8 +5048,8 @@ paths:
             additionalProperties:
               type: string
             type: object
-        "403":
-          description: Forbidden - Only admins can create organizations
+        "401":
+          description: Unauthorized - JWT token required
           schema:
             additionalProperties:
               type: string
@@ -5016,7 +5062,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Create a new organization (Admin only)
+      summary: Create a new organization
       tags:
       - organizations
   /organizations/{advertiser_org_id}/visible-affiliates:
@@ -5060,6 +5106,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get visible affiliates for advertiser
       tags:
       - organization-associations
@@ -5104,6 +5152,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get visible campaigns for affiliate
       tags:
       - organization-associations
@@ -5397,6 +5447,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get associations for organization
       tags:
       - organization-associations
@@ -5432,6 +5484,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List campaigns by organization
       tags:
       - campaigns
@@ -5477,6 +5531,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List tracking links by organization
       tags:
       - tracking-links
@@ -5519,6 +5575,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new tracking link
       tags:
       - tracking-links
@@ -5559,6 +5617,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Delete a tracking link
       tags:
       - tracking-links
@@ -5602,6 +5662,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get a tracking link
       tags:
       - tracking-links
@@ -5653,6 +5715,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update a tracking link
       tags:
       - tracking-links
@@ -5697,6 +5761,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get tracking link QR code
       tags:
       - tracking-links
@@ -5741,6 +5807,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Regenerate a tracking link
       tags:
       - tracking-links
@@ -5785,6 +5853,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Generate a new tracking link
       tags:
       - tracking-links
@@ -5946,41 +6016,6 @@ paths:
       summary: Upsert a profile
       tags:
       - profile
-  /public/organizations:
-    post:
-      consumes:
-      - application/json
-      description: Creates a new organization with the given name and optional extra
-        info. No authentication required.
-      parameters:
-      - description: Organization details
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handlers.CreateOrganizationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created organization
-          schema:
-            $ref: '#/definitions/domain.Organization'
-        "400":
-          description: Invalid request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal server error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Create a new organization (Public)
-      tags:
-      - organizations
   /public/webhooks/supabase/new-user:
     post:
       consumes:
@@ -6048,6 +6083,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get conversations for organization
       tags:
       - Publisher Messaging
@@ -6089,6 +6126,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new conversation with a publisher
       tags:
       - Publisher Messaging
@@ -6122,6 +6161,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Delete conversation
       tags:
       - Publisher Messaging
@@ -6156,6 +6197,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get conversation with messages
       tags:
       - Publisher Messaging
@@ -6196,6 +6239,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Add external message to conversation
       tags:
       - Publisher Messaging
@@ -6239,6 +6284,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Add message to conversation
       tags:
       - Publisher Messaging
@@ -6282,6 +6329,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update conversation status
       tags:
       - Publisher Messaging
