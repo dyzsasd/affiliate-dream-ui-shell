@@ -63,13 +63,13 @@ const AffiliateExtraInfoPanel: React.FC<AffiliateExtraInfoPanelProps> = ({
               <SelectValue placeholder={t("organizations.selectAffiliateType")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="cashback">Cashback</SelectItem>
-              <SelectItem value="blog">Blog</SelectItem>
-              <SelectItem value="incentive">Incentive</SelectItem>
-              <SelectItem value="content">Content</SelectItem>
-              <SelectItem value="forum">Forum</SelectItem>
-              <SelectItem value="sub_affiliate_network">Sub Affiliate Network</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="cashback">{t("organizations.cashback")}</SelectItem>
+              <SelectItem value="blog">{t("organizations.blog")}</SelectItem>
+              <SelectItem value="incentive">{t("organizations.incentive")}</SelectItem>
+              <SelectItem value="content">{t("organizations.content")}</SelectItem>
+              <SelectItem value="forum">{t("organizations.forum")}</SelectItem>
+              <SelectItem value="sub_affiliate_network">{t("organizations.subAffiliateNetwork")}</SelectItem>
+              <SelectItem value="other">{t("organizations.other")}</SelectItem>
             </SelectContent>
           </Select>
         </div>

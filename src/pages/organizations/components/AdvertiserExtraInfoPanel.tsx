@@ -62,11 +62,11 @@ const AdvertiserExtraInfoPanel: React.FC<AdvertiserExtraInfoPanelProps> = ({
               <SelectValue placeholder={t("organizations.selectWebsiteType")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="shopify">Shopify</SelectItem>
-              <SelectItem value="amazon">Amazon</SelectItem>
-              <SelectItem value="shopline">Shopline</SelectItem>
-              <SelectItem value="tiktok_shop">TikTok Shop</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="shopify">{t("organizations.shopify")}</SelectItem>
+              <SelectItem value="amazon">{t("organizations.amazon")}</SelectItem>
+              <SelectItem value="shopline">{t("organizations.shopline")}</SelectItem>
+              <SelectItem value="tiktok_shop">{t("organizations.tiktokShop")}</SelectItem>
+              <SelectItem value="other">{t("organizations.other")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -81,11 +81,11 @@ const AdvertiserExtraInfoPanel: React.FC<AdvertiserExtraInfoPanelProps> = ({
               <SelectValue placeholder={t("organizations.selectCompanySize")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="startup">Startup</SelectItem>
-              <SelectItem value="small">Small</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="large">Large</SelectItem>
-              <SelectItem value="enterprise">Enterprise</SelectItem>
+              <SelectItem value="startup">{t("organizations.startup")}</SelectItem>
+              <SelectItem value="small">{t("organizations.small")}</SelectItem>
+              <SelectItem value="medium">{t("organizations.medium")}</SelectItem>
+              <SelectItem value="large">{t("organizations.large")}</SelectItem>
+              <SelectItem value="enterprise">{t("organizations.enterprise")}</SelectItem>
             </SelectContent>
           </Select>
         </div>

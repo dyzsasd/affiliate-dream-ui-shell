@@ -47,5 +47,21 @@
   "campaignRequired": "Please select a campaign",
   "affiliateRequired": "Please select an affiliate",
   "copied": "Copied",
-  "copyError": "Failed to copy link"
+  "copyError": "Failed to copy link",
+  "pending": "Pending",
+  "selected": "Selected",
+  "select": "Select",
+  "unknownName": "Unknown Name",
+  "noEmail": "No email",
+  "unknownStatus": "Unknown",
+  "createTrackingLinkFor": "Create a tracking link for",
+  "selectedAffiliate": "Selected Affiliate",
+  "loadingCampaigns": "Loading campaigns...",
+  "chooseCampaign": "Choose a campaign",
+  "enterLinkName": "Enter a name for this tracking link",
+  "failedToLoadDetails": "Failed to load affiliate details",
+  "failedToLoadCampaigns": "Failed to load campaigns",
+  "selectCampaignAndName": "Please select a campaign and enter a link name",
+  "selectAffiliateFirst": "Please select an affiliate to create tracking link for",
+  "failedToLoadAssociations": "Failed to load affiliate associations"
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Edit, Share2, BarChart3, Users, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +16,7 @@ import { UsageChart } from './components/UsageChart';
 export default function InvitationDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   const { data: invitation, isLoading } = useQuery({
@@ -62,14 +64,14 @@ export default function InvitationDetail() {
 
   const getStatusBadge = () => {
     if (invitation.status === 'disabled') {
-      return <Badge variant="destructive" className="gap-1"><XCircle className="h-3 w-3" /> Disabled</Badge>;
+      return <Badge variant="destructive" className="gap-1"><XCircle className="h-3 w-3" /> {t("invitations.disabled")}</Badge>;
     }
     
     if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
-      return <Badge variant="secondary" className="gap-1"><Clock className="h-3 w-3" /> Expired</Badge>;
+      return <Badge variant="secondary" className="gap-1"><Clock className="h-3 w-3" /> {t("invitations.expired")}</Badge>;
     }
     
-    return <Badge variant="default" className="gap-1"><CheckCircle className="h-3 w-3" /> Active</Badge>;
+    return <Badge variant="default" className="gap-1"><CheckCircle className="h-3 w-3" /> {t("invitations.active")}</Badge>;
   };
 
   const getUsageProgress = () => {

@@ -169,13 +169,13 @@ const AssociationsManagement: React.FC = () => {
   const getStatusBadge = (status: DomainAssociationStatus) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending</Badge>;
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-600">{t("associations.pending")}</Badge>;
       case 'active':
-        return <Badge variant="outline" className="text-green-600 border-green-600">Active</Badge>;
+        return <Badge variant="outline" className="text-green-600 border-green-600">{t("associations.active")}</Badge>;
       case 'suspended':
-        return <Badge variant="outline" className="text-orange-600 border-orange-600">Suspended</Badge>;
+        return <Badge variant="outline" className="text-orange-600 border-orange-600">{t("associations.suspended")}</Badge>;
       case 'rejected':
-        return <Badge variant="outline" className="text-red-600 border-red-600">Rejected</Badge>;
+        return <Badge variant="outline" className="text-red-600 border-red-600">{t("associations.rejected")}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
