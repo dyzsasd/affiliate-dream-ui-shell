@@ -280,7 +280,7 @@ const AffiliateDetails: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">
-                          Organization ID: {affiliate.organizationId || 'Unknown'}
+                          {affiliate.organizationId || 'Unknown'}
                         </Badge>
                       </TableCell>
                       <TableCell>
