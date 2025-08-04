@@ -60,20 +60,20 @@ export const OrganizationEdit: React.FC = () => {
       console.log('🔍 Raw affiliate_extra_info:', rawData.affiliate_extra_info);
       
       const mappedData: DomainOrganizationWithExtraInfo = {
-        organizationId: rawData.organization_id,
+        organizationId: rawData.organizationId,
         name: rawData.name,
         type: rawData.type,
-        createdAt: rawData.created_at,
-        updatedAt: rawData.updated_at,
-        advertiserExtraInfo: rawData.advertiser_extra_info ? {
-          website: rawData.advertiser_extra_info.website,
-          websiteType: rawData.advertiser_extra_info.website_type,
-          companySize: rawData.advertiser_extra_info.company_size
+        createdAt: rawData.createdAt,
+        updatedAt: rawData.updatedAt,
+        advertiserExtraInfo: rawData.advertiserExtraInfo ? {
+          website: rawData.advertiserExtraInfo.website,
+          websiteType: rawData.advertiserExtraInfo.websiteType,
+          companySize: rawData.advertiserExtraInfo.companySize
         } : undefined,
-        affiliateExtraInfo: rawData.affiliate_extra_info ? {
-          website: rawData.affiliate_extra_info.website,
-          affiliateType: rawData.affiliate_extra_info.affiliate_type,
-          selfDescription: rawData.affiliate_extra_info.self_description
+        affiliateExtraInfo: rawData.affiliateExtraInfo ? {
+          website: rawData.affiliateExtraInfo.website,
+          affiliateType: rawData.affiliateExtraInfo.affiliateType,
+          selfDescription: rawData.affiliateExtraInfo.selfDescription
         } : undefined
       };
       
