@@ -243,18 +243,6 @@ export const OrganizationEdit: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header with back button */}
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => navigate('/')}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            {t("common.back")}
-          </Button>
-        </div>
-
         <OrganizationHeader organization={organizationData} />
 
         {/* Basic Info Panel */}
