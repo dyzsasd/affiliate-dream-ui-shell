@@ -57,8 +57,8 @@ const AffiliateDetails: React.FC = () => {
     } catch (error) {
       console.error('Error fetching visible affiliates:', error);
       toast({
-        title: "Error",
-        description: "Failed to load affiliate details",
+        title: t("associations.error"),
+        description: t("associations.failedToLoadDetails"),
         variant: "destructive",
       });
     } finally {
@@ -242,7 +242,7 @@ const AffiliateDetails: React.FC = () => {
                           size="sm"
                           onClick={() => setSelectedAffiliateId(affiliate.affiliateId!)}
                         >
-                          {selectedAffiliateId === affiliate.affiliateId ? "Selected" : "Select"}
+                          {selectedAffiliateId === affiliate.affiliateId ? t("associations.selected") : t("associations.select")}
                         </Button>
                       </TableCell>
                       <TableCell className="font-medium">
@@ -254,7 +254,7 @@ const AffiliateDetails: React.FC = () => {
                           </div>
                           <div>
                             <p className="font-medium">
-                              {affiliate.name || 'Unknown Name'}
+                              {affiliate.name || t("associations.unknownName")}
                             </p>
                           </div>
                         </div>
@@ -262,7 +262,7 @@ const AffiliateDetails: React.FC = () => {
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Mail className="w-4 h-4 text-muted-foreground" />
-                          <span>{affiliate.contactEmail || 'No email'}</span>
+                          <span>{affiliate.contactEmail || t("associations.noEmail")}</span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -274,7 +274,7 @@ const AffiliateDetails: React.FC = () => {
                               : ''
                           }
                         >
-                          {affiliate.status || 'Unknown'}
+                          {affiliate.status || t("associations.unknown")}
                         </Badge>
                       </TableCell>
                       <TableCell>

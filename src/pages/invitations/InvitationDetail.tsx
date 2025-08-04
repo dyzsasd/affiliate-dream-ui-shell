@@ -165,27 +165,27 @@ export default function InvitationDetail() {
       {/* Details */}
       <Tabs defaultValue="details" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="usage">Usage History</TabsTrigger>
+          <TabsTrigger value="details">{t("invitations.details")}</TabsTrigger>
+          <TabsTrigger value="analytics">{t("invitations.analytics")}</TabsTrigger>
+          <TabsTrigger value="usage">{t("invitations.usageHistory")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Invitation Information</CardTitle>
+              <CardTitle>{t("invitations.invitationInformation")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {invitation.description && (
                 <div>
-                  <h4 className="font-medium">Description</h4>
+                  <h4 className="font-medium">{t("invitations.invitationDescription")}</h4>
                   <p className="text-muted-foreground">{invitation.description}</p>
                 </div>
               )}
 
               {invitation.message && (
                 <div>
-                  <h4 className="font-medium">Welcome Message</h4>
+                  <h4 className="font-medium">{t("invitations.welcomeMessage")}</h4>
                   <p className="text-muted-foreground">{invitation.message}</p>
                 </div>
               )}

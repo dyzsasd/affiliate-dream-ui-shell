@@ -65,5 +65,13 @@
   "failedToUpdate": "Failed to update invitation",
   "organizationNotFound": "Organization not found",
   "invitationDeletedSuccess": "Invitation deleted successfully",
-  "failedToDelete": "Failed to delete invitation"
+  "failedToDelete": "Failed to delete invitation",
+  "invitationInformation": "Invitation Information",
+  "welcomeMessage": "Welcome Message",
+  "defaultVisibilitySettings": "Default Visibility Settings",
+  "editInvitation": "Edit Invitation",
+  "createInvitation": "Create Invitation",
+  "all": "All",
+  "error": "Error",
+  "success": "Success"
 }

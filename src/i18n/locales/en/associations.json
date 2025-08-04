@@ -48,7 +48,6 @@
   "affiliateRequired": "Please select an affiliate",
   "copied": "Copied",
   "copyError": "Failed to copy link",
-  "pending": "Pending",
   "selected": "Selected",
   "select": "Select",
   "unknownName": "Unknown Name",
@@ -63,5 +62,14 @@
   "failedToLoadCampaigns": "Failed to load campaigns",
   "selectCampaignAndName": "Please select a campaign and enter a link name",
   "selectAffiliateFirst": "Please select an affiliate to create tracking link for",
-  "failedToLoadAssociations": "Failed to load affiliate associations"
+  "failedToLoadAssociations": "Failed to load affiliate associations",
+  "organizationId": "Organization ID",
+  "updatedDate": "Updated Date",
+  "visibility": "Visibility",
+  "affiliatesVisible": "Affiliates Visible",
+  "campaignsVisible": "Campaigns Visible",
+  "na": "N/A",
+  "unknown": "Unknown",
+  "error": "Error",
+  "success": "Success"
 }

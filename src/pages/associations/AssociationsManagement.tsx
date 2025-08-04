@@ -49,8 +49,8 @@ const AssociationsManagement: React.FC = () => {
     } catch (error) {
       console.error('Error fetching associations:', error);
       toast({
-        title: "Error",
-        description: "Failed to load affiliate associations",
+        title: t("associations.error"),
+        description: t("associations.failedToLoadAssociations"),
         variant: "destructive",
       });
     } finally {
