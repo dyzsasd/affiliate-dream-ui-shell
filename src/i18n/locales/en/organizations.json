@@ -58,5 +58,11 @@
   "notFoundMessage": "The organization you're looking for doesn't exist or you don't have permission to view it.",
   "backToOrganizations": "Back to Organizations",
   "updateSuccess": "Organization updated successfully",
-  "updateError": "Failed to update organization"
+  "updateError": "Failed to update organization",
+  "advertiserInfo": "Advertiser Information",
+  "affiliateInfo": "Affiliate Information",
+  "websiteType": "Website Type",
+  "affiliateType": "Affiliate Type",
+  "description": "Description",
+  "notProvided": "Not provided"
 }

@@ -58,5 +58,11 @@
   "notFoundMessage": "L'organisation que vous recherchez n'existe pas ou vous n'avez pas l'autorisation de la voir.",
   "backToOrganizations": "Retour aux Organisations",
   "updateSuccess": "Organisation mise à jour avec succès",
-  "updateError": "Échec de la mise à jour de l'organisation"
+  "updateError": "Échec de la mise à jour de l'organisation",
+  "advertiserInfo": "Informations Annonceur",
+  "affiliateInfo": "Informations Affilié",
+  "websiteType": "Type de Site Web",
+  "affiliateType": "Type d'Affilié",
+  "description": "Description",
+  "notProvided": "Non fourni"
 }
