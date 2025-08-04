@@ -6,11 +6,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { createApiClient } from '@/services/backendApi';
 import { DomainAffiliate } from '@/generated-api/src/models';
-import { OrganizationAssociationsApi } from '@/generated-api/src/apis';
-import { ArrowLeft, Users, Mail, Calendar, AlertCircle } from 'lucide-react';
+import { OrganizationAssociationsApi, TrackingLinksApi } from '@/generated-api/src/apis';
+import { ModelsTrackingLinkGenerationRequest } from '@/generated-api/src/models/ModelsTrackingLinkGenerationRequest';
+import { campaignService } from '@/services/campaign';
+import { Campaign } from '@/types/api';
+import { ArrowLeft, Users, Mail, Calendar, AlertCircle, Link, Copy, Loader2 } from 'lucide-react';
 
 const AffiliateDetails: React.FC = () => {
   const { affiliateOrgId } = useParams<{ affiliateOrgId: string }>();
@@ -19,11 +25,20 @@ const AffiliateDetails: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [affiliates, setAffiliates] = useState<DomainAffiliate[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
+  
+  // Tracking link generation state
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>("");
+  const [linkName, setLinkName] = useState<string>("");
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState<string>("");
 
   useEffect(() => {
     if (organization?.organizationId && affiliateOrgId) {
       fetchVisibleAffiliates();
+      fetchCampaigns();
     }
   }, [organization, affiliateOrgId]);
 
@@ -47,6 +62,97 @@ const AffiliateDetails: React.FC = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCampaigns = async () => {
+    try {
+      setIsLoadingCampaigns(true);
+      const campaignsData = await campaignService.getCampaigns(organization!.organizationId!);
+      setCampaigns(campaignsData);
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load campaigns",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingCampaigns(false);
+    }
+  };
+
+  const handleGenerateTrackingLink = async () => {
+    if (!selectedCampaignId || !linkName.trim()) {
+      toast({
+        title: "Error",
+        description: "Please select a campaign and enter a link name",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (affiliates.length === 0) {
+      toast({
+        title: "Error", 
+        description: "No affiliate found to create tracking link for",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGeneratingLink(true);
+    
+    try {
+      const trackingApi = await createApiClient(TrackingLinksApi);
+      const affiliate = affiliates[0]; // Use the first affiliate from the details
+      
+      const request: ModelsTrackingLinkGenerationRequest = {
+        affiliateId: affiliate.affiliateId!,
+        campaignId: parseInt(selectedCampaignId),
+        name: linkName.trim(),
+        description: `Tracking link for ${affiliate.name} - Campaign ${selectedCampaignId}`,
+      };
+
+      const response = await trackingApi.organizationsOrganizationIdTrackingLinksGeneratePost({
+        organizationId: organization!.organizationId!,
+        request: request
+      });
+
+      setGeneratedLink(response.generatedUrl || "");
+      toast({
+        title: "Success",
+        description: "Tracking link generated successfully!",
+      });
+    } catch (error) {
+      console.error('Error generating tracking link:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate tracking link",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingLink(false);
+    }
+  };
+
+  const copyLinkToClipboard = () => {
+    if (generatedLink) {
+      navigator.clipboard.writeText(generatedLink)
+        .then(() => {
+          toast({
+            title: "Copied",
+            description: "Tracking link copied to clipboard",
+          });
+        })
+        .catch((error) => {
+          console.error("Error copying text:", error);
+          toast({
+            title: "Error",
+            description: "Failed to copy link",
+            variant: "destructive",
+          });
+        });
     }
   };
 
@@ -189,6 +295,95 @@ const AffiliateDetails: React.FC = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Create Tracking Link Section */}
+        {affiliates.length > 0 && (
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <Link className="w-6 h-6 text-primary" />
+                <CardTitle>Generate Tracking Link</CardTitle>
+              </div>
+              <CardDescription>
+                Create a tracking link for this affiliate by selecting a campaign
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="campaign-select">Select Campaign</Label>
+                  <Select 
+                    value={selectedCampaignId} 
+                    onValueChange={setSelectedCampaignId}
+                    disabled={isLoadingCampaigns}
+                  >
+                    <SelectTrigger id="campaign-select">
+                      <SelectValue placeholder={
+                        isLoadingCampaigns ? "Loading campaigns..." : "Choose a campaign"
+                      } />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {campaigns.map((campaign) => (
+                        <SelectItem key={campaign.id} value={campaign.id}>
+                          {campaign.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="link-name">Link Name</Label>
+                  <Input
+                    id="link-name"
+                    placeholder="Enter a name for this tracking link"
+                    value={linkName}
+                    onChange={(e) => setLinkName(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handleGenerateTrackingLink}
+                disabled={isGeneratingLink || !selectedCampaignId || !linkName.trim()}
+                className="w-full md:w-auto"
+              >
+                {isGeneratingLink ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Link className="w-4 h-4 mr-2" />
+                    Generate Tracking Link
+                  </>
+                )}
+              </Button>
+              
+              {generatedLink && (
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                  <Label className="text-sm font-medium mb-2 block">Generated Tracking Link</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input 
+                      value={generatedLink} 
+                      readOnly 
+                      className="flex-1 font-mono text-sm"
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={copyLinkToClipboard}
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
