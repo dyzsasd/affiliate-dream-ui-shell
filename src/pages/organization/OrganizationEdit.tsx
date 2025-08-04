@@ -36,6 +36,16 @@ export const OrganizationEdit: React.FC = () => {
     description: "",
     contactEmail: ""
   });
+  const [advertiserData, setAdvertiserData] = useState<{website?: string; websiteType?: string; companySize?: string}>({
+    website: "",
+    websiteType: "",
+    companySize: ""
+  });
+  const [affiliateData, setAffiliateData] = useState<{website?: string; affiliateType?: string; selfDescription?: string}>({
+    website: "",
+    affiliateType: "",
+    selfDescription: ""
+  });
 
   useEffect(() => {
     if (organization?.organizationId) {
@@ -88,6 +98,23 @@ export const OrganizationEdit: React.FC = () => {
         description: "", // Not available in current API
         contactEmail: "" // Not available in current API
       });
+      
+      // Initialize extra info data
+      if (mappedData.advertiserExtraInfo) {
+        setAdvertiserData({
+          website: mappedData.advertiserExtraInfo.website || "",
+          websiteType: mappedData.advertiserExtraInfo.websiteType || "",
+          companySize: mappedData.advertiserExtraInfo.companySize || ""
+        });
+      }
+      
+      if (mappedData.affiliateExtraInfo) {
+        setAffiliateData({
+          website: mappedData.affiliateExtraInfo.website || "",
+          affiliateType: mappedData.affiliateExtraInfo.affiliateType || "",
+          selfDescription: mappedData.affiliateExtraInfo.selfDescription || ""
+        });
+      }
     } catch (error) {
       console.error('Error fetching organization:', error);
       toast({
@@ -133,6 +160,78 @@ export const OrganizationEdit: React.FC = () => {
     }
   };
 
+  const handleAdvertiserSave = async () => {
+    if (!organizationData?.organizationId) return;
+
+    try {
+      setIsSaving(true);
+      const organizationsApi = await createApiClient(OrganizationsApi);
+      // Note: You may need to implement the API endpoint for updating advertiser extra info
+      await organizationsApi.organizationsIdPut({
+        id: organizationData.organizationId,
+        request: {
+          name: organizationData.name!,
+          type: organizationData.type as any,
+          advertiserExtraInfo: {
+            website: advertiserData.website,
+            websiteType: advertiserData.websiteType as any,
+            companySize: advertiserData.companySize as any
+          }
+        }
+      });
+      
+      toast({
+        title: t("common.success"),
+        description: t("organizations.updateSuccess"),
+      });
+    } catch (error) {
+      console.error('Error updating advertiser info:', error);
+      toast({
+        title: t("common.error"),
+        description: t("organizations.updateError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleAffiliateSave = async () => {
+    if (!organizationData?.organizationId) return;
+
+    try {
+      setIsSaving(true);
+      const organizationsApi = await createApiClient(OrganizationsApi);
+      // Note: You may need to implement the API endpoint for updating affiliate extra info
+      await organizationsApi.organizationsIdPut({
+        id: organizationData.organizationId,
+        request: {
+          name: organizationData.name!,
+          type: organizationData.type as any,
+          affiliateExtraInfo: {
+            website: affiliateData.website,
+            affiliateType: affiliateData.affiliateType as any,
+            selfDescription: affiliateData.selfDescription
+          }
+        }
+      });
+      
+      toast({
+        title: t("common.success"),
+        description: t("organizations.updateSuccess"),
+      });
+    } catch (error) {
+      console.error('Error updating affiliate info:', error);
+      toast({
+        title: t("common.error"),
+        description: t("organizations.updateError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (isLoading) {
     return <OrganizationLoadingState />;
   }
@@ -158,32 +257,40 @@ export const OrganizationEdit: React.FC = () => {
 
         <OrganizationHeader organization={organizationData} />
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Basic Info Panel */}
-          <BasicInfoPanel
-            data={basicInfoData}
-            onDataChange={setBasicInfoData}
-            onSave={handleBasicInfoSave}
-            isSaving={isSaving}
-          />
-
-          {/* Invite Team Member */}
-          <InviteUserSection
-            organizationId={organizationData.organizationId!}
-            organizationName={organizationData.name || 'Organization'}
-          />
-        </div>
+        {/* Basic Info Panel */}
+        <BasicInfoPanel
+          data={basicInfoData}
+          onDataChange={setBasicInfoData}
+          onSave={handleBasicInfoSave}
+          isSaving={isSaving}
+        />
 
         {/* Extra Info Panels - Only show if data exists */}
         <div className="grid gap-6 md:grid-cols-2">
           {organizationData.type === 'advertiser' && organizationData.advertiserExtraInfo && (
-            <AdvertiserExtraInfoPanel extraInfo={organizationData.advertiserExtraInfo} />
+            <AdvertiserExtraInfoPanel 
+              extraInfo={advertiserData}
+              onDataChange={setAdvertiserData}
+              onSave={handleAdvertiserSave}
+              isSaving={isSaving}
+            />
           )}
           
           {organizationData.type === 'affiliate' && organizationData.affiliateExtraInfo && (
-            <AffiliateExtraInfoPanel extraInfo={organizationData.affiliateExtraInfo} />
+            <AffiliateExtraInfoPanel 
+              extraInfo={affiliateData}
+              onDataChange={setAffiliateData}
+              onSave={handleAffiliateSave}
+              isSaving={isSaving}
+            />
           )}
         </div>
+
+        {/* Invite Team Member - At the bottom */}
+        <InviteUserSection
+          organizationId={organizationData.organizationId!}
+          organizationName={organizationData.name || 'Organization'}
+        />
       </div>
     </div>
   );

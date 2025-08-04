@@ -1,8 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Users, Globe, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Users, Globe, FileText, Save } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface AffiliateExtraInfo {
@@ -13,10 +16,24 @@ interface AffiliateExtraInfo {
 
 interface AffiliateExtraInfoPanelProps {
   extraInfo: AffiliateExtraInfo;
+  onDataChange?: (data: AffiliateExtraInfo) => void;
+  onSave?: () => void;
+  isSaving?: boolean;
 }
 
-const AffiliateExtraInfoPanel: React.FC<AffiliateExtraInfoPanelProps> = ({ extraInfo }) => {
+const AffiliateExtraInfoPanel: React.FC<AffiliateExtraInfoPanelProps> = ({ 
+  extraInfo, 
+  onDataChange, 
+  onSave, 
+  isSaving = false 
+}) => {
   const { t } = useTranslation();
+
+  const handleInputChange = (field: keyof AffiliateExtraInfo, value: string) => {
+    if (onDataChange) {
+      onDataChange({ ...extraInfo, [field]: value });
+    }
+  };
 
   return (
     <Card>
@@ -32,20 +49,27 @@ const AffiliateExtraInfoPanel: React.FC<AffiliateExtraInfoPanelProps> = ({ extra
             <Globe className="w-4 h-4" />
             {t("organizations.website")}
           </Label>
-          <p className="text-sm text-muted-foreground">
-            {extraInfo.website || t("organizations.notProvided")}
-          </p>
+          <Input
+            value={extraInfo.website || ''}
+            onChange={(e) => handleInputChange('website', e.target.value)}
+            placeholder={t("organizations.websitePlaceholder")}
+          />
         </div>
 
         <div className="space-y-2">
           <Label>{t("organizations.affiliateType")}</Label>
-          <div>
-            {extraInfo.affiliateType ? (
-              <Badge variant="secondary">{extraInfo.affiliateType}</Badge>
-            ) : (
-              <p className="text-sm text-muted-foreground">{t("organizations.notProvided")}</p>
-            )}
-          </div>
+          <Select value={extraInfo.affiliateType || ''} onValueChange={(value) => handleInputChange('affiliateType', value)}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("organizations.selectAffiliateType")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="influencer">Influencer</SelectItem>
+              <SelectItem value="blogger">Blogger</SelectItem>
+              <SelectItem value="media">Media</SelectItem>
+              <SelectItem value="coupon">Coupon Site</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
@@ -53,10 +77,24 @@ const AffiliateExtraInfoPanel: React.FC<AffiliateExtraInfoPanelProps> = ({ extra
             <FileText className="w-4 h-4" />
             {t("organizations.description")}
           </Label>
-          <p className="text-sm text-muted-foreground">
-            {extraInfo.selfDescription || t("organizations.notProvided")}
-          </p>
+          <Textarea
+            value={extraInfo.selfDescription || ''}
+            onChange={(e) => handleInputChange('selfDescription', e.target.value)}
+            placeholder={t("organizations.descriptionPlaceholder")}
+            rows={3}
+          />
         </div>
+
+        {onSave && (
+          <Button 
+            onClick={onSave} 
+            disabled={isSaving}
+            className="w-full"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {isSaving ? t("common.saving") : t("common.save")}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
