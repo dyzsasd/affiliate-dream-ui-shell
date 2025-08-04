@@ -226,7 +226,6 @@ const AffiliateDetails: React.FC = () => {
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Organization</TableHead>
                     <TableHead>Created Date</TableHead>
                     <TableHead>Updated Date</TableHead>
                   </TableRow>
@@ -276,11 +275,6 @@ const AffiliateDetails: React.FC = () => {
                           }
                         >
                           {affiliate.status || 'Unknown'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {affiliate.organizationId || 'Unknown'}
                         </Badge>
                       </TableCell>
                       <TableCell>
