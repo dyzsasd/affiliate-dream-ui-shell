@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
 
 const inviteSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -40,22 +41,16 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/functions/v1/send-invitation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data: result, error } = await supabase.functions.invoke('send-invitation', {
+        body: {
           email: data.email,
           organizationId,
           organizationName,
-        }),
+        },
       });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || t('organizations.invitationErrorDescription'));
+      if (error) {
+        throw new Error(error.message || t('organizations.invitationErrorDescription'));
       }
 
       toast({
