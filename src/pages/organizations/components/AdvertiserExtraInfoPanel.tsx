@@ -63,8 +63,9 @@ const AdvertiserExtraInfoPanel: React.FC<AdvertiserExtraInfoPanelProps> = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="shopify">Shopify</SelectItem>
-              <SelectItem value="wordpress">WordPress</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
+              <SelectItem value="amazon">Amazon</SelectItem>
+              <SelectItem value="shopline">Shopline</SelectItem>
+              <SelectItem value="tiktok_shop">TikTok Shop</SelectItem>
               <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
@@ -80,9 +81,11 @@ const AdvertiserExtraInfoPanel: React.FC<AdvertiserExtraInfoPanelProps> = ({
               <SelectValue placeholder={t("organizations.selectCompanySize")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="small">Small (1-10)</SelectItem>
-              <SelectItem value="medium">Medium (11-50)</SelectItem>
-              <SelectItem value="large">Large (51+)</SelectItem>
+              <SelectItem value="startup">Startup</SelectItem>
+              <SelectItem value="small">Small</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="large">Large</SelectItem>
+              <SelectItem value="enterprise">Enterprise</SelectItem>
             </SelectContent>
           </Select>
         </div>
