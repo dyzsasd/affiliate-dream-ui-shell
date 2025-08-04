@@ -17,6 +17,8 @@ interface AdvertiserExtraInfoPanelProps {
 
 const AdvertiserExtraInfoPanel: React.FC<AdvertiserExtraInfoPanelProps> = ({ extraInfo }) => {
   const { t } = useTranslation();
+  
+  console.log('AdvertiserExtraInfoPanel received extraInfo:', extraInfo);
 
   return (
     <Card>

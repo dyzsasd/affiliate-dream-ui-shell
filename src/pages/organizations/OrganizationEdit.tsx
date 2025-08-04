@@ -62,6 +62,8 @@ const OrganizationEdit: React.FC = () => {
         } : undefined
       };
       
+      console.log('Raw API response:', rawData);
+      console.log('Mapped organization data:', mappedData);
       setOrganization(mappedData);
       setFormData({
         name: mappedData.name || "",
@@ -120,6 +122,9 @@ const OrganizationEdit: React.FC = () => {
   if (!organization) {
     return <OrganizationNotFound />;
   }
+
+  // Debug logging
+  console.log('Organization type:', organization.type, 'Advertiser extra info:', organization.advertiserExtraInfo);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
