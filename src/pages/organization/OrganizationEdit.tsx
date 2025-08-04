@@ -266,25 +266,23 @@ export const OrganizationEdit: React.FC = () => {
         />
 
         {/* Extra Info Panels - Only show if data exists */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {organizationData.type === 'advertiser' && organizationData.advertiserExtraInfo && (
-            <AdvertiserExtraInfoPanel 
-              extraInfo={advertiserData}
-              onDataChange={setAdvertiserData}
-              onSave={handleAdvertiserSave}
-              isSaving={isSaving}
-            />
-          )}
-          
-          {organizationData.type === 'affiliate' && organizationData.affiliateExtraInfo && (
-            <AffiliateExtraInfoPanel 
-              extraInfo={affiliateData}
-              onDataChange={setAffiliateData}
-              onSave={handleAffiliateSave}
-              isSaving={isSaving}
-            />
-          )}
-        </div>
+        {organizationData.type === 'advertiser' && organizationData.advertiserExtraInfo && (
+          <AdvertiserExtraInfoPanel 
+            extraInfo={advertiserData}
+            onDataChange={setAdvertiserData}
+            onSave={handleAdvertiserSave}
+            isSaving={isSaving}
+          />
+        )}
+        
+        {organizationData.type === 'affiliate' && organizationData.affiliateExtraInfo && (
+          <AffiliateExtraInfoPanel 
+            extraInfo={affiliateData}
+            onDataChange={setAffiliateData}
+            onSave={handleAffiliateSave}
+            isSaving={isSaving}
+          />
+        )}
 
         {/* Invite Team Member - At the bottom */}
         <InviteUserSection
