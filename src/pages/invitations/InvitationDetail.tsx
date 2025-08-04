@@ -52,9 +52,9 @@ export default function InvitationDetail() {
       <div className="container mx-auto p-6">
         <Card>
           <CardContent className="p-12 text-center">
-            <p className="text-muted-foreground mb-4">Invitation not found</p>
+            <p className="text-muted-foreground mb-4">{t("invitations.invitationNotFound")}</p>
             <Button onClick={() => navigate('/invitations')} variant="outline">
-              Back to Invitations
+              {t("invitations.backToInvitations")}
             </Button>
           </CardContent>
         </Card>
@@ -95,17 +95,17 @@ export default function InvitationDetail() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold">{invitation.name}</h1>
-            <p className="text-muted-foreground">Invitation Details & Analytics</p>
+            <p className="text-muted-foreground">{t("invitations.invitationDetailsAndAnalytics")}</p>
           </div>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShareDialogOpen(true)} className="gap-2">
             <Share2 className="h-4 w-4" />
-            Share
+            {t("invitations.share")}
           </Button>
           <Button onClick={() => navigate(`/invitations/${id}/edit`)} className="gap-2">
             <Edit className="h-4 w-4" />
-            Edit
+            {t("invitations.edit")}
           </Button>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default function InvitationDetail() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Status</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("invitations.status")}</CardTitle>
           </CardHeader>
           <CardContent>
             {getStatusBadge()}
@@ -123,7 +123,7 @@ export default function InvitationDetail() {
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Usage</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("invitations.usage")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-2xl font-bold">{usage.label}</div>
@@ -133,29 +133,29 @@ export default function InvitationDetail() {
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Created</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("invitations.created")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {invitation.createdAt ? new Date(invitation.createdAt).toLocaleDateString() : 'N/A'}
+              {invitation.createdAt ? new Date(invitation.createdAt).toLocaleDateString() : t("associations.na")}
             </div>
             <p className="text-sm text-muted-foreground">
-              {invitation.createdByUser?.email || 'Unknown'}
+              {invitation.createdByUser?.email || t("invitations.unknown")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Expires</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("invitations.expires")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {invitation.expiresAt ? new Date(invitation.expiresAt).toLocaleDateString() : 'Never'}
+              {invitation.expiresAt ? new Date(invitation.expiresAt).toLocaleDateString() : t("invitations.never")}
             </div>
             {invitation.expiresAt && (
               <p className="text-sm text-muted-foreground">
-                {new Date(invitation.expiresAt) > new Date() ? 'Active' : 'Expired'}
+                {new Date(invitation.expiresAt) > new Date() ? t("invitations.active") : t("invitations.expired")}
               </p>
             )}
           </CardContent>
@@ -192,21 +192,21 @@ export default function InvitationDetail() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-medium">Default Visibility Settings</h4>
+                  <h4 className="font-medium">{t("invitations.defaultVisibilitySettings")}</h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
                     <li>
-                      All Affiliates Visible: {invitation.defaultAllAffiliatesVisible ? 'Yes' : 'No'}
+                      {t("invitations.allAffiliatesVisible")}: {invitation.defaultAllAffiliatesVisible ? t("invitations.yes") : t("invitations.no")}
                     </li>
                     <li>
-                      All Campaigns Visible: {invitation.defaultAllCampaignsVisible ? 'Yes' : 'No'}
+                      {t("invitations.allCampaignsVisible")}: {invitation.defaultAllCampaignsVisible ? t("invitations.yes") : t("invitations.no")}
                     </li>
                   </ul>
                 </div>
 
                 <div>
-                  <h4 className="font-medium">Advertiser Organization</h4>
+                  <h4 className="font-medium">{t("invitations.advertiserOrganization")}</h4>
                   <p className="text-sm text-muted-foreground">
-                    {invitation.advertiserOrganization?.name || 'Unknown'}
+                    {invitation.advertiserOrganization?.name || t("invitations.unknown")}
                   </p>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export default function InvitationDetail() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
-                Usage Analytics
+                {t("invitations.usageAnalytics")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -233,7 +233,7 @@ export default function InvitationDetail() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Usage History
+                {t("invitations.usageHistory")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -241,28 +241,28 @@ export default function InvitationDetail() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Affiliate Org ID</TableHead>
-                      <TableHead>User</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>IP Address</TableHead>
+                      <TableHead>{t("invitations.date")}</TableHead>
+                      <TableHead>{t("invitations.affiliateOrgId")}</TableHead>
+                      <TableHead>{t("invitations.user")}</TableHead>
+                      <TableHead>{t("invitations.status")}</TableHead>
+                      <TableHead>{t("invitations.ipAddress")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {usageHistory.map((usage, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          {usage.usedAt ? new Date(usage.usedAt).toLocaleString() : 'N/A'}
+                          {usage.usedAt ? new Date(usage.usedAt).toLocaleString() : t("associations.na")}
                         </TableCell>
                         <TableCell>{usage.affiliateOrgId}</TableCell>
-                        <TableCell>{usage.usedByUserId || 'Unknown'}</TableCell>
+                        <TableCell>{usage.usedByUserId || t("invitations.unknown")}</TableCell>
                         <TableCell>
                           <Badge variant={usage.success ? "default" : "destructive"}>
-                            {usage.success ? 'Success' : 'Failed'}
+                            {usage.success ? t("invitations.successStatus") : t("invitations.failed")}
                           </Badge>
                         </TableCell>
                         <TableCell className="font-mono text-sm">
-                          {usage.ipAddress || 'N/A'}
+                          {usage.ipAddress || t("associations.na")}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -270,7 +270,7 @@ export default function InvitationDetail() {
                 </Table>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">No usage history found</p>
+                  <p className="text-muted-foreground">{t("invitations.noUsageHistory")}</p>
                 </div>
               )}
             </CardContent>

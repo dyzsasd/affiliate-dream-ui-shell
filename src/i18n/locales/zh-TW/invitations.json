@@ -35,5 +35,20 @@
   "deleted": "邀請刪除成功",
   "fetchError": "載入邀請失敗",
   "saveError": "儲存邀請失敗",
-  "deleteError": "刪除邀請失敗"
+  "deleteError": "刪除邀請失敗",
+  "advertiserOrganization": "廣告主組織",
+  "usage": "使用情況",
+  "created": "建立日期",
+  "expires": "到期日",
+  "usageAnalytics": "使用分析",
+  "noUsageHistory": "未找到使用歷史",
+  "date": "日期",
+  "affiliateOrgId": "聯盟夥伴組織ID",
+  "user": "用戶",
+  "ipAddress": "IP地址",
+  "invitationNotFound": "未找到邀請",
+  "backToInvitations": "返回邀請",
+  "invitationDetailsAndAnalytics": "邀請詳情與分析",
+  "share": "分享",
+  "edit": "編輯"
 }

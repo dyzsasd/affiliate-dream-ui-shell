@@ -73,5 +73,20 @@
   "createInvitation": "Create Invitation",
   "all": "All",
   "error": "Error",
-  "success": "Success"
+  "success": "Success",
+  "advertiserOrganization": "Advertiser Organization",
+  "usage": "Usage",
+  "created": "Created",
+  "expires": "Expires",
+  "usageAnalytics": "Usage Analytics",
+  "noUsageHistory": "No usage history found",
+  "date": "Date",
+  "affiliateOrgId": "Affiliate Org ID",
+  "user": "User",
+  "ipAddress": "IP Address",
+  "invitationNotFound": "Invitation not found",
+  "backToInvitations": "Back to Invitations",
+  "invitationDetailsAndAnalytics": "Invitation Details & Analytics",
+  "share": "Share",
+  "edit": "Edit"
 }

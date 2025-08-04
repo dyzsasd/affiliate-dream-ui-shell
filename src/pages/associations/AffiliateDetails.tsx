@@ -74,8 +74,8 @@ const AffiliateDetails: React.FC = () => {
     } catch (error) {
       console.error('Error fetching campaigns:', error);
       toast({
-        title: "Error",
-        description: "Failed to load campaigns",
+        title: t("associations.error"),
+        description: t("associations.failedToLoadCampaigns"),
         variant: "destructive",
       });
     } finally {
@@ -86,8 +86,8 @@ const AffiliateDetails: React.FC = () => {
   const handleGenerateTrackingLink = async () => {
     if (!selectedCampaignId || !linkName.trim()) {
       toast({
-        title: "Error",
-        description: "Please select a campaign and enter a link name",
+        title: t("associations.error"),
+        description: t("associations.selectCampaignAndName"),
         variant: "destructive",
       });
       return;
@@ -95,8 +95,8 @@ const AffiliateDetails: React.FC = () => {
 
     if (!selectedAffiliateId) {
       toast({
-        title: "Error", 
-        description: "Please select an affiliate to create tracking link for",
+        title: t("associations.error"), 
+        description: t("associations.selectAffiliateFirst"),
         variant: "destructive",
       });
       return;
@@ -121,14 +121,14 @@ const AffiliateDetails: React.FC = () => {
 
       setGeneratedLink(response.generatedUrl || "");
       toast({
-        title: "Success",
-        description: "Tracking link generated successfully!",
+        title: t("associations.success"),
+        description: t("associations.trackingLinkGenerated"),
       });
     } catch (error) {
       console.error('Error generating tracking link:', error);
       toast({
-        title: "Error",
-        description: "Failed to generate tracking link",
+        title: t("associations.error"),
+        description: t("associations.trackingLinkError"),
         variant: "destructive",
       });
     } finally {
@@ -141,15 +141,15 @@ const AffiliateDetails: React.FC = () => {
       navigator.clipboard.writeText(generatedLink)
         .then(() => {
           toast({
-            title: "Copied",
-            description: "Tracking link copied to clipboard",
+            title: t("associations.copied"),
+            description: t("associations.trackingLinkCopiedToClipboard"),
           });
         })
         .catch((error) => {
           console.error("Error copying text:", error);
           toast({
-            title: "Error",
-            description: "Failed to copy link",
+            title: t("associations.error"),
+            description: t("associations.copyError"),
             variant: "destructive",
           });
         });
@@ -165,7 +165,7 @@ const AffiliateDetails: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading affiliate details...</p>
+          <p>{t("associations.loadingAffiliateDetails")}</p>
         </div>
       </div>
     );
@@ -186,16 +186,16 @@ const AffiliateDetails: React.FC = () => {
                   className="flex items-center space-x-2"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back to Associations</span>
+                  <span>{t("associations.backToAssociations")}</span>
                 </Button>
                 <div className="flex items-center space-x-2">
                   <Users className="w-6 h-6 text-primary" />
-                  <CardTitle className="text-2xl">Affiliate Organization Details</CardTitle>
+                  <CardTitle className="text-2xl">{t("associations.affiliateOrganizationDetails")}</CardTitle>
                 </div>
               </div>
             </div>
             <CardDescription>
-              Visible affiliates for organization ID: {affiliateOrgId}
+              {t("associations.visibleAffiliatesFor")}: {affiliateOrgId}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -203,9 +203,9 @@ const AffiliateDetails: React.FC = () => {
         {/* Affiliates Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Visible Affiliates</CardTitle>
+            <CardTitle>{t("associations.visibleAffiliates")}</CardTitle>
             <CardDescription>
-              List of affiliates that are visible to your organization
+              {t("associations.listOfAffiliates")}
             </CardDescription>
           </CardHeader>
           
@@ -213,21 +213,21 @@ const AffiliateDetails: React.FC = () => {
             {affiliates.length === 0 ? (
               <div className="text-center py-12">
                 <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Visible Affiliates</h3>
+                <h3 className="text-lg font-medium mb-2">{t("associations.noVisibleAffiliates")}</h3>
                 <p className="text-muted-foreground">
-                  There are no visible affiliates for this organization.
+                  {t("associations.noVisibleAffiliatesMessage")}
                 </p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Select</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created Date</TableHead>
-                    <TableHead>Updated Date</TableHead>
+                    <TableHead>{t("associations.select")}</TableHead>
+                    <TableHead>{t("associations.name")}</TableHead>
+                    <TableHead>{t("associations.email")}</TableHead>
+                    <TableHead>{t("associations.status")}</TableHead>
+                    <TableHead>{t("associations.createdDate")}</TableHead>
+                    <TableHead>{t("associations.updatedDate")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -283,7 +283,7 @@ const AffiliateDetails: React.FC = () => {
                           <span>
                             {affiliate.createdAt 
                               ? new Date(affiliate.createdAt).toLocaleDateString() 
-                              : 'N/A'
+                              : t("associations.na")
                             }
                           </span>
                         </div>
@@ -294,7 +294,7 @@ const AffiliateDetails: React.FC = () => {
                           <span>
                             {affiliate.updatedAt 
                               ? new Date(affiliate.updatedAt).toLocaleDateString() 
-                              : 'N/A'
+                              : t("associations.na")
                             }
                           </span>
                         </div>
@@ -313,12 +313,12 @@ const AffiliateDetails: React.FC = () => {
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <Link className="w-6 h-6 text-primary" />
-                <CardTitle>Generate Tracking Link</CardTitle>
+                <CardTitle>{t("associations.generateTrackingLink")}</CardTitle>
               </div>
               <CardDescription>
                 {selectedAffiliateId 
-                  ? `Create a tracking link for: ${getSelectedAffiliate()?.name || 'Selected Affiliate'}`
-                  : "Select an affiliate from the table above, then choose a campaign to create a tracking link"
+                  ? `${t("associations.createTrackingLinkFor")}: ${getSelectedAffiliate()?.name || t("associations.selectedAffiliate")}`
+                  : t("associations.selectAffiliateDescription")
                 }
               </CardDescription>
             </CardHeader>
@@ -327,7 +327,7 @@ const AffiliateDetails: React.FC = () => {
               {!selectedAffiliateId && (
                 <div className="p-4 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/30">
                   <p className="text-center text-muted-foreground">
-                    Please select an affiliate from the table above to continue
+                    {t("associations.selectAffiliateMessage")}
                   </p>
                 </div>
               )}
@@ -337,8 +337,8 @@ const AffiliateDetails: React.FC = () => {
                   <div className="p-3 bg-primary/10 rounded-lg">
                     <div className="flex items-center space-x-2">
                       <Users className="w-4 h-4 text-primary" />
-                      <span className="font-medium">Selected Affiliate:</span>
-                      <span>{getSelectedAffiliate()?.name || 'Unknown'}</span>
+                      <span className="font-medium">{t("associations.selectedAffiliate")}:</span>
+                      <span>{getSelectedAffiliate()?.name || t("associations.unknownName")}</span>
                       <Badge variant="outline">
                         ID: {selectedAffiliateId}
                       </Badge>
@@ -347,7 +347,7 @@ const AffiliateDetails: React.FC = () => {
                   
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="campaign-select">Select Campaign</Label>
+                      <Label htmlFor="campaign-select">{t("associations.selectCampaign")}</Label>
                       <Select 
                         value={selectedCampaignId} 
                         onValueChange={setSelectedCampaignId}
@@ -355,7 +355,7 @@ const AffiliateDetails: React.FC = () => {
                       >
                         <SelectTrigger id="campaign-select">
                           <SelectValue placeholder={
-                            isLoadingCampaigns ? "Loading campaigns..." : "Choose a campaign"
+                            isLoadingCampaigns ? t("associations.loadingCampaigns") : t("associations.chooseCampaign")
                           } />
                         </SelectTrigger>
                         <SelectContent>
@@ -369,10 +369,10 @@ const AffiliateDetails: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="link-name">Link Name</Label>
+                      <Label htmlFor="link-name">{t("associations.linkName")}</Label>
                       <Input
                         id="link-name"
-                        placeholder="Enter a name for this tracking link"
+                        placeholder={t("associations.enterLinkName")}
                         value={linkName}
                         onChange={(e) => setLinkName(e.target.value)}
                       />
@@ -387,19 +387,19 @@ const AffiliateDetails: React.FC = () => {
                     {isGeneratingLink ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Generating...
+                        {t("associations.generating")}
                       </>
                     ) : (
                       <>
                         <Link className="w-4 h-4 mr-2" />
-                        Generate Tracking Link
+                        {t("associations.generateTrackingLink")}
                       </>
                     )}
                   </Button>
                   
                   {generatedLink && (
                     <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                      <Label className="text-sm font-medium mb-2 block">Generated Tracking Link</Label>
+                      <Label className="text-sm font-medium mb-2 block">{t("associations.generatedTrackingLink")}</Label>
                       <div className="flex items-center space-x-2">
                         <Input 
                           value={generatedLink} 

@@ -68,16 +68,16 @@ const AssociationsManagement: React.FC = () => {
       });
 
       toast({
-        title: "Success",
-        description: "Association approved successfully",
+        title: t("associations.success"),
+        description: t("associations.approveSuccess"),
       });
 
       fetchAssociations();
     } catch (error) {
       console.error('Error approving association:', error);
       toast({
-        title: "Error",
-        description: "Failed to approve association",
+        title: t("associations.error"),
+        description: t("associations.approveError"),
         variant: "destructive",
       });
     } finally {
@@ -95,16 +95,16 @@ const AssociationsManagement: React.FC = () => {
       });
 
       toast({
-        title: "Success",
-        description: "Association rejected",
+        title: t("associations.success"),
+        description: t("associations.rejectSuccess"),
       });
 
       fetchAssociations();
     } catch (error) {
       console.error('Error rejecting association:', error);
       toast({
-        title: "Error",
-        description: "Failed to reject association",
+        title: t("associations.error"),
+        description: t("associations.rejectError"),
         variant: "destructive",
       });
     } finally {
@@ -122,16 +122,16 @@ const AssociationsManagement: React.FC = () => {
       });
 
       toast({
-        title: "Success",
-        description: "Association suspended",
+        title: t("associations.success"),
+        description: t("associations.suspendSuccess"),
       });
 
       fetchAssociations();
     } catch (error) {
       console.error('Error suspending association:', error);
       toast({
-        title: "Error",
-        description: "Failed to suspend association",
+        title: t("associations.error"),
+        description: t("associations.suspendError"),
         variant: "destructive",
       });
     } finally {
@@ -149,16 +149,16 @@ const AssociationsManagement: React.FC = () => {
       });
 
       toast({
-        title: "Success",
-        description: "Association reactivated",
+        title: t("associations.success"),
+        description: t("associations.reactivateSuccess"),
       });
 
       fetchAssociations();
     } catch (error) {
       console.error('Error reactivating association:', error);
       toast({
-        title: "Error",
-        description: "Failed to reactivate association",
+        title: t("associations.error"),
+        description: t("associations.reactivateError"),
         variant: "destructive",
       });
     } finally {
@@ -201,7 +201,7 @@ const AssociationsManagement: React.FC = () => {
               className="text-green-600 hover:text-green-700"
             >
               <Check className="w-4 h-4 mr-1" />
-              Approve
+              {t("associations.approve")}
             </Button>
             <Button
               size="sm"
@@ -211,7 +211,7 @@ const AssociationsManagement: React.FC = () => {
               className="text-red-600 hover:text-red-700"
             >
               <X className="w-4 h-4 mr-1" />
-              Reject
+              {t("associations.reject")}
             </Button>
           </>
         )}
@@ -225,7 +225,7 @@ const AssociationsManagement: React.FC = () => {
             className="text-orange-600 hover:text-orange-700"
           >
             <Pause className="w-4 h-4 mr-1" />
-            Suspend
+            {t("associations.suspend")}
           </Button>
         )}
         
@@ -238,7 +238,7 @@ const AssociationsManagement: React.FC = () => {
             className="text-green-600 hover:text-green-700"
           >
             <Check className="w-4 h-4 mr-1" />
-            Reactivate
+            {t("associations.reactivate")}
           </Button>
         )}
         
@@ -249,7 +249,7 @@ const AssociationsManagement: React.FC = () => {
           className="text-blue-600 hover:text-blue-700"
         >
           <Eye className="w-4 h-4 mr-1" />
-          View Details
+          {t("associations.view")}
         </Button>
       </div>
     );
@@ -260,7 +260,7 @@ const AssociationsManagement: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading affiliate associations...</p>
+          <p>{t("associations.loadingAssociations")}</p>
         </div>
       </div>
     );
@@ -273,10 +273,10 @@ const AssociationsManagement: React.FC = () => {
           <CardHeader>
             <div className="flex items-center space-x-2">
               <Users className="w-6 h-6 text-primary" />
-              <CardTitle className="text-2xl">Affiliate Associations</CardTitle>
+              <CardTitle className="text-2xl">{t("associations.affiliateAssociations")}</CardTitle>
             </div>
             <CardDescription>
-              Manage your affiliate partnerships and association requests
+              {t("associations.managePartnerships")}
             </CardDescription>
           </CardHeader>
           
@@ -284,54 +284,54 @@ const AssociationsManagement: React.FC = () => {
             {associations.length === 0 ? (
               <div className="text-center py-12">
                 <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Affiliate Associations</h3>
+                <h3 className="text-lg font-medium mb-2">{t("associations.noAffiliateAssociations")}</h3>
                 <p className="text-muted-foreground">
-                  You don't have any affiliate associations yet.
+                  {t("associations.noAffiliateAssociationsMessage")}
                 </p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Organization Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created Date</TableHead>
-                    <TableHead>Updated Date</TableHead>
-                    <TableHead>Visibility</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t("associations.organizationName")}</TableHead>
+                    <TableHead>{t("associations.type")}</TableHead>
+                    <TableHead>{t("associations.status")}</TableHead>
+                    <TableHead>{t("associations.dateCreated")}</TableHead>
+                    <TableHead>{t("associations.updatedDate")}</TableHead>
+                    <TableHead>{t("associations.visibility")}</TableHead>
+                    <TableHead>{t("associations.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {associations.map((association) => (
                     <TableRow key={association.associationId}>
                       <TableCell className="font-medium">
-                        Organization ID: {association.affiliateOrgId || 'Unknown'}
+                        {t("associations.organizationId")}: {association.affiliateOrgId || t("associations.unknown")}
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary">
-                          {association.associationType || 'Unknown'}
+                          {association.associationType || t("associations.unknown")}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(association.status!)}
                       </TableCell>
                       <TableCell>
-                        {association.createdAt ? new Date(association.createdAt).toLocaleDateString() : 'N/A'}
+                        {association.createdAt ? new Date(association.createdAt).toLocaleDateString() : t("associations.na")}
                       </TableCell>
                       <TableCell>
-                        {association.updatedAt ? new Date(association.updatedAt).toLocaleDateString() : 'N/A'}
+                        {association.updatedAt ? new Date(association.updatedAt).toLocaleDateString() : t("associations.na")}
                       </TableCell>
                       <TableCell>
                         <div className="space-y-1">
           {association.allAffiliatesVisible && (
             <Badge variant="outline" className="text-xs">
-              Affiliates Visible
+              {t("associations.affiliatesVisible")}
             </Badge>
           )}
           {association.allCampaignsVisible && (
             <Badge variant="outline" className="text-xs">
-              Campaigns Visible
+              {t("associations.campaignsVisible")}
             </Badge>
           )}
                         </div>
