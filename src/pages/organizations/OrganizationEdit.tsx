@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/auth";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationsApi } from "@/generated-api/src/apis/OrganizationsApi";
-import { DomainOrganization } from "@/generated-api/src/models";
+import { DomainOrganizationWithExtraInfo } from "@/generated-api/src/models";
 import { createApiClient } from "@/services/backendApi";
 import { useTranslation } from "react-i18next";
 import OrganizationHeader from "./components/OrganizationHeader";
@@ -18,7 +18,7 @@ const OrganizationEdit: React.FC = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   
-  const [organization, setOrganization] = useState<DomainOrganization | null>(null);
+  const [organization, setOrganization] = useState<DomainOrganizationWithExtraInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -39,7 +39,7 @@ const OrganizationEdit: React.FC = () => {
       const data = await organizationsApi.organizationsIdGet({
         id: parseInt(id!),
         withExtra: true
-      });
+      }) as DomainOrganizationWithExtraInfo;
       setOrganization(data);
       setFormData({
         name: data.name || "",

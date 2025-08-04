@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
-import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganizationWithExtraInfo } from '@/generated-api/src/models';
 import { 
   fetchBackendProfile, 
   fetchOrganization, 
@@ -18,7 +18,7 @@ import {
 
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [organization, setOrganization] = useState<DomainOrganization | null>(null);
+  const [organization, setOrganization] = useState<DomainOrganizationWithExtraInfo | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [isOrganizationLoading, setIsOrganizationLoading] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
