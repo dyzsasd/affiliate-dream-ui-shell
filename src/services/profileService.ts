@@ -47,7 +47,8 @@ export const fetchOrganization = async (organizationId: number): Promise<DomainO
     const organizationsApi = await createApiClient(OrganizationsApi);
     
     const org = await organizationsApi.organizationsIdGet({
-      id: organizationId
+      id: organizationId,
+      withExtra: true
     });
     
     console.log("Organization fetched successfully:", org);

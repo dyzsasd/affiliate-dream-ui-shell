@@ -37,7 +37,8 @@ const OrganizationEdit: React.FC = () => {
       setIsLoading(true);
       const organizationsApi = await createApiClient(OrganizationsApi);
       const data = await organizationsApi.organizationsIdGet({
-        id: parseInt(id!)
+        id: parseInt(id!),
+        withExtra: true
       });
       setOrganization(data);
       setFormData({
