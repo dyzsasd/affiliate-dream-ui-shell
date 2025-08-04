@@ -30,6 +30,7 @@ const AffiliateDetails: React.FC = () => {
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
   
   // Tracking link generation state
+  const [selectedAffiliateId, setSelectedAffiliateId] = useState<number | null>(null);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string>("");
   const [linkName, setLinkName] = useState<string>("");
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
@@ -92,10 +93,10 @@ const AffiliateDetails: React.FC = () => {
       return;
     }
 
-    if (affiliates.length === 0) {
+    if (!selectedAffiliateId) {
       toast({
         title: "Error", 
-        description: "No affiliate found to create tracking link for",
+        description: "Please select an affiliate to create tracking link for",
         variant: "destructive",
       });
       return;
@@ -105,13 +106,12 @@ const AffiliateDetails: React.FC = () => {
     
     try {
       const trackingApi = await createApiClient(TrackingLinksApi);
-      const affiliate = affiliates[0]; // Use the first affiliate from the details
       
       const request: ModelsTrackingLinkGenerationRequest = {
-        affiliateId: affiliate.affiliateId!,
+        affiliateId: selectedAffiliateId,
         campaignId: parseInt(selectedCampaignId),
         name: linkName.trim(),
-        description: `Tracking link for ${affiliate.name} - Campaign ${selectedCampaignId}`,
+        description: `Tracking link for affiliate ID ${selectedAffiliateId} - Campaign ${selectedCampaignId}`,
       };
 
       const response = await trackingApi.organizationsOrganizationIdTrackingLinksGeneratePost({
@@ -154,6 +154,10 @@ const AffiliateDetails: React.FC = () => {
           });
         });
     }
+  };
+
+  const getSelectedAffiliate = () => {
+    return affiliates.find(a => a.affiliateId === selectedAffiliateId);
   };
 
   if (loading) {
@@ -218,6 +222,7 @@ const AffiliateDetails: React.FC = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Select</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Status</TableHead>
@@ -228,7 +233,19 @@ const AffiliateDetails: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {affiliates.map((affiliate) => (
-                    <TableRow key={affiliate.affiliateId}>
+                    <TableRow 
+                      key={affiliate.affiliateId}
+                      className={selectedAffiliateId === affiliate.affiliateId ? "bg-muted/50" : ""}
+                    >
+                      <TableCell>
+                        <Button
+                          variant={selectedAffiliateId === affiliate.affiliateId ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setSelectedAffiliateId(affiliate.affiliateId!)}
+                        >
+                          {selectedAffiliateId === affiliate.affiliateId ? "Selected" : "Select"}
+                        </Button>
+                      </TableCell>
                       <TableCell className="font-medium">
                         <div className="flex items-center space-x-2">
                           <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
@@ -305,81 +322,107 @@ const AffiliateDetails: React.FC = () => {
                 <CardTitle>Generate Tracking Link</CardTitle>
               </div>
               <CardDescription>
-                Create a tracking link for this affiliate by selecting a campaign
+                {selectedAffiliateId 
+                  ? `Create a tracking link for: ${getSelectedAffiliate()?.name || 'Selected Affiliate'}`
+                  : "Select an affiliate from the table above, then choose a campaign to create a tracking link"
+                }
               </CardDescription>
             </CardHeader>
             
             <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="campaign-select">Select Campaign</Label>
-                  <Select 
-                    value={selectedCampaignId} 
-                    onValueChange={setSelectedCampaignId}
-                    disabled={isLoadingCampaigns}
-                  >
-                    <SelectTrigger id="campaign-select">
-                      <SelectValue placeholder={
-                        isLoadingCampaigns ? "Loading campaigns..." : "Choose a campaign"
-                      } />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {campaigns.map((campaign) => (
-                        <SelectItem key={campaign.id} value={campaign.id}>
-                          {campaign.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              {!selectedAffiliateId && (
+                <div className="p-4 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/30">
+                  <p className="text-center text-muted-foreground">
+                    Please select an affiliate from the table above to continue
+                  </p>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="link-name">Link Name</Label>
-                  <Input
-                    id="link-name"
-                    placeholder="Enter a name for this tracking link"
-                    value={linkName}
-                    onChange={(e) => setLinkName(e.target.value)}
-                  />
-                </div>
-              </div>
+              )}
               
-              <Button 
-                onClick={handleGenerateTrackingLink}
-                disabled={isGeneratingLink || !selectedCampaignId || !linkName.trim()}
-                className="w-full md:w-auto"
-              >
-                {isGeneratingLink ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Link className="w-4 h-4 mr-2" />
-                    Generate Tracking Link
-                  </>
-                )}
-              </Button>
-              
-              {generatedLink && (
-                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                  <Label className="text-sm font-medium mb-2 block">Generated Tracking Link</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input 
-                      value={generatedLink} 
-                      readOnly 
-                      className="flex-1 font-mono text-sm"
-                    />
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={copyLinkToClipboard}
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
+              {selectedAffiliateId && (
+                <>
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <Users className="w-4 h-4 text-primary" />
+                      <span className="font-medium">Selected Affiliate:</span>
+                      <span>{getSelectedAffiliate()?.name || 'Unknown'}</span>
+                      <Badge variant="outline">
+                        ID: {selectedAffiliateId}
+                      </Badge>
+                    </div>
                   </div>
-                </div>
+                  
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="campaign-select">Select Campaign</Label>
+                      <Select 
+                        value={selectedCampaignId} 
+                        onValueChange={setSelectedCampaignId}
+                        disabled={isLoadingCampaigns}
+                      >
+                        <SelectTrigger id="campaign-select">
+                          <SelectValue placeholder={
+                            isLoadingCampaigns ? "Loading campaigns..." : "Choose a campaign"
+                          } />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {campaigns.map((campaign) => (
+                            <SelectItem key={campaign.id} value={campaign.id}>
+                              {campaign.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="link-name">Link Name</Label>
+                      <Input
+                        id="link-name"
+                        placeholder="Enter a name for this tracking link"
+                        value={linkName}
+                        onChange={(e) => setLinkName(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleGenerateTrackingLink}
+                    disabled={isGeneratingLink || !selectedCampaignId || !linkName.trim()}
+                    className="w-full md:w-auto"
+                  >
+                    {isGeneratingLink ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Link className="w-4 h-4 mr-2" />
+                        Generate Tracking Link
+                      </>
+                    )}
+                  </Button>
+                  
+                  {generatedLink && (
+                    <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                      <Label className="text-sm font-medium mb-2 block">Generated Tracking Link</Label>
+                      <div className="flex items-center space-x-2">
+                        <Input 
+                          value={generatedLink} 
+                          readOnly 
+                          className="flex-1 font-mono text-sm"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={copyLinkToClipboard}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </CardContent>
           </Card>
