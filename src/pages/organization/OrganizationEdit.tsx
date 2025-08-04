@@ -55,6 +55,10 @@ export const OrganizationEdit: React.FC = () => {
       }) as any;
       
       // Map snake_case response to camelCase for TypeScript interface
+      console.log('🔍 Raw API response:', rawData);
+      console.log('🔍 Raw advertiser_extra_info:', rawData.advertiser_extra_info);
+      console.log('🔍 Raw affiliate_extra_info:', rawData.affiliate_extra_info);
+      
       const mappedData: DomainOrganizationWithExtraInfo = {
         organizationId: rawData.organization_id,
         name: rawData.name,
@@ -73,8 +77,10 @@ export const OrganizationEdit: React.FC = () => {
         } : undefined
       };
       
-      console.log('Raw API response:', rawData);
-      console.log('Mapped organization data:', mappedData);
+      console.log('✅ Mapped organization data:', mappedData);
+      console.log('✅ Mapped advertiserExtraInfo:', mappedData.advertiserExtraInfo);
+      console.log('✅ Mapped affiliateExtraInfo:', mappedData.affiliateExtraInfo);
+      console.log('✅ Organization type:', mappedData.type);
       
       setOrganizationData(mappedData);
       setBasicInfoData({
