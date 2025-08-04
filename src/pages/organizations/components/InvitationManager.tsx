@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Send, Copy, Check } from "lucide-react";
-import { DomainOrganization } from "@/generated-api/src/models";
+import { DomainOrganizationWithExtraInfo } from "@/generated-api/src/models";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth";
 
 interface InvitationManagerProps {
-  organization: DomainOrganization;
+  organization: DomainOrganizationWithExtraInfo;
 }
 
 const InvitationManager: React.FC<InvitationManagerProps> = ({ organization }) => {

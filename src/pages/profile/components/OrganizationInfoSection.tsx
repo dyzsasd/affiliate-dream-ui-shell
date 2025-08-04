@@ -3,14 +3,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserProfile } from '@/contexts/auth/authTypes';
-import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganizationWithExtraInfo } from '@/generated-api/src/models';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 
 interface OrganizationInfoSectionProps {
   profile: UserProfile | null;
   backendProfile: DomainProfile | null;
-  organization: DomainOrganization | null;
+  organization: DomainOrganizationWithExtraInfo | null;
   isOrganizationLoading: boolean;
 }
 
@@ -26,6 +26,11 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
   const organizationId = organization?.organizationId || 
                          profile?.organization?.id || 
                          backendProfile?.organizationId;
+
+  // Get the appropriate extra info based on organization type
+  const extraInfo = organization?.type === 'advertiser' 
+    ? organization.advertiserExtraInfo 
+    : organization?.affiliateExtraInfo;
 
   return (
     <div className="space-y-2">
@@ -57,6 +62,32 @@ const OrganizationInfoSection: React.FC<OrganizationInfoSectionProps> = ({
           {profile?.role?.name || 
            (backendProfile?.roleId ? `Role ID: ${backendProfile.roleId}` : t("profile.notAssigned"))}
         </dd>
+
+        {/* Website */}
+        <dt className="text-sm font-medium text-muted-foreground">{t("organizations.website")}</dt>
+        <dd className="text-sm">
+          {extraInfo?.website || t("profile.notAssigned")}
+        </dd>
+
+        {/* Company Size for Advertisers */}
+        {organization?.type === 'advertiser' && organization.advertiserExtraInfo && (
+          <>
+            <dt className="text-sm font-medium text-muted-foreground">{t("organizations.companySize")}</dt>
+            <dd className="text-sm">
+              {organization.advertiserExtraInfo.companySize || t("profile.notAssigned")}
+            </dd>
+          </>
+        )}
+
+        {/* Affiliate Type for Affiliates */}
+        {organization?.type === 'affiliate' && organization.affiliateExtraInfo && (
+          <>
+            <dt className="text-sm font-medium text-muted-foreground">{t("organizations.affiliateType")}</dt>
+            <dd className="text-sm">
+              {organization.affiliateExtraInfo.affiliateType || t("profile.notAssigned")}
+            </dd>
+          </>
+        )}
       </dl>
     </div>
   );

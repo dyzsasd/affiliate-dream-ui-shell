@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Save } from "lucide-react";
-import { DomainOrganization } from "@/generated-api/src/models";
+import { DomainOrganizationWithExtraInfo } from "@/generated-api/src/models";
 import { useTranslation } from "react-i18next";
 
 interface OrganizationDetailsFormProps {
-  organization: DomainOrganization;
+  organization: DomainOrganizationWithExtraInfo;
   formData: {
     name: string;
     type: string;
@@ -29,6 +29,11 @@ const OrganizationDetailsForm: React.FC<OrganizationDetailsFormProps> = ({
   isSaving,
 }) => {
   const { t } = useTranslation();
+
+  // Get the appropriate extra info based on organization type
+  const extraInfo = organization.type === 'advertiser' 
+    ? organization.advertiserExtraInfo 
+    : organization.affiliateExtraInfo;
 
   return (
     <Card>
@@ -60,6 +65,49 @@ const OrganizationDetailsForm: React.FC<OrganizationDetailsFormProps> = ({
             placeholder={t("organizations.organizationType")}
           />
         </div>
+
+        {/* Website */}
+        <div className="space-y-2">
+          <Label>{t("organizations.website")}</Label>
+          <p className="text-sm text-muted-foreground">
+            {extraInfo?.website || t("organizations.notProvided")}
+          </p>
+        </div>
+
+        {/* Organization type specific fields */}
+        {organization.type === 'advertiser' && organization.advertiserExtraInfo && (
+          <>
+            <div className="space-y-2">
+              <Label>{t("organizations.companySize")}</Label>
+              <p className="text-sm text-muted-foreground">
+                {organization.advertiserExtraInfo.companySize || t("organizations.notProvided")}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("organizations.websiteType")}</Label>
+              <p className="text-sm text-muted-foreground">
+                {organization.advertiserExtraInfo.websiteType || t("organizations.notProvided")}
+              </p>
+            </div>
+          </>
+        )}
+
+        {organization.type === 'affiliate' && organization.affiliateExtraInfo && (
+          <>
+            <div className="space-y-2">
+              <Label>{t("organizations.affiliateType")}</Label>
+              <p className="text-sm text-muted-foreground">
+                {organization.affiliateExtraInfo.affiliateType || t("organizations.notProvided")}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("organizations.description")}</Label>
+              <p className="text-sm text-muted-foreground">
+                {organization.affiliateExtraInfo.selfDescription || t("organizations.notProvided")}
+              </p>
+            </div>
+          </>
+        )}
 
         <div className="space-y-2">
           <Label>{t("organizations.created")}</Label>
