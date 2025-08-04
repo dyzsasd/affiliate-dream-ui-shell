@@ -15,5 +15,7 @@
   "conversations": "Conversations",
   "organizations": "Organizations",
   "users": "Users",
-  "agencyAnalytics": "Agency Analytics"
+  "agencyAnalytics": "Agency Analytics",
+  "affiliates": "Affiliates",
+  "associations": "Associations"
 }

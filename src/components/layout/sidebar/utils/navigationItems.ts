@@ -97,9 +97,14 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
     return [
       ...baseItems,
       {
-        name: "Create Affiliate",
-        path: "/affiliate/create",
-        icon: Building2
+        name: t("sidebar.affiliates"),
+        path: "/affiliates",
+        icon: Users
+      },
+      {
+        name: t("sidebar.associations"),
+        path: "/associations",
+        icon: Users
       },
       {
         name: t("sidebar.trackingLinks"),
@@ -125,16 +130,6 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: "Organization Settings",
         path: "/organization/edit",
         icon: Settings
-      },
-      {
-        name: "Affiliates",
-        path: "/affiliates",
-        icon: Users
-      },
-      {
-        name: "Associations",
-        path: "/associations",
-        icon: Users
       }
     ];
   } else if (organizationType === 'agency') {

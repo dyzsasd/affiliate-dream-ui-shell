@@ -1,0 +1,17 @@
+{
+  "title": "关联用户",
+  "description": "管理您的关联用户及其表现",
+  "noAffiliates": "未找到关联用户",
+  "createYourFirst": "创建您的第一个关联用户以开始",
+  "list": "关联用户列表",
+  "total": "总计：{{count}} 个关联用户",
+  "tableCaption": "所有关联用户及其基本信息的列表",
+  "nameColumn": "名称",
+  "contactColumn": "联系方式",
+  "statusColumn": "状态",
+  "createdAtColumn": "创建时间",
+  "actions": "操作",
+  "view": "查看",
+  "edit": "编辑",
+  "createAffiliate": "创建关联用户"
+}

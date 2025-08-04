@@ -15,5 +15,7 @@
   "conversations": "对话",
   "organizations": "组织",
   "users": "用户",
-  "agencyAnalytics": "代理分析"
+  "agencyAnalytics": "代理分析",
+  "affiliates": "关联用户",
+  "associations": "关联关系"
 }

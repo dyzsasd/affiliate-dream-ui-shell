@@ -1,0 +1,17 @@
+{
+  "title": "Affiliés",
+  "description": "Gérez vos affiliés et leurs performances",
+  "noAffiliates": "Aucun affilié trouvé",
+  "createYourFirst": "Créez votre premier affilié pour commencer",
+  "list": "Liste des Affiliés",
+  "total": "Total : {{count}} affilié(s)",
+  "tableCaption": "Liste de tous les affiliés avec leurs informations de base",
+  "nameColumn": "Nom",
+  "contactColumn": "Contact",
+  "statusColumn": "Statut",
+  "createdAtColumn": "Créé le",
+  "actions": "Actions",
+  "view": "Voir",
+  "edit": "Modifier",
+  "createAffiliate": "Créer un Affilié"
+}

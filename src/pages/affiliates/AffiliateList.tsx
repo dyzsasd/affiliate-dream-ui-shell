@@ -123,6 +123,10 @@ const AffiliateList: React.FC = () => {
           <h1 className="text-3xl font-bold tracking-tight">{t('affiliates.title')}</h1>
           <p className="text-muted-foreground">{t('affiliates.description')}</p>
         </div>
+        <Button onClick={() => navigate('/affiliate/create')}>
+          <Plus className="mr-2 h-4 w-4" />
+          {t('affiliates.createAffiliate')}
+        </Button>
       </div>
 
       {affiliates.length === 0 ? (
