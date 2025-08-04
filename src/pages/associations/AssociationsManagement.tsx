@@ -298,7 +298,6 @@ const AssociationsManagement: React.FC = () => {
                     <TableHead>{t("associations.status")}</TableHead>
                     <TableHead>{t("associations.dateCreated")}</TableHead>
                     <TableHead>{t("associations.updatedDate")}</TableHead>
-                    <TableHead>{t("associations.visibility")}</TableHead>
                     <TableHead>{t("associations.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -321,20 +320,6 @@ const AssociationsManagement: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         {association.updatedAt ? new Date(association.updatedAt).toLocaleDateString() : t("associations.na")}
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-          {association.allAffiliatesVisible && (
-            <Badge variant="outline" className="text-xs">
-              {t("associations.affiliatesVisible")}
-            </Badge>
-          )}
-          {association.allCampaignsVisible && (
-            <Badge variant="outline" className="text-xs">
-              {t("associations.campaignsVisible")}
-            </Badge>
-          )}
-                        </div>
                       </TableCell>
                       <TableCell>
                         {getActionButtons(association)}
