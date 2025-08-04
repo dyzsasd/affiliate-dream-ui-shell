@@ -10,13 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 import { UserPlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const createInviteSchema = (t: (key: string) => string) => z.object({
-  email: z.string().email(t('organizations.validEmailRequired')),
+const inviteSchema = z.object({
+  email: z.string().email('Invalid email address'),
 });
 
-type InviteUserData = {
-  email: string;
-};
+type InviteUserData = z.infer<typeof inviteSchema>;
 
 interface InviteUserSectionProps {
   organizationId: number;
@@ -30,8 +28,6 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { t } = useTranslation();
-
-  const inviteSchema = createInviteSchema(t);
 
   const form = useForm<InviteUserData>({
     resolver: zodResolver(inviteSchema),
@@ -103,7 +99,7 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
             />
             {form.formState.errors.email && (
               <p className="text-sm text-destructive">
-                {form.formState.errors.email.message}
+                {t('organizations.validEmailRequired')}
               </p>
             )}
           </div>
