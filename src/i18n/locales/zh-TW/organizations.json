@@ -58,5 +58,11 @@
   "notFoundMessage": "您要尋找的組織不存在或您沒有權限檢視它。",
   "backToOrganizations": "返回組織",
   "updateSuccess": "組織更新成功",
-  "updateError": "更新組織失敗"
+  "updateError": "更新組織失敗",
+  "advertiserInfo": "廣告主資訊",
+  "affiliateInfo": "聯盟夥伴資訊",
+  "websiteType": "網站類型",
+  "affiliateType": "聯盟類型",
+  "description": "描述",
+  "notProvided": "未提供"
 }

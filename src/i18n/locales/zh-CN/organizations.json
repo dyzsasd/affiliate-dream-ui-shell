@@ -58,5 +58,11 @@
   "notFoundMessage": "您要查找的组织不存在或您没有权限查看它。",
   "backToOrganizations": "返回组织",
   "updateSuccess": "组织更新成功",
-  "updateError": "更新组织失败"
+  "updateError": "更新组织失败",
+  "advertiserInfo": "广告主信息",
+  "affiliateInfo": "联盟伙伴信息",
+  "websiteType": "网站类型",
+  "affiliateType": "联盟类型",
+  "description": "描述",
+  "notProvided": "未提供"
 }
