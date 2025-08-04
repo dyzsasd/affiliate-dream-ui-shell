@@ -8,12 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const inviteSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+const createInviteSchema = (t: (key: string) => string) => z.object({
+  email: z.string().email(t('organizations.validEmailRequired')),
 });
 
-type InviteUserData = z.infer<typeof inviteSchema>;
+type InviteUserData = {
+  email: string;
+};
 
 interface InviteUserSectionProps {
   organizationId: number;
@@ -26,6 +29,9 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
+
+  const inviteSchema = createInviteSchema(t);
 
   const form = useForm<InviteUserData>({
     resolver: zodResolver(inviteSchema),
@@ -53,20 +59,20 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to send invitation');
+        throw new Error(result.error || t('organizations.invitationErrorDescription'));
       }
 
       toast({
-        title: "Invitation sent",
-        description: `An invitation has been sent to ${data.email}`,
+        title: t('organizations.invitationSent'),
+        description: t('organizations.invitationSentDescription', { email: data.email }),
       });
 
       form.reset();
     } catch (error: any) {
       console.error('Error sending invitation:', error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to send invitation. Please try again.",
+        title: t('organizations.invitationError'),
+        description: error.message || t('organizations.invitationErrorDescription'),
         variant: "destructive",
       });
     } finally {
@@ -79,21 +85,21 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
       <CardHeader>
         <div className="flex items-center space-x-2">
           <UserPlus className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg">Invite Team Member</CardTitle>
+          <CardTitle className="text-lg">{t('organizations.inviteTeamMember')}</CardTitle>
         </div>
         <CardDescription>
-          Invite a new user to join your organization
+          {t('organizations.inviteTeamMemberDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="inviteEmail">Email Address</Label>
+            <Label htmlFor="inviteEmail">{t('organizations.emailAddress')}</Label>
             <Input
               id="inviteEmail"
               type="email"
               {...form.register('email')}
-              placeholder="user@example.com"
+              placeholder={t('organizations.emailPlaceholderInvite')}
             />
             {form.formState.errors.email && (
               <p className="text-sm text-destructive">
@@ -103,7 +109,7 @@ export const InviteUserSection: React.FC<InviteUserSectionProps> = ({
           </div>
 
           <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Sending Invitation..." : "Send Invitation"}
+            {isSubmitting ? t('organizations.sendingInvitation') : t('organizations.sendInvitation')}
           </Button>
         </form>
       </CardContent>

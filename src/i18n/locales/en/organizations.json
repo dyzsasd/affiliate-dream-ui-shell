@@ -89,5 +89,15 @@
   "namePlaceholder": "Enter organization name",
   "descriptionPlaceholder": "Enter organization description",
   "contactEmail": "Contact Email",
-  "contactEmailPlaceholder": "Enter contact email address"
+  "contactEmailPlaceholder": "Enter contact email address",
+  "inviteTeamMember": "Invite Team Member",
+  "inviteTeamMemberDescription": "Invite a new user to join your organization",
+  "emailPlaceholderInvite": "user@example.com",
+  "sendInvitation": "Send Invitation",
+  "sendingInvitation": "Sending Invitation...",
+  "invitationSent": "Invitation sent",
+  "invitationSentDescription": "An invitation has been sent to {{email}}",
+  "invitationError": "Error",
+  "invitationErrorDescription": "Failed to send invitation. Please try again.",
+  "validEmailRequired": "Please enter a valid email address"
 }

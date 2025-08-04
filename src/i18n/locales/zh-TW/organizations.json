@@ -89,5 +89,15 @@
   "namePlaceholder": "輸入組織名稱",
   "descriptionPlaceholder": "輸入組織描述",
   "contactEmail": "聯絡電子郵件",
-  "contactEmailPlaceholder": "輸入聯絡電子郵件地址"
+  "contactEmailPlaceholder": "輸入聯絡電子郵件地址",
+  "inviteTeamMember": "邀請團隊成員",
+  "inviteTeamMemberDescription": "邀請新用戶加入您的組織",
+  "emailPlaceholderInvite": "user@example.com",
+  "sendInvitation": "發送邀請",
+  "sendingInvitation": "發送邀請中...",
+  "invitationSent": "邀請已發送",
+  "invitationSentDescription": "邀請已發送至 {{email}}",
+  "invitationError": "錯誤",
+  "invitationErrorDescription": "發送邀請失敗。請重試。",
+  "validEmailRequired": "請輸入有效的電子郵件地址"
 }

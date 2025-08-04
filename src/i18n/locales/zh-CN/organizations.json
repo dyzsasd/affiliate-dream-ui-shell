@@ -89,5 +89,15 @@
   "namePlaceholder": "输入组织名称",
   "descriptionPlaceholder": "输入组织描述",
   "contactEmail": "联系邮箱",
-  "contactEmailPlaceholder": "输入联系邮箱地址"
+  "contactEmailPlaceholder": "输入联系邮箱地址",
+  "inviteTeamMember": "邀请团队成员",
+  "inviteTeamMemberDescription": "邀请新用户加入您的组织",
+  "emailPlaceholderInvite": "user@example.com",
+  "sendInvitation": "发送邀请",
+  "sendingInvitation": "发送邀请中...",
+  "invitationSent": "邀请已发送",
+  "invitationSentDescription": "邀请已发送至 {{email}}",
+  "invitationError": "错误",
+  "invitationErrorDescription": "发送邀请失败。请重试。",
+  "validEmailRequired": "请输入有效的电子邮件地址"
 }
