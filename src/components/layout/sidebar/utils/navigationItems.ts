@@ -102,14 +102,14 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: Users
       },
       {
-        name: t("sidebar.associations"),
-        path: "/associations",
-        icon: Users
-      },
-      {
         name: t("sidebar.trackingLinks"),
         path: "/tracking-links",
         icon: LinkIcon
+      },
+      {
+        name: t("sidebar.associations"),
+        path: "/associations",
+        icon: Users
       },
       {
         name: t("sidebar.reports"),
