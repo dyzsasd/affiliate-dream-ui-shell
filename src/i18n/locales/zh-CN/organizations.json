@@ -83,5 +83,11 @@
   "incentive": "激励",
   "content": "内容",
   "forum": "论坛",
-  "subAffiliateNetwork": "子联盟网络"
+  "subAffiliateNetwork": "子联盟网络",
+  "basicInfo": "基本信息",
+  "name": "名称",
+  "namePlaceholder": "输入组织名称",
+  "descriptionPlaceholder": "输入组织描述",
+  "contactEmail": "联系邮箱",
+  "contactEmailPlaceholder": "输入联系邮箱地址"
 }

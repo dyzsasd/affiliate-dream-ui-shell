@@ -83,5 +83,11 @@
   "incentive": "Incitation",
   "content": "Contenu",
   "forum": "Forum",
-  "subAffiliateNetwork": "Réseau Sous-Affilié"
+  "subAffiliateNetwork": "Réseau Sous-Affilié",
+  "basicInfo": "Informations de base",
+  "name": "Nom",
+  "namePlaceholder": "Entrez le nom de l'organisation",
+  "descriptionPlaceholder": "Entrez la description de l'organisation",
+  "contactEmail": "Email de contact",
+  "contactEmailPlaceholder": "Entrez l'adresse email de contact"
 }

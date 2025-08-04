@@ -83,5 +83,11 @@
   "incentive": "激勵",
   "content": "內容",
   "forum": "論壇",
-  "subAffiliateNetwork": "子聯盟網路"
+  "subAffiliateNetwork": "子聯盟網路",
+  "basicInfo": "基本資訊",
+  "name": "名稱",
+  "namePlaceholder": "輸入組織名稱",
+  "descriptionPlaceholder": "輸入組織描述",
+  "contactEmail": "聯絡電子郵件",
+  "contactEmailPlaceholder": "輸入聯絡電子郵件地址"
 }

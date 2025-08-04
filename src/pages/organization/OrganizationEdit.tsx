@@ -275,7 +275,7 @@ export const OrganizationEdit: React.FC = () => {
         {/* Invite Team Member - At the bottom */}
         <InviteUserSection
           organizationId={organizationData.organizationId!}
-          organizationName={organizationData.name || 'Organization'}
+          organizationName={organizationData.name || t("organizations.organizationName")}
         />
       </div>
     </div>

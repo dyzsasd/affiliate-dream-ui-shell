@@ -83,5 +83,11 @@
   "incentive": "Incentive",
   "content": "Content",
   "forum": "Forum",
-  "subAffiliateNetwork": "Sub Affiliate Network"
+  "subAffiliateNetwork": "Sub Affiliate Network",
+  "basicInfo": "Basic Information",
+  "name": "Name",
+  "namePlaceholder": "Enter organization name",
+  "descriptionPlaceholder": "Enter organization description",
+  "contactEmail": "Contact Email",
+  "contactEmailPlaceholder": "Enter contact email address"
 }
