@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,10 +23,13 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { email, organizationId, organizationName }: InvitationRequest = await req.json();
 
-    // Initialize Supabase client
+    // Initialize Supabase client and Resend
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const resendApiKey = Deno.env.get('RESEND_API_KEY')!;
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const resend = new Resend(resendApiKey);
 
     // Create an encrypted token containing the organization ID
     const tokenData = {
@@ -52,13 +56,41 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
 
-    if (authError) {
+    // Check if user already exists (handle gracefully)
+    let userId = authUser.user?.id;
+    
+    if (authError && authError.message.includes("already been registered")) {
+      // User already exists, get their ID
+      const { data: existingUser } = await supabase.auth.admin.getUserByEmail(email);
+      userId = existingUser.user?.id;
+      console.log(`User ${email} already exists, using existing account`);
+    } else if (authError) {
       throw new Error(`Failed to create user: ${authError.message}`);
     }
 
-    // Send invitation email (you would use your email service here)
-    // For now, we'll return the invitation link
-    console.log(`Invitation link for ${email}: ${invitationLink}`);
+    // Send invitation email using Resend
+    const emailResponse = await resend.emails.send({
+      from: `${organizationName} <noreply@contact.rolinko.com>`,
+      to: [email],
+      subject: `Invitation to join ${organizationName}`,
+      html: `
+        <h1>You're invited to join ${organizationName}!</h1>
+        <p>You have been invited to join <strong>${organizationName}</strong> as an affiliate partner.</p>
+        <p>Click the link below to complete your registration:</p>
+        <a href="${invitationLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
+          Accept Invitation
+        </a>
+        <p>Or copy and paste this link into your browser:</p>
+        <p style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; word-break: break-all;">
+          ${invitationLink}
+        </p>
+        <p style="color: #666; font-size: 14px; margin-top: 24px;">
+          If you didn't expect this invitation, you can safely ignore this email.
+        </p>
+      `,
+    });
+
+    console.log("Email sent successfully:", emailResponse);
 
     return new Response(
       JSON.stringify({ 
