@@ -362,6 +362,39 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.AgencyDelegation:
+    properties:
+      accepted_at:
+        type: string
+      accepted_by_user_id:
+        description: UUID of agency user who accepted delegation
+        type: string
+      advertiser_org_id:
+        type: integer
+      agency_org_id:
+        type: integer
+      created_at:
+        type: string
+      delegated_by_user_id:
+        description: Delegation metadata
+        type: string
+      delegation_id:
+        type: integer
+      expires_at:
+        description: Expiration settings
+        type: string
+      message:
+        description: Optional message with delegation
+        type: string
+      permissions:
+        description: Permissions granted to the agency (JSONB array of permission
+          strings)
+        type: string
+      status:
+        $ref: '#/definitions/domain.DelegationStatus'
+      updated_at:
+        type: string
+    type: object
   domain.AnalyticsAdvertiser:
     properties:
       created_at:
@@ -886,6 +919,25 @@ definitions:
     - publisher_domain
     - subject
     type: object
+  domain.CreateDelegationRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      agency_org_id:
+        type: integer
+      expires_at:
+        type: string
+      message:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/domain.DelegationPermission'
+        type: array
+    required:
+    - advertiser_org_id
+    - agency_org_id
+    - permissions
+    type: object
   domain.CreateFavoritePublisherListRequest:
     properties:
       description:
@@ -944,6 +996,54 @@ definitions:
     required:
     - payment_method_id
     type: object
+  domain.DelegationPermission:
+    enum:
+    - campaign_create
+    - campaign_manage
+    - campaign_view
+    - campaign_delete
+    - association_invite
+    - association_manage
+    - association_view
+    - invitation_create
+    - invitation_manage
+    - invitation_view
+    - analytics_view
+    - analytics_export
+    - billing_view
+    - billing_manage
+    - organization_view
+    - organization_manage
+    type: string
+    x-enum-varnames:
+    - PermissionCampaignCreate
+    - PermissionCampaignManage
+    - PermissionCampaignView
+    - PermissionCampaignDelete
+    - PermissionAssociationInvite
+    - PermissionAssociationManage
+    - PermissionAssociationView
+    - PermissionInvitationCreate
+    - PermissionInvitationManage
+    - PermissionInvitationView
+    - PermissionAnalyticsView
+    - PermissionAnalyticsExport
+    - PermissionBillingView
+    - PermissionBillingManage
+    - PermissionOrganizationView
+    - PermissionOrganizationManage
+  domain.DelegationStatus:
+    enum:
+    - pending
+    - active
+    - suspended
+    - revoked
+    type: string
+    x-enum-varnames:
+    - DelegationStatusPending
+    - DelegationStatusActive
+    - DelegationStatusSuspended
+    - DelegationStatusRevoked
   domain.FavoritePublisherList:
     properties:
       created_at:
@@ -1303,6 +1403,34 @@ definitions:
     - PaymentTypePayPal
     - PaymentTypeCrypto
     - PaymentTypeOther
+  domain.PermissionCheckRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      agency_org_id:
+        type: integer
+      permissions:
+        items:
+          $ref: '#/definitions/domain.DelegationPermission'
+        type: array
+    required:
+    - advertiser_org_id
+    - agency_org_id
+    - permissions
+    type: object
+  domain.PermissionCheckResponse:
+    properties:
+      delegation_status:
+        $ref: '#/definitions/domain.DelegationStatus'
+      has_permissions:
+        type: boolean
+      is_expired:
+        type: boolean
+      permission_results:
+        additionalProperties:
+          type: boolean
+        type: object
+    type: object
   domain.Profile:
     properties:
       created_at:
@@ -1988,6 +2116,11 @@ definitions:
     - name
     - status
     type: object
+  handlers.UpdateExpirationRequest:
+    properties:
+      expires_at:
+        type: string
+    type: object
   handlers.UpdateOrganizationRequest:
     properties:
       advertiser_extra_info:
@@ -2010,6 +2143,15 @@ definitions:
     required:
     - name
     - type
+    type: object
+  handlers.UpdatePermissionsRequest:
+    properties:
+      permissions:
+        items:
+          $ref: '#/definitions/domain.DelegationPermission'
+        type: array
+    required:
+    - permissions
     type: object
   handlers.UpdateProfileRequest:
     properties:
@@ -3985,6 +4127,605 @@ paths:
       summary: Search affiliates by domain, country, partner domains, and verticals
       tags:
       - affiliates
+  /agency-delegations:
+    get:
+      consumes:
+      - application/json
+      description: List agency delegations with optional filtering
+      parameters:
+      - description: Agency organization ID
+        in: query
+        name: agency_org_id
+        type: integer
+      - description: Advertiser organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      - description: Delegation status
+        enum:
+        - pending
+        - active
+        - suspended
+        - revoked
+        in: query
+        name: status
+        type: string
+      - default: false
+        description: Include expired delegations
+        in: query
+        name: include_expired
+        type: boolean
+      - default: 50
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AgencyDelegation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List delegations
+      tags:
+      - agency-delegations
+    post:
+      consumes:
+      - application/json
+      description: Create a new delegation from advertiser organization to agency
+        organization
+      parameters:
+      - description: Create delegation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateDelegationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create agency delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an agency delegation by ID
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/accept:
+    post:
+      consumes:
+      - application/json
+      description: Accept a pending agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Accept delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/expiration:
+    put:
+      consumes:
+      - application/json
+      description: Update the expiration date of an agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update expiration request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateExpirationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update delegation expiration
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/permissions:
+    put:
+      consumes:
+      - application/json
+      description: Update the permissions of an agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update permissions request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdatePermissionsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update delegation permissions
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/reactivate:
+    post:
+      consumes:
+      - application/json
+      description: Reactivate a suspended agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reactivate delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Reject a pending agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reject delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/revoke:
+    post:
+      consumes:
+      - application/json
+      description: Revoke an agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Revoke delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/suspend:
+    post:
+      consumes:
+      - application/json
+      description: Suspend an active agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Suspend delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/advertiser/{advertiser_org_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all active delegations for an advertiser organization
+      parameters:
+      - description: Advertiser organization ID
+        in: path
+        name: advertiser_org_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AgencyDelegation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get advertiser delegations
+      tags:
+      - agency-delegations
+  /agency-delegations/agency/{agency_org_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all active delegations for an agency organization
+      parameters:
+      - description: Agency organization ID
+        in: path
+        name: agency_org_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AgencyDelegation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get agency delegations
+      tags:
+      - agency-delegations
+  /agency-delegations/check-permissions:
+    post:
+      consumes:
+      - application/json
+      description: Check if an agency has specific permissions for an advertiser organization
+      parameters:
+      - description: Permission check request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PermissionCheckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.PermissionCheckResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Check permissions
+      tags:
+      - agency-delegations
+  /agency-delegations/permissions:
+    get:
+      consumes:
+      - application/json
+      description: Get all available delegation permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get available permissions
+      tags:
+      - agency-delegations
   /analytics/advertisers:
     post:
       consumes:

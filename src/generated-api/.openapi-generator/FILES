@@ -6,6 +6,7 @@ src/apis/AdvertiserAssociationInvitationsApi.ts
 src/apis/AdvertiserProviderMappingsApi.ts
 src/apis/AdvertisersApi.ts
 src/apis/AffiliatesApi.ts
+src/apis/AgencyDelegationsApi.ts
 src/apis/AnalyticsApi.ts
 src/apis/BillingApi.ts
 src/apis/CampaignsApi.ts
@@ -35,6 +36,7 @@ src/models/DomainAffiliate.ts
 src/models/DomainAffiliateExtraInfo.ts
 src/models/DomainAffiliateNetworkData.ts
 src/models/DomainAffiliateProviderMapping.ts
+src/models/DomainAgencyDelegation.ts
 src/models/DomainAnalyticsAdvertiser.ts
 src/models/DomainAnalyticsAdvertiserResponse.ts
 src/models/DomainAnalyticsAdvertiserResponseAdvertiser.ts
@@ -63,9 +65,12 @@ src/models/DomainCountryRankingData.ts
 src/models/DomainCountryRankingDataHighestValue.ts
 src/models/DomainCreateAssociationRequest.ts
 src/models/DomainCreateConversationRequest.ts
+src/models/DomainCreateDelegationRequest.ts
 src/models/DomainCreateFavoritePublisherListRequest.ts
 src/models/DomainCreateInvitationRequest.ts
 src/models/DomainCreatePaymentMethodRequest.ts
+src/models/DomainDelegationPermission.ts
+src/models/DomainDelegationStatus.ts
 src/models/DomainFavoritePublisherList.ts
 src/models/DomainFavoritePublisherListItem.ts
 src/models/DomainInvitationStatus.ts
@@ -84,6 +89,8 @@ src/models/DomainPaymentDetails.ts
 src/models/DomainPaymentDetailsType.ts
 src/models/DomainPaymentMethodStatus.ts
 src/models/DomainPaymentType.ts
+src/models/DomainPermissionCheckRequest.ts
+src/models/DomainPermissionCheckResponse.ts
 src/models/DomainProfile.ts
 src/models/DomainPublisherConversation.ts
 src/models/DomainPublisherMessage.ts
@@ -121,7 +128,9 @@ src/models/HandlersSupabaseUserWebhookPayload.ts
 src/models/HandlersSupabaseUserWebhookPayloadRecord.ts
 src/models/HandlersUpdateAffiliateProviderMappingRequest.ts
 src/models/HandlersUpdateAffiliateRequest.ts
+src/models/HandlersUpdateExpirationRequest.ts
 src/models/HandlersUpdateOrganizationRequest.ts
+src/models/HandlersUpdatePermissionsRequest.ts
 src/models/HandlersUpdateProfileRequest.ts
 src/models/HandlersUpsertProfileRequest.ts
 src/models/ModelsAdvertiserResponse.ts

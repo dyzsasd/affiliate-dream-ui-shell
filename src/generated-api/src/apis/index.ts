@@ -4,6 +4,7 @@ export * from './AdvertiserAssociationInvitationsApi';
 export * from './AdvertiserProviderMappingsApi';
 export * from './AdvertisersApi';
 export * from './AffiliatesApi';
+export * from './AgencyDelegationsApi';
 export * from './AnalyticsApi';
 export * from './BillingApi';
 export * from './CampaignsApi';
