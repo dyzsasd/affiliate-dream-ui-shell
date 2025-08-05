@@ -79,8 +79,8 @@ const handler = async (req: Request): Promise<Response> => {
       
     const emailContent = isExistingUser
       ? `
-        <h1>Access ${organizationName}</h1>
-        <p>You have been invited to access <strong>${organizationName}</strong> as an affiliate partner.</p>
+        <h1>Access ${organizationName} on rolinko.com</h1>
+        <p>You have been invited to access <strong>${organizationName}</strong> as an affiliate partner on rolinko.com.</p>
         <p>Since you already have an account, simply click the link below to log in and access your dashboard:</p>
         <a href="${invitationLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
           Access Dashboard
@@ -95,7 +95,7 @@ const handler = async (req: Request): Promise<Response> => {
       `
       : `
         <h1>You're invited to join ${organizationName}!</h1>
-        <p>You have been invited to join <strong>${organizationName}</strong> as an affiliate partner.</p>
+        <p>You have been invited to join <strong>${organizationName}</strong> as an affiliate partner on rolinko.com.</p>
         <p>Click the link below to complete your registration:</p>
         <a href="${invitationLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
           Accept Invitation
