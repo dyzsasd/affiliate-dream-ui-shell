@@ -76,6 +76,7 @@ export interface TranslationKeys {
     agencyAnalytics: string;
     affiliates: string;
     associations: string;
+    delegations: string;
   };
 
   // Marketplace

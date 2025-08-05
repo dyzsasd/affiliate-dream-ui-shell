@@ -136,14 +136,14 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
     return [
       ...baseItems,
       {
+        name: t("sidebar.delegations"),
+        path: "/delegations",
+        icon: Users
+      },
+      {
         name: t("agencyAnalytics.title"),
         path: "/agency-analytics",
         icon: Activity
-      },
-      {
-        name: t("sidebar.agencyCampaigns"),
-        path: "/agency-campaigns",
-        icon: LayoutDashboard
       },
       {
         name: t("sidebar.marketplace"),
