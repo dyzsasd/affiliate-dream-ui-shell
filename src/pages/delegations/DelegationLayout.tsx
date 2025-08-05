@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,12 +7,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, LayoutDashboard, Users, Send, Building, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DelegationProvider } from "@/contexts/delegation";
+import { createApiClient } from "@/services/backendApi";
+import { OrganizationsApi } from "@/generated-api/src/apis";
 
 const DelegationLayout: React.FC = () => {
   const { t } = useTranslation();
   const { advertiserOrgId } = useParams<{ advertiserOrgId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const [organizationName, setOrganizationName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchOrganizationName = async () => {
+      if (advertiserOrgId) {
+        try {
+          const api = await createApiClient(OrganizationsApi);
+          const response = await api.organizationsIdGet({
+            id: parseInt(advertiserOrgId),
+            withExtra: true,
+          });
+          setOrganizationName(response.name || `Organization ${advertiserOrgId}`);
+        } catch (error) {
+          console.error("Error fetching organization:", error);
+          setOrganizationName(`Organization ${advertiserOrgId}`);
+        }
+      }
+    };
+    
+    fetchOrganizationName();
+  }, [advertiserOrgId]);
 
   const navigationItems = [
     {
@@ -65,7 +88,7 @@ const DelegationLayout: React.FC = () => {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">
-              {t('delegations.managingOrganization', { organizationName: `Organization ${advertiserOrgId}` })}
+              {t('delegations.managingOrganization', { organizationName })}
             </h1>
           </div>
         </div>
