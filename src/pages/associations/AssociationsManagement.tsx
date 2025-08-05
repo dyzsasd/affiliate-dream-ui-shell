@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth';
+import { useDelegation } from '@/contexts/delegation';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AssociationsManagement: React.FC = () => {
   const { organization } = useAuth();
+  const { delegatedOrgId, isDelegationMode } = useDelegation();
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -24,20 +26,25 @@ const AssociationsManagement: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
+  // Use delegated org ID if in delegation mode, otherwise use auth org ID
+  const effectiveOrgId = isDelegationMode ? delegatedOrgId : organization?.organizationId;
+
   useEffect(() => {
-    if (organization?.organizationId) {
+    if (effectiveOrgId) {
       fetchAssociations();
     }
-  }, [organization]);
+  }, [effectiveOrgId]);
 
   const fetchAssociations = async () => {
     try {
       setLoading(true);
       const api = await createApiClient(OrganizationAssociationsApi);
       
-      const queryParams = organization?.type === 'affiliate' 
-        ? { affiliateOrgId: organization.organizationId }
-        : { advertiserOrgId: organization.organizationId };
+      // Use effective org ID (delegated or auth org) and determine organization type
+      const orgType = isDelegationMode ? 'advertiser' : organization?.type;
+      const queryParams = orgType === 'affiliate' 
+        ? { affiliateOrgId: effectiveOrgId }
+        : { advertiserOrgId: effectiveOrgId };
 
       const response = await api.organizationAssociationsGet({
         ...queryParams,
