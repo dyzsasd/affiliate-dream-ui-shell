@@ -111,7 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send invitation email using Resend
     const emailResponse = await resend.emails.send({
-      from: `${organizationName} <noreply@contact.rolinko.com>`,
+      from: `rolinko.com <noreply@contact.rolinko.com>`,
       to: [email],
       subject: emailSubject,
       html: emailContent,
