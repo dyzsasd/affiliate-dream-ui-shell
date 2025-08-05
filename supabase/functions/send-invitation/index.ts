@@ -45,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate the invitation link
     const invitationLink = `${req.headers.get('origin') || 'http://localhost:5173'}/signup?invitation=${token}`;
 
-    // Create the user in Supabase Auth (without password)
+    // Try to create the user in Supabase Auth (without password)
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
       email,
       email_confirm: false,
@@ -56,24 +56,44 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
 
-    // Check if user already exists (handle gracefully)
+    // Handle user creation result
     let userId = authUser.user?.id;
+    let isExistingUser = false;
+    let responseMessage = "Invitation sent successfully";
     
     if (authError && authError.message.includes("already been registered")) {
       // User already exists, get their ID
       const { data: existingUser } = await supabase.auth.admin.getUserByEmail(email);
       userId = existingUser.user?.id;
-      console.log(`User ${email} already exists, using existing account`);
+      isExistingUser = true;
+      responseMessage = "User already exists. Invitation email has been sent with login instructions.";
+      console.log(`User ${email} already exists, sending invitation anyway`);
     } else if (authError) {
       throw new Error(`Failed to create user: ${authError.message}`);
     }
 
-    // Send invitation email using Resend
-    const emailResponse = await resend.emails.send({
-      from: `${organizationName} <noreply@contact.rolinko.com>`,
-      to: [email],
-      subject: `Invitation to join ${organizationName}`,
-      html: `
+    // Customize email content based on whether user exists
+    const emailSubject = isExistingUser 
+      ? `Login to access ${organizationName}` 
+      : `Invitation to join ${organizationName}`;
+      
+    const emailContent = isExistingUser
+      ? `
+        <h1>Access ${organizationName}</h1>
+        <p>You have been invited to access <strong>${organizationName}</strong> as an affiliate partner.</p>
+        <p>Since you already have an account, simply click the link below to log in and access your dashboard:</p>
+        <a href="${invitationLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
+          Access Dashboard
+        </a>
+        <p>Or copy and paste this link into your browser:</p>
+        <p style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; word-break: break-all;">
+          ${invitationLink}
+        </p>
+        <p style="color: #666; font-size: 14px; margin-top: 24px;">
+          If you didn't expect this invitation, you can safely ignore this email.
+        </p>
+      `
+      : `
         <h1>You're invited to join ${organizationName}!</h1>
         <p>You have been invited to join <strong>${organizationName}</strong> as an affiliate partner.</p>
         <p>Click the link below to complete your registration:</p>
@@ -87,7 +107,14 @@ const handler = async (req: Request): Promise<Response> => {
         <p style="color: #666; font-size: 14px; margin-top: 24px;">
           If you didn't expect this invitation, you can safely ignore this email.
         </p>
-      `,
+      `;
+
+    // Send invitation email using Resend
+    const emailResponse = await resend.emails.send({
+      from: `${organizationName} <noreply@contact.rolinko.com>`,
+      to: [email],
+      subject: emailSubject,
+      html: emailContent,
     });
 
     console.log("Email sent successfully:", emailResponse);
@@ -95,9 +122,10 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Invitation sent successfully",
+        message: responseMessage,
+        isExistingUser,
         invitationLink, // In production, don't return this
-        userId: authUser.user?.id,
+        userId,
       }), 
       {
         status: 200,
