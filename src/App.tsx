@@ -72,7 +72,7 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               
               {/* Public invitation route (no auth required) - must be before protected routes */}
-              <Route path="/invitations/:token" element={<PublicInvitation />} />
+              <Route path="/invite/:token" element={<PublicInvitation />} />
               
               {/* Onboarding routes - protected to redirect users with profiles */}
               <Route path="/onboard" element={<OnboardingGuard><OrganizationTypeSelection /></OnboardingGuard>} />
