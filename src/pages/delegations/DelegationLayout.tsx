@@ -15,7 +15,7 @@ const DelegationLayout: React.FC = () => {
   const { advertiserOrgId } = useParams<{ advertiserOrgId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const [organizationName, setOrganizationName] = useState<string>("");
+  const [organizationName, setOrganizationName] = useState<string>(`Organization ${advertiserOrgId}`);
 
   useEffect(() => {
     const fetchOrganizationName = async () => {
