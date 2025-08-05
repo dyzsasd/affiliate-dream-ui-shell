@@ -6,16 +6,38 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Users, TrendingUp, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/auth";
+import { useTranslation } from "react-i18next";
+import { getPlatformOwnerMetrics, getRecentActivity } from "@/services/mockDashboardData";
 
 const PlatformOwnerDashboard: React.FC = () => {
   const { organization } = useAuth();
+  const { t } = useTranslation();
 
-  // Mock data for platform owner dashboard
+  // Get realistic platform metrics and recent activity
+  const platformMetrics = getPlatformOwnerMetrics();
+  const recentActivity = getRecentActivity();
+
   const platformStats = [
-    { title: "Total Organizations", value: "0", change: "0" },
-    { title: "Active Advertisers", value: "0", change: "0" },
-    { title: "Active Affiliates", value: "0", change: "0" },
-    { title: "Platform Revenue", value: "$0", change: "0%" },
+    { 
+      title: t("platformOwnerDashboard.totalOrganizations"), 
+      value: platformMetrics.totalOrganizations.toString(), 
+      change: `+${platformMetrics.monthlyGrowth}%` 
+    },
+    { 
+      title: t("platformOwnerDashboard.totalUsers"), 
+      value: platformMetrics.totalUsers.toString(), 
+      change: "+12.5%" 
+    },
+    { 
+      title: t("platformOwnerDashboard.totalRevenue"), 
+      value: `$${platformMetrics.totalRevenue.toLocaleString()}`, 
+      change: "+15.3%" 
+    },
+    { 
+      title: t("platformOwnerDashboard.platformConversionRate"), 
+      value: `${platformMetrics.platformConversionRate}%`, 
+      change: "+2.1%" 
+    },
   ];
 
 
@@ -41,9 +63,9 @@ const PlatformOwnerDashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Platform Owner Dashboard</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("platformOwnerDashboard.title")}</h1>
           <p className="text-muted-foreground">
-            Manage organizations and monitor platform performance
+            {t("platformOwnerDashboard.description")}
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -124,6 +146,74 @@ const PlatformOwnerDashboard: React.FC = () => {
             <Link to="/reporting">
               <Button variant="outline" className="w-full">View Analytics</Button>
             </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">{t("platformOwnerDashboard.recentActivity")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {recentActivity.slice(0, 8).map((activity) => (
+              <div key={activity.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{activity.description}</p>
+                  <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
+                  {activity.user && (
+                    <p className="text-xs text-muted-foreground">by {activity.user}</p>
+                  )}
+                </div>
+                {activity.amount && (
+                  <div className="text-right">
+                    <span className="text-sm font-medium">${activity.amount}</span>
+                  </div>
+                )}
+                <div className="ml-4">
+                  <Badge 
+                    variant={activity.type === 'conversion' ? 'default' : 'secondary'}
+                    className="text-xs"
+                  >
+                    {activity.type.replace('_', ' ')}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Additional Platform Metrics */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{t("platformOwnerDashboard.activeAdvertisers")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{platformMetrics.activeAdvertisers}</div>
+            <p className="text-sm text-muted-foreground">+3 this month</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{t("platformOwnerDashboard.activeAffiliates")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{platformMetrics.activeAffiliates}</div>
+            <p className="text-sm text-muted-foreground">+5 this month</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{t("platformOwnerDashboard.averageRevenue")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">${platformMetrics.averageRevenuePerUser}</div>
+            <p className="text-sm text-muted-foreground">per user</p>
           </CardContent>
         </Card>
       </div>

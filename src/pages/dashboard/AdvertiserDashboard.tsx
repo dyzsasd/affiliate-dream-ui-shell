@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, BarChart, RefreshCw } from "lucide-react";
 import { mockPerformanceData } from "@/services/api";
+import { getAdvertiserDashboardMetrics, getMockCampaignSummaries } from "@/services/mockDashboardData";
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar, BarChart as RechartsBarChart } from "recharts";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -25,25 +26,34 @@ const AdvertiserDashboard: React.FC = () => {
     enabled: !!organization?.organizationId,
   });
 
-  // Set all data to 0 and format dates for display
-  const formattedData = mockPerformanceData.map(item => ({
-    ...item,
-    clicks: 0,
-    conversions: 0,
-    revenue: 0,
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  }));
-
-  const totalClicks = formattedData.reduce((sum, item) => sum + item.clicks, 0);
-  const totalConversions = formattedData.reduce((sum, item) => sum + item.conversions, 0);
-  const totalRevenue = formattedData.reduce((sum, item) => sum + item.revenue, 0);
-  const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks * 100).toFixed(2) : "0";
+  // Get realistic dashboard metrics and formatted data
+  const dashboardMetrics = getAdvertiserDashboardMetrics();
+  const campaignSummaries = getMockCampaignSummaries();
+  
+  // Format data for charts (already formatted in mockDashboardData)
+  const formattedData = mockPerformanceData;
 
   const stats = [
-    { title: t("dashboard.totalClicks"), value: totalClicks.toLocaleString(), change: "0%" },
-    { title: t("dashboard.conversions"), value: totalConversions.toLocaleString(), change: "0%" },
-    { title: t("dashboard.revenue"), value: `$${totalRevenue.toLocaleString()}`, change: "0%" },
-    { title: t("dashboard.conversionRate"), value: `${conversionRate}%`, change: "0%" },
+    { 
+      title: t("dashboard.totalClicks"), 
+      value: dashboardMetrics.totalClicks.toLocaleString(), 
+      change: dashboardMetrics.change.clicks 
+    },
+    { 
+      title: t("dashboard.conversions"), 
+      value: dashboardMetrics.conversions.toLocaleString(), 
+      change: dashboardMetrics.change.conversions 
+    },
+    { 
+      title: t("dashboard.revenue"), 
+      value: `$${dashboardMetrics.revenue.toLocaleString()}`, 
+      change: dashboardMetrics.change.revenue 
+    },
+    { 
+      title: t("dashboard.conversionRate"), 
+      value: `${dashboardMetrics.conversionRate}%`, 
+      change: dashboardMetrics.change.conversionRate 
+    },
   ];
 
   if (isLoadingAdvertisers) {
