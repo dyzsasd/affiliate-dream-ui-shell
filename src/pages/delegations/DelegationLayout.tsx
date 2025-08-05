@@ -8,7 +8,7 @@ import { ChevronLeft, LayoutDashboard, Users, Send, Building, BarChart3 } from "
 import { cn } from "@/lib/utils";
 import { DelegationProvider } from "@/contexts/delegation";
 import { createApiClient } from "@/services/backendApi";
-import { OrganizationsApi } from "@/generated-api/src/apis";
+import { OrganizationsApi, AgencyDelegationsApi } from "@/generated-api/src/apis";
 
 const DelegationLayout: React.FC = () => {
   const { t } = useTranslation();
@@ -16,25 +16,49 @@ const DelegationLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [organizationName, setOrganizationName] = useState<string>(`Organization ${advertiserOrgId}`);
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
+  const [accessError, setAccessError] = useState<string>("");
 
   useEffect(() => {
-    const fetchOrganizationName = async () => {
+    const checkDelegationAndFetchOrg = async () => {
       if (advertiserOrgId) {
         try {
-          const api = await createApiClient(OrganizationsApi);
-          const response = await api.organizationsIdGet({
+          // First check if there's a delegation relationship
+          const delegationApi = await createApiClient(AgencyDelegationsApi);
+          const delegations = await delegationApi.agencyDelegationsAdvertiserAdvertiserOrgIdGet({
+            advertiserOrgId: parseInt(advertiserOrgId),
+          });
+
+          // Check if there's an active delegation
+          const activeDelegation = delegations.find(delegation => 
+            delegation.status === 'active' && 
+            (!delegation.expiresAt || new Date(delegation.expiresAt) > new Date())
+          );
+
+          if (!activeDelegation) {
+            setHasAccess(false);
+            setAccessError("You don't have delegation access to this organization.");
+            return;
+          }
+
+          // If delegation exists, fetch organization details
+          const orgApi = await createApiClient(OrganizationsApi);
+          const response = await orgApi.organizationsIdGet({
             id: parseInt(advertiserOrgId),
             withExtra: true,
           });
+          
           setOrganizationName(response.name || `Organization ${advertiserOrgId}`);
+          setHasAccess(true);
         } catch (error) {
-          console.error("Error fetching organization:", error);
-          setOrganizationName(`Organization ${advertiserOrgId}`);
+          console.error("Error checking delegation or fetching organization:", error);
+          setHasAccess(false);
+          setAccessError("Failed to verify delegation access. Please contact support.");
         }
       }
     };
     
-    fetchOrganizationName();
+    checkDelegationAndFetchOrg();
   }, [advertiserOrgId]);
 
   const navigationItems = [
@@ -71,6 +95,48 @@ const DelegationLayout: React.FC = () => {
     }
     return location.pathname === path;
   };
+
+  // Show loading state while checking access
+  if (hasAccess === null) {
+    return (
+      <DelegationProvider>
+        <div className="container mx-auto p-6 space-y-6">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-lg">{t('delegations.loading')}</div>
+          </div>
+        </div>
+      </DelegationProvider>
+    );
+  }
+
+  // Show access denied if no delegation relationship
+  if (hasAccess === false) {
+    return (
+      <DelegationProvider>
+        <div className="container mx-auto p-6 space-y-6">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate('/delegations')}
+              className="gap-2"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              {t('delegations.backToDelegations')}
+            </Button>
+          </div>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center space-y-4">
+                <div className="text-xl font-semibold text-destructive">Access Denied</div>
+                <div className="text-muted-foreground">{accessError}</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </DelegationProvider>
+    );
+  }
 
   return (
     <DelegationProvider>
