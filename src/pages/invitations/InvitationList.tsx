@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Plus, Eye, Edit, Share2, Trash2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +20,7 @@ export default function InvitationList() {
   const { profile } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -40,14 +42,14 @@ export default function InvitationList() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invitations'] });
       toast({
-        title: "Success",
-        description: "Invitation deleted successfully"
+        title: t('invitations.success'),
+        description: t('invitations.deleted')
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to delete invitation",
+        title: t('invitations.error'),
+        description: t('invitations.deleteError'),
         variant: "destructive"
       });
     }
@@ -60,20 +62,20 @@ export default function InvitationList() {
 
   const getStatusBadge = (status?: string, expiresAt?: string) => {
     if (status === 'disabled') {
-      return <Badge variant="destructive">Disabled</Badge>;
+      return <Badge variant="destructive">{t('invitations.disabled')}</Badge>;
     }
     
     if (expiresAt && new Date(expiresAt) < new Date()) {
-      return <Badge variant="secondary">Expired</Badge>;
+      return <Badge variant="secondary">{t('invitations.expired')}</Badge>;
     }
     
-    return <Badge variant="default">Active</Badge>;
+    return <Badge variant="default">{t('invitations.active')}</Badge>;
   };
 
   const getUsageProgress = (current?: number, max?: number) => {
-    if (!max) return { percentage: 0, label: `${current || 0}/∞ uses` };
+    if (!max) return { percentage: 0, label: `${current || 0}/∞ ${t('invitations.uses')}` };
     const percentage = ((current || 0) / max) * 100;
-    return { percentage, label: `${current || 0}/${max} uses` };
+    return { percentage, label: `${current || 0}/${max} ${t('invitations.uses')}` };
   };
 
   const handleShare = (invitation: DomainAdvertiserAssociationInvitationWithDetails) => {
@@ -83,7 +85,7 @@ export default function InvitationList() {
 
   const handleDelete = (id?: number) => {
     if (!id) return;
-    if (confirm('Are you sure you want to delete this invitation?')) {
+    if (confirm(t('invitations.deleteConfirmation'))) {
       deleteMutation.mutate(id);
     }
   };
@@ -105,12 +107,12 @@ export default function InvitationList() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Invitation Management</h1>
-          <p className="text-muted-foreground">Create and manage affiliate invitation links</p>
+          <h1 className="text-3xl font-bold">{t('invitations.invitationManagement')}</h1>
+          <p className="text-muted-foreground">{t('invitations.createAndManageAffiliateLinks')}</p>
         </div>
         <Button onClick={() => navigate('/invitations/new')} className="gap-2">
           <Plus className="h-4 w-4" />
-          Create Invitation
+          {t('invitations.createInvitation')}
         </Button>
       </div>
 
@@ -119,19 +121,19 @@ export default function InvitationList() {
         <CardContent className="p-4">
           <div className="flex gap-4">
             <Input
-              placeholder="Search invitations..."
+              placeholder={t('invitations.searchInvitations')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-xs"
             />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="max-w-xs">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={t('invitations.filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="disabled">Disabled</SelectItem>
+                <SelectItem value="all">{t('invitations.allStatus')}</SelectItem>
+                <SelectItem value="active">{t('invitations.active')}</SelectItem>
+                <SelectItem value="disabled">{t('invitations.disabled')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -143,9 +145,9 @@ export default function InvitationList() {
         {filteredInvitations.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <p className="text-muted-foreground mb-4">No invitations found</p>
+              <p className="text-muted-foreground mb-4">{t('invitations.noInvitations')}</p>
               <Button onClick={() => navigate('/invitations/new')} variant="outline">
-                Create your first invitation
+                {t('invitations.createYourFirstInvitation')}
               </Button>
             </CardContent>
           </Card>
@@ -172,7 +174,7 @@ export default function InvitationList() {
                   {/* Usage Progress */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>Usage</span>
+                      <span>{t('invitations.usage')}</span>
                       <span>{usage.label}</span>
                     </div>
                     <Progress value={usage.percentage} className="h-2" />
@@ -181,12 +183,12 @@ export default function InvitationList() {
                   {/* Details */}
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-muted-foreground">Created:</span>
-                      <p>{invitation.createdAt ? new Date(invitation.createdAt).toLocaleDateString() : 'N/A'}</p>
+                      <span className="text-muted-foreground">{t('invitations.created')}:</span>
+                      <p>{invitation.createdAt ? new Date(invitation.createdAt).toLocaleDateString() : t('invitations.nA')}</p>
                     </div>
                     {invitation.expiresAt && (
                       <div>
-                        <span className="text-muted-foreground">Expires:</span>
+                        <span className="text-muted-foreground">{t('invitations.expires')}:</span>
                         <p>{new Date(invitation.expiresAt).toLocaleDateString()}</p>
                       </div>
                     )}
@@ -201,7 +203,7 @@ export default function InvitationList() {
                       className="gap-2"
                     >
                       <Eye className="h-4 w-4" />
-                      View
+                      {t('invitations.view')}
                     </Button>
                     <Button
                       variant="outline"
@@ -210,7 +212,7 @@ export default function InvitationList() {
                       className="gap-2"
                     >
                       <Edit className="h-4 w-4" />
-                      Edit
+                      {t('invitations.edit')}
                     </Button>
                     <Button
                       variant="outline"
@@ -219,7 +221,7 @@ export default function InvitationList() {
                       className="gap-2"
                     >
                       <Share2 className="h-4 w-4" />
-                      Share
+                      {t('invitations.share')}
                     </Button>
                     <Button
                       variant="outline"
@@ -228,7 +230,7 @@ export default function InvitationList() {
                       className="gap-2 text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
-                      Delete
+                      {t('invitations.delete')}
                     </Button>
                   </div>
                 </CardContent>

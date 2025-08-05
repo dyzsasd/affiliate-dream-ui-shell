@@ -50,5 +50,16 @@
   "backToInvitations": "返回邀請",
   "invitationDetailsAndAnalytics": "邀請詳情與分析",
   "share": "分享",
-  "edit": "編輯"
+  "edit": "編輯",
+  "invitationManagement": "邀請管理",
+  "createAndManageAffiliateLinks": "建立和管理聯盟邀請連結",
+  "searchInvitations": "搜尋邀請...",
+  "filterByStatus": "按狀態篩選",
+  "allStatus": "所有狀態",
+  "uses": "次使用",
+  "view": "檢視",
+  "delete": "刪除",
+  "deleteConfirmation": "您確定要刪除此邀請嗎？",
+  "createYourFirstInvitation": "建立您的第一個邀請",
+  "nA": "無"
 }

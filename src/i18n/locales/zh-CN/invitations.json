@@ -35,5 +35,17 @@
   "deleted": "邀请删除成功",
   "fetchError": "加载邀请失败",
   "saveError": "保存邀请失败",
-  "deleteError": "删除邀请失败"
+  "deleteError": "删除邀请失败",
+  "invitationManagement": "邀请管理",
+  "createAndManageAffiliateLinks": "创建和管理联盟邀请链接",
+  "searchInvitations": "搜索邀请...",
+  "filterByStatus": "按状态筛选",
+  "allStatus": "所有状态",
+  "usage": "使用情况",
+  "uses": "次使用",
+  "view": "查看",
+  "delete": "删除",
+  "deleteConfirmation": "您确定要删除此邀请吗？",
+  "createYourFirstInvitation": "创建您的第一个邀请",
+  "nA": "无"
 }

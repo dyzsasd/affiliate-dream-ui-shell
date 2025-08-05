@@ -35,5 +35,17 @@
   "deleted": "Invitation supprimée avec succès",
   "fetchError": "Échec du chargement des invitations",
   "saveError": "Échec de la sauvegarde de l'invitation",
-  "deleteError": "Échec de la suppression de l'invitation"
+  "deleteError": "Échec de la suppression de l'invitation",
+  "invitationManagement": "Gestion des Invitations",
+  "createAndManageAffiliateLinks": "Créer et gérer les liens d'invitation d'affiliation",
+  "searchInvitations": "Rechercher des invitations...",
+  "filterByStatus": "Filtrer par statut",
+  "allStatus": "Tous les Statuts",
+  "usage": "Utilisation",
+  "uses": "utilisations",
+  "view": "Voir",
+  "delete": "Supprimer",
+  "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer cette invitation ?",
+  "createYourFirstInvitation": "Créez votre première invitation",
+  "nA": "N/D"
 }

@@ -88,5 +88,17 @@
   "backToInvitations": "Back to Invitations",
   "invitationDetailsAndAnalytics": "Invitation Details & Analytics",
   "share": "Share",
-  "edit": "Edit"
+  "edit": "Edit",
+  "invitationManagement": "Invitation Management",
+  "createAndManageAffiliateLinks": "Create and manage affiliate invitation links",
+  "searchInvitations": "Search invitations...",
+  "filterByStatus": "Filter by status",
+  "allStatus": "All Status",
+  "usage": "Usage",
+  "uses": "uses",
+  "view": "View",
+  "delete": "Delete",
+  "deleteConfirmation": "Are you sure you want to delete this invitation?",
+  "createYourFirstInvitation": "Create your first invitation",
+  "nA": "N/A"
 }
