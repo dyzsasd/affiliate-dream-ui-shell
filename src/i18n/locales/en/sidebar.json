@@ -17,5 +17,7 @@
   "users": "Users",
   "agencyAnalytics": "Agency Analytics",
   "affiliates": "Affiliates",
-  "associations": "Associations"
+  "associations": "Associations",
+  "organizationSettings": "Organization Settings",
+  "agencyCampaigns": "Agency Campaigns"
 }

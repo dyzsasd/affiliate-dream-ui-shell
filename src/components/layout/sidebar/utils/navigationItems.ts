@@ -48,7 +48,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: LayoutDashboard
       },
       {
-        name: "Affiliate Associations",
+        name: t("sidebar.associations"),
         path: "/associations",
         icon: Users
       },
@@ -63,7 +63,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: TrendingUp
       },
       {
-        name: "Invitations",
+        name: t("sidebar.invitations"),
         path: "/invitations",
         icon: Send
       },
@@ -88,7 +88,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: User
       },
       {
-        name: "Organization Settings",
+        name: t("sidebar.organizationSettings"),
         path: "/organization/edit",
         icon: Settings
       }
@@ -127,7 +127,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: User
       },
       {
-        name: "Organization Settings",
+        name: t("sidebar.organizationSettings"),
         path: "/organization/edit",
         icon: Settings
       }
@@ -141,7 +141,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: Activity
       },
       {
-        name: "Agency Campaigns",
+        name: t("sidebar.agencyCampaigns"),
         path: "/agency-campaigns",
         icon: LayoutDashboard
       },
@@ -171,7 +171,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: User
       },
       {
-        name: "Organization Settings",
+        name: t("sidebar.organizationSettings"),
         path: "/organization/edit",
         icon: Settings
       }
@@ -180,12 +180,12 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
     return [
       ...baseItems,
       {
-        name: "Organizations",
+        name: t("sidebar.organizations"),
         path: "/organizations",
         icon: Building2
       },
       {
-        name: "Users",
+        name: t("sidebar.users"),
         path: "/users",
         icon: User
       },
@@ -205,7 +205,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: User
       },
       {
-        name: "Organization Settings",
+        name: t("sidebar.organizationSettings"),
         path: "/organization/edit",
         icon: Settings
       }
@@ -221,7 +221,7 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       icon: User
     },
     {
-      name: "Organization Settings",
+      name: t("sidebar.organizationSettings"),
       path: "/organization/edit",
       icon: Settings
     }

@@ -17,5 +17,7 @@
   "users": "使用者",
   "agencyAnalytics": "代理分析",
   "affiliates": "關聯用戶",
-  "associations": "關聯關係"
+  "associations": "關聯關係",
+  "organizationSettings": "組織設定",
+  "agencyCampaigns": "代理行銷活動"
 }
