@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Building2, Users, Target, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
+import { LanguageSelector } from '@/components/ui/language-selector';
 
 const OrganizationTypeSelection: React.FC = () => {
   const navigate = useNavigate();
@@ -38,7 +39,8 @@ const OrganizationTypeSelection: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-between items-center mb-4">
+          <LanguageSelector />
           <Button 
             variant="outline" 
             onClick={signOut}
