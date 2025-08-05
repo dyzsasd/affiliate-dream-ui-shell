@@ -4,7 +4,7 @@ import { useParams, useNavigate, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronLeft, LayoutDashboard, Users, Send, Building } from "lucide-react";
+import { ChevronLeft, LayoutDashboard, Users, Send, Building, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DelegationProvider } from "@/contexts/delegation";
 
@@ -34,6 +34,11 @@ const DelegationLayout: React.FC = () => {
       label: t('delegations.associations'),
       path: `/delegations/${advertiserOrgId}/associations`,
       icon: Users,
+    },
+    {
+      label: t('sidebar.reports'),
+      path: `/delegations/${advertiserOrgId}/reports`,
+      icon: BarChart3,
     },
   ];
 

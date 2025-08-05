@@ -5,7 +5,7 @@ import DelegationLayout from "./DelegationLayout";
 import DelegatedDashboard from "./DelegatedDashboard";
 import DelegatedCampaigns from "./DelegatedCampaigns";
 import DelegatedInvitations from "./DelegatedInvitations";
-import DelegatedAssociations from "./DelegatedAssociations";
+import DelegatedReports from "./DelegatedReports";
 
 const DelegationsRoutes: React.FC = () => {
   return (
@@ -15,7 +15,7 @@ const DelegationsRoutes: React.FC = () => {
         <Route index element={<DelegatedDashboard />} />
         <Route path="campaigns" element={<DelegatedCampaigns />} />
         <Route path="invitations" element={<DelegatedInvitations />} />
-        <Route path="associations" element={<DelegatedAssociations />} />
+        <Route path="reports" element={<DelegatedReports />} />
       </Route>
     </Routes>
   );
