@@ -1,4 +1,4 @@
-// Mock data service for dashboard components
+// Mock data service for dashboard and reporting components
 import { addDays, subDays, format } from 'date-fns';
 
 // Types for dashboard data
@@ -45,6 +45,64 @@ export interface PlatformMetrics {
   totalClicks: number;
   platformConversionRate: number;
   averageRevenuePerUser: number;
+}
+
+export interface RecentActivity {
+  id: string;
+  type: 'campaign_created' | 'user_signup' | 'conversion' | 'payout' | 'organization_approved';
+  description: string;
+  timestamp: string;
+  amount?: number;
+  user?: string;
+}
+
+// Reporting-specific interfaces
+export interface DetailedPerformanceData extends PerformanceDataPoint {
+  campaignId: string;
+  campaignName: string;
+  country: string;
+  deviceType: 'desktop' | 'mobile' | 'tablet';
+  source: string;
+  cpc: number; // Cost per click
+  cpm: number; // Cost per mille
+  roas: number; // Return on ad spend
+}
+
+export interface ConversionDetail {
+  id: string;
+  timestamp: string;
+  transactionId: string;
+  campaignId: string;
+  campaignName: string;
+  offerId: string;
+  offerName: string;
+  status: 'pending' | 'approved' | 'rejected';
+  payout: number;
+  currency: string;
+  affiliateId: string;
+  affiliateName: string;
+  country: string;
+  deviceType: 'desktop' | 'mobile' | 'tablet';
+  ip: string;
+  userAgent: string;
+  referrer: string;
+  subId1?: string;
+  subId2?: string;
+  subId3?: string;
+}
+
+export interface CampaignPerformanceReport {
+  campaignId: string;
+  campaignName: string;
+  totalClicks: number;
+  totalImpressions: number;
+  totalConversions: number;
+  totalRevenue: number;
+  ctr: number;
+  conversionRate: number;
+  avgPayout: number;
+  roas: number;
+  performance: PerformanceDataPoint[];
 }
 
 export interface RecentActivity {
@@ -257,4 +315,232 @@ export const getDashboardRealTimeData = () => {
     hourlyData,
     lastUpdate: format(now, 'HH:mm:ss'),
   };
+};
+
+// REPORTING-SPECIFIC MOCK DATA
+
+// Generate detailed performance data with campaign, country, and device breakdowns
+export const generateDetailedPerformanceData = (days: number = 30): DetailedPerformanceData[] => {
+  const campaigns = [
+    { id: '1', name: 'Summer Sale 2024' },
+    { id: '2', name: 'Holiday Promotions' },
+    { id: '3', name: 'New Product Launch' },
+    { id: '4', name: 'Brand Awareness Campaign' },
+  ];
+  
+  const countries = ['US', 'UK', 'CA', 'AU', 'DE', 'FR', 'ES', 'IT'];
+  const deviceTypes: ('desktop' | 'mobile' | 'tablet')[] = ['desktop', 'mobile', 'tablet'];
+  const sources = ['Google Ads', 'Facebook', 'Instagram', 'Twitter', 'TikTok', 'Email', 'Direct'];
+  
+  const data: DetailedPerformanceData[] = [];
+  
+  for (let i = days - 1; i >= 0; i--) {
+    const date = subDays(new Date(), i);
+    
+    // Generate multiple entries per day for different campaigns/countries/devices
+    for (let j = 0; j < 3 + Math.floor(Math.random() * 3); j++) {
+      const campaign = campaigns[Math.floor(Math.random() * campaigns.length)];
+      const country = countries[Math.floor(Math.random() * countries.length)];
+      const deviceType = deviceTypes[Math.floor(Math.random() * deviceTypes.length)];
+      const source = sources[Math.floor(Math.random() * sources.length)];
+      
+      const weekdayMultiplier = [0.7, 1.0, 1.1, 1.2, 1.3, 0.9, 0.6][date.getDay()];
+      const baseClicks = 200 + Math.random() * 300;
+      const clicks = Math.round(baseClicks * weekdayMultiplier);
+      const impressions = Math.round(clicks * (8 + Math.random() * 4));
+      const conversions = Math.round(clicks * (0.015 + Math.random() * 0.035));
+      const revenue = Math.round(conversions * (15 + Math.random() * 25));
+      const ctr = Number(((clicks / impressions) * 100).toFixed(2));
+      const cpc = Number((revenue / clicks * 0.7).toFixed(2)); // 70% of revenue per click
+      const cpm = Number((revenue / impressions * 1000).toFixed(2));
+      const roas = revenue > 0 ? Number((revenue / (cpc * clicks)).toFixed(2)) : 0;
+      
+      data.push({
+        date: format(date, 'yyyy-MM-dd'),
+        clicks,
+        conversions,
+        revenue,
+        impressions,
+        ctr,
+        campaignId: campaign.id,
+        campaignName: campaign.name,
+        country,
+        deviceType,
+        source,
+        cpc,
+        cpm,
+        roas,
+      });
+    }
+  }
+  
+  return data;
+};
+
+// Generate detailed conversion data
+export const generateDetailedConversions = (count: number = 100): ConversionDetail[] => {
+  const campaigns = [
+    { id: '1', name: 'Summer Sale 2024' },
+    { id: '2', name: 'Holiday Promotions' },
+    { id: '3', name: 'New Product Launch' },
+  ];
+  
+  const offers = [
+    { id: 'offer-1', name: '20% Discount Offer' },
+    { id: 'offer-2', name: 'Free Shipping Offer' },
+    { id: 'offer-3', name: 'Premium Subscription' },
+  ];
+  
+  const affiliates = [
+    { id: 'aff-1', name: 'PromoMax Networks' },
+    { id: 'aff-2', name: 'DigitalBoost Ltd' },
+    { id: 'aff-3', name: 'AdVantage Partners' },
+    { id: 'aff-4', name: 'ConvertPro Agency' },
+  ];
+  
+  const countries = ['US', 'UK', 'CA', 'AU', 'DE', 'FR', 'ES', 'IT'];
+  const deviceTypes: ('desktop' | 'mobile' | 'tablet')[] = ['desktop', 'mobile', 'tablet'];
+  const statuses: ('pending' | 'approved' | 'rejected')[] = ['pending', 'approved', 'rejected'];
+  
+  const userAgents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15',
+    'Mozilla/5.0 (Android 11; Mobile; rv:68.0) Gecko/68.0 Firefox/88.0',
+  ];
+  
+  const referrers = [
+    'https://google.com',
+    'https://facebook.com',
+    'https://instagram.com',
+    'https://twitter.com',
+    'https://example-affiliate-site.com',
+  ];
+  
+  return Array.from({ length: count }, (_, index) => {
+    const campaign = campaigns[Math.floor(Math.random() * campaigns.length)];
+    const offer = offers[Math.floor(Math.random() * offers.length)];
+    const affiliate = affiliates[Math.floor(Math.random() * affiliates.length)];
+    const country = countries[Math.floor(Math.random() * countries.length)];
+    const deviceType = deviceTypes[Math.floor(Math.random() * deviceTypes.length)];
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+    const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+    const referrer = referrers[Math.floor(Math.random() * referrers.length)];
+    
+    // Status-based approval rates: 70% approved, 20% pending, 10% rejected
+    const statusWeight = Math.random();
+    const finalStatus = statusWeight < 0.7 ? 'approved' : statusWeight < 0.9 ? 'pending' : 'rejected';
+    
+    return {
+      id: `conv-${String(index + 1).padStart(4, '0')}`,
+      timestamp: format(
+        subDays(new Date(), Math.floor(Math.random() * 30)), 
+        'yyyy-MM-dd HH:mm:ss'
+      ),
+      transactionId: `tx-${String(Math.floor(Math.random() * 999999)).padStart(6, '0')}`,
+      campaignId: campaign.id,
+      campaignName: campaign.name,
+      offerId: offer.id,
+      offerName: offer.name,
+      status: finalStatus,
+      payout: Number((Math.random() * 50 + 10).toFixed(2)),
+      currency: 'USD',
+      affiliateId: affiliate.id,
+      affiliateName: affiliate.name,
+      country,
+      deviceType,
+      ip: `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+      userAgent,
+      referrer,
+      subId1: Math.random() > 0.7 ? `sub1_${Math.floor(Math.random() * 1000)}` : undefined,
+      subId2: Math.random() > 0.8 ? `sub2_${Math.floor(Math.random() * 1000)}` : undefined,
+      subId3: Math.random() > 0.9 ? `sub3_${Math.floor(Math.random() * 1000)}` : undefined,
+    };
+  });
+};
+
+// Generate campaign performance reports
+export const getCampaignPerformanceReports = (): CampaignPerformanceReport[] => {
+  const campaigns = [
+    { id: '1', name: 'Summer Sale 2024' },
+    { id: '2', name: 'Holiday Promotions' },
+    { id: '3', name: 'New Product Launch' },
+    { id: '4', name: 'Brand Awareness Campaign' },
+  ];
+  
+  return campaigns.map(campaign => {
+    const performance = generatePerformanceData(30);
+    const totalClicks = performance.reduce((sum, p) => sum + p.clicks, 0);
+    const totalImpressions = performance.reduce((sum, p) => sum + p.impressions, 0);
+    const totalConversions = performance.reduce((sum, p) => sum + p.conversions, 0);
+    const totalRevenue = performance.reduce((sum, p) => sum + p.revenue, 0);
+    
+    return {
+      campaignId: campaign.id,
+      campaignName: campaign.name,
+      totalClicks,
+      totalImpressions,
+      totalConversions,
+      totalRevenue,
+      ctr: Number(((totalClicks / totalImpressions) * 100).toFixed(2)),
+      conversionRate: Number(((totalConversions / totalClicks) * 100).toFixed(2)),
+      avgPayout: totalConversions > 0 ? Number((totalRevenue / totalConversions).toFixed(2)) : 0,
+      roas: Number((totalRevenue / (totalClicks * 0.5)).toFixed(2)), // Assume $0.50 CPC
+      performance,
+    };
+  });
+};
+
+// Get reporting performance data for different date ranges
+export const getReportingPerformanceData = (dateRange: string) => {
+  const days = {
+    '7days': 7,
+    '30days': 30,
+    '90days': 90,
+    'year': 365,
+  }[dateRange] || 30;
+  
+  return generatePerformanceData(days).map(item => ({
+    ...item,
+    date: format(new Date(item.date), 'MMM dd'),
+  }));
+};
+
+// Get filtered conversions for conversion report
+export const getFilteredConversions = (
+  dateRange: string,
+  statusFilter: string,
+  searchTerm: string
+): ConversionDetail[] => {
+  let conversions = generateDetailedConversions(100);
+  
+  // Filter by date range
+  const days = {
+    '7days': 7,
+    '30days': 30,
+    '90days': 90,
+    'year': 365,
+  }[dateRange] || 30;
+  
+  const cutoffDate = subDays(new Date(), days);
+  conversions = conversions.filter(conv => 
+    new Date(conv.timestamp) >= cutoffDate
+  );
+  
+  // Filter by status
+  if (statusFilter !== 'all') {
+    conversions = conversions.filter(conv => conv.status === statusFilter);
+  }
+  
+  // Filter by search term
+  if (searchTerm) {
+    conversions = conversions.filter(conv =>
+      conv.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      conv.campaignName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      conv.affiliateName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+  
+  // Sort by timestamp descending
+  return conversions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };

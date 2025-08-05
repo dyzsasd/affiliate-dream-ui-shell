@@ -29,6 +29,7 @@ import {
 import { CheckCircle2, XCircle, Clock, Search } from "lucide-react";
 import { mockConversions, mockPaginatedConversions } from "@/services/api";
 import { Conversion } from "@/types/api";
+import { getFilteredConversions, ConversionDetail } from "@/services/mockDashboardData";
 
 const ConversionReport: React.FC = () => {
   const { t } = useTranslation();
@@ -36,23 +37,13 @@ const ConversionReport: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [conversions, setConversions] = useState<Conversion[]>(mockConversions);
-  const [totalPages, setTotalPages] = useState(mockPaginatedConversions.meta.totalPages);
+  
+  // Get filtered conversions using the new mock data service
+  const conversions = getFilteredConversions(dateRange, statusFilter, searchTerm);
+  const totalPages = Math.ceil(conversions.length / 10);
 
-  // Apply filters
-  const filteredConversions = conversions.filter((conversion) => {
-    // Filter by status
-    if (statusFilter !== "all" && conversion.status !== statusFilter) {
-      return false;
-    }
-    
-    // Filter by search term in transaction ID
-    if (searchTerm && !conversion.transactionId.toLowerCase().includes(searchTerm.toLowerCase())) {
-      return false;
-    }
-    
-    return true;
-  });
+  // Paginate results
+  const paginatedConversions = conversions.slice((currentPage - 1) * 10, currentPage * 10);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
@@ -72,9 +63,9 @@ const ConversionReport: React.FC = () => {
   };
 
   // Calculate summary statistics
-  const approvedConversions = filteredConversions.filter(c => c.status === "approved");
-  const pendingConversions = filteredConversions.filter(c => c.status === "pending");
-  const rejectedConversions = filteredConversions.filter(c => c.status === "rejected");
+  const approvedConversions = conversions.filter(c => c.status === "approved");
+  const pendingConversions = conversions.filter(c => c.status === "pending");
+  const rejectedConversions = conversions.filter(c => c.status === "rejected");
   
   const totalPayout = approvedConversions.reduce((sum, c) => sum + c.payout, 0);
   const pendingPayout = pendingConversions.reduce((sum, c) => sum + c.payout, 0);
@@ -121,7 +112,7 @@ const ConversionReport: React.FC = () => {
           <CardContent className="p-4">
             <div className="space-y-1">
               <div className="text-sm text-gray-500">{t("reports.conversions.totalConversions")}</div>
-              <div className="text-2xl font-bold">{filteredConversions.length}</div>
+              <div className="text-2xl font-bold">{conversions.length}</div>
             </div>
           </CardContent>
         </Card>
@@ -199,24 +190,24 @@ const ConversionReport: React.FC = () => {
                 <div className="space-y-1">
                   <span className="text-sm">{t("reports.conversions.approvalRate")}</span>
                   <div className="font-semibold text-xl">
-                    {filteredConversions.length > 0 
-                      ? `${((approvedConversions.length / filteredConversions.length) * 100).toFixed(1)}%`
+                    {conversions.length > 0 
+                      ? `${((approvedConversions.length / conversions.length) * 100).toFixed(1)}%`
                       : "N/A"}
                   </div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-sm">{t("reports.conversions.rejectionRate")}</span>
                   <div className="font-semibold text-xl">
-                    {filteredConversions.length > 0
-                      ? `${((rejectedConversions.length / filteredConversions.length) * 100).toFixed(1)}%`
+                    {conversions.length > 0
+                      ? `${((rejectedConversions.length / conversions.length) * 100).toFixed(1)}%`
                       : "N/A"}
                   </div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-sm">{t("reports.conversions.pendingRate")}</span>
                   <div className="font-semibold text-xl">
-                    {filteredConversions.length > 0
-                      ? `${((pendingConversions.length / filteredConversions.length) * 100).toFixed(1)}%`
+                    {conversions.length > 0
+                      ? `${((pendingConversions.length / conversions.length) * 100).toFixed(1)}%`
                       : "N/A"}
                   </div>
                 </div>
@@ -255,24 +246,20 @@ const ConversionReport: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredConversions.length === 0 ? (
+                {paginatedConversions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="h-24 text-center">
                       {t("reports.conversions.noConversionsFound")}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredConversions.map((conversion) => (
+                  paginatedConversions.map((conversion) => (
                     <TableRow key={conversion.id}>
                       <TableCell className="font-medium">
                         {formatDate(conversion.timestamp)}
                       </TableCell>
                       <TableCell>{conversion.transactionId}</TableCell>
-                      <TableCell>
-                        {conversion.campaignId === "1" ? "Summer Promotion" : 
-                         conversion.campaignId === "2" ? "Black Friday" :
-                         conversion.campaignId === "3" ? "Premium Subscription" : conversion.campaignId}
-                      </TableCell>
+                      <TableCell>{conversion.campaignName}</TableCell>
                       <TableCell>
                         <div className="flex items-center">
                           {getStatusIcon(conversion.status)}
@@ -292,9 +279,9 @@ const ConversionReport: React.FC = () => {
           {/* Pagination */}
           <div className="flex items-center justify-between py-4">
             <div className="text-sm text-gray-500">
-              {t("reports.conversions.showingResults")} <span className="font-medium">{Math.min(1, filteredConversions.length)}</span> {t("reports.conversions.to")}{" "}
-              <span className="font-medium">{Math.min(10, filteredConversions.length)}</span> {t("reports.conversions.of")}{" "}
-              <span className="font-medium">{filteredConversions.length}</span> {t("reports.conversions.results")}
+              {t("reports.conversions.showingResults")} <span className="font-medium">{Math.min(1, paginatedConversions.length)}</span> {t("reports.conversions.to")}{" "}
+              <span className="font-medium">{Math.min(10, paginatedConversions.length)}</span> {t("reports.conversions.of")}{" "}
+              <span className="font-medium">{conversions.length}</span> {t("reports.conversions.results")}
             </div>
             <div className="flex items-center space-x-2">
               <Button

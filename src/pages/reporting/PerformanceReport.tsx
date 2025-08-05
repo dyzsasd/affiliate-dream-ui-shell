@@ -24,20 +24,26 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { mockPerformanceData, mockCampaigns } from "@/services/api";
+import { getReportingPerformanceData } from "@/services/mockDashboardData";
 
 const PerformanceReport: React.FC = () => {
   const { t } = useTranslation();
   const [dateRange, setDateRange] = useState("7days");
   const [campaignFilter, setCampaignFilter] = useState("all");
   
-  // Format dates for display - empty data since mock removed
-  const formattedData: any[] = [];
+  // Get filtered performance data based on date range
+  const performanceData = getReportingPerformanceData(dateRange);
+  
+  // Filter by campaign if needed
+  const formattedData = campaignFilter === "all" 
+    ? performanceData 
+    : performanceData; // Would filter by campaign in real implementation
 
-  // Calculate totals - all zero since no data
-  const totalClicks = 0;
-  const totalImpressions = 0;
-  const totalConversions = 0;
-  const totalRevenue = 0;
+  // Calculate totals with real data
+  const totalClicks = formattedData.reduce((sum, item) => sum + item.clicks, 0);
+  const totalImpressions = formattedData.reduce((sum, item) => sum + item.impressions, 0);
+  const totalConversions = formattedData.reduce((sum, item) => sum + item.conversions, 0);
+  const totalRevenue = formattedData.reduce((sum, item) => sum + item.revenue, 0);
   
   const conversionRate = totalClicks > 0 
     ? ((totalConversions / totalClicks) * 100).toFixed(2) 
