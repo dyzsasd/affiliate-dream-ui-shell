@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +37,7 @@ export default function InvitationForm() {
   const { profile } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const isEdit = Boolean(id);
 
   const form = useForm<InvitationFormData>({
@@ -76,15 +78,15 @@ export default function InvitationForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invitations'] });
       toast({
-        title: "Success",
-        description: "Invitation created successfully"
+        title: t('invitations.success'),
+        description: t('invitations.created')
       });
       navigate('/invitations');
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to create invitation",
+        title: t('invitations.error'),
+        description: t('invitations.saveError'),
         variant: "destructive"
       });
     }
@@ -97,15 +99,15 @@ export default function InvitationForm() {
       queryClient.invalidateQueries({ queryKey: ['invitations'] });
       queryClient.invalidateQueries({ queryKey: ['invitation', id] });
       toast({
-        title: "Success",
-        description: "Invitation updated successfully"
+        title: t('invitations.success'),
+        description: t('invitations.updated')
       });
       navigate('/invitations');
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to update invitation",
+        title: t('invitations.error'),
+        description: t('invitations.saveError'),
         variant: "destructive"
       });
     }
@@ -114,8 +116,8 @@ export default function InvitationForm() {
   const onSubmit = (data: InvitationFormData) => {
     if (!profile?.organization?.id) {
       toast({
-        title: "Error",
-        description: "Organization not found",
+        title: t('invitations.error'),
+        description: t('invitations.organizationNotFound'),
         variant: "destructive"
       });
       return;
@@ -156,10 +158,10 @@ export default function InvitationForm() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold">
-            {isEdit ? 'Edit Invitation' : 'Create Invitation'}
+            {isEdit ? t('invitations.editInvitation') : t('invitations.createInvitation')}
           </h1>
           <p className="text-muted-foreground">
-            {isEdit ? 'Update invitation settings' : 'Create a new affiliate invitation link'}
+            {isEdit ? t('invitations.updateInvitationSettings') : t('invitations.createNewAffiliateInvitation')}
           </p>
         </div>
       </div>
@@ -167,7 +169,7 @@ export default function InvitationForm() {
       {/* Form */}
       <Card>
         <CardHeader>
-          <CardTitle>Invitation Details</CardTitle>
+          <CardTitle>{t('invitations.invitationDetails')}</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -179,12 +181,12 @@ export default function InvitationForm() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Invitation Name *</FormLabel>
+                      <FormLabel>{t('invitations.invitationNameRequired')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Partner Program Invitation" {...field} />
+                        <Input placeholder={t('invitations.partnerProgramInvitation')} {...field} />
                       </FormControl>
                       <FormDescription>
-                        A descriptive name for this invitation
+                        {t('invitations.descriptiveNameForInvitation')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -196,18 +198,18 @@ export default function InvitationForm() {
                   name="maxUses"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Usage Limit</FormLabel>
+                      <FormLabel>{t('invitations.usageLimit')}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Unlimited"
+                          placeholder={t('invitations.unlimited')}
                           {...field}
                           onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
                           value={field.value || ''}
                         />
                       </FormControl>
                       <FormDescription>
-                        Maximum number of times this invitation can be used
+                        {t('invitations.maxNumberOfUses')}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -220,16 +222,16 @@ export default function InvitationForm() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t('invitations.invitationDescription')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Join our affiliate program and start earning commissions..."
+                        placeholder={t('invitations.joinAffiliateProgram')}
                         className="min-h-20"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Optional description that will be shown to affiliates
+                      {t('invitations.optionalDescription')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -241,7 +243,7 @@ export default function InvitationForm() {
                 name="expiresAt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Expiration Date</FormLabel>
+                    <FormLabel>{t('invitations.expirationDate')}</FormLabel>
                     <FormControl>
                       <Input
                         type="datetime-local"
@@ -249,7 +251,7 @@ export default function InvitationForm() {
                       />
                     </FormControl>
                     <FormDescription>
-                      When this invitation should expire (optional)
+                      {t('invitations.whenInvitationExpires')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -261,16 +263,16 @@ export default function InvitationForm() {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Welcome Message</FormLabel>
+                    <FormLabel>{t('invitations.welcomeMessage')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Welcome to our affiliate program! We're excited to work with you..."
+                        placeholder={t('invitations.welcomeToAffiliate')}
                         className="min-h-20"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Custom message shown to affiliates when they view the invitation
+                      {t('invitations.customMessageShown')}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -279,9 +281,9 @@ export default function InvitationForm() {
 
               {/* Default Visibility Settings */}
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Default Visibility Settings</h3>
+                <h3 className="text-lg font-medium">{t('invitations.defaultVisibilitySettings')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  These settings will apply to new associations created through this invitation
+                  {t('invitations.settingsApplyToNew')}
                 </p>
 
                 <div className="space-y-4">
@@ -298,10 +300,10 @@ export default function InvitationForm() {
                         </FormControl>
                         <div className="space-y-1 leading-none">
                           <FormLabel>
-                            Make all affiliates visible by default
+                            {t('invitations.makeAllAffiliatesVisible')}
                           </FormLabel>
                           <FormDescription>
-                            New associations will have visibility to all affiliates in the network
+                            {t('invitations.newAssociationsAffiliates')}
                           </FormDescription>
                         </div>
                       </FormItem>
@@ -321,10 +323,10 @@ export default function InvitationForm() {
                         </FormControl>
                         <div className="space-y-1 leading-none">
                           <FormLabel>
-                            Make all campaigns visible by default
+                            {t('invitations.makeAllCampaignsVisible')}
                           </FormLabel>
                           <FormDescription>
-                            New associations will have access to all available campaigns
+                            {t('invitations.newAssociationsCampaigns')}
                           </FormDescription>
                         </div>
                       </FormItem>
@@ -341,14 +343,14 @@ export default function InvitationForm() {
                   className="gap-2"
                 >
                   <Save className="h-4 w-4" />
-                  {isSubmitting ? 'Saving...' : isEdit ? 'Update Invitation' : 'Create Invitation'}
+                  {isSubmitting ? t('invitations.saving') : isEdit ? t('invitations.updateInvitation') : t('invitations.createInvitation')}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => navigate('/invitations')}
                 >
-                  Cancel
+                  {t('invitations.cancel')}
                 </Button>
               </div>
             </form>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { Copy, Share2, QrCode, Mail, MessageSquare, ExternalLink } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ interface ShareInvitationDialogProps {
 
 export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareInvitationDialogProps) {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [currentUrl, setCurrentUrl] = useState('');
 
   const { data: linkData, refetch: generateLink } = useQuery({
@@ -38,14 +40,14 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
       const url = data.invitation_link || '';
       setCurrentUrl(url);
       toast({
-        title: "Success",
-        description: "Invitation link generated successfully"
+        title: t('invitations.success'),
+        description: t('invitations.linkGeneratedSuccess')
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to generate invitation link",
+        title: t('invitations.error'),
+        description: t('invitations.failedToGenerateLink'),
         variant: "destructive"
       });
     }
@@ -54,8 +56,8 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       toast({
-        title: "Copied!",
-        description: "Link copied to clipboard"
+        title: t('invitations.copied'),
+        description: t('invitations.linkCopiedToClipboard')
       });
     });
   };
@@ -67,28 +69,28 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
   const invitationUrl = linkData?.invitation_link || currentUrl;
 
   const shareViaEmail = () => {
-    const subject = encodeURIComponent(`Partnership Invitation: ${invitation.name}`);
+    const subject = encodeURIComponent(`${t('invitations.partnershipInvitationEmail')} ${invitation.name}`);
     const body = encodeURIComponent(
-      `Hi there!\n\nYou've been invited to join our affiliate partnership program.\n\n` +
+      `${t('invitations.invitedToJoin')}\n\n` +
       `${invitation.description || ''}\n\n` +
-      `Click the link below to view the invitation and get started:\n${invitationUrl}\n\n` +
-      `Best regards`
+      `${t('invitations.clickLinkBelow')}\n${invitationUrl}\n\n` +
+      `${t('invitations.bestRegards')}`
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };
 
   const shareViaWhatsApp = () => {
     const text = encodeURIComponent(
-      `🎉 Partnership Invitation: ${invitation.name}\n\n` +
+      `🎉 ${t('invitations.partnershipInvitationEmail')} ${invitation.name}\n\n` +
       `${invitation.description || ''}\n\n` +
-      `Join our affiliate program: ${invitationUrl}`
+      `${t('invitations.joinProgram')}: ${invitationUrl}`
     );
     window.open(`https://wa.me/?text=${text}`);
   };
 
   const shareViaLinkedIn = () => {
     const url = encodeURIComponent(invitationUrl);
-    const text = encodeURIComponent(`Partnership opportunity: ${invitation.name}`);
+    const text = encodeURIComponent(`${t('invitations.partnershipOpportunity')} ${invitation.name}`);
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${text}`);
   };
 
@@ -103,27 +105,27 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Share2 className="h-5 w-5" />
-            Share Invitation: {invitation.name}
+            {t('invitations.shareInvitationTitle')} {invitation.name}
           </DialogTitle>
         </DialogHeader>
 
         <Tabs defaultValue="link" className="space-y-4">
           <TabsList className="grid grid-cols-3 w-full">
-            <TabsTrigger value="link">Share Link</TabsTrigger>
-            <TabsTrigger value="social">Social Media</TabsTrigger>
-            <TabsTrigger value="qr">QR Code</TabsTrigger>
+            <TabsTrigger value="link">{t('invitations.shareLink')}</TabsTrigger>
+            <TabsTrigger value="social">{t('invitations.socialMedia')}</TabsTrigger>
+            <TabsTrigger value="qr">{t('invitations.qrCode')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="link" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Invitation Link</CardTitle>
+                <CardTitle className="text-lg">{t('invitations.invitationLink')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {!invitationUrl ? (
                   <div className="text-center py-6">
                     <p className="text-muted-foreground mb-4">
-                      Generate a shareable link for this invitation
+                      {t('invitations.generateShareableLink')}
                     </p>
                     <Button 
                       onClick={handleGenerateLink}
@@ -131,7 +133,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                       className="gap-2"
                     >
                       <ExternalLink className="h-4 w-4" />
-                      {generateLinkMutation.isPending ? 'Generating...' : 'Generate Link'}
+                      {generateLinkMutation.isPending ? t('invitations.generating') : t('invitations.generateLink')}
                     </Button>
                   </div>
                 ) : (
@@ -148,7 +150,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                         className="gap-2 shrink-0"
                       >
                         <Copy className="h-4 w-4" />
-                        Copy
+                        {t('invitations.copy')}
                       </Button>
                     </div>
 
@@ -159,7 +161,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                         className="gap-2"
                       >
                         <Mail className="h-4 w-4" />
-                        Share via Email
+                        {t('invitations.shareViaEmail')}
                       </Button>
                       <Button
                         variant="outline"
@@ -167,7 +169,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                         className="gap-2"
                       >
                         <Copy className="h-4 w-4" />
-                        Copy Link
+                        {t('invitations.copyLink')}
                       </Button>
                     </div>
                   </>
@@ -179,7 +181,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
           <TabsContent value="social" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Social Media Sharing</CardTitle>
+                <CardTitle className="text-lg">{t('invitations.socialMediaSharing')}</CardTitle>
               </CardHeader>
               <CardContent>
                 {invitationUrl ? (
@@ -190,7 +192,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                       className="gap-2"
                     >
                       <MessageSquare className="h-4 w-4" />
-                      WhatsApp
+                      {t('invitations.whatsApp')}
                     </Button>
                     <Button
                       variant="outline"
@@ -198,13 +200,13 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                       className="gap-2"
                     >
                       <ExternalLink className="h-4 w-4" />
-                      LinkedIn
+                      {t('invitations.linkedIn')}
                     </Button>
                   </div>
                 ) : (
                   <div className="text-center py-6">
                     <p className="text-muted-foreground">
-                      Generate a link first to enable social media sharing
+                      {t('invitations.generateLinkFirst')}
                     </p>
                   </div>
                 )}
@@ -215,7 +217,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
           <TabsContent value="qr" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">QR Code</CardTitle>
+                <CardTitle className="text-lg">{t('invitations.qrCode')}</CardTitle>
               </CardHeader>
               <CardContent>
                 {invitationUrl ? (
@@ -228,7 +230,7 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                       />
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Scan this QR code to access the invitation
+                      {t('invitations.scanQRCode')}
                     </p>
                     <Button
                       variant="outline"
@@ -241,13 +243,13 @@ export function ShareInvitationDialog({ invitation, open, onOpenChange }: ShareI
                       className="gap-2"
                     >
                       <QrCode className="h-4 w-4" />
-                      Download QR Code
+                      {t('invitations.downloadQRCode')}
                     </Button>
                   </div>
                 ) : (
                   <div className="text-center py-6">
                     <p className="text-muted-foreground">
-                      Generate a link first to create a QR code
+                      {t('invitations.generateLinkFirstQR')}
                     </p>
                   </div>
                 )}
