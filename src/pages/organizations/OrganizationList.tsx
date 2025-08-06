@@ -24,10 +24,17 @@ import { useTranslation } from "react-i18next";
 import LanguageSelector from "@/components/common/LanguageSelector";
 
 const OrganizationList: React.FC = () => {
-  const { user } = useAuth();
+  const { user, organization } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Redirect non-platform owners to dashboard
+  useEffect(() => {
+    if (organization && organization.type !== 'platform_owner') {
+      navigate('/dashboard');
+    }
+  }, [organization, navigate]);
   const [organizations, setOrganizations] = useState<DomainOrganization[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
