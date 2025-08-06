@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { User } from '@/types/auth';
 import { UserProfile } from '../authTypes';
-import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganizationWithExtraInfo } from '@/generated-api/src/models';
 import { 
   fetchBackendProfile, 
   fetchOrganization, 
@@ -18,7 +18,7 @@ import {
 
 export const useProfile = (user: User | null) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [organization, setOrganization] = useState<DomainOrganization | null>(null);
+  const [organization, setOrganization] = useState<DomainOrganizationWithExtraInfo | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
   const [isOrganizationLoading, setIsOrganizationLoading] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
@@ -63,12 +63,9 @@ export const useProfile = (user: User | null) => {
             }
           }
         } else {
-          // Create fallback profile from user metadata
-          if (user.user_metadata) {
-            const fallbackProfile = createFallbackProfile(user.user_metadata);
-            setProfile(fallbackProfile);
-            console.log("Created fallback profile:", fallbackProfile);
-          }
+          // Backend profile not found (404) - keep profile as null to trigger onboarding
+          console.log("No backend profile found - user needs onboarding");
+          setProfile(null);
         }
       } catch (error) {
         console.error('Error loading profile:', error);

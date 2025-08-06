@@ -12,13 +12,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { campaignService } from "@/services/campaign";
+import { fetchAdvertisers } from "@/services/advertiserService";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/auth";
 import { ModelsCreateCampaignRequest } from "@/generated-api/src/models/ModelsCreateCampaignRequest";
+import { DomainAdvertiser } from "@/generated-api/src/models";
 
 const campaignSchema = z.object({
   name: z.string().min(1, "Campaign name is required"),
+  advertiserId: z.string().min(1, "Advertiser is required"),
   description: z.string().optional(),
   status: z.enum(["draft", "active", "paused", "archived"]),
   startDate: z.string().optional(),
@@ -58,6 +61,7 @@ const CampaignForm: React.FC = () => {
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [advertisers, setAdvertisers] = useState<DomainAdvertiser[]>([]);
   
   const isEditMode = !!id;
 
@@ -65,6 +69,7 @@ const CampaignForm: React.FC = () => {
     resolver: zodResolver(campaignSchema),
     defaultValues: {
       name: "",
+      advertiserId: "",
       description: "",
       status: "draft",
       startDate: "",
@@ -95,6 +100,27 @@ const CampaignForm: React.FC = () => {
     },
   });
 
+  // Load advertisers on component mount
+  useEffect(() => {
+    const loadAdvertisers = async () => {
+      if (organization?.organizationId) {
+        try {
+          const fetchedAdvertisers = await fetchAdvertisers(organization.organizationId);
+          setAdvertisers(fetchedAdvertisers);
+        } catch (error) {
+          console.error("Error loading advertisers:", error);
+          toast({
+            title: t("common.error"),
+            description: "Failed to load advertisers",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    loadAdvertisers();
+  }, [organization?.organizationId, toast, t]);
+
   // Load campaign data when in edit mode
   useEffect(() => {
     const loadCampaignData = async () => {
@@ -111,6 +137,7 @@ const CampaignForm: React.FC = () => {
 
             form.reset({
               name: campaign.name || "",
+              advertiserId: campaign.advertiserId?.toString() || "",
               description: campaign.description || "",
               status: campaign.status,
               startDate: formatDate(campaign.startDate),
@@ -233,7 +260,7 @@ const CampaignForm: React.FC = () => {
         const request: ModelsCreateCampaignRequest = {
           name: data.name,
           organizationId: organization.organizationId,
-          advertiserId: 1, // Default for now - should be selected/configured
+          advertiserId: parseInt(data.advertiserId),
           status: data.status as ModelsCreateCampaignRequest['status'],
           description: data.description || undefined,
           startDate: formatDateTime(data.startDate),
@@ -377,6 +404,31 @@ const CampaignForm: React.FC = () => {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="advertiserId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Advertiser</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select an advertiser" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {advertisers.map((advertiser) => (
+                          <SelectItem key={advertiser.advertiserId} value={advertiser.advertiserId?.toString() || ""}>
+                            {advertiser.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

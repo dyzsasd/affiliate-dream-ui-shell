@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,10 +23,13 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { email, organizationId, organizationName }: InvitationRequest = await req.json();
 
-    // Initialize Supabase client
+    // Initialize Supabase client and Resend
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const resendApiKey = Deno.env.get('RESEND_API_KEY')!;
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const resend = new Resend(resendApiKey);
 
     // Create an encrypted token containing the organization ID
     const tokenData = {
@@ -41,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate the invitation link
     const invitationLink = `${req.headers.get('origin') || 'http://localhost:5173'}/signup?invitation=${token}`;
 
-    // Create the user in Supabase Auth (without password)
+    // Try to create the user in Supabase Auth (without password)
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
       email,
       email_confirm: false,
@@ -52,20 +56,76 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
 
-    if (authError) {
+    // Handle user creation result
+    let userId = authUser.user?.id;
+    let isExistingUser = false;
+    let responseMessage = "Invitation sent successfully";
+    
+    if (authError && authError.message.includes("already been registered")) {
+      // User already exists, get their ID
+      const { data: existingUser } = await supabase.auth.admin.getUserByEmail(email);
+      userId = existingUser.user?.id;
+      isExistingUser = true;
+      responseMessage = "User already exists. Invitation email has been sent with login instructions.";
+      console.log(`User ${email} already exists, sending invitation anyway`);
+    } else if (authError) {
       throw new Error(`Failed to create user: ${authError.message}`);
     }
 
-    // Send invitation email (you would use your email service here)
-    // For now, we'll return the invitation link
-    console.log(`Invitation link for ${email}: ${invitationLink}`);
+    // Customize email content based on whether user exists
+    const emailSubject = isExistingUser 
+      ? `Login to access ${organizationName}` 
+      : `Invitation to join ${organizationName}`;
+      
+    const emailContent = isExistingUser
+      ? `
+        <h1>Access ${organizationName} on rolinko.com</h1>
+        <p>You have been invited to access <strong>${organizationName}</strong> as an affiliate partner on rolinko.com.</p>
+        <p>Since you already have an account, simply click the link below to log in and access your dashboard:</p>
+        <a href="${invitationLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
+          Access Dashboard
+        </a>
+        <p>Or copy and paste this link into your browser:</p>
+        <p style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; word-break: break-all;">
+          ${invitationLink}
+        </p>
+        <p style="color: #666; font-size: 14px; margin-top: 24px;">
+          If you didn't expect this invitation, you can safely ignore this email.
+        </p>
+      `
+      : `
+        <h1>You're invited to join ${organizationName}!</h1>
+        <p>You have been invited to join <strong>${organizationName}</strong> as an affiliate partner on rolinko.com.</p>
+        <p>Click the link below to complete your registration:</p>
+        <a href="${invitationLink}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
+          Accept Invitation
+        </a>
+        <p>Or copy and paste this link into your browser:</p>
+        <p style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; word-break: break-all;">
+          ${invitationLink}
+        </p>
+        <p style="color: #666; font-size: 14px; margin-top: 24px;">
+          If you didn't expect this invitation, you can safely ignore this email.
+        </p>
+      `;
+
+    // Send invitation email using Resend
+    const emailResponse = await resend.emails.send({
+      from: `rolinko.com <noreply@contact.rolinko.com>`,
+      to: [email],
+      subject: emailSubject,
+      html: emailContent,
+    });
+
+    console.log("Email sent successfully:", emailResponse);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: "Invitation sent successfully",
+        message: responseMessage,
+        isExistingUser,
         invitationLink, // In production, don't return this
-        userId: authUser.user?.id,
+        userId,
       }), 
       {
         status: 200,

@@ -1,0 +1,17 @@
+{
+  "title": "關聯用戶",
+  "description": "管理您的關聯用戶及其表現",
+  "noAffiliates": "未找到關聯用戶",
+  "createYourFirst": "創建您的第一個關聯用戶以開始",
+  "list": "關聯用戶列表",
+  "total": "總計：{{count}} 個關聯用戶",
+  "tableCaption": "所有關聯用戶及其基本信息的列表",
+  "nameColumn": "名稱",
+  "contactColumn": "聯絡方式",
+  "statusColumn": "狀態",
+  "createdAtColumn": "創建時間",
+  "actions": "操作",
+  "view": "檢視",
+  "edit": "編輯",
+  "createAffiliate": "創建關聯用戶"
+}

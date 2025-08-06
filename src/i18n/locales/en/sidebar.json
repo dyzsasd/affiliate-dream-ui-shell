@@ -14,5 +14,10 @@
   "favoritePublishers": "Favorite Publishers",
   "conversations": "Conversations",
   "organizations": "Organizations",
-  "users": "Users"
+  "users": "Users",
+  "agencyAnalytics": "Agency Analytics",
+  "affiliates": "Affiliates",
+  "associations": "Associations",
+  "organizationSettings": "Organization Settings",
+  "delegations": "Delegations"
 }

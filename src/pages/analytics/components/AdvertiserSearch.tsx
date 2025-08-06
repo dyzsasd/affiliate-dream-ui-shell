@@ -39,7 +39,7 @@ const AdvertiserSearch: React.FC<AdvertiserSearchProps> = ({ onSelect }) => {
       if (searchValue.length < 3) return [];
       
       const apiClient = await createApiClient(AnalyticsApi);
-      const response = await apiClient.apiV1AnalyticsAutocompleteGet({
+      const response = await apiClient.analyticsAutocompleteGet({
         q: searchValue,
         type: 'advertiser', // Filter to only advertisers
         limit: 10

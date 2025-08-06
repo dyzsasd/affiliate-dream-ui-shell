@@ -99,6 +99,131 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.AdvertiserAssociationInvitation:
+    properties:
+      advertiser_org_id:
+        type: integer
+      allowed_affiliate_org_ids:
+        description: Access control
+        type: string
+      created_at:
+        type: string
+      created_by_user_id:
+        type: string
+      current_uses:
+        type: integer
+      default_all_affiliates_visible:
+        description: Default visibility settings for associations created through
+          this invitation
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        description: JSONB array
+        type: string
+      default_visible_campaign_ids:
+        description: JSONB array
+        type: string
+      description:
+        type: string
+      expires_at:
+        description: Expiration
+        type: string
+      invitation_id:
+        type: integer
+      invitation_token:
+        type: string
+      max_uses:
+        description: Usage limits
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.InvitationStatus'
+        description: Status and metadata
+      updated_at:
+        type: string
+    type: object
+  domain.AdvertiserAssociationInvitationWithDetails:
+    properties:
+      advertiser_org_id:
+        type: integer
+      advertiser_organization:
+        $ref: '#/definitions/domain.Organization'
+      allowed_affiliate_org_ids:
+        description: Access control
+        type: string
+      created_at:
+        type: string
+      created_by_user:
+        $ref: '#/definitions/domain.Profile'
+      created_by_user_id:
+        type: string
+      current_uses:
+        type: integer
+      default_all_affiliates_visible:
+        description: Default visibility settings for associations created through
+          this invitation
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        description: JSONB array
+        type: string
+      default_visible_campaign_ids:
+        description: JSONB array
+        type: string
+      description:
+        type: string
+      expires_at:
+        description: Expiration
+        type: string
+      invitation_id:
+        type: integer
+      invitation_token:
+        type: string
+      max_uses:
+        description: Usage limits
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+      recent_usages:
+        items:
+          $ref: '#/definitions/domain.InvitationUsageLog'
+        type: array
+      status:
+        allOf:
+        - $ref: '#/definitions/domain.InvitationStatus'
+        description: Status and metadata
+      updated_at:
+        type: string
+      usage_count:
+        type: integer
+    type: object
+  domain.AdvertiserExtraInfo:
+    properties:
+      company_size:
+        description: '''startup'', ''small'', ''medium'', ''large'', ''enterprise'''
+        type: string
+      created_at:
+        type: string
+      extra_info_id:
+        type: integer
+      organization_id:
+        type: integer
+      updated_at:
+        type: string
+      website:
+        type: string
+      website_type:
+        description: '''shopify'', ''amazon'', ''shopline'', ''tiktok_shop'''
+        type: string
+    type: object
   domain.AdvertiserProviderMapping:
     properties:
       advertiser_id:
@@ -169,6 +294,27 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.AffiliateExtraInfo:
+    properties:
+      affiliate_type:
+        description: '''cashback'', ''blog'', ''incentive'', ''content'', ''forum'',
+          ''sub_affiliate_network'''
+        type: string
+      created_at:
+        type: string
+      extra_info_id:
+        type: integer
+      logo_url:
+        type: string
+      organization_id:
+        type: integer
+      self_description:
+        type: string
+      updated_at:
+        type: string
+      website:
+        type: string
+    type: object
   domain.AffiliateNetworkData:
     properties:
       count:
@@ -213,6 +359,39 @@ definitions:
       sync_status:
         description: Synchronization metadata
         type: string
+      updated_at:
+        type: string
+    type: object
+  domain.AgencyDelegation:
+    properties:
+      accepted_at:
+        type: string
+      accepted_by_user_id:
+        description: UUID of agency user who accepted delegation
+        type: string
+      advertiser_org_id:
+        type: integer
+      agency_org_id:
+        type: integer
+      created_at:
+        type: string
+      delegated_by_user_id:
+        description: Delegation metadata
+        type: string
+      delegation_id:
+        type: integer
+      expires_at:
+        description: Expiration settings
+        type: string
+      message:
+        description: Optional message with delegation
+        type: string
+      permissions:
+        description: Permissions granted to the agency (JSONB array of permission
+          strings)
+        type: string
+      status:
+        $ref: '#/definitions/domain.DelegationStatus'
       updated_at:
         type: string
     type: object
@@ -320,6 +499,29 @@ definitions:
             $ref: '#/definitions/domain.VerticalData'
         type: object
     type: object
+  domain.AssociationStatus:
+    enum:
+    - pending
+    - active
+    - suspended
+    - rejected
+    type: string
+    x-enum-varnames:
+    - AssociationStatusPending
+    - AssociationStatusActive
+    - AssociationStatusSuspended
+    - AssociationStatusRejected
+  domain.AssociationType:
+    enum:
+    - invitation
+    - request
+    type: string
+    x-enum-comments:
+      AssociationTypeInvitation: Advertiser invites affiliate
+      AssociationTypeRequest: Affiliate requests to join advertiser
+    x-enum-varnames:
+    - AssociationTypeInvitation
+    - AssociationTypeRequest
   domain.AutocompleteResult:
     properties:
       domain:
@@ -512,6 +714,87 @@ definitions:
         description: For quarterly/yearly billing
         type: integer
     type: object
+  domain.Campaign:
+    properties:
+      advertiser_id:
+        type: integer
+      campaign_id:
+        type: integer
+      conversion_method:
+        description: '''server_postback'', ''pixel'', etc.'
+        type: string
+      created_at:
+        type: string
+      currency_id:
+        description: '''USD'', ''EUR'', etc.'
+        type: string
+      daily_click_cap:
+        type: integer
+      daily_conversion_cap:
+        type: integer
+      description:
+        type: string
+      destination_url:
+        description: Core campaign fields (provider-agnostic)
+        type: string
+      end_date:
+        type: string
+      fixed_click_amount:
+        description: Fixed amount paid to affiliates per click
+        type: number
+      fixed_conversion_amount:
+        description: Fixed amount paid to affiliates per conversion
+        type: number
+      fixed_revenue:
+        description: Simplified billing configuration
+        type: number
+      global_click_cap:
+        type: integer
+      global_conversion_cap:
+        type: integer
+      internal_notes:
+        type: string
+      is_caps_enabled:
+        description: Caps and limits
+        type: boolean
+      monthly_click_cap:
+        type: integer
+      monthly_conversion_cap:
+        type: integer
+      name:
+        type: string
+      organization_id:
+        type: integer
+      percentage_conversion_amount:
+        description: Percentage of revenue paid to affiliates per conversion (0-100)
+        type: number
+      preview_url:
+        type: string
+      session_definition:
+        description: '''cookie'', ''ip'', ''fingerprint'''
+        type: string
+      session_duration:
+        description: in hours
+        type: integer
+      start_date:
+        type: string
+      status:
+        description: '''draft'', ''active'', ''paused'', ''archived'''
+        type: string
+      terms_and_conditions:
+        type: string
+      thumbnail_url:
+        type: string
+      updated_at:
+        type: string
+      visibility:
+        description: '''public'', ''require_approval'', ''private'''
+        type: string
+      weekly_click_cap:
+        type: integer
+      weekly_conversion_cap:
+        type: integer
+    type: object
   domain.ContactEmailData:
     properties:
       count:
@@ -586,6 +869,35 @@ definitions:
           type: object
         type: array
     type: object
+  domain.CreateAssociationRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      affiliate_org_id:
+        type: integer
+      all_affiliates_visible:
+        type: boolean
+      all_campaigns_visible:
+        type: boolean
+      association_type:
+        $ref: '#/definitions/domain.AssociationType'
+      message:
+        type: string
+      visible_affiliate_ids:
+        description: For invitations from advertiser
+        items:
+          type: integer
+        type: array
+      visible_campaign_ids:
+        description: For requests from affiliate
+        items:
+          type: integer
+        type: array
+    required:
+    - advertiser_org_id
+    - affiliate_org_id
+    - association_type
+    type: object
   domain.CreateConversationRequest:
     properties:
       initial_message:
@@ -607,6 +919,25 @@ definitions:
     - publisher_domain
     - subject
     type: object
+  domain.CreateDelegationRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      agency_org_id:
+        type: integer
+      expires_at:
+        type: string
+      message:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/domain.DelegationPermission'
+        type: array
+    required:
+    - advertiser_org_id
+    - agency_org_id
+    - permissions
+    type: object
   domain.CreateFavoritePublisherListRequest:
     properties:
       description:
@@ -617,6 +948,40 @@ definitions:
         minLength: 1
         type: string
     required:
+    - name
+    type: object
+  domain.CreateInvitationRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      allowed_affiliate_org_ids:
+        items:
+          type: integer
+        type: array
+      default_all_affiliates_visible:
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        items:
+          type: integer
+        type: array
+      default_visible_campaign_ids:
+        items:
+          type: integer
+        type: array
+      description:
+        type: string
+      expires_at:
+        type: string
+      max_uses:
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+    required:
+    - advertiser_org_id
     - name
     type: object
   domain.CreatePaymentMethodRequest:
@@ -631,6 +996,54 @@ definitions:
     required:
     - payment_method_id
     type: object
+  domain.DelegationPermission:
+    enum:
+    - campaign_create
+    - campaign_manage
+    - campaign_view
+    - campaign_delete
+    - association_invite
+    - association_manage
+    - association_view
+    - invitation_create
+    - invitation_manage
+    - invitation_view
+    - analytics_view
+    - analytics_export
+    - billing_view
+    - billing_manage
+    - organization_view
+    - organization_manage
+    type: string
+    x-enum-varnames:
+    - PermissionCampaignCreate
+    - PermissionCampaignManage
+    - PermissionCampaignView
+    - PermissionCampaignDelete
+    - PermissionAssociationInvite
+    - PermissionAssociationManage
+    - PermissionAssociationView
+    - PermissionInvitationCreate
+    - PermissionInvitationManage
+    - PermissionInvitationView
+    - PermissionAnalyticsView
+    - PermissionAnalyticsExport
+    - PermissionBillingView
+    - PermissionBillingManage
+    - PermissionOrganizationView
+    - PermissionOrganizationManage
+  domain.DelegationStatus:
+    enum:
+    - pending
+    - active
+    - suspended
+    - revoked
+    type: string
+    x-enum-varnames:
+    - DelegationStatusPending
+    - DelegationStatusActive
+    - DelegationStatusSuspended
+    - DelegationStatusRevoked
   domain.FavoritePublisherList:
     properties:
       created_at:
@@ -668,6 +1081,40 @@ definitions:
       publisher_domain:
         type: string
       status:
+        type: string
+    type: object
+  domain.InvitationStatus:
+    enum:
+    - active
+    - disabled
+    - expired
+    type: string
+    x-enum-varnames:
+    - InvitationStatusActive
+    - InvitationStatusDisabled
+    - InvitationStatusExpired
+  domain.InvitationUsageLog:
+    properties:
+      affiliate_org_id:
+        type: integer
+      association_id:
+        type: integer
+      error_message:
+        type: string
+      invitation_id:
+        type: integer
+      ip_address:
+        description: Usage metadata
+        type: string
+      success:
+        type: boolean
+      usage_id:
+        type: integer
+      used_at:
+        type: string
+      used_by_user_id:
+        type: string
+      user_agent:
         type: string
     type: object
   domain.Invoice:
@@ -804,16 +1251,75 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.OrganizationAssociation:
+    properties:
+      advertiser_org_id:
+        type: integer
+      affiliate_org_id:
+        type: integer
+      all_affiliates_visible:
+        description: Default visibility flags (when true, all affiliates/campaigns
+          are visible)
+        type: boolean
+      all_campaigns_visible:
+        type: boolean
+      approved_at:
+        type: string
+      approved_by_user_id:
+        description: UUID of user who approved
+        type: string
+      association_id:
+        type: integer
+      association_type:
+        $ref: '#/definitions/domain.AssociationType'
+      created_at:
+        type: string
+      message:
+        description: Optional message with request/invitation
+        type: string
+      requested_by_user_id:
+        description: Request/invitation metadata
+        type: string
+      status:
+        $ref: '#/definitions/domain.AssociationStatus'
+      updated_at:
+        type: string
+      visible_affiliate_ids:
+        description: Visibility settings - JSON arrays of IDs
+        type: string
+      visible_campaign_ids:
+        description: JSONB array of campaign IDs visible to affiliate
+        type: string
+    type: object
   domain.OrganizationType:
     enum:
     - advertiser
     - affiliate
     - platform_owner
+    - agency
     type: string
     x-enum-varnames:
     - OrganizationTypeAdvertiser
     - OrganizationTypeAffiliate
     - OrganizationTypePlatformOwner
+    - OrganizationTypeAgency
+  domain.OrganizationWithExtraInfo:
+    properties:
+      advertiser_extra_info:
+        $ref: '#/definitions/domain.AdvertiserExtraInfo'
+      affiliate_extra_info:
+        $ref: '#/definitions/domain.AffiliateExtraInfo'
+      created_at:
+        type: string
+      name:
+        type: string
+      organization_id:
+        type: integer
+      type:
+        $ref: '#/definitions/domain.OrganizationType'
+      updated_at:
+        type: string
+    type: object
   domain.PaymentDetails:
     properties:
       account_number:
@@ -897,6 +1403,34 @@ definitions:
     - PaymentTypePayPal
     - PaymentTypeCrypto
     - PaymentTypeOther
+  domain.PermissionCheckRequest:
+    properties:
+      advertiser_org_id:
+        type: integer
+      agency_org_id:
+        type: integer
+      permissions:
+        items:
+          $ref: '#/definitions/domain.DelegationPermission'
+        type: array
+    required:
+    - advertiser_org_id
+    - agency_org_id
+    - permissions
+    type: object
+  domain.PermissionCheckResponse:
+    properties:
+      delegation_status:
+        $ref: '#/definitions/domain.DelegationStatus'
+      has_permissions:
+        type: boolean
+      is_expired:
+        type: boolean
+      permission_results:
+        additionalProperties:
+          type: boolean
+        type: object
+    type: object
   domain.Profile:
     properties:
       created_at:
@@ -1162,6 +1696,23 @@ definitions:
     - TransactionTypePlatformFee
     - TransactionTypeAdjustment
     - TransactionTypeTransfer
+  domain.UpdateAssociationRequest:
+    properties:
+      all_affiliates_visible:
+        type: boolean
+      all_campaigns_visible:
+        type: boolean
+      status:
+        $ref: '#/definitions/domain.AssociationStatus'
+      visible_affiliate_ids:
+        items:
+          type: integer
+        type: array
+      visible_campaign_ids:
+        items:
+          type: integer
+        type: array
+    type: object
   domain.UpdateBillingConfigRequest:
     properties:
       auto_recharge_amount:
@@ -1200,6 +1751,37 @@ definitions:
         minLength: 1
         type: string
     type: object
+  domain.UpdateInvitationRequest:
+    properties:
+      allowed_affiliate_org_ids:
+        items:
+          type: integer
+        type: array
+      default_all_affiliates_visible:
+        type: boolean
+      default_all_campaigns_visible:
+        type: boolean
+      default_visible_affiliate_ids:
+        items:
+          type: integer
+        type: array
+      default_visible_campaign_ids:
+        items:
+          type: integer
+        type: array
+      description:
+        type: string
+      expires_at:
+        type: string
+      max_uses:
+        type: integer
+      message:
+        type: string
+      name:
+        type: string
+      status:
+        $ref: '#/definitions/domain.InvitationStatus'
+    type: object
   domain.UpdatePublisherInListRequest:
     properties:
       notes:
@@ -1216,6 +1798,33 @@ definitions:
         type: string
     required:
     - status
+    type: object
+  domain.UseInvitationRequest:
+    properties:
+      affiliate_org_id:
+        type: integer
+      invitation_token:
+        type: string
+      ip_address:
+        type: string
+      message:
+        type: string
+      user_agent:
+        type: string
+    required:
+    - affiliate_org_id
+    - invitation_token
+    type: object
+  domain.UseInvitationResponse:
+    properties:
+      association:
+        $ref: '#/definitions/domain.OrganizationAssociation'
+      error_message:
+        type: string
+      invitation:
+        $ref: '#/definitions/domain.AdvertiserAssociationInvitation'
+      success:
+        type: boolean
     type: object
   domain.VerticalData:
     properties:
@@ -1241,6 +1850,46 @@ definitions:
               type: integer
           type: object
         type: array
+    type: object
+  handlers.AdvertiserExtraInfoRequest:
+    properties:
+      company_size:
+        enum:
+        - startup
+        - small
+        - medium
+        - large
+        - enterprise
+        type: string
+      website:
+        type: string
+      website_type:
+        enum:
+        - shopify
+        - amazon
+        - shopline
+        - tiktok_shop
+        - other
+        type: string
+    type: object
+  handlers.AffiliateExtraInfoRequest:
+    properties:
+      affiliate_type:
+        enum:
+        - cashback
+        - blog
+        - incentive
+        - content
+        - forum
+        - sub_affiliate_network
+        - other
+        type: string
+      logo_url:
+        type: string
+      self_description:
+        type: string
+      website:
+        type: string
     type: object
   handlers.AffiliatesSearchRequest:
     properties:
@@ -1358,6 +2007,14 @@ definitions:
     type: object
   handlers.CreateOrganizationRequest:
     properties:
+      advertiser_extra_info:
+        $ref: '#/definitions/handlers.AdvertiserExtraInfoRequest'
+      affiliate_extra_info:
+        $ref: '#/definitions/handlers.AffiliateExtraInfoRequest'
+      contact_email:
+        type: string
+      description:
+        type: string
       name:
         type: string
       type:
@@ -1365,6 +2022,7 @@ definitions:
         - advertiser
         - affiliate
         - platform_owner
+        - agency
         type: string
     required:
     - name
@@ -1458,8 +2116,21 @@ definitions:
     - name
     - status
     type: object
+  handlers.UpdateExpirationRequest:
+    properties:
+      expires_at:
+        type: string
+    type: object
   handlers.UpdateOrganizationRequest:
     properties:
+      advertiser_extra_info:
+        $ref: '#/definitions/handlers.AdvertiserExtraInfoRequest'
+      affiliate_extra_info:
+        $ref: '#/definitions/handlers.AffiliateExtraInfoRequest'
+      contact_email:
+        type: string
+      description:
+        type: string
       name:
         type: string
       type:
@@ -1467,10 +2138,20 @@ definitions:
         - advertiser
         - affiliate
         - platform_owner
+        - agency
         type: string
     required:
     - name
     - type
+    type: object
+  handlers.UpdatePermissionsRequest:
+    properties:
+      permissions:
+        items:
+          $ref: '#/definitions/domain.DelegationPermission'
+        type: array
+    required:
+    - permissions
     type: object
   handlers.UpdateProfileRequest:
     properties:
@@ -2171,6 +2852,330 @@ info:
   title: Affiliate Backend API
   version: "1.0"
 paths:
+  /advertiser-association-invitations:
+    get:
+      consumes:
+      - application/json
+      description: List advertiser association invitations with optional filters
+      parameters:
+      - description: Advertiser Organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      - description: Invitation Status
+        enum:
+        - active
+        - disabled
+        - expired
+        in: query
+        name: status
+        type: string
+      - description: Created By User ID
+        in: query
+        name: created_by_user_id
+        type: string
+      - description: Include Expired Invitations
+        in: query
+        name: include_expired
+        type: boolean
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AdvertiserAssociationInvitationWithDetails'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List invitations
+      tags:
+      - advertiser-association-invitations
+    post:
+      consumes:
+      - application/json
+      description: Create a new advertiser association invitation link
+      parameters:
+      - description: Create invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateInvitationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create invitation
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an advertiser association invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete invitation
+      tags:
+      - advertiser-association-invitations
+    get:
+      consumes:
+      - application/json
+      description: Get an advertiser association invitation by ID
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitationWithDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get invitation
+      tags:
+      - advertiser-association-invitations
+    put:
+      consumes:
+      - application/json
+      description: Update an advertiser association invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateInvitationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update invitation
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/{id}/link:
+    get:
+      consumes:
+      - application/json
+      description: Generate a full invitation link for sharing
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Base URL (defaults to request host)
+        in: query
+        name: base_url
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Generate invitation link
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/{id}/usage-history:
+    get:
+      consumes:
+      - application/json
+      description: Get usage history for an advertiser association invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Limit (default 50)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.InvitationUsageLog'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get invitation usage history
+      tags:
+      - advertiser-association-invitations
+  /advertiser-association-invitations/use:
+    post:
+      consumes:
+      - application/json
+      description: Use an invitation link to create an organization association request
+      parameters:
+      - description: Use invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UseInvitationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.UseInvitationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Use invitation
+      tags:
+      - advertiser-association-invitations
   /advertiser-provider-mappings:
     post:
       consumes:
@@ -2362,6 +3367,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List campaigns by advertiser
       tags:
       - campaigns
@@ -3072,6 +4079,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List tracking links by affiliate
       tags:
       - tracking-links
@@ -3118,7 +4127,606 @@ paths:
       summary: Search affiliates by domain, country, partner domains, and verticals
       tags:
       - affiliates
-  /api/v1/analytics/advertisers:
+  /agency-delegations:
+    get:
+      consumes:
+      - application/json
+      description: List agency delegations with optional filtering
+      parameters:
+      - description: Agency organization ID
+        in: query
+        name: agency_org_id
+        type: integer
+      - description: Advertiser organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      - description: Delegation status
+        enum:
+        - pending
+        - active
+        - suspended
+        - revoked
+        in: query
+        name: status
+        type: string
+      - default: false
+        description: Include expired delegations
+        in: query
+        name: include_expired
+        type: boolean
+      - default: 50
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AgencyDelegation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List delegations
+      tags:
+      - agency-delegations
+    post:
+      consumes:
+      - application/json
+      description: Create a new delegation from advertiser organization to agency
+        organization
+      parameters:
+      - description: Create delegation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateDelegationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create agency delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an agency delegation by ID
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/accept:
+    post:
+      consumes:
+      - application/json
+      description: Accept a pending agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Accept delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/expiration:
+    put:
+      consumes:
+      - application/json
+      description: Update the expiration date of an agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update expiration request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateExpirationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update delegation expiration
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/permissions:
+    put:
+      consumes:
+      - application/json
+      description: Update the permissions of an agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update permissions request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdatePermissionsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update delegation permissions
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/reactivate:
+    post:
+      consumes:
+      - application/json
+      description: Reactivate a suspended agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reactivate delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Reject a pending agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reject delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/revoke:
+    post:
+      consumes:
+      - application/json
+      description: Revoke an agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Revoke delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/{id}/suspend:
+    post:
+      consumes:
+      - application/json
+      description: Suspend an active agency delegation
+      parameters:
+      - description: Delegation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AgencyDelegation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Suspend delegation
+      tags:
+      - agency-delegations
+  /agency-delegations/advertiser/{advertiser_org_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all active delegations for an advertiser organization
+      parameters:
+      - description: Advertiser organization ID
+        in: path
+        name: advertiser_org_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AgencyDelegation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get advertiser delegations
+      tags:
+      - agency-delegations
+  /agency-delegations/agency/{agency_org_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all active delegations for an agency organization
+      parameters:
+      - description: Agency organization ID
+        in: path
+        name: agency_org_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.AgencyDelegation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get agency delegations
+      tags:
+      - agency-delegations
+  /agency-delegations/check-permissions:
+    post:
+      consumes:
+      - application/json
+      description: Check if an agency has specific permissions for an advertiser organization
+      parameters:
+      - description: Permission check request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PermissionCheckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.PermissionCheckResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Check permissions
+      tags:
+      - agency-delegations
+  /agency-delegations/permissions:
+    get:
+      consumes:
+      - application/json
+      description: Get all available delegation permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get available permissions
+      tags:
+      - agency-delegations
+  /analytics/advertisers:
     post:
       consumes:
       - application/json
@@ -3150,10 +4758,12 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create advertiser analytics data
       tags:
       - Analytics
-  /api/v1/analytics/advertisers/{id}:
+  /analytics/advertisers/{id}:
     get:
       consumes:
       - application/json
@@ -3188,10 +4798,12 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get advertiser analytics data
       tags:
       - Analytics
-  /api/v1/analytics/affiliates:
+  /analytics/affiliates:
     post:
       consumes:
       - application/json
@@ -3223,10 +4835,12 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create publisher analytics data
       tags:
       - Analytics
-  /api/v1/analytics/affiliates/{id}:
+  /analytics/affiliates/{id}:
     get:
       consumes:
       - application/json
@@ -3261,10 +4875,12 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get publisher analytics data
       tags:
       - Analytics
-  /api/v1/analytics/affiliates/domain/{domain}:
+  /analytics/affiliates/domain/{domain}:
     get:
       consumes:
       - application/json
@@ -3300,10 +4916,12 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get publisher analytics data by domain
       tags:
       - Analytics
-  /api/v1/analytics/autocomplete:
+  /analytics/autocomplete:
     get:
       consumes:
       - application/json
@@ -3354,327 +4972,11 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Search organizations for autocompletion
       tags:
       - Analytics
-  /api/v1/favorite-publisher-lists/{list_id}/publishers/{domain}/status:
-    patch:
-      consumes:
-      - application/json
-      description: Updates the status of a publisher in a favorite list (added ->
-        contacted -> accepted)
-      parameters:
-      - description: List ID
-        in: path
-        name: list_id
-        required: true
-        type: integer
-      - description: Publisher domain
-        in: path
-        name: domain
-        required: true
-        type: string
-      - description: Status update request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.UpdatePublisherStatusRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Status updated successfully
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Invalid request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: List or publisher not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update publisher status in favorite list
-      tags:
-      - favorite-publisher-lists
-  /api/v1/publisher-messaging/conversations:
-    get:
-      description: Retrieves a paginated list of conversations for the organization
-      parameters:
-      - description: Filter by conversation status (active, closed)
-        in: query
-        name: status
-        type: string
-      - description: 'Page number (default: 1)'
-        in: query
-        name: page
-        type: integer
-      - description: 'Page size (default: 20)'
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Conversations retrieved successfully
-          schema:
-            $ref: '#/definitions/domain.ConversationListResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get conversations for organization
-      tags:
-      - Publisher Messaging
-    post:
-      consumes:
-      - application/json
-      description: Initiates a new conversation with a publisher from a favorite list
-      parameters:
-      - description: Conversation creation request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.CreateConversationRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Conversation created successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherConversation'
-        "400":
-          description: Invalid request body or validation error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Publisher or favorite list not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "409":
-          description: Active conversation with publisher already exists
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Create a new conversation with a publisher
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}:
-    delete:
-      description: Deletes a conversation and all associated messages
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: Conversation deleted successfully
-        "400":
-          description: Invalid conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Delete conversation
-      tags:
-      - Publisher Messaging
-    get:
-      description: Retrieves a specific conversation along with its messages
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Conversation retrieved successfully
-          schema:
-            $ref: '#/definitions/domain.ConversationWithMessagesResponse'
-        "400":
-          description: Invalid conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get conversation with messages
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}/external-messages:
-    post:
-      consumes:
-      - application/json
-      description: Allows external services to add messages to existing conversations
-        (e.g., publisher replies)
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      - description: External message request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.AddExternalMessageRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Message added successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherMessage'
-        "400":
-          description: Invalid request body or conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Add external message to conversation
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}/messages:
-    post:
-      consumes:
-      - application/json
-      description: Adds a new message to an existing conversation
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      - description: Message request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.SendMessageRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Message added successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherMessage'
-        "400":
-          description: Invalid request body or conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Add message to conversation
-      tags:
-      - Publisher Messaging
-  /api/v1/publisher-messaging/conversations/{conversation_id}/status:
-    put:
-      consumes:
-      - application/json
-      description: Updates the status of a conversation (e.g., close conversation)
-      parameters:
-      - description: Conversation ID
-        in: path
-        name: conversation_id
-        required: true
-        type: integer
-      - description: Status update request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.UpdateConversationStatusRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Conversation status updated successfully
-          schema:
-            $ref: '#/definitions/domain.PublisherConversation'
-        "400":
-          description: Invalid request body or conversation ID
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Organization ID not found in context
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "404":
-          description: Conversation not found
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Update conversation status
-      tags:
-      - Publisher Messaging
   /billing/config:
     put:
       consumes:
@@ -3942,6 +5244,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new campaign
       tags:
       - campaigns
@@ -3969,6 +5273,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Delete a campaign
       tags:
       - campaigns
@@ -3999,6 +5305,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get a campaign by ID
       tags:
       - campaigns
@@ -4037,6 +5345,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update a campaign
       tags:
       - campaigns
@@ -4082,6 +5392,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List tracking links by campaign
       tags:
       - tracking-links
@@ -4450,6 +5762,58 @@ paths:
       summary: Update publisher notes in favorite list
       tags:
       - favorite-publisher-lists
+  /favorite-publisher-lists/{list_id}/publishers/{domain}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Updates the status of a publisher in a favorite list (added ->
+        contacted -> accepted)
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: integer
+      - description: Publisher domain
+        in: path
+        name: domain
+        required: true
+        type: string
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdatePublisherStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status updated successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: List or publisher not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update publisher status in favorite list
+      tags:
+      - favorite-publisher-lists
   /favorite-publisher-lists/search:
     get:
       description: Retrieves all favorite publisher lists that contain a specific
@@ -4500,6 +5864,428 @@ paths:
       summary: Health check endpoint
       tags:
       - system
+  /organization-associations:
+    get:
+      consumes:
+      - application/json
+      description: List organization associations with optional filtering
+      parameters:
+      - description: Advertiser organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      - description: Affiliate organization ID
+        in: query
+        name: affiliate_org_id
+        type: integer
+      - description: Association status
+        enum:
+        - pending
+        - active
+        - suspended
+        - rejected
+        in: query
+        name: status
+        type: string
+      - description: Association type
+        enum:
+        - invitation
+        - request
+        in: query
+        name: association_type
+        type: string
+      - default: 50
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrganizationAssociation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List associations
+      tags:
+      - organization-associations
+  /organization-associations/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an organization association by ID
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/approve:
+    post:
+      consumes:
+      - application/json
+      description: Approve a pending organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Approve association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/reactivate:
+    post:
+      consumes:
+      - application/json
+      description: Reactivate a suspended organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reactivate association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Reject a pending organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reject association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/suspend:
+    post:
+      consumes:
+      - application/json
+      description: Suspend an active organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Suspend association
+      tags:
+      - organization-associations
+  /organization-associations/{id}/visibility:
+    put:
+      consumes:
+      - application/json
+      description: Update the visibility settings of an organization association
+      parameters:
+      - description: Association ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update visibility request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateAssociationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update visibility
+      tags:
+      - organization-associations
+  /organization-associations/invitations:
+    post:
+      consumes:
+      - application/json
+      description: Create a new invitation from advertiser organization to affiliate
+        organization
+      parameters:
+      - description: Create invitation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateAssociationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create invitation
+      tags:
+      - organization-associations
+  /organization-associations/requests:
+    post:
+      consumes:
+      - application/json
+      description: Create a new request from affiliate organization to advertiser
+        organization
+      parameters:
+      - description: Create request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateAssociationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.OrganizationAssociation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create request
+      tags:
+      - organization-associations
   /organizations:
     get:
       consumes:
@@ -4537,7 +6323,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new organization with the given name
+      description: Creates a new organization with the given name and optional extra
+        info. Requires JWT authentication.
       parameters:
       - description: Organization details
         in: body
@@ -4558,8 +6345,8 @@ paths:
             additionalProperties:
               type: string
             type: object
-        "403":
-          description: Forbidden - Only admins can create organizations
+        "401":
+          description: Unauthorized - JWT token required
           schema:
             additionalProperties:
               type: string
@@ -4575,6 +6362,98 @@ paths:
       summary: Create a new organization
       tags:
       - organizations
+  /organizations/{advertiser_org_id}/visible-affiliates:
+    get:
+      consumes:
+      - application/json
+      description: Get all affiliates from affiliate organizations that are visible
+        to the specified advertiser organization based on active associations
+      parameters:
+      - description: Advertiser Organization ID
+        in: path
+        name: advertiser_org_id
+        required: true
+        type: integer
+      - description: Filter by specific affiliate organization ID
+        in: query
+        name: affiliate_org_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Affiliate'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get visible affiliates for advertiser
+      tags:
+      - organization-associations
+  /organizations/{affiliate_org_id}/visible-campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Get all campaigns from advertiser organizations that are visible
+        to the specified affiliate organization based on active associations
+      parameters:
+      - description: Affiliate Organization ID
+        in: path
+        name: affiliate_org_id
+        required: true
+        type: integer
+      - description: Filter by specific advertiser organization ID
+        in: query
+        name: advertiser_org_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Campaign'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get visible campaigns for affiliate
+      tags:
+      - organization-associations
   /organizations/{id}:
     delete:
       consumes:
@@ -4623,20 +6502,24 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieves an organization by its ID
+      description: Retrieves an organization by its ID, optionally with extra info
       parameters:
       - description: Organization ID
         in: path
         name: id
         required: true
         type: integer
+      - description: Include extra info (advertiser_extra_info or affiliate_extra_info)
+        in: query
+        name: with_extra
+        type: boolean
       produces:
       - application/json
       responses:
         "200":
-          description: Organization details
+          description: Organization details (with extra info)
           schema:
-            $ref: '#/definitions/domain.Organization'
+            $ref: '#/definitions/domain.OrganizationWithExtraInfo'
         "400":
           description: Invalid organization ID
           schema:
@@ -4814,6 +6697,58 @@ paths:
       summary: List affiliates by organization
       tags:
       - affiliates
+  /organizations/{id}/associations:
+    get:
+      consumes:
+      - application/json
+      description: Get all associations for a specific organization (advertiser or
+        affiliate)
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Association status
+        enum:
+        - pending
+        - active
+        - suspended
+        - rejected
+        in: query
+        name: status
+        type: string
+      - default: false
+        description: Include organization and user details
+        in: query
+        name: with_details
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrganizationAssociation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get associations for organization
+      tags:
+      - organization-associations
   /organizations/{organization_id}/campaigns:
     get:
       description: Retrieve campaigns for a specific organization with pagination
@@ -4846,6 +6781,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List campaigns by organization
       tags:
       - campaigns
@@ -4891,6 +6828,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: List tracking links by organization
       tags:
       - tracking-links
@@ -4933,6 +6872,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create a new tracking link
       tags:
       - tracking-links
@@ -4973,6 +6914,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Delete a tracking link
       tags:
       - tracking-links
@@ -5016,6 +6959,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get a tracking link
       tags:
       - tracking-links
@@ -5067,6 +7012,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update a tracking link
       tags:
       - tracking-links
@@ -5111,6 +7058,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get tracking link QR code
       tags:
       - tracking-links
@@ -5155,6 +7104,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Regenerate a tracking link
       tags:
       - tracking-links
@@ -5199,6 +7150,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Generate a new tracking link
       tags:
       - tracking-links
@@ -5360,6 +7313,36 @@ paths:
       summary: Upsert a profile
       tags:
       - profile
+  /public/invitations/{token}:
+    get:
+      consumes:
+      - application/json
+      description: Get an advertiser association invitation by token (public endpoint
+        for invitation links)
+      parameters:
+      - description: Invitation Token
+        in: path
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AdvertiserAssociationInvitationWithDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get invitation by token
+      tags:
+      - advertiser-association-invitations
   /public/webhooks/supabase/new-user:
     post:
       consumes:
@@ -5396,6 +7379,288 @@ paths:
       summary: Handle Supabase new user webhook
       tags:
       - webhooks
+  /publisher-messaging/conversations:
+    get:
+      description: Retrieves a paginated list of conversations for the organization
+      parameters:
+      - description: Filter by conversation status (active, closed)
+        in: query
+        name: status
+        type: string
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 20)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversations retrieved successfully
+          schema:
+            $ref: '#/definitions/domain.ConversationListResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get conversations for organization
+      tags:
+      - Publisher Messaging
+    post:
+      consumes:
+      - application/json
+      description: Initiates a new conversation with a publisher from a favorite list
+      parameters:
+      - description: Conversation creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateConversationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Conversation created successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherConversation'
+        "400":
+          description: Invalid request body or validation error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Publisher or favorite list not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "409":
+          description: Active conversation with publisher already exists
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new conversation with a publisher
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}:
+    delete:
+      description: Deletes a conversation and all associated messages
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Conversation deleted successfully
+        "400":
+          description: Invalid conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete conversation
+      tags:
+      - Publisher Messaging
+    get:
+      description: Retrieves a specific conversation along with its messages
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation retrieved successfully
+          schema:
+            $ref: '#/definitions/domain.ConversationWithMessagesResponse'
+        "400":
+          description: Invalid conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get conversation with messages
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}/external-messages:
+    post:
+      consumes:
+      - application/json
+      description: Allows external services to add messages to existing conversations
+        (e.g., publisher replies)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: External message request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.AddExternalMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Message added successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherMessage'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add external message to conversation
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}/messages:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new message to an existing conversation
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: Message request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SendMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Message added successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherMessage'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Add message to conversation
+      tags:
+      - Publisher Messaging
+  /publisher-messaging/conversations/{conversation_id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Updates the status of a conversation (e.g., close conversation)
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversation_id
+        required: true
+        type: integer
+      - description: Status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateConversationStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation status updated successfully
+          schema:
+            $ref: '#/definitions/domain.PublisherConversation'
+        "400":
+          description: Invalid request body or conversation ID
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Organization ID not found in context
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update conversation status
+      tags:
+      - Publisher Messaging
   /users/me:
     get:
       consumes:

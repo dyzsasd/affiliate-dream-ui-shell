@@ -22,6 +22,13 @@ import enProfile from './locales/en/profile.json';
 import enFavoritePublishers from './locales/en/favoritePublishers.json';
 import enConversations from './locales/en/conversations.json';
 import enTrackingLinks from './locales/en/trackingLinks.json';
+import enAgencyDashboard from './locales/en/agencyDashboard.json';
+import enAgencyAnalytics from './locales/en/agencyAnalytics.json';
+import enAgencyCampaigns from './locales/en/agencyCampaigns.json';
+import enAffiliates from './locales/en/affiliates.json';
+import enInvitations from './locales/en/invitations.json';
+import enAssociations from './locales/en/associations.json';
+import enDelegations from './locales/en/delegations.json';
 
 import frApp from './locales/fr/app.json';
 import frCommon from './locales/fr/common.json';
@@ -41,6 +48,13 @@ import frProfile from './locales/fr/profile.json';
 import frFavoritePublishers from './locales/fr/favoritePublishers.json';
 import frConversations from './locales/fr/conversations.json';
 import frTrackingLinks from './locales/fr/trackingLinks.json';
+import frAgencyDashboard from './locales/fr/agencyDashboard.json';
+import frAgencyAnalytics from './locales/fr/agencyAnalytics.json';
+import frAgencyCampaigns from './locales/fr/agencyCampaigns.json';
+import frAffiliates from './locales/fr/affiliates.json';
+import frInvitations from './locales/fr/invitations.json';
+import frAssociations from './locales/fr/associations.json';
+import frDelegations from './locales/fr/delegations.json';
 
 import zhCNApp from './locales/zh-CN/app.json';
 import zhCNCommon from './locales/zh-CN/common.json';
@@ -60,6 +74,13 @@ import zhCNProfile from './locales/zh-CN/profile.json';
 import zhCNFavoritePublishers from './locales/zh-CN/favoritePublishers.json';
 import zhCNConversations from './locales/zh-CN/conversations.json';
 import zhCNTrackingLinks from './locales/zh-CN/trackingLinks.json';
+import zhCNAgencyDashboard from './locales/zh-CN/agencyDashboard.json';
+import zhCNAgencyAnalytics from './locales/zh-CN/agencyAnalytics.json';
+import zhCNAgencyCampaigns from './locales/zh-CN/agencyCampaigns.json';
+import zhCNAffiliates from './locales/zh-CN/affiliates.json';
+import zhCNInvitations from './locales/zh-CN/invitations.json';
+import zhCNAssociations from './locales/zh-CN/associations.json';
+import zhCNDelegations from './locales/zh-CN/delegations.json';
 
 import zhTWApp from './locales/zh-TW/app.json';
 import zhTWCommon from './locales/zh-TW/common.json';
@@ -79,6 +100,13 @@ import zhTWProfile from './locales/zh-TW/profile.json';
 import zhTWFavoritePublishers from './locales/zh-TW/favoritePublishers.json';
 import zhTWConversations from './locales/zh-TW/conversations.json';
 import zhTWTrackingLinks from './locales/zh-TW/trackingLinks.json';
+import zhTWAgencyDashboard from './locales/zh-TW/agencyDashboard.json';
+import zhTWAgencyAnalytics from './locales/zh-TW/agencyAnalytics.json';
+import zhTWAgencyCampaigns from './locales/zh-TW/agencyCampaigns.json';
+import zhTWAffiliates from './locales/zh-TW/affiliates.json';
+import zhTWInvitations from './locales/zh-TW/invitations.json';
+import zhTWAssociations from './locales/zh-TW/associations.json';
+import zhTWDelegations from './locales/zh-TW/delegations.json';
 
 // Combine all translations into legacy format for compatibility
 const enTranslation = {
@@ -99,7 +127,14 @@ const enTranslation = {
   profile: enProfile,
   favoritePublishers: enFavoritePublishers,
   conversations: enConversations,
-  trackingLinks: enTrackingLinks
+  trackingLinks: enTrackingLinks,
+  agencyDashboard: enAgencyDashboard,
+  agencyAnalytics: enAgencyAnalytics,
+  agencyCampaigns: enAgencyCampaigns,
+  affiliates: enAffiliates,
+  invitations: enInvitations,
+  associations: enAssociations,
+  delegations: enDelegations
 };
 
 const frTranslation = {
@@ -120,7 +155,14 @@ const frTranslation = {
   profile: frProfile,
   favoritePublishers: frFavoritePublishers,
   conversations: frConversations,
-  trackingLinks: frTrackingLinks
+  trackingLinks: frTrackingLinks,
+  agencyDashboard: frAgencyDashboard,
+  agencyAnalytics: frAgencyAnalytics,
+  agencyCampaigns: frAgencyCampaigns,
+  affiliates: frAffiliates,
+  invitations: frInvitations,
+  associations: frAssociations,
+  delegations: frDelegations
 };
 
 const zhCNTranslation = {
@@ -141,7 +183,14 @@ const zhCNTranslation = {
   profile: zhCNProfile,
   favoritePublishers: zhCNFavoritePublishers,
   conversations: zhCNConversations,
-  trackingLinks: zhCNTrackingLinks
+  trackingLinks: zhCNTrackingLinks,
+  agencyDashboard: zhCNAgencyDashboard,
+  agencyAnalytics: zhCNAgencyAnalytics,
+  agencyCampaigns: zhCNAgencyCampaigns,
+  affiliates: zhCNAffiliates,
+  invitations: zhCNInvitations,
+  associations: zhCNAssociations,
+  delegations: zhCNDelegations
 };
 
 const zhTWTranslation = {
@@ -162,7 +211,14 @@ const zhTWTranslation = {
   profile: zhTWProfile,
   favoritePublishers: zhTWFavoritePublishers,
   conversations: zhTWConversations,
-  trackingLinks: zhTWTrackingLinks
+  trackingLinks: zhTWTrackingLinks,
+  agencyDashboard: zhTWAgencyDashboard,
+  agencyAnalytics: zhTWAgencyAnalytics,
+  agencyCampaigns: zhTWAgencyCampaigns,
+  affiliates: zhTWAffiliates,
+  invitations: zhTWInvitations,
+  associations: zhTWAssociations,
+  delegations: zhTWDelegations
 };
 
 // Language resources

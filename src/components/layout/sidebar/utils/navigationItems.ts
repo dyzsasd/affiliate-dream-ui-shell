@@ -12,7 +12,10 @@ import {
   Users,
   CreditCard,
   Heart,
-  MessageCircle
+  MessageCircle,
+  Activity,
+  Settings,
+  Send
 } from "lucide-react";
 import { TFunction } from "i18next";
 
@@ -45,6 +48,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         icon: LayoutDashboard
       },
       {
+        name: t("sidebar.associations"),
+        path: "/associations",
+        icon: Users
+      },
+      {
         name: t("sidebar.marketplace"),
         path: "/advertiser/marketplace",
         icon: Store
@@ -53,6 +61,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.analytics"),
         path: "/analytics/advertiser",
         icon: TrendingUp
+      },
+      {
+        name: t("sidebar.invitations"),
+        path: "/invitations",
+        icon: Send
       },
       {
         name: t("sidebar.favoritePublishers"),
@@ -73,20 +86,30 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: t("sidebar.organizationSettings"),
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   } else if (organizationType === 'affiliate') {
     return [
       ...baseItems,
       {
-        name: "Create Affiliate",
-        path: "/affiliate/create",
-        icon: Building2
+        name: t("sidebar.affiliates"),
+        path: "/affiliates",
+        icon: Users
       },
       {
         name: t("sidebar.trackingLinks"),
         path: "/tracking-links",
         icon: LinkIcon
+      },
+      {
+        name: t("sidebar.associations"),
+        path: "/associations",
+        icon: Users
       },
       {
         name: t("sidebar.reports"),
@@ -102,18 +125,67 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: t("sidebar.organizationSettings"),
+        path: "/organization/edit",
+        icon: Settings
+      }
+    ];
+  } else if (organizationType === 'agency') {
+    return [
+      ...baseItems,
+      {
+        name: t("sidebar.delegations"),
+        path: "/delegations",
+        icon: Users
+      },
+      {
+        name: t("agencyAnalytics.title"),
+        path: "/agency-analytics",
+        icon: Activity
+      },
+      {
+        name: t("sidebar.marketplace"),
+        path: "/advertiser/marketplace",
+        icon: Store
+      },
+      {
+        name: t("sidebar.analytics"),
+        path: "/analytics/advertiser",
+        icon: TrendingUp
+      },
+      {
+        name: t("sidebar.favoritePublishers"),
+        path: "/favorite_publisher",
+        icon: Heart
+      },
+      {
+        name: t("sidebar.conversations"),
+        path: "/conversations",
+        icon: MessageCircle
+      },
+      {
+        name: t("sidebar.myProfile"),
+        path: "/profile",
+        icon: User
+      },
+      {
+        name: t("sidebar.organizationSettings"),
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   } else if (organizationType === 'platform_owner') {
     return [
       ...baseItems,
       {
-        name: "Organizations",
+        name: t("sidebar.organizations"),
         path: "/organizations",
         icon: Building2
       },
       {
-        name: "Users",
+        name: t("sidebar.users"),
         path: "/users",
         icon: User
       },
@@ -131,6 +203,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
         name: t("sidebar.myProfile"),
         path: "/profile",
         icon: User
+      },
+      {
+        name: t("sidebar.organizationSettings"),
+        path: "/organization/edit",
+        icon: Settings
       }
     ];
   }
@@ -142,6 +219,11 @@ export const getNavItems = (organizationType: string | undefined, t: TFunction):
       name: t("sidebar.myProfile"),
       path: "/profile",
       icon: User
+    },
+    {
+      name: t("sidebar.organizationSettings"),
+      path: "/organization/edit",
+      icon: Settings
     }
   ];
 };

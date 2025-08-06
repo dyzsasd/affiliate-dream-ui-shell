@@ -15,26 +15,26 @@
 
 import * as runtime from '../runtime';
 import type {
-  ApiV1AnalyticsAdvertisersIdGet200Response,
-  ApiV1AnalyticsAdvertisersPost201Response,
-  ApiV1AnalyticsAffiliatesIdGet200Response,
-  ApiV1AnalyticsAffiliatesPost201Response,
-  ApiV1AnalyticsAutocompleteGet200Response,
+  AnalyticsAdvertisersIdGet200Response,
+  AnalyticsAdvertisersPost201Response,
+  AnalyticsAffiliatesIdGet200Response,
+  AnalyticsAffiliatesPost201Response,
+  AnalyticsAutocompleteGet200Response,
   HandlersCreateAdvertiserRequest,
   HandlersCreatePublisherRequest,
   HandlersErrorResponse,
 } from '../models/index';
 import {
-    ApiV1AnalyticsAdvertisersIdGet200ResponseFromJSON,
-    ApiV1AnalyticsAdvertisersIdGet200ResponseToJSON,
-    ApiV1AnalyticsAdvertisersPost201ResponseFromJSON,
-    ApiV1AnalyticsAdvertisersPost201ResponseToJSON,
-    ApiV1AnalyticsAffiliatesIdGet200ResponseFromJSON,
-    ApiV1AnalyticsAffiliatesIdGet200ResponseToJSON,
-    ApiV1AnalyticsAffiliatesPost201ResponseFromJSON,
-    ApiV1AnalyticsAffiliatesPost201ResponseToJSON,
-    ApiV1AnalyticsAutocompleteGet200ResponseFromJSON,
-    ApiV1AnalyticsAutocompleteGet200ResponseToJSON,
+    AnalyticsAdvertisersIdGet200ResponseFromJSON,
+    AnalyticsAdvertisersIdGet200ResponseToJSON,
+    AnalyticsAdvertisersPost201ResponseFromJSON,
+    AnalyticsAdvertisersPost201ResponseToJSON,
+    AnalyticsAffiliatesIdGet200ResponseFromJSON,
+    AnalyticsAffiliatesIdGet200ResponseToJSON,
+    AnalyticsAffiliatesPost201ResponseFromJSON,
+    AnalyticsAffiliatesPost201ResponseToJSON,
+    AnalyticsAutocompleteGet200ResponseFromJSON,
+    AnalyticsAutocompleteGet200ResponseToJSON,
     HandlersCreateAdvertiserRequestFromJSON,
     HandlersCreateAdvertiserRequestToJSON,
     HandlersCreatePublisherRequestFromJSON,
@@ -43,29 +43,29 @@ import {
     HandlersErrorResponseToJSON,
 } from '../models/index';
 
-export interface ApiV1AnalyticsAdvertisersIdGetRequest {
+export interface AnalyticsAdvertisersIdGetRequest {
     id: number;
 }
 
-export interface ApiV1AnalyticsAdvertisersPostRequest {
+export interface AnalyticsAdvertisersPostRequest {
     advertiser: HandlersCreateAdvertiserRequest;
 }
 
-export interface ApiV1AnalyticsAffiliatesDomainDomainGetRequest {
+export interface AnalyticsAffiliatesDomainDomainGetRequest {
     domain: string;
 }
 
-export interface ApiV1AnalyticsAffiliatesIdGetRequest {
+export interface AnalyticsAffiliatesIdGetRequest {
     id: number;
 }
 
-export interface ApiV1AnalyticsAffiliatesPostRequest {
+export interface AnalyticsAffiliatesPostRequest {
     publisher: HandlersCreatePublisherRequest;
 }
 
-export interface ApiV1AnalyticsAutocompleteGetRequest {
+export interface AnalyticsAutocompleteGetRequest {
     q: string;
-    type?: ApiV1AnalyticsAutocompleteGetTypeEnum;
+    type?: AnalyticsAutocompleteGetTypeEnum;
     limit?: number;
 }
 
@@ -78,11 +78,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
      * Retrieve detailed analytics data for a specific advertiser
      * Get advertiser analytics data
      */
-    async apiV1AnalyticsAdvertisersIdGetRaw(requestParameters: ApiV1AnalyticsAdvertisersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAdvertisersIdGet200Response>> {
+    async analyticsAdvertisersIdGetRaw(requestParameters: AnalyticsAdvertisersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsAdvertisersIdGet200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1AnalyticsAdvertisersIdGet().'
+                'Required parameter "id" was null or undefined when calling analyticsAdvertisersIdGet().'
             );
         }
 
@@ -101,15 +101,15 @@ export class AnalyticsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAdvertisersIdGet200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AnalyticsAdvertisersIdGet200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Retrieve detailed analytics data for a specific advertiser
      * Get advertiser analytics data
      */
-    async apiV1AnalyticsAdvertisersIdGet(requestParameters: ApiV1AnalyticsAdvertisersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAdvertisersIdGet200Response> {
-        const response = await this.apiV1AnalyticsAdvertisersIdGetRaw(requestParameters, initOverrides);
+    async analyticsAdvertisersIdGet(requestParameters: AnalyticsAdvertisersIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsAdvertisersIdGet200Response> {
+        const response = await this.analyticsAdvertisersIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -117,11 +117,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
      * Create a new advertiser analytics entry
      * Create advertiser analytics data
      */
-    async apiV1AnalyticsAdvertisersPostRaw(requestParameters: ApiV1AnalyticsAdvertisersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAdvertisersPost201Response>> {
+    async analyticsAdvertisersPostRaw(requestParameters: AnalyticsAdvertisersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsAdvertisersPost201Response>> {
         if (requestParameters['advertiser'] == null) {
             throw new runtime.RequiredError(
                 'advertiser',
-                'Required parameter "advertiser" was null or undefined when calling apiV1AnalyticsAdvertisersPost().'
+                'Required parameter "advertiser" was null or undefined when calling analyticsAdvertisersPost().'
             );
         }
 
@@ -129,11 +129,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters['Content-Type'] = 'application/json';
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
             path: `/analytics/advertisers`,
@@ -143,15 +143,15 @@ export class AnalyticsApi extends runtime.BaseAPI {
             body: HandlersCreateAdvertiserRequestToJSON(requestParameters['advertiser']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAdvertisersPost201ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AnalyticsAdvertisersPost201ResponseFromJSON(jsonValue));
     }
 
     /**
      * Create a new advertiser analytics entry
      * Create advertiser analytics data
      */
-    async apiV1AnalyticsAdvertisersPost(requestParameters: ApiV1AnalyticsAdvertisersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAdvertisersPost201Response> {
-        const response = await this.apiV1AnalyticsAdvertisersPostRaw(requestParameters, initOverrides);
+    async analyticsAdvertisersPost(requestParameters: AnalyticsAdvertisersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsAdvertisersPost201Response> {
+        const response = await this.analyticsAdvertisersPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -159,11 +159,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
      * Retrieve detailed analytics data for a specific publisher (affiliate) by domain name
      * Get publisher analytics data by domain
      */
-    async apiV1AnalyticsAffiliatesDomainDomainGetRaw(requestParameters: ApiV1AnalyticsAffiliatesDomainDomainGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAffiliatesIdGet200Response>> {
+    async analyticsAffiliatesDomainDomainGetRaw(requestParameters: AnalyticsAffiliatesDomainDomainGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsAffiliatesIdGet200Response>> {
         if (requestParameters['domain'] == null) {
             throw new runtime.RequiredError(
                 'domain',
-                'Required parameter "domain" was null or undefined when calling apiV1AnalyticsAffiliatesDomainDomainGet().'
+                'Required parameter "domain" was null or undefined when calling analyticsAffiliatesDomainDomainGet().'
             );
         }
 
@@ -182,15 +182,15 @@ export class AnalyticsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAffiliatesIdGet200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AnalyticsAffiliatesIdGet200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Retrieve detailed analytics data for a specific publisher (affiliate) by domain name
      * Get publisher analytics data by domain
      */
-    async apiV1AnalyticsAffiliatesDomainDomainGet(requestParameters: ApiV1AnalyticsAffiliatesDomainDomainGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAffiliatesIdGet200Response> {
-        const response = await this.apiV1AnalyticsAffiliatesDomainDomainGetRaw(requestParameters, initOverrides);
+    async analyticsAffiliatesDomainDomainGet(requestParameters: AnalyticsAffiliatesDomainDomainGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsAffiliatesIdGet200Response> {
+        const response = await this.analyticsAffiliatesDomainDomainGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -198,11 +198,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
      * Retrieve detailed analytics data for a specific publisher (affiliate)
      * Get publisher analytics data
      */
-    async apiV1AnalyticsAffiliatesIdGetRaw(requestParameters: ApiV1AnalyticsAffiliatesIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAffiliatesIdGet200Response>> {
+    async analyticsAffiliatesIdGetRaw(requestParameters: AnalyticsAffiliatesIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsAffiliatesIdGet200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiV1AnalyticsAffiliatesIdGet().'
+                'Required parameter "id" was null or undefined when calling analyticsAffiliatesIdGet().'
             );
         }
 
@@ -221,15 +221,15 @@ export class AnalyticsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAffiliatesIdGet200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AnalyticsAffiliatesIdGet200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Retrieve detailed analytics data for a specific publisher (affiliate)
      * Get publisher analytics data
      */
-    async apiV1AnalyticsAffiliatesIdGet(requestParameters: ApiV1AnalyticsAffiliatesIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAffiliatesIdGet200Response> {
-        const response = await this.apiV1AnalyticsAffiliatesIdGetRaw(requestParameters, initOverrides);
+    async analyticsAffiliatesIdGet(requestParameters: AnalyticsAffiliatesIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsAffiliatesIdGet200Response> {
+        const response = await this.analyticsAffiliatesIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -237,11 +237,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
      * Create a new publisher analytics entry
      * Create publisher analytics data
      */
-    async apiV1AnalyticsAffiliatesPostRaw(requestParameters: ApiV1AnalyticsAffiliatesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAffiliatesPost201Response>> {
+    async analyticsAffiliatesPostRaw(requestParameters: AnalyticsAffiliatesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsAffiliatesPost201Response>> {
         if (requestParameters['publisher'] == null) {
             throw new runtime.RequiredError(
                 'publisher',
-                'Required parameter "publisher" was null or undefined when calling apiV1AnalyticsAffiliatesPost().'
+                'Required parameter "publisher" was null or undefined when calling analyticsAffiliatesPost().'
             );
         }
 
@@ -249,11 +249,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters['Content-Type'] = 'application/json';
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
         }
-
-        headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
             path: `/analytics/affiliates`,
@@ -263,15 +263,15 @@ export class AnalyticsApi extends runtime.BaseAPI {
             body: HandlersCreatePublisherRequestToJSON(requestParameters['publisher']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAffiliatesPost201ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AnalyticsAffiliatesPost201ResponseFromJSON(jsonValue));
     }
 
     /**
      * Create a new publisher analytics entry
      * Create publisher analytics data
      */
-    async apiV1AnalyticsAffiliatesPost(requestParameters: ApiV1AnalyticsAffiliatesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAffiliatesPost201Response> {
-        const response = await this.apiV1AnalyticsAffiliatesPostRaw(requestParameters, initOverrides);
+    async analyticsAffiliatesPost(requestParameters: AnalyticsAffiliatesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsAffiliatesPost201Response> {
+        const response = await this.analyticsAffiliatesPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -279,11 +279,11 @@ export class AnalyticsApi extends runtime.BaseAPI {
      * Search advertisers and/or publishers by domain name for autocompletion (minimum 3 characters)
      * Search organizations for autocompletion
      */
-    async apiV1AnalyticsAutocompleteGetRaw(requestParameters: ApiV1AnalyticsAutocompleteGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiV1AnalyticsAutocompleteGet200Response>> {
+    async analyticsAutocompleteGetRaw(requestParameters: AnalyticsAutocompleteGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsAutocompleteGet200Response>> {
         if (requestParameters['q'] == null) {
             throw new runtime.RequiredError(
                 'q',
-                'Required parameter "q" was null or undefined when calling apiV1AnalyticsAutocompleteGet().'
+                'Required parameter "q" was null or undefined when calling analyticsAutocompleteGet().'
             );
         }
 
@@ -314,15 +314,15 @@ export class AnalyticsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ApiV1AnalyticsAutocompleteGet200ResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AnalyticsAutocompleteGet200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Search advertisers and/or publishers by domain name for autocompletion (minimum 3 characters)
      * Search organizations for autocompletion
      */
-    async apiV1AnalyticsAutocompleteGet(requestParameters: ApiV1AnalyticsAutocompleteGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiV1AnalyticsAutocompleteGet200Response> {
-        const response = await this.apiV1AnalyticsAutocompleteGetRaw(requestParameters, initOverrides);
+    async analyticsAutocompleteGet(requestParameters: AnalyticsAutocompleteGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsAutocompleteGet200Response> {
+        const response = await this.analyticsAutocompleteGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -331,9 +331,9 @@ export class AnalyticsApi extends runtime.BaseAPI {
 /**
  * @export
  */
-export const ApiV1AnalyticsAutocompleteGetTypeEnum = {
+export const AnalyticsAutocompleteGetTypeEnum = {
     Advertiser: 'advertiser',
     Publisher: 'publisher',
     Both: 'both'
 } as const;
-export type ApiV1AnalyticsAutocompleteGetTypeEnum = typeof ApiV1AnalyticsAutocompleteGetTypeEnum[keyof typeof ApiV1AnalyticsAutocompleteGetTypeEnum];
+export type AnalyticsAutocompleteGetTypeEnum = typeof AnalyticsAutocompleteGetTypeEnum[keyof typeof AnalyticsAutocompleteGetTypeEnum];

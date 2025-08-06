@@ -1,0 +1,20 @@
+{
+  "title": "Affiliates",
+  "description": "Manage your affiliate accounts and partnerships",
+  "createNew": "Create New",
+  "createAffiliate": "Create Affiliate",
+  "editAffiliate": "Edit Affiliate",
+  "createAffiliateDescription": "Add a new affiliate to your platform",
+  "editAffiliateDescription": "Update affiliate information and settings",
+  "noAffiliates": "No Affiliates Found",
+  "createYourFirst": "Create your first affiliate to get started",
+  "list": "Affiliates List",
+  "total": "Total: {{count}} affiliates",
+  "tableCaption": "A list of all affiliates in your organization",
+  "nameColumn": "Name",
+  "contactColumn": "Contact",
+  "statusColumn": "Status",
+  "createdAtColumn": "Created",
+  "backToList": "Back to Affiliates",
+  "notFound": "Affiliate not found"
+}

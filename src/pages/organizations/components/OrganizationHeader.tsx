@@ -3,13 +3,13 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Building2 } from "lucide-react";
-import { DomainOrganization } from "@/generated-api/src/models";
+import { DomainOrganizationWithExtraInfo } from "@/generated-api/src/models";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import LanguageSelector from "@/components/common/LanguageSelector";
 
 interface OrganizationHeaderProps {
-  organization: DomainOrganization;
+  organization: DomainOrganizationWithExtraInfo;
 }
 
 const OrganizationHeader: React.FC<OrganizationHeaderProps> = ({ organization }) => {

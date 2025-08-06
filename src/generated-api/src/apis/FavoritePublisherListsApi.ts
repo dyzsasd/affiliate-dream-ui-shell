@@ -37,12 +37,6 @@ import {
     HandlersErrorResponseToJSON,
 } from '../models/index';
 
-export interface ApiV1FavoritePublisherListsListIdPublishersDomainStatusPatchRequest {
-    listId: number;
-    domain: string;
-    request: DomainUpdatePublisherStatusRequest;
-}
-
 export interface FavoritePublisherListsListIdDeleteRequest {
     listId: number;
 }
@@ -60,6 +54,12 @@ export interface FavoritePublisherListsListIdPublishersDomainPutRequest {
     listId: number;
     domain: string;
     request: DomainUpdatePublisherInListRequest;
+}
+
+export interface FavoritePublisherListsListIdPublishersDomainStatusPatchRequest {
+    listId: number;
+    domain: string;
+    request: DomainUpdatePublisherStatusRequest;
 }
 
 export interface FavoritePublisherListsListIdPublishersGetRequest {
@@ -89,62 +89,6 @@ export interface FavoritePublisherListsSearchGetRequest {
  * 
  */
 export class FavoritePublisherListsApi extends runtime.BaseAPI {
-
-    /**
-     * Updates the status of a publisher in a favorite list (added -> contacted -> accepted)
-     * Update publisher status in favorite list
-     */
-    async apiV1FavoritePublisherListsListIdPublishersDomainStatusPatchRaw(requestParameters: ApiV1FavoritePublisherListsListIdPublishersDomainStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any | undefined; }>> {
-        if (requestParameters['listId'] == null) {
-            throw new runtime.RequiredError(
-                'listId',
-                'Required parameter "listId" was null or undefined when calling apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch().'
-            );
-        }
-
-        if (requestParameters['domain'] == null) {
-            throw new runtime.RequiredError(
-                'domain',
-                'Required parameter "domain" was null or undefined when calling apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch().'
-            );
-        }
-
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/favorite-publisher-lists/{list_id}/publishers/{domain}/status`.replace(`{${"list_id"}}`, encodeURIComponent(String(requestParameters['listId']))).replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: DomainUpdatePublisherStatusRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     * Updates the status of a publisher in a favorite list (added -> contacted -> accepted)
-     * Update publisher status in favorite list
-     */
-    async apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch(requestParameters: ApiV1FavoritePublisherListsListIdPublishersDomainStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
-        const response = await this.apiV1FavoritePublisherListsListIdPublishersDomainStatusPatchRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      * Retrieves all favorite publisher lists for the user\'s organization with statistics
@@ -355,6 +299,62 @@ export class FavoritePublisherListsApi extends runtime.BaseAPI {
      */
     async favoritePublisherListsListIdPublishersDomainPut(requestParameters: FavoritePublisherListsListIdPublishersDomainPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
         const response = await this.favoritePublisherListsListIdPublishersDomainPutRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Updates the status of a publisher in a favorite list (added -> contacted -> accepted)
+     * Update publisher status in favorite list
+     */
+    async favoritePublisherListsListIdPublishersDomainStatusPatchRaw(requestParameters: FavoritePublisherListsListIdPublishersDomainStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any | undefined; }>> {
+        if (requestParameters['listId'] == null) {
+            throw new runtime.RequiredError(
+                'listId',
+                'Required parameter "listId" was null or undefined when calling favoritePublisherListsListIdPublishersDomainStatusPatch().'
+            );
+        }
+
+        if (requestParameters['domain'] == null) {
+            throw new runtime.RequiredError(
+                'domain',
+                'Required parameter "domain" was null or undefined when calling favoritePublisherListsListIdPublishersDomainStatusPatch().'
+            );
+        }
+
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling favoritePublisherListsListIdPublishersDomainStatusPatch().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/favorite-publisher-lists/{list_id}/publishers/{domain}/status`.replace(`{${"list_id"}}`, encodeURIComponent(String(requestParameters['listId']))).replace(`{${"domain"}}`, encodeURIComponent(String(requestParameters['domain']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: DomainUpdatePublisherStatusRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Updates the status of a publisher in a favorite list (added -> contacted -> accepted)
+     * Update publisher status in favorite list
+     */
+    async favoritePublisherListsListIdPublishersDomainStatusPatch(requestParameters: FavoritePublisherListsListIdPublishersDomainStatusPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
+        const response = await this.favoritePublisherListsListIdPublishersDomainStatusPatchRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

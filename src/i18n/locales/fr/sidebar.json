@@ -14,5 +14,10 @@
   "favoritePublishers": "Éditeurs Favoris",
   "conversations": "Conversations",
   "organizations": "Organisations",
-  "users": "Utilisateurs"
+  "users": "Utilisateurs",
+  "agencyAnalytics": "Analyses d'Agence",
+  "affiliates": "Affiliés",
+  "associations": "Associations",
+  "organizationSettings": "Paramètres d'Organisation",
+  "delegations": "Délégations"
 }

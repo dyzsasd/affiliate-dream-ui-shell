@@ -68,8 +68,15 @@ export interface TranslationKeys {
     myProfile: string;
     trackingLinks: string;
     conversions: string;
+    billing: string;
+    favoritePublishers: string;
+    conversations: string;
     organizations: string;
     users: string;
+    agencyAnalytics: string;
+    affiliates: string;
+    associations: string;
+    delegations: string;
   };
 
   // Marketplace
@@ -148,9 +155,76 @@ export interface TranslationKeys {
     advertiserDetails: string;
   };
 
+  // Organizations
+  organizations: {
+    title: string;
+    description: string;
+    createOrganization: string;
+    editOrganization: string;
+    editDescription: string;
+    organizationDetails: string;
+    organizationType: string;
+    website: string;
+    phoneNumber: string;
+    address: string;
+    noOrganization: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+    taxId: string;
+    industry: string;
+    companySize: string;
+    members: string;
+    inviteMembers: string;
+    membersList: string;
+    role: string;
+    joinedAt: string;
+    noOrganizations: string;
+    createFirstOrganization: string;
+    organizationCreated: string;
+    organizationUpdated: string;
+    organizationDeleted: string;
+    confirmDelete: string;
+    deleteWarning: string;
+    createNew: string;
+    searchPlaceholder: string;
+    typeAdvertiser: string;
+    typeAffiliate: string;
+    typePlatformOwner: string;
+    created: string;
+    statusUnknown: string;
+    noOrganizationsMessage: string;
+    noOrganizationsYet: string;
+    fetchError: string;
+    invitationError: string;
+    invitationGenerated: string;
+    shareLink: string;
+    generateInvitationError: string;
+    linkCopied: string;
+    linkCopiedDescription: string;
+    copyError: string;
+    generateInvitation: string;
+    emailAddress: string;
+    emailPlaceholder: string;
+    generatingLink: string;
+    generateInvitationLink: string;
+    organizationName: string;
+    saving: string;
+    notFound: string;
+    notFoundMessage: string;
+    backToOrganizations: string;
+    updateSuccess: string;
+    updateError: string;
+    advertiserInfo: string;
+    affiliateInfo: string;
+    websiteType: string;
+    affiliateType: string;
+    notProvided: string;
+  };
+
   // Additional interfaces for other modules...
   campaigns: any;
-  organizations: any;
   users: any;
   reports: any;
   dashboard: any;
@@ -158,6 +232,8 @@ export interface TranslationKeys {
   influencerSearch: any;
   analytics: any;
   profile: any;
+  invitations: any;
+  associations: any;
 }
 
 declare module 'react-i18next' {

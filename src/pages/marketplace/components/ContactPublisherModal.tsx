@@ -52,7 +52,7 @@ const ContactPublisherModal: React.FC<ContactPublisherModalProps> = ({
     mutationFn: async ({ subject, message }: { subject: string; message: string }) => {
       try {
         const apiClient = await createApiClient(PublisherMessagingApi);
-        return await apiClient.apiV1PublisherMessagingConversationsPost({
+        return await apiClient.publisherMessagingConversationsPost({
           request: {
             subject,
             initialMessage: message,
@@ -76,7 +76,7 @@ const ContactPublisherModal: React.FC<ContactPublisherModalProps> = ({
           const apiClient = await createApiClient(FavoritePublisherListsApi);
           console.log('✅ FavoritePublisherListsApi client created for status update');
           
-          const statusUpdateResult = await apiClient.apiV1FavoritePublisherListsListIdPublishersDomainStatusPatch({
+          const statusUpdateResult = await apiClient.favoritePublisherListsListIdPublishersDomainStatusPatch({
             listId: currentListId,
             domain: publisherDomain,
             request: {

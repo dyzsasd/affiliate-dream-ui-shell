@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,12 +8,17 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import OrganizationTypeSelection from "@/pages/onboard/OrganizationTypeSelection";
 import { AffiliateOnboard } from "@/pages/onboard/AffiliateOnboard";
+import AdvertiserOnboard from "@/pages/onboard/AdvertiserOnboard";
+import AgencyOnboard from "@/pages/onboard/AgencyOnboard";
+import { OnboardingGuard } from "@/components/auth/OnboardingGuard";
 import Dashboard from "@/pages/Dashboard";
 import CampaignList from "@/pages/campaigns/CampaignList";
 import CampaignDetail from "@/pages/campaigns/CampaignDetail";
 import CampaignForm from "@/pages/campaigns/CampaignForm";
 import AdvertiserRoutes from "@/pages/advertisers";
+import AffiliatesRoutes from "@/pages/affiliates";
 import ProfilePage from "@/pages/profile";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
@@ -23,9 +27,11 @@ import AdvertiserAnalytics from "@/pages/analytics/AdvertiserAnalytics";
 import AllPartnersPage from "@/pages/analytics/AllPartnersPage";
 import NewPartnersPage from "@/pages/analytics/NewPartnersPage";
 import LostPartnersPage from "@/pages/analytics/LostPartnersPage";
-import InvitationManagement from "@/pages/invitations";
+import InvitationManagement, { PublicInvitation } from "@/pages/invitations";
 import OrganizationList from "@/pages/organizations";
-import OrganizationEdit from "@/pages/organizations/OrganizationEdit";
+import OrganizationEdit from "@/pages/organization/OrganizationEdit";
+import AssociationsManagement from "@/pages/associations/AssociationsManagement";
+import AffiliateDetails from "@/pages/associations/AffiliateDetails";
 import UserList from "@/pages/users";
 import CreateAffiliateAccount from "@/pages/affiliate/CreateAffiliateAccount";
 import MarketplacePage from "@/pages/marketplace";
@@ -39,6 +45,8 @@ import CreateFavoritePublisherList from "@/pages/favorite-publishers/CreateFavor
 import ConversationsList from "@/pages/conversations";
 // Import the component directly with a different syntax to ensure it loads
 import ConversationDetail from "./pages/conversations/ConversationDetail";
+import AgencyAnalyticsRoutes from "@/pages/agency-analytics";
+import DelegationsRoutes from "@/pages/delegations";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -62,10 +70,18 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/onboard" element={<AffiliateOnboard />} />
+              
+              {/* Public invitation route (no auth required) - must be before protected routes */}
+              <Route path="/invite/:token" element={<PublicInvitation />} />
+              
+              {/* Onboarding routes - protected to redirect users with profiles */}
+              <Route path="/onboard" element={<OnboardingGuard><OrganizationTypeSelection /></OnboardingGuard>} />
+              <Route path="/onboard/affiliate" element={<OnboardingGuard><AffiliateOnboard /></OnboardingGuard>} />
+              <Route path="/onboard/advertiser" element={<OnboardingGuard><AdvertiserOnboard /></OnboardingGuard>} />
+              <Route path="/onboard/agency" element={<OnboardingGuard><AgencyOnboard /></OnboardingGuard>} />
               
               {/* Protected routes */}
-              <Route element={<AppLayout />}>
+              <Route element={<OnboardingGuard><AppLayout /></OnboardingGuard>}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 
@@ -77,6 +93,9 @@ function App() {
                 
                 {/* Advertiser routes - use the AdvertiserRoutes component */}
                 <Route path="/advertisers/*" element={<AdvertiserRoutes />} />
+                
+                {/* Affiliate routes - use the AffiliatesRoutes component */}
+                <Route path="/affiliates/*" element={<AffiliatesRoutes />} />
                 
                 {/* Marketplace routes */}
                 <Route path="/advertiser/marketplace" element={<MarketplacePage />} />
@@ -91,6 +110,12 @@ function App() {
                 <Route path="/analytics/advertiser/:advertiserId/all_partners" element={<AllPartnersPage />} />
             <Route path="/analytics/advertiser/:advertiserId/new_partners" element={<NewPartnersPage />} />
             <Route path="/analytics/advertiser/:advertiserId/lost_partners" element={<LostPartnersPage />} />
+                
+                {/* Agency Analytics routes */}
+                <Route path="/agency-analytics/*" element={<AgencyAnalyticsRoutes />} />
+                
+                {/* Delegations routes */}
+                <Route path="/delegations/*" element={<DelegationsRoutes />} />
                 
                 {/* Tracking routes */}
                 <Route path="/tracking-links" element={<TrackingLinkGenerator />} />
@@ -122,8 +147,11 @@ function App() {
           <Route path="/conversations/:conversationId" element={<ConversationDetail />} />
                 
                 {/* Other routes */}
-                <Route path="/invitations" element={<InvitationManagement />} />
+                <Route path="/invitations/*" element={<InvitationManagement />} />
                 <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/organization/edit" element={<OrganizationEdit />} />
+          <Route path="/associations" element={<AssociationsManagement />} />
+          <Route path="/affiliates/:affiliateOrgId/details" element={<AffiliateDetails />} />
               </Route>
               
               {/* 404 route */}

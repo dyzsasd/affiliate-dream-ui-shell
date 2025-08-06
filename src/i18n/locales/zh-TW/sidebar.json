@@ -14,5 +14,10 @@
   "favoritePublishers": "收藏發布商",
   "conversations": "對話",
   "organizations": "組織",
-  "users": "使用者"
+  "users": "使用者",
+  "agencyAnalytics": "代理分析",
+  "affiliates": "關聯用戶",
+  "associations": "關聯關係",
+  "organizationSettings": "組織設定",
+  "delegations": "委託管理"
 }

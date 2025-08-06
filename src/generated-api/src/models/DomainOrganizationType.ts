@@ -20,7 +20,8 @@
 export const DomainOrganizationType = {
     OrganizationTypeAdvertiser: 'advertiser',
     OrganizationTypeAffiliate: 'affiliate',
-    OrganizationTypePlatformOwner: 'platform_owner'
+    OrganizationTypePlatformOwner: 'platform_owner',
+    OrganizationTypeAgency: 'agency'
 } as const;
 export type DomainOrganizationType = typeof DomainOrganizationType[keyof typeof DomainOrganizationType];
 

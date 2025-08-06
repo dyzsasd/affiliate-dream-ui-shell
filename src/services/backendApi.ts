@@ -1,8 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Configuration } from '@/generated-api/src/runtime';
 
-// Using the production API URL
-const DEFAULT_API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://api.affiliate.rolinko.com') + '/api/v1';
+// Using localhost for temporary development
+const DEFAULT_API_BASE_URL = 'http://localhost:8080';
 
 // Define a simple ApiError interface
 interface ApiError {
@@ -117,9 +117,13 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   const baseUrl = getApiBase();
   console.log('🌐 Creating API client with base URL:', baseUrl);
   
+  // All API clients use /api/v1 prefix
+  const basePath = `${baseUrl}/api/v1`;
+  console.log('🎯 Using v1 API path for', ClientClass.name + ':', basePath);
+  
   // Create configuration with proper authentication and retry logic
   const configuration = new Configuration({
-    basePath: baseUrl,
+    basePath: basePath,
     apiKey: async (name: string) => {
       console.log('🔐 API Key requested for parameter:', name);
       console.log('🔍 Request stack trace:', new Error().stack?.split('\n').slice(1, 4).join('\n'));
@@ -162,6 +166,34 @@ export const createApiClient = async <T>(ClientClass: new (configuration?: Confi
   
   console.log('✅ API client created successfully with methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(client)));
   console.log('🔍 Client instance created, checking if apiKey function is accessible');
+  
+  return client;
+};
+
+// Create public API client (no authentication required)
+export const createPublicApiClient = <T>(ClientClass: new (configuration?: Configuration) => T): T => {
+  console.log('🔧 Creating public API client for:', ClientClass.name);
+  
+  if (!ClientClass) {
+    throw new Error('API client not initialized. Please run "npm run generate-api" first.');
+  }
+  
+  const baseUrl = getApiBase();
+  console.log('🌐 Creating public API client with base URL:', baseUrl);
+  
+  // All public API clients use /api/v1 prefix
+  const basePath = `${baseUrl}/api/v1`;
+  console.log('🎯 Using v1 API path for public', ClientClass.name + ':', basePath);
+  
+  // Create configuration without authentication
+  const configuration = new Configuration({
+    basePath: basePath,
+    // No apiKey function - public endpoint
+  });
+  
+  const client = new ClientClass(configuration);
+  
+  console.log('✅ Public API client created successfully');
   
   return client;
 };

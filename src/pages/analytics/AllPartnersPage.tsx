@@ -37,7 +37,7 @@ const AllPartnersPage: React.FC = () => {
       if (!advertiserId) return null;
       
       const apiClient = await createApiClient(AnalyticsApi);
-      const response = await apiClient.apiV1AnalyticsAdvertisersIdGet({
+      const response = await apiClient.analyticsAdvertisersIdGet({
         id: parseInt(advertiserId)
       });
       
@@ -97,7 +97,7 @@ const AllPartnersPage: React.FC = () => {
     for (const domain of domains) {
       try {
         console.log(`Fetching data for domain: ${domain}`);
-        const response = await apiClient.apiV1AnalyticsAffiliatesDomainDomainGet({
+        const response = await apiClient.analyticsAffiliatesDomainDomainGet({
           domain
         });
         if (response.data) {

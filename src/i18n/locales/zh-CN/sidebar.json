@@ -14,5 +14,10 @@
   "favoritePublishers": "收藏发布商",
   "conversations": "对话",
   "organizations": "组织",
-  "users": "用户"
+  "users": "用户",
+  "agencyAnalytics": "代理分析",
+  "affiliates": "关联用户",
+  "associations": "关联关系",
+  "organizationSettings": "组织设置",
+  "delegations": "委托管理"
 }

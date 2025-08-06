@@ -62,7 +62,7 @@ const AdvertiserAnalytics: React.FC = () => {
       if (!id) return null;
       
       const apiClient = await createApiClient(AnalyticsApi);
-      const response = await apiClient.apiV1AnalyticsAdvertisersIdGet({
+      const response = await apiClient.analyticsAdvertisersIdGet({
         id: parseInt(id.toString())
       });
       

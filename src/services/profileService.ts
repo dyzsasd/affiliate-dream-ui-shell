@@ -6,7 +6,7 @@ import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 import { createApiClient, handleApiError, tokenManager } from '@/services/backendApi';
 import { HandlersUpdateProfileRequest } from '@/generated-api/src/models';
-import { DomainProfile, DomainOrganization } from '@/generated-api/src/models';
+import { DomainProfile, DomainOrganization, DomainOrganizationWithExtraInfo } from '@/generated-api/src/models';
 
 /**
  * Fetches the user profile from the backend API
@@ -36,7 +36,7 @@ export const fetchBackendProfile = async (user: User): Promise<DomainProfile | n
 /**
  * Fetches organization details from the backend API
  */
-export const fetchOrganization = async (organizationId: number): Promise<DomainOrganization | null> => {
+export const fetchOrganization = async (organizationId: number): Promise<DomainOrganizationWithExtraInfo | null> => {
   if (!organizationId) {
     console.log("Cannot fetch organization: No organization ID provided");
     return null;
@@ -47,11 +47,12 @@ export const fetchOrganization = async (organizationId: number): Promise<DomainO
     const organizationsApi = await createApiClient(OrganizationsApi);
     
     const org = await organizationsApi.organizationsIdGet({
-      id: organizationId
+      id: organizationId,
+      withExtra: true
     });
     
     console.log("Organization fetched successfully:", org);
-    return org;
+    return org as DomainOrganizationWithExtraInfo;
   } catch (error) {
     console.error('Error fetching organization:', error);
     return null;
