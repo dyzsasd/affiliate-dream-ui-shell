@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth';
-import { useDelegation } from '@/contexts/delegation';
+import { useContext } from 'react';
+import { DelegationContext } from '@/contexts/delegation';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,9 +17,20 @@ import { OrganizationAssociationsApi, OrganizationAssociationsGetAssociationType
 import { Users, Check, X, Pause, Eye, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+// Delegation context type for safe access
+interface DelegationContextType {
+  delegatedOrgId: number | null;
+  setDelegatedOrgId: (orgId: number | null) => void;
+  isDelegationMode: boolean;
+}
+
 const AssociationsManagement: React.FC = () => {
   const { organization } = useAuth();
-  const { delegatedOrgId, isDelegationMode } = useDelegation();
+  
+  // Safely use delegation context - it may not be available in all routes
+  const delegationContext = useContext(DelegationContext) as DelegationContextType | undefined;
+  const isDelegationMode = delegationContext?.isDelegationMode || false;
+  const delegatedOrgId = delegationContext?.delegatedOrgId || null;
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();

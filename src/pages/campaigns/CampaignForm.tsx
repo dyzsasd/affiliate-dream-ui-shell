@@ -16,7 +16,8 @@ import { fetchAdvertisers } from "@/services/advertiserService";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/auth";
-import { useDelegation } from "@/contexts/delegation";
+import { useContext } from "react";
+import { DelegationContext } from "@/contexts/delegation";
 import { ModelsCreateCampaignRequest } from "@/generated-api/src/models/ModelsCreateCampaignRequest";
 import { DomainAdvertiser } from "@/generated-api/src/models";
 
@@ -54,12 +55,23 @@ const campaignSchema = z.object({
 
 type CampaignFormData = z.infer<typeof campaignSchema>;
 
+// Delegation context type for safe access
+interface DelegationContextType {
+  delegatedOrgId: number | null;
+  setDelegatedOrgId: (orgId: number | null) => void;
+  isDelegationMode: boolean;
+}
+
 const CampaignForm: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
   const { organization } = useAuth();
-  const { isDelegationMode, delegatedOrgId } = useDelegation();
+  
+  // Safely use delegation context - it may not be available in all routes
+  const delegationContext = useContext(DelegationContext) as DelegationContextType | undefined;
+  const isDelegationMode = delegationContext?.isDelegationMode || false;
+  const delegatedOrgId = delegationContext?.delegatedOrgId || null;
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
