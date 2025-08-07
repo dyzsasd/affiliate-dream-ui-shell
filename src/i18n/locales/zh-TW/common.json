@@ -24,5 +24,6 @@
   "errorOccurred": "發生錯誤",
   "tryAgain": "重試",
   "optional": "可選",
-  "remove": "移除"
+  "remove": "移除",
+  "filter": "篩選"
 }
