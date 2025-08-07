@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -20,12 +20,14 @@ import { Plus, PlusCircle, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { CreateAdvertiserModal } from '@/components/advertisers/CreateAdvertiserModal';
 
 const AdvertiserList: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { organization, profile, isOrganizationLoading, fetchOrganization } = useAuth();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   console.log("Auth organization:", organization);
   console.log("Auth profile:", profile);
@@ -127,6 +129,10 @@ const AdvertiserList: React.FC = () => {
           <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
           <p className="text-muted-foreground">{t('advertisers.description')}</p>
         </div>
+        <Button onClick={() => setIsCreateModalOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Create Advertiser
+        </Button>
       </div>
 
       {advertisers.length === 0 ? (
@@ -137,6 +143,12 @@ const AdvertiserList: React.FC = () => {
               {t('advertisers.createYourFirst')}
             </CardDescription>
           </CardHeader>
+          <CardFooter>
+            <Button onClick={() => setIsCreateModalOpen(true)} className="w-full">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Create Your First Advertiser
+            </Button>
+          </CardFooter>
         </Card>
       ) : (
         <Card>
@@ -189,6 +201,11 @@ const AdvertiserList: React.FC = () => {
           </CardContent>
         </Card>
       )}
+
+      <CreateAdvertiserModal 
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+      />
     </div>
   );
 };
