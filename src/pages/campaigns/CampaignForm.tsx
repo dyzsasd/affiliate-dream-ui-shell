@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MediaUpload } from "@/components/ui/media-upload";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -521,7 +522,12 @@ const CampaignForm: React.FC = () => {
                           <FormItem>
                             <FormLabel>{t("campaigns.thumbnailUrlLabel")}</FormLabel>
                             <FormControl>
-                              <Input placeholder={t("campaigns.thumbnailUrlPlaceholder")} {...field} />
+                              <MediaUpload
+                                onUpload={field.onChange}
+                                currentUrl={field.value}
+                                label={t("campaigns.thumbnailUrlPlaceholder")}
+                                organizationId={organization?.organizationId?.toString() || "1"}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -535,7 +541,12 @@ const CampaignForm: React.FC = () => {
                           <FormItem>
                             <FormLabel>{t("campaigns.previewUrlLabel")}</FormLabel>
                             <FormControl>
-                              <Input placeholder={t("campaigns.previewUrlPlaceholder")} {...field} />
+                              <MediaUpload
+                                onUpload={field.onChange}
+                                currentUrl={field.value}
+                                label={t("campaigns.previewUrlPlaceholder")}
+                                organizationId={organization?.organizationId?.toString() || "1"}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>

@@ -145,5 +145,10 @@
   "updateSuccessDescription": "Your campaign has been updated with the latest changes.",
   "updating": "Updating...",
   "update": "Update Campaign",
-  "fixedRevenueLabel": "Fixed Revenue"
+  "fixedRevenueLabel": "Fixed Revenue",
+  "thumbnail": "Thumbnail",
+  "preview": "Preview",
+  "imageLoadError": "Failed to load image",
+  "viewOriginal": "View Original",
+  "previewNotImage": "Preview content"
 }

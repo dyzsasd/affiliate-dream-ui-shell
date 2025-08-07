@@ -443,29 +443,63 @@ const CampaignDetail: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Campaign URLs */}
+          {/* Campaign Assets */}
           {(campaign.previewUrl || campaign.thumbnailUrl) && (
             <Card>
               <CardHeader>
                 <CardTitle>{t("campaigns.campaignAssets")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {campaign.previewUrl && (
-                    <a href={campaign.previewUrl} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="w-full">
-                        <Eye className="mr-2 h-4 w-4" />
-                        {t("campaigns.viewPreview")}
-                      </Button>
-                    </a>
-                  )}
+                <div className="space-y-4">
                   {campaign.thumbnailUrl && (
-                    <a href={campaign.thumbnailUrl} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="w-full">
-                        <Eye className="mr-2 h-4 w-4" />
-                        {t("campaigns.viewThumbnail")}
-                      </Button>
-                    </a>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-2">{t("campaigns.thumbnail")}</h3>
+                      <div className="relative overflow-hidden rounded-lg border border-gray-200">
+                        <img 
+                          src={campaign.thumbnailUrl} 
+                          alt={`${campaign.name} thumbnail`}
+                          className="w-full h-auto max-h-48 object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                        <div className="hidden p-4 text-center text-gray-500">
+                          <Eye className="mx-auto h-8 w-8 mb-2" />
+                          <p className="text-sm">{t("campaigns.imageLoadError")}</p>
+                          <a href={campaign.thumbnailUrl} target="_blank" rel="noopener noreferrer" 
+                             className="text-blue-600 hover:text-blue-800 text-sm">
+                            {t("campaigns.viewOriginal")}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {campaign.previewUrl && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-2">{t("campaigns.preview")}</h3>
+                      <div className="relative overflow-hidden rounded-lg border border-gray-200">
+                        <img 
+                          src={campaign.previewUrl} 
+                          alt={`${campaign.name} preview`}
+                          className="w-full h-auto max-h-64 object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                        <div className="hidden p-4 text-center text-gray-500">
+                          <Eye className="mx-auto h-8 w-8 mb-2" />
+                          <p className="text-sm">{t("campaigns.previewNotImage")}</p>
+                          <a href={campaign.previewUrl} target="_blank" rel="noopener noreferrer">
+                            <Button variant="outline" size="sm" className="mt-2">
+                              <Eye className="mr-2 h-4 w-4" />
+                              {t("campaigns.viewPreview")}
+                            </Button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </CardContent>
