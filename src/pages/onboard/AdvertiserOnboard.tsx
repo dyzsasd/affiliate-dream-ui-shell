@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,6 +39,7 @@ type AdvertiserFormData = z.infer<typeof advertiserSchema>;
 export const AdvertiserOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, fetchBackendProfile } = useAuth();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -102,8 +104,11 @@ export const AdvertiserOnboard: React.FC = () => {
         });
       }
 
-      // Refresh the profile to update auth context
+      // Refresh the profile to update auth context and invalidate queries
       await fetchBackendProfile();
+      queryClient.invalidateQueries({ queryKey: ['advertisers'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['organization'] });
 
       toast({
         title: t('organizations.organizationCreated'),

@@ -14,6 +14,7 @@ import { ProfileApi } from '@/generated-api/src/apis/ProfileApi';
 import { HandlersCreateOrganizationRequest, HandlersAffiliateExtraInfoRequest, HandlersAffiliateExtraInfoRequestAffiliateTypeEnum } from '@/generated-api/src/models';
 import { createPublicApiClient, createApiClient } from '@/services/backendApi';
 import { useAuth } from '@/contexts/auth';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Building2, Mail } from 'lucide-react';
 import { MediaUpload } from '@/components/ui/media-upload';
@@ -31,6 +32,7 @@ type OnboardFormData = z.infer<typeof onboardSchema>;
 export const AffiliateOnboard: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, fetchBackendProfile } = useAuth();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -82,8 +84,11 @@ export const AffiliateOnboard: React.FC = () => {
         });
       }
 
-      // Refresh the profile to update auth context
+      // Refresh the profile to update auth context and invalidate queries
       await fetchBackendProfile();
+      queryClient.invalidateQueries({ queryKey: ['affiliates'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['organization'] });
 
       toast({
         title: "Organization created successfully",
