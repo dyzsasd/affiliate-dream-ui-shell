@@ -25,6 +25,7 @@ import { Campaign } from "@/types/api";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth";
+import { useDelegation } from "@/contexts/delegation";
 
 const CampaignList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,10 +35,14 @@ const CampaignList: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { organization } = useAuth();
+  const { isDelegationMode, delegatedOrgId } = useDelegation();
 
   // Fetch campaigns from backend API
   useEffect(() => {
-    if (!organization?.organizationId) {
+    // Use delegated organization ID if in delegation mode, otherwise use current organization
+    const targetOrgId = isDelegationMode ? delegatedOrgId : organization?.organizationId;
+    
+    if (!targetOrgId) {
       setIsLoading(false);
       return;
     }
@@ -46,8 +51,8 @@ const CampaignList: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        console.log('Fetching campaigns from API for organization:', organization.organizationId);
-        const data = await campaignService.getCampaigns(organization.organizationId);
+        console.log('Fetching campaigns from API for organization:', targetOrgId);
+        const data = await campaignService.getCampaigns(targetOrgId);
         console.log('Campaigns fetched successfully:', data);
         setCampaigns(data);
       } catch (err) {
@@ -64,7 +69,7 @@ const CampaignList: React.FC = () => {
     };
 
     fetchCampaigns();
-  }, [organization?.organizationId, toast]);
+  }, [organization?.organizationId, isDelegationMode, delegatedOrgId, toast]);
 
   // Filter campaigns based on search term
   const filteredCampaigns = campaigns.filter((campaign) =>

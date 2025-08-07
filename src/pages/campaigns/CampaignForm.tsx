@@ -16,6 +16,7 @@ import { fetchAdvertisers } from "@/services/advertiserService";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/auth";
+import { useDelegation } from "@/contexts/delegation";
 import { ModelsCreateCampaignRequest } from "@/generated-api/src/models/ModelsCreateCampaignRequest";
 import { DomainAdvertiser } from "@/generated-api/src/models";
 
@@ -58,6 +59,7 @@ const CampaignForm: React.FC = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { organization } = useAuth();
+  const { isDelegationMode, delegatedOrgId } = useDelegation();
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -184,7 +186,10 @@ const CampaignForm: React.FC = () => {
   }, [isEditMode, id, form, toast, t]);
 
   const onSubmit = async (data: CampaignFormData) => {
-    if (!organization?.organizationId) {
+    // Use delegated organization ID if in delegation mode, otherwise use current organization
+    const targetOrgId = isDelegationMode ? delegatedOrgId : organization?.organizationId;
+    
+    if (!targetOrgId) {
       toast({
         title: t("common.error"),
         description: "No organization found. Please contact support.",
@@ -259,7 +264,7 @@ const CampaignForm: React.FC = () => {
         // Create the request object matching the backend API structure
         const request: ModelsCreateCampaignRequest = {
           name: data.name,
-          organizationId: organization.organizationId,
+          organizationId: targetOrgId,
           advertiserId: parseInt(data.advertiserId),
           status: data.status as ModelsCreateCampaignRequest['status'],
           description: data.description || undefined,
