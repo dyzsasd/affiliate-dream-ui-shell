@@ -154,7 +154,7 @@ const DelegationLayout: React.FC = () => {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">
-              {t('delegations.managingOrganization', { organizationName })}
+              {organizationName}
             </h1>
           </div>
         </div>
