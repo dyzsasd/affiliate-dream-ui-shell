@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth";
 import { useContext } from "react";
+import { DelegationContext } from "@/contexts/delegation";
 
 // Import delegation context type for safe access
 interface DelegationContextType {
@@ -44,18 +45,9 @@ const CampaignList: React.FC = () => {
   const { organization } = useAuth();
   
   // Safely use delegation context - it may not be available in all routes
-  let isDelegationMode = false;
-  let delegatedOrgId: number | null = null;
-  
-  try {
-    const { DelegationContext } = require("@/contexts/delegation");
-    const delegationContext = useContext(DelegationContext) as DelegationContextType | undefined;
-    isDelegationMode = delegationContext?.isDelegationMode || false;
-    delegatedOrgId = delegationContext?.delegatedOrgId || null;
-  } catch (error) {
-    // Context not available, use default values
-    console.log("Delegation context not available, using default values");
-  }
+  const delegationContext = useContext(DelegationContext) as DelegationContextType | undefined;
+  const isDelegationMode = delegationContext?.isDelegationMode || false;
+  const delegatedOrgId = delegationContext?.delegatedOrgId || null;
 
   // Fetch campaigns from backend API
   useEffect(() => {

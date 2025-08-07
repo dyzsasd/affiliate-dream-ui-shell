@@ -6,7 +6,7 @@ interface DelegationContextType {
   isDelegationMode: boolean;
 }
 
-const DelegationContext = createContext<DelegationContextType | undefined>(undefined);
+export const DelegationContext = createContext<DelegationContextType | undefined>(undefined);
 
 export const useDelegation = () => {
   const context = useContext(DelegationContext);
