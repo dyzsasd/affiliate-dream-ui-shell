@@ -48,7 +48,7 @@ const DelegationLayout: React.FC = () => {
             withExtra: true,
           });
           
-          setOrganizationName(response.name || `Organization ${advertiserOrgId}`);
+          setOrganizationName((response as any).name || `Organization ${advertiserOrgId}`);
           setHasAccess(true);
         } catch (error) {
           console.error("Error checking delegation or fetching organization:", error);
