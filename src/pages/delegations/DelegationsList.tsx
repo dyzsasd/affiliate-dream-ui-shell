@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Users, AlertCircle } from "lucide-react";
 import { createApiClient } from "@/services/backendApi";
 import { DomainAgencyDelegation } from "@/generated-api/src/models";
-import { AgencyDelegationsApi } from "@/generated-api/src/apis";
+import { AgencyDelegationsApi, OrganizationsApi } from "@/generated-api/src/apis";
 
 const DelegationsList: React.FC = () => {
   const { t } = useTranslation();
@@ -19,6 +19,7 @@ const DelegationsList: React.FC = () => {
   const { toast } = useToast();
   
   const [delegations, setDelegations] = useState<DomainAgencyDelegation[]>([]);
+  const [organizationNames, setOrganizationNames] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,6 +38,27 @@ const DelegationsList: React.FC = () => {
       });
       
       setDelegations(response);
+      
+      // Fetch organization names for each delegation
+      const organizationsApi = await createApiClient(OrganizationsApi);
+      const orgNames: Record<number, string> = {};
+      
+      for (const delegation of response) {
+        if (delegation.advertiserOrgId) {
+          try {
+            const orgResponse = await organizationsApi.organizationsIdGet({
+              id: delegation.advertiserOrgId,
+              withExtra: true
+            });
+            orgNames[delegation.advertiserOrgId] = (orgResponse as any).name || `Organization ${delegation.advertiserOrgId}`;
+          } catch (error) {
+            console.error(`Error fetching organization ${delegation.advertiserOrgId}:`, error);
+            orgNames[delegation.advertiserOrgId] = `Organization ${delegation.advertiserOrgId}`;
+          }
+        }
+      }
+      
+      setOrganizationNames(orgNames);
     } catch (error) {
       console.error('Error fetching delegations:', error);
       toast({
@@ -127,8 +149,7 @@ const DelegationsList: React.FC = () => {
                 {delegations.map((delegation) => (
                   <TableRow key={delegation.delegationId}>
                     <TableCell className="font-medium">
-                      {/* For now, we'll show the advertiser org ID, this could be enhanced to show actual org name */}
-                      Organization {delegation.advertiserOrgId}
+                      {organizationNames[delegation.advertiserOrgId!] || `Organization ${delegation.advertiserOrgId}`}
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(delegation.status?.toString())}
