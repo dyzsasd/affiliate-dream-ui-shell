@@ -116,6 +116,7 @@
   "revenueLabel": "Revenue",
   "fixedFee": "Fixed Fee",
   "fixedRevenuePlaceholder": "0.00",
+  "payoutType": "Payout Type",
   "clickBasedPayout": "Click-based Payout",
   "fixedClickAmountLabel": "Fixed Click Amount",
   "fixedClickAmountPlaceholder": "0.00",

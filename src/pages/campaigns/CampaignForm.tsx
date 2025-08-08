@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { campaignService } from "@/services/campaign";
 import { fetchAdvertisers } from "@/services/advertiserService";
@@ -38,6 +39,7 @@ const campaignSchema = z.object({
   sessionDefinition: z.enum(["cookie", "ip", "fingerprint"]).optional(),
   sessionDuration: z.number().min(1).optional(),
   fixedRevenue: z.number().min(0).optional(),
+  payoutType: z.enum(["click", "conversion"]).optional(),
   fixedClickAmount: z.number().min(0).optional(),
   fixedConversionAmount: z.number().min(0).optional(),
   percentageConversionAmount: z.number().min(0).optional(),
@@ -631,72 +633,105 @@ const CampaignForm: React.FC = () => {
                     />
                   </div>
                   
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-4">
-                      <h4 className="font-medium">{t("campaigns.clickBasedPayout")}</h4>
-                      <FormField
-                        control={form.control}
-                        name="fixedClickAmount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("campaigns.fixedClickAmountLabel")}</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                step="0.01"
-                                placeholder={t("campaigns.fixedClickAmountPlaceholder")}
-                                value={field.value || ''}
-                                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <h4 className="font-medium">{t("campaigns.conversionBasedPayout")}</h4>
-                      <FormField
-                        control={form.control}
-                        name="fixedConversionAmount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("campaigns.fixedConversionAmountLabel")}</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                step="0.01"
-                                placeholder={t("campaigns.fixedConversionAmountPlaceholder")}
-                                value={field.value || ''}
-                                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="percentageConversionAmount"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("campaigns.percentageConversionAmountLabel")}</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                step="0.01"
-                                placeholder={t("campaigns.percentageConversionAmountPlaceholder")}
-                                value={field.value || ''}
-                                onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                  <div className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="payoutType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("campaigns.payoutType")}</FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className="flex flex-col space-y-2"
+                            >
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="click" id="click" />
+                                <label htmlFor="click" className="text-sm font-medium">
+                                  {t("campaigns.clickBasedPayout")}
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="conversion" id="conversion" />
+                                <label htmlFor="conversion" className="text-sm font-medium">
+                                  {t("campaigns.conversionBasedPayout")}
+                                </label>
+                              </div>
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {form.watch("payoutType") === "click" && (
+                      <div className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="fixedClickAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t("campaigns.fixedClickAmountLabel")}</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="number" 
+                                  step="0.01"
+                                  placeholder={t("campaigns.fixedClickAmountPlaceholder")}
+                                  value={field.value || ''}
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {form.watch("payoutType") === "conversion" && (
+                      <div className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="fixedConversionAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t("campaigns.fixedConversionAmountLabel")}</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="number" 
+                                  step="0.01"
+                                  placeholder={t("campaigns.fixedConversionAmountPlaceholder")}
+                                  value={field.value || ''}
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="percentageConversionAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t("campaigns.percentageConversionAmountLabel")}</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="number" 
+                                  step="0.01"
+                                  placeholder={t("campaigns.percentageConversionAmountPlaceholder")}
+                                  value={field.value || ''}
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>

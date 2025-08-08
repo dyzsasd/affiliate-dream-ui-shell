@@ -116,6 +116,7 @@
   "revenueLabel": "收入",
   "fixedFee": "固定費用",
   "fixedRevenuePlaceholder": "0.00",
+  "payoutType": "支付類型",
   "clickBasedPayout": "基於點擊的支付",
   "fixedClickAmountLabel": "固定點擊金額",
   "fixedClickAmountPlaceholder": "0.00",
