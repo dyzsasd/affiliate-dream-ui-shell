@@ -634,36 +634,45 @@ const CampaignForm: React.FC = () => {
                   </div>
                   
                   <div className="space-y-6">
-                    <FormField
-                      control={form.control}
-                      name="payoutType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("campaigns.payoutType")}</FormLabel>
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="flex flex-col space-y-2"
-                            >
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="click" id="click" />
-                                <label htmlFor="click" className="text-sm font-medium">
-                                  {t("campaigns.clickBasedPayout")}
-                                </label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="conversion" id="conversion" />
-                                <label htmlFor="conversion" className="text-sm font-medium">
-                                  {t("campaigns.conversionBasedPayout")}
-                                </label>
-                              </div>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                     <FormField
+                       control={form.control}
+                       name="payoutType"
+                       render={({ field }) => (
+                         <FormItem>
+                           <FormLabel>{t("campaigns.payoutType")}</FormLabel>
+                           <FormControl>
+                             <RadioGroup
+                               onValueChange={(value) => {
+                                 field.onChange(value);
+                                 // Null out opposite payout values when type changes
+                                 if (value === "click") {
+                                   form.setValue("fixedConversionAmount", null);
+                                   form.setValue("percentageConversionAmount", null);
+                                 } else if (value === "conversion") {
+                                   form.setValue("fixedClickAmount", null);
+                                 }
+                               }}
+                               value={field.value}
+                               className="flex flex-col space-y-2"
+                             >
+                               <div className="flex items-center space-x-2">
+                                 <RadioGroupItem value="click" id="click" />
+                                 <label htmlFor="click" className="text-sm font-medium">
+                                   {t("campaigns.clickBasedPayout")}
+                                 </label>
+                               </div>
+                               <div className="flex items-center space-x-2">
+                                 <RadioGroupItem value="conversion" id="conversion" />
+                                 <label htmlFor="conversion" className="text-sm font-medium">
+                                   {t("campaigns.conversionBasedPayout")}
+                                 </label>
+                               </div>
+                             </RadioGroup>
+                           </FormControl>
+                           <FormMessage />
+                         </FormItem>
+                       )}
+                     />
 
                     {form.watch("payoutType") === "click" && (
                       <div className="space-y-4">
