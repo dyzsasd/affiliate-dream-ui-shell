@@ -152,6 +152,21 @@ const CampaignForm: React.FC = () => {
               return dateString.split('T')[0];
             };
 
+            // Determine payout type based on existing data
+            const hasClickPayout = campaign.fixedClickAmount && campaign.fixedClickAmount > 0;
+            const hasConversionPayout = (campaign.fixedConversionAmount && campaign.fixedConversionAmount > 0) || 
+                                      (campaign.percentageConversionAmount && campaign.percentageConversionAmount > 0);
+            
+            let payoutType: "click" | "conversion" | undefined;
+            if (hasClickPayout && !hasConversionPayout) {
+              payoutType = "click";
+            } else if (hasConversionPayout && !hasClickPayout) {
+              payoutType = "conversion";
+            } else if (hasConversionPayout) {
+              // If both exist, prioritize conversion
+              payoutType = "conversion";
+            }
+
             form.reset({
               name: campaign.name || "",
               advertiserId: campaign.advertiserId?.toString() || "",
@@ -168,9 +183,10 @@ const CampaignForm: React.FC = () => {
               sessionDefinition: (campaign.sessionDefinition as "cookie" | "ip" | "fingerprint") || "cookie",
               sessionDuration: campaign.sessionDuration || 30,
               fixedRevenue: campaign.fixedRevenue || 0,
-              fixedClickAmount: campaign.fixedClickAmount || 0,
-              fixedConversionAmount: campaign.fixedConversionAmount || 0,
-              percentageConversionAmount: campaign.percentageConversionAmount || 0,
+              payoutType,
+              fixedClickAmount: payoutType === "click" ? (campaign.fixedClickAmount || 0) : 0,
+              fixedConversionAmount: payoutType === "conversion" ? (campaign.fixedConversionAmount || 0) : 0,
+              percentageConversionAmount: payoutType === "conversion" ? (campaign.percentageConversionAmount || 0) : 0,
               isCapsEnabled: campaign.isCapsEnabled || false,
               dailyClickCap: campaign.dailyClickCap || 0,
               weeklyClickCap: campaign.weeklyClickCap || 0,
