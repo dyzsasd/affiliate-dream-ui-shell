@@ -20,14 +20,14 @@ import { Plus, PlusCircle, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { CreateAdvertiserModal } from '@/components/advertisers/CreateAdvertiserModal';
+
 
 const AdvertiserList: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { organization, profile, isOrganizationLoading, fetchOrganization } = useAuth();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  
 
   console.log("Auth organization:", organization);
   console.log("Auth profile:", profile);
@@ -129,7 +129,7 @@ const AdvertiserList: React.FC = () => {
           <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
           <p className="text-muted-foreground">{t('advertisers.description')}</p>
         </div>
-        <Button onClick={() => setIsCreateModalOpen(true)}>
+        <Button onClick={() => navigate('/advertisers/new')}>
           <Plus className="mr-2 h-4 w-4" />
           Create Advertiser
         </Button>
@@ -144,7 +144,7 @@ const AdvertiserList: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="w-full">
+            <Button onClick={() => navigate('/advertisers/new')} className="w-full">
               <PlusCircle className="mr-2 h-4 w-4" />
               Create Your First Advertiser
             </Button>
@@ -202,10 +202,6 @@ const AdvertiserList: React.FC = () => {
         </Card>
       )}
 
-      <CreateAdvertiserModal 
-        open={isCreateModalOpen}
-        onOpenChange={setIsCreateModalOpen}
-      />
     </div>
   );
 };

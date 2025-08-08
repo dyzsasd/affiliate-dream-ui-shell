@@ -25,5 +25,6 @@
   "tryAgain": "重試",
   "optional": "可選",
   "remove": "移除",
-  "filter": "篩選"
+  "filter": "篩選",
+  "required": "必填"
 }

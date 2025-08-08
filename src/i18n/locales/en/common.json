@@ -25,5 +25,6 @@
   "tryAgain": "Try Again",
   "optional": "optional",
   "remove": "Remove",
-  "filter": "Filter"
+  "filter": "Filter",
+  "required": "Required"
 }
