@@ -412,7 +412,12 @@ const CampaignForm: React.FC = () => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+              console.log("=== FORM VALIDATION ERRORS ===");
+              console.log("Validation errors:", errors);
+              console.log("Form state:", form.formState);
+              console.log("Form values:", form.getValues());
+            })} className="space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -884,7 +889,16 @@ const CampaignForm: React.FC = () => {
                 >
                   {t("common.cancel")}
                 </Button>
-                <Button type="submit" disabled={isSubmitting || isLoading}>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting || isLoading}
+                  onClick={() => {
+                    console.log("=== UPDATE BUTTON CLICKED ===");
+                    console.log("Button disabled state:", isSubmitting || isLoading);
+                    console.log("Form valid:", form.formState.isValid);
+                    console.log("Form errors:", form.formState.errors);
+                  }}
+                >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
