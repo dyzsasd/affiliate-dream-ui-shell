@@ -217,10 +217,17 @@ const CampaignForm: React.FC = () => {
   }, [isEditMode, id, form, toast, t]);
 
   const onSubmit = async (data: CampaignFormData) => {
+    console.log("=== SUBMIT HANDLER CALLED ===");
+    console.log("Form data received:", data);
+    console.log("isEditMode:", isEditMode);
+    console.log("Campaign ID:", id);
+    
     // Use delegated organization ID if in delegation mode, otherwise use current organization
     const targetOrgId = isDelegationMode ? delegatedOrgId : organization?.organizationId;
+    console.log("Target organization ID:", targetOrgId);
     
     if (!targetOrgId) {
+      console.error("No organization ID found");
       toast({
         title: t("common.error"),
         description: "No organization found. Please contact support.",
@@ -230,10 +237,14 @@ const CampaignForm: React.FC = () => {
     }
 
     setIsSubmitting(true);
+    console.log("Setting isSubmitting to true");
+    
     try {
       console.log(`${isEditMode ? 'Updating' : 'Creating'} campaign with data:`, data);
       
       if (isEditMode && id) {
+        console.log("=== UPDATE CAMPAIGN FLOW ===");
+        
         // Update existing campaign  
         // Convert date strings to proper datetime format with timezone
         const formatDateTime = (dateString?: string) => {

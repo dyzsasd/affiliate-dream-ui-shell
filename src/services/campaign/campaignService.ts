@@ -60,6 +60,10 @@ class CampaignService {
   
   // Update an existing campaign
   async updateCampaign(id: string, campaignData: Partial<CampaignDetail>): Promise<Campaign> {
+    console.log("=== CAMPAIGN SERVICE UPDATE ===");
+    console.log("Campaign ID:", id);
+    console.log("Campaign data received:", campaignData);
+    
     // Create a valid request object with all available fields
     const request: ModelsUpdateCampaignRequest = {
       name: campaignData.name || '',
@@ -92,8 +96,21 @@ class CampaignService {
       internalNotes: campaignData.internalNotes
     };
     
-    const response = await this.apiClient.updateCampaign(Number(id), request);
-    return mapToCampaign(response);
+    console.log("Update request object:", request);
+    console.log("Calling API client updateCampaign...");
+    
+    try {
+      const response = await this.apiClient.updateCampaign(Number(id), request);
+      console.log("API response received:", response);
+      
+      const mappedCampaign = mapToCampaign(response);
+      console.log("Mapped campaign:", mappedCampaign);
+      
+      return mappedCampaign;
+    } catch (error) {
+      console.error("Error in campaignService.updateCampaign:", error);
+      throw error;
+    }
   }
   
   // Delete a campaign
