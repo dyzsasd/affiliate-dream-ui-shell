@@ -115,8 +115,8 @@ export const AdvertiserOnboard: React.FC = () => {
         description: "Your advertiser organization and profile have been created successfully",
       });
 
-      // Navigate to dashboard after successful creation
-      navigate('/');
+      // Reload the website after successful creation
+      window.location.reload();
     } catch (error) {
       console.error('Error creating advertiser organization:', error);
       toast({

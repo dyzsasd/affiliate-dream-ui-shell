@@ -97,8 +97,8 @@ export const AgencyOnboard: React.FC = () => {
         description: "Your agency organization and profile have been created successfully",
       });
 
-      // Navigate to dashboard after successful creation
-      navigate('/');
+      // Reload the website after successful creation
+      window.location.reload();
     } catch (error) {
       console.error('Error creating agency organization:', error);
       toast({

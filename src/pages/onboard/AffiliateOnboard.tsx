@@ -95,8 +95,8 @@ export const AffiliateOnboard: React.FC = () => {
         description: "Your affiliate organization and profile have been created.",
       });
 
-      // Navigate to dashboard after successful creation
-      navigate('/');
+      // Reload the website after successful creation
+      window.location.reload();
 
     } catch (error: any) {
       toast({
