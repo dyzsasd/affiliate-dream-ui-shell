@@ -10,8 +10,9 @@ const InvitationRoutes: React.FC = () => {
     <Routes>
       <Route index element={<InvitationList />} />
       <Route path="new" element={<InvitationForm />} />
+      {/* Public invitation route for tokens - must come before :id route */}
+      <Route path=":token" element={<PublicInvitation />} />
       <Route path=":id/edit" element={<InvitationForm />} />
-      <Route path=":id" element={<InvitationDetail />} />
     </Routes>
   );
 };
