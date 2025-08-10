@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Building2, Calendar, Users, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { PublicInvitationService, InvitationService } from '@/services/invitationApi';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
@@ -18,7 +18,7 @@ export default function PublicInvitation() {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { toast } = useToast();
-  const [selectedOrgId, setSelectedOrgId] = useState<string>('');
+  const [selectedOrgIds, setSelectedOrgIds] = useState<number[]>([]);
 
   const { data: invitation, isLoading, error } = useQuery({
     queryKey: ['public-invitation', token],
@@ -48,12 +48,23 @@ export default function PublicInvitation() {
     enabled: !!user && !!invitation,
   });
 
+  // Select all organizations by default when they load
+  useEffect(() => {
+    if (affiliateOrganizations.length > 0 && selectedOrgIds.length === 0) {
+      const orgIds = affiliateOrganizations.map(org => org.organizationId!).filter(id => id !== undefined);
+      setSelectedOrgIds(orgIds);
+    }
+  }, [affiliateOrganizations, selectedOrgIds.length]);
+
   const useInvitationMutation = useMutation({
-    mutationFn: ({ affiliateOrgId }: { affiliateOrgId: number }) => 
-      InvitationService.useInvitation({
+    mutationFn: async ({ affiliateOrgIds }: { affiliateOrgIds: number[] }) => {
+      // Use the first organization ID for now - API needs to be updated to support multiple
+      const affiliateOrgId = affiliateOrgIds[0];
+      return InvitationService.useInvitation({
         invitationToken: token!,
         affiliateOrgId,
-      }),
+      });
+    },
     onSuccess: (response) => {
       if (response.success) {
         toast({
@@ -78,17 +89,25 @@ export default function PublicInvitation() {
     },
   });
 
+  const handleToggleOrganization = (orgId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedOrgIds([...selectedOrgIds, orgId]);
+    } else {
+      setSelectedOrgIds(selectedOrgIds.filter(id => id !== orgId));
+    }
+  };
+
   const handleAcceptInvitation = () => {
-    if (!selectedOrgId) {
+    if (selectedOrgIds.length === 0) {
       toast({
         title: "Error",
-        description: "Please select an affiliate organization",
+        description: "Please select at least one affiliate organization",
         variant: "destructive",
       });
       return;
     }
 
-    useInvitationMutation.mutate({ affiliateOrgId: Number(selectedOrgId) });
+    useInvitationMutation.mutate({ affiliateOrgIds: selectedOrgIds });
   };
 
   const isExpired = invitation?.expiresAt && new Date(invitation.expiresAt) < new Date();
@@ -206,32 +225,36 @@ export default function PublicInvitation() {
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2" />
                       <p className="text-sm text-muted-foreground">Loading affiliate organizations...</p>
                     </div>
-                  ) : affiliateOrganizations.length > 0 ? (
+                   ) : affiliateOrganizations.length > 0 ? (
                     <>
                       <p className="text-sm text-muted-foreground">
-                        Select the affiliate organization you want to use for this partnership:
+                        Select the affiliate organizations you want to use for this partnership:
                       </p>
-                      <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an affiliate organization" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {affiliateOrganizations.map((org) => (
-                            <SelectItem 
-                              key={org.organizationId} 
-                              value={String(org.organizationId)}
+                      <div className="space-y-3 max-h-48 overflow-y-auto">
+                        {affiliateOrganizations.map((org) => (
+                          <div key={org.organizationId} className="flex items-center space-x-3">
+                            <Checkbox
+                              id={`org-${org.organizationId}`}
+                              checked={selectedOrgIds.includes(org.organizationId!)}
+                              onCheckedChange={(checked) => 
+                                handleToggleOrganization(org.organizationId!, checked as boolean)
+                              }
+                            />
+                            <label 
+                              htmlFor={`org-${org.organizationId}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                             >
                               {org.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                            </label>
+                          </div>
+                        ))}
+                      </div>
                       <Button 
                         onClick={handleAcceptInvitation}
-                        disabled={useInvitationMutation.isPending || !selectedOrgId}
+                        disabled={useInvitationMutation.isPending || selectedOrgIds.length === 0}
                         className="w-full"
                       >
-                        {useInvitationMutation.isPending ? 'Processing...' : 'Accept Invitation'}
+                        {useInvitationMutation.isPending ? 'Processing...' : `Accept Invitation (${selectedOrgIds.length} selected)`}
                       </Button>
                     </>
                   ) : (
