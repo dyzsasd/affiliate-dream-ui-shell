@@ -359,7 +359,7 @@ const AssociationsManagement: React.FC = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => navigate(`/associations/${association.associationId}/details`)}
+                            onClick={() => navigate(`/associations/${association.affiliateOrgId}`)}
                             className="text-blue-600 hover:text-blue-700"
                           >
                             <Eye className="w-4 h-4 mr-1" />
