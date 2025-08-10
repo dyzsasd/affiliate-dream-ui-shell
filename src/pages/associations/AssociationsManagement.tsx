@@ -305,8 +305,8 @@ const AssociationsManagement: React.FC = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("associations.advertiserName")}</TableHead>
-                    <TableHead>{t("associations.affiliateName")}</TableHead>
+                    <TableHead>{t("associations.advertiser")}</TableHead>
+                    <TableHead>{t("associations.affiliate")}</TableHead>
                     <TableHead>{t("associations.status")}</TableHead>
                     <TableHead>{t("associations.createdAt")}</TableHead>
                     <TableHead>{t("associations.actions")}</TableHead>
@@ -326,9 +326,6 @@ const AssociationsManagement: React.FC = () => {
                             <p className="font-medium">
                               {association.advertiserOrganization?.name || t("associations.unknownAdvertiser")}
                             </p>
-                            <p className="text-sm text-muted-foreground">
-                              ID: {association.advertiserOrgId}
-                            </p>
                           </div>
                         </div>
                       </TableCell>
@@ -342,9 +339,6 @@ const AssociationsManagement: React.FC = () => {
                           <div>
                             <p className="font-medium">
                               {association.affiliateOrganization?.name || t("associations.unknownAffiliate")}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              ID: {association.affiliateOrgId}
                             </p>
                           </div>
                         </div>
