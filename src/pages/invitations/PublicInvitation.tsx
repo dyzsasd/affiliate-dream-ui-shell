@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PublicInvitationService, InvitationService } from '@/services/invitationApi';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
+import { createApiClient } from '@/services/backendApi';
+import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 
 export default function PublicInvitation() {
   const { token } = useParams();
@@ -23,6 +25,27 @@ export default function PublicInvitation() {
     queryFn: () => PublicInvitationService.getPublicInvitation(token!),
     enabled: !!token,
     retry: false,
+  });
+
+  // Fetch available affiliate organizations
+  const { data: affiliateOrganizations = [], isLoading: isLoadingOrganizations } = useQuery({
+    queryKey: ['affiliate-organizations'],
+    queryFn: async () => {
+      const organizationsApi = await createApiClient(OrganizationsApi);
+      const allOrgs = await organizationsApi.organizationsGet({ page: 1, pageSize: 100 });
+      
+      // Filter to only affiliate organizations
+      const affiliateOrgs = allOrgs.filter(org => org.type === 'affiliate');
+      
+      // If invitation has allowedAffiliateOrgIds, filter by those
+      if (invitation?.allowedAffiliateOrgIds) {
+        const allowedIds = invitation.allowedAffiliateOrgIds.split(',').map(id => parseInt(id.trim()));
+        return affiliateOrgs.filter(org => allowedIds.includes(org.organizationId!));
+      }
+      
+      return affiliateOrgs;
+    },
+    enabled: !!user && !!invitation,
   });
 
   const useInvitationMutation = useMutation({
@@ -178,19 +201,29 @@ export default function PublicInvitation() {
                   <CardTitle>Accept Invitation</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {profile?.organization ? (
+                  {isLoadingOrganizations ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">Loading affiliate organizations...</p>
+                    </div>
+                  ) : affiliateOrganizations.length > 0 ? (
                     <>
                       <p className="text-sm text-muted-foreground">
                         Select the affiliate organization you want to use for this partnership:
                       </p>
                       <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select your affiliate organization" />
+                          <SelectValue placeholder="Select an affiliate organization" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value={String(profile.organization.id)}>
-                            {profile.organization.name}
-                          </SelectItem>
+                          {affiliateOrganizations.map((org) => (
+                            <SelectItem 
+                              key={org.organizationId} 
+                              value={String(org.organizationId)}
+                            >
+                              {org.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <Button 
@@ -205,7 +238,7 @@ export default function PublicInvitation() {
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        You need to be part of an affiliate organization to accept this invitation.
+                        No affiliate organizations are available for this invitation, or you don't have access to any affiliate organizations.
                       </AlertDescription>
                     </Alert>
                   )}
