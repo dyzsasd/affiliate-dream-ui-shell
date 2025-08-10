@@ -116,9 +116,7 @@ export default function PublicInvitation() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="max-w-2xl mx-auto space-y-6">
             {/* Invitation Details */}
             <Card>
               <CardHeader>
@@ -157,24 +155,6 @@ export default function PublicInvitation() {
                   </div>
                 )}
 
-                {/* Partnership Benefits */}
-                <div>
-                  <h3 className="font-medium mb-2">Partnership Benefits</h3>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {invitation.defaultAllAffiliatesVisible && (
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        Access to all affiliate network
-                      </li>
-                    )}
-                    {invitation.defaultAllCampaignsVisible && (
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        Access to all available campaigns
-                      </li>
-                    )}
-                  </ul>
-                </div>
               </CardContent>
             </Card>
 
@@ -246,54 +226,7 @@ export default function PublicInvitation() {
             )}
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Invitation Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Invitation Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Created: {invitation.createdAt ? new Date(invitation.createdAt).toLocaleDateString() : 'Unknown'}</span>
-                </div>
-
-                {invitation.expiresAt && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>Expires: {new Date(invitation.expiresAt).toLocaleDateString()}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2 text-sm">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span>
-                    Usage: {invitation.currentUses || 0}
-                    {invitation.maxUses ? `/${invitation.maxUses}` : '/∞'}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Need Help */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Need Help?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Have questions about this partnership opportunity?
-                </p>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <ExternalLink className="h-4 w-4" />
-                  Contact Support
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
         </div>
-      </div>
     </div>
   );
 }
