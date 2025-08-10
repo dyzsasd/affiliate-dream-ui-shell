@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import { createApiClient } from '@/services/backendApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
+// Fixed Select reference error
 
 export default function PublicInvitation() {
   const { token } = useParams();
