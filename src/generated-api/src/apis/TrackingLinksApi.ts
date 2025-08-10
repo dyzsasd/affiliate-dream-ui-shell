@@ -22,6 +22,8 @@ import type {
   ModelsTrackingLinkRequest,
   ModelsTrackingLinkResponse,
   ModelsTrackingLinkUpdateRequest,
+  ModelsTrackingLinkUpsertRequest,
+  ModelsTrackingLinkUpsertResponse,
 } from '../models/index';
 import {
     HandlersErrorResponseFromJSON,
@@ -38,6 +40,10 @@ import {
     ModelsTrackingLinkResponseToJSON,
     ModelsTrackingLinkUpdateRequestFromJSON,
     ModelsTrackingLinkUpdateRequestToJSON,
+    ModelsTrackingLinkUpsertRequestFromJSON,
+    ModelsTrackingLinkUpsertRequestToJSON,
+    ModelsTrackingLinkUpsertResponseFromJSON,
+    ModelsTrackingLinkUpsertResponseToJSON,
 } from '../models/index';
 
 export interface AffiliatesIdTrackingLinksGetRequest {
@@ -92,6 +98,11 @@ export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdQrGetRequ
 export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRequest {
     organizationId: number;
     trackingLinkId: number;
+}
+
+export interface OrganizationsOrganizationIdTrackingLinksUpsertPostRequest {
+    organizationId: number;
+    request: ModelsTrackingLinkUpsertRequest;
 }
 
 /**
@@ -578,6 +589,55 @@ export class TrackingLinksApi extends runtime.BaseAPI {
      */
     async organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePost(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkGenerationResponse> {
         const response = await this.organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Create a new tracking link or update an existing one based on campaign_id and affiliate_id
+     * Upsert a tracking link by campaign and affiliate
+     */
+    async organizationsOrganizationIdTrackingLinksUpsertPostRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkUpsertResponse>> {
+        if (requestParameters['organizationId'] == null) {
+            throw new runtime.RequiredError(
+                'organizationId',
+                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksUpsertPost().'
+            );
+        }
+
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling organizationsOrganizationIdTrackingLinksUpsertPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/organizations/{organization_id}/tracking-links/upsert`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ModelsTrackingLinkUpsertRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkUpsertResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new tracking link or update an existing one based on campaign_id and affiliate_id
+     * Upsert a tracking link by campaign and affiliate
+     */
+    async organizationsOrganizationIdTrackingLinksUpsertPost(requestParameters: OrganizationsOrganizationIdTrackingLinksUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkUpsertResponse> {
+        const response = await this.organizationsOrganizationIdTrackingLinksUpsertPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

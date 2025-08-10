@@ -132,6 +132,8 @@ export * from './ModelsTrackingLinkListResponse';
 export * from './ModelsTrackingLinkRequest';
 export * from './ModelsTrackingLinkResponse';
 export * from './ModelsTrackingLinkUpdateRequest';
+export * from './ModelsTrackingLinkUpsertRequest';
+export * from './ModelsTrackingLinkUpsertResponse';
 export * from './ModelsUpdateAdvertiserProviderMappingRequest';
 export * from './ModelsUpdateAdvertiserRequest';
 export * from './ModelsUpdateCampaignRequest';

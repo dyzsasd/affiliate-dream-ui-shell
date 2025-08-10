@@ -2816,6 +2816,82 @@ definitions:
         example: facebook,mobile,lookalike
         type: string
     type: object
+  models.TrackingLinkUpsertRequest:
+    properties:
+      affiliate_id:
+        example: 1
+        type: integer
+      campaign_id:
+        example: 1
+        type: integer
+      creative_id:
+        example: 1
+        type: integer
+      description:
+        example: Tracking link for Facebook traffic
+        type: string
+      internal_notes:
+        example: High-performing traffic source
+        type: string
+      is_encrypt_parameters:
+        example: false
+        type: boolean
+      is_redirect_link:
+        example: true
+        type: boolean
+      name:
+        example: Facebook Campaign Link
+        type: string
+      network_offer_url_id:
+        example: 1
+        type: integer
+      network_tracking_domain_id:
+        example: 1
+        type: integer
+      network_traffic_source_id:
+        example: 1
+        type: integer
+      source_id:
+        example: facebook
+        type: string
+      sub1:
+        example: campaign_123
+        type: string
+      sub2:
+        example: adset_456
+        type: string
+      sub3:
+        example: ad_789
+        type: string
+      sub4:
+        example: placement_mobile
+        type: string
+      sub5:
+        example: audience_lookalike
+        type: string
+      tags:
+        example: facebook,mobile,lookalike
+        type: string
+    required:
+    - affiliate_id
+    - campaign_id
+    - name
+    type: object
+  models.TrackingLinkUpsertResponse:
+    properties:
+      generated_url:
+        example: https://tracking.example.com/ABC123/DEF456/?sub1=campaign_123
+        type: string
+      is_new:
+        description: Indicates if this was a create (true) or update (false)
+        example: true
+        type: boolean
+      qr_code_url:
+        example: https://api.example.com/tracking-links/1/qr
+        type: string
+      tracking_link:
+        $ref: '#/definitions/models.TrackingLinkResponse'
+    type: object
   models.UpdateAdvertiserProviderMappingRequest:
     properties:
       provider_mapping:
@@ -7337,6 +7413,56 @@ paths:
       security:
       - BearerAuth: []
       summary: Generate a new tracking link
+      tags:
+      - tracking-links
+  /organizations/{organization_id}/tracking-links/upsert:
+    post:
+      consumes:
+      - application/json
+      description: Create a new tracking link or update an existing one based on campaign_id
+        and affiliate_id
+      parameters:
+      - description: Organization ID
+        in: path
+        name: organization_id
+        required: true
+        type: integer
+      - description: Tracking link upsert request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TrackingLinkUpsertRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated existing tracking link
+          schema:
+            $ref: '#/definitions/models.TrackingLinkUpsertResponse'
+        "201":
+          description: Created new tracking link
+          schema:
+            $ref: '#/definitions/models.TrackingLinkUpsertResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upsert a tracking link by campaign and affiliate
       tags:
       - tracking-links
   /profiles:
