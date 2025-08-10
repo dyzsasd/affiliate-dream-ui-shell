@@ -714,6 +714,38 @@ definitions:
         description: For quarterly/yearly billing
         type: integer
     type: object
+  domain.BulkSyncItemResult:
+    properties:
+      advertiser_id:
+        type: integer
+      advertiser_name:
+        type: string
+      error:
+        type: string
+      provider_advertiser_id:
+        type: string
+    type: object
+  domain.BulkSyncResult:
+    properties:
+      completed_at:
+        type: string
+      failure_count:
+        type: integer
+      failures:
+        items:
+          $ref: '#/definitions/domain.BulkSyncItemResult'
+        type: array
+      started_at:
+        type: string
+      success_count:
+        type: integer
+      successes:
+        items:
+          $ref: '#/definitions/domain.BulkSyncItemResult'
+        type: array
+      total_processed:
+        type: integer
+    type: object
   domain.Campaign:
     properties:
       advertiser_id:
@@ -1277,6 +1309,54 @@ definitions:
       message:
         description: Optional message with request/invitation
         type: string
+      requested_by_user_id:
+        description: Request/invitation metadata
+        type: string
+      status:
+        $ref: '#/definitions/domain.AssociationStatus'
+      updated_at:
+        type: string
+      visible_affiliate_ids:
+        description: Visibility settings - JSON arrays of IDs
+        type: string
+      visible_campaign_ids:
+        description: JSONB array of campaign IDs visible to affiliate
+        type: string
+    type: object
+  domain.OrganizationAssociationWithDetails:
+    properties:
+      advertiser_org_id:
+        type: integer
+      advertiser_organization:
+        $ref: '#/definitions/domain.Organization'
+      affiliate_org_id:
+        type: integer
+      affiliate_organization:
+        $ref: '#/definitions/domain.Organization'
+      all_affiliates_visible:
+        description: Default visibility flags (when true, all affiliates/campaigns
+          are visible)
+        type: boolean
+      all_campaigns_visible:
+        type: boolean
+      approved_at:
+        type: string
+      approved_by_user:
+        $ref: '#/definitions/domain.Profile'
+      approved_by_user_id:
+        description: UUID of user who approved
+        type: string
+      association_id:
+        type: integer
+      association_type:
+        $ref: '#/definitions/domain.AssociationType'
+      created_at:
+        type: string
+      message:
+        description: Optional message with request/invitation
+        type: string
+      requested_by_user:
+        $ref: '#/definitions/domain.Profile'
       requested_by_user_id:
         description: Request/invitation metadata
         type: string
@@ -2052,6 +2132,9 @@ definitions:
         type: string
       first_name:
         type: string
+      id:
+        description: 'TODO: Remove this field when access control is restored'
+        type: string
       last_name:
         type: string
       organization_id:
@@ -2236,6 +2319,27 @@ definitions:
         type: integer
       total:
         type: integer
+    type: object
+  models.CampaignProviderMappingResponse:
+    properties:
+      campaign_id:
+        type: integer
+      created_at:
+        type: string
+      is_active_on_provider:
+        type: boolean
+      last_synced_at:
+        type: string
+      mapping_id:
+        type: integer
+      provider_data:
+        type: string
+      provider_offer_id:
+        type: string
+      provider_type:
+        type: string
+      updated_at:
+        type: string
     type: object
   models.CampaignResponse:
     properties:
@@ -2457,6 +2561,11 @@ definitions:
     properties:
       provider_mapping:
         $ref: '#/definitions/domain.AdvertiserProviderMapping'
+    type: object
+  models.GetCampaignProviderMappingResponse:
+    properties:
+      provider_mapping:
+        $ref: '#/definitions/models.CampaignProviderMappingResponse'
     type: object
   models.TrackingLinkGenerationRequest:
     properties:
@@ -3335,43 +3444,6 @@ paths:
       summary: Create a new advertiser
       tags:
       - advertisers
-  /advertisers/{advertiser_id}/campaigns:
-    get:
-      description: Retrieve campaigns for a specific advertiser with pagination
-      parameters:
-      - description: Advertiser ID
-        in: path
-        name: advertiser_id
-        required: true
-        type: integer
-      - description: 'Page number (default: 1)'
-        in: query
-        name: page
-        type: integer
-      - description: 'Page size (default: 20, max: 100)'
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.CampaignListResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: List campaigns by advertiser
-      tags:
-      - campaigns
   /advertisers/{id}:
     delete:
       consumes:
@@ -3515,6 +3587,43 @@ paths:
       summary: Update advertiser
       tags:
       - advertisers
+  /advertisers/{id}/campaigns:
+    get:
+      description: Retrieve campaigns for a specific advertiser with pagination
+      parameters:
+      - description: Advertiser ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 20, max: 100)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CampaignListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List campaigns by advertiser
+      tags:
+      - campaigns
   /advertisers/{id}/compare-with-everflow:
     get:
       consumes:
@@ -3707,6 +3816,40 @@ paths:
       security:
       - BearerAuth: []
       summary: Sync advertiser to Everflow
+      tags:
+      - advertisers
+  /advertisers/sync-all-to-everflow:
+    post:
+      description: Creates Everflow advertisers for all local advertisers that don't
+        have provider mappings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sync results
+          schema:
+            $ref: '#/definitions/domain.BulkSyncResult'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Sync all advertisers to Everflow
       tags:
       - advertisers
   /affiliate-provider-mappings:
@@ -5350,6 +5493,47 @@ paths:
       summary: Update a campaign
       tags:
       - campaigns
+  /campaigns/{id}/provider-mappings/{providerType}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a campaign provider mapping by campaign ID and provider
+        type
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Provider type
+        in: path
+        name: providerType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetCampaignProviderMappingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get campaign provider mapping
+      tags:
+      - campaigns
   /campaigns/{id}/tracking-links:
     get:
       description: Retrieve a list of tracking links for a specific campaign
@@ -5916,7 +6100,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.OrganizationAssociation'
+              $ref: '#/definitions/domain.OrganizationAssociationWithDetails'
             type: array
         "400":
           description: Bad Request
@@ -7159,7 +7343,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new user profile
+      description: 'Creates a new user profile (TODO: Temporarily without access control)'
       parameters:
       - description: Profile information
         in: body

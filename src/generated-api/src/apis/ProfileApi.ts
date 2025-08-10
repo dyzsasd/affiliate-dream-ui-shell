@@ -141,7 +141,7 @@ export class ProfileApi extends runtime.BaseAPI {
     }
 
     /**
-     * Creates a new user profile
+     * Creates a new user profile (TODO: Temporarily without access control)
      * Create a new profile
      */
     async profilesPostRaw(requestParameters: ProfilesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainProfile>> {
@@ -174,7 +174,7 @@ export class ProfileApi extends runtime.BaseAPI {
     }
 
     /**
-     * Creates a new user profile
+     * Creates a new user profile (TODO: Temporarily without access control)
      * Create a new profile
      */
     async profilesPost(requestParameters: ProfilesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainProfile> {

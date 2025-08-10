@@ -19,6 +19,7 @@ import type {
   DomainCampaign,
   DomainCreateAssociationRequest,
   DomainOrganizationAssociation,
+  DomainOrganizationAssociationWithDetails,
   DomainUpdateAssociationRequest,
   HandlersErrorResponse,
 } from '../models/index';
@@ -31,6 +32,8 @@ import {
     DomainCreateAssociationRequestToJSON,
     DomainOrganizationAssociationFromJSON,
     DomainOrganizationAssociationToJSON,
+    DomainOrganizationAssociationWithDetailsFromJSON,
+    DomainOrganizationAssociationWithDetailsToJSON,
     DomainUpdateAssociationRequestFromJSON,
     DomainUpdateAssociationRequestToJSON,
     HandlersErrorResponseFromJSON,
@@ -106,7 +109,7 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
      * List organization associations with optional filtering
      * List associations
      */
-    async organizationAssociationsGetRaw(requestParameters: OrganizationAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainOrganizationAssociation>>> {
+    async organizationAssociationsGetRaw(requestParameters: OrganizationAssociationsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<DomainOrganizationAssociationWithDetails>>> {
         const queryParameters: any = {};
 
         if (requestParameters['advertiserOrgId'] != null) {
@@ -150,14 +153,14 @@ export class OrganizationAssociationsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainOrganizationAssociationFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(DomainOrganizationAssociationWithDetailsFromJSON));
     }
 
     /**
      * List organization associations with optional filtering
      * List associations
      */
-    async organizationAssociationsGet(requestParameters: OrganizationAssociationsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainOrganizationAssociation>> {
+    async organizationAssociationsGet(requestParameters: OrganizationAssociationsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<DomainOrganizationAssociationWithDetails>> {
         const response = await this.organizationAssociationsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

@@ -19,6 +19,7 @@ import type {
   ModelsCampaignListResponse,
   ModelsCampaignResponse,
   ModelsCreateCampaignRequest,
+  ModelsGetCampaignProviderMappingResponse,
   ModelsUpdateCampaignRequest,
 } from '../models/index';
 import {
@@ -30,12 +31,14 @@ import {
     ModelsCampaignResponseToJSON,
     ModelsCreateCampaignRequestFromJSON,
     ModelsCreateCampaignRequestToJSON,
+    ModelsGetCampaignProviderMappingResponseFromJSON,
+    ModelsGetCampaignProviderMappingResponseToJSON,
     ModelsUpdateCampaignRequestFromJSON,
     ModelsUpdateCampaignRequestToJSON,
 } from '../models/index';
 
-export interface AdvertisersAdvertiserIdCampaignsGetRequest {
-    advertiserId: number;
+export interface AdvertisersIdCampaignsGetRequest {
+    id: number;
     page?: number;
     pageSize?: number;
 }
@@ -46,6 +49,11 @@ export interface CampaignsIdDeleteRequest {
 
 export interface CampaignsIdGetRequest {
     id: number;
+}
+
+export interface CampaignsIdProviderMappingsProviderTypeGetRequest {
+    id: number;
+    providerType: string;
 }
 
 export interface CampaignsIdPutRequest {
@@ -72,11 +80,11 @@ export class CampaignsApi extends runtime.BaseAPI {
      * Retrieve campaigns for a specific advertiser with pagination
      * List campaigns by advertiser
      */
-    async advertisersAdvertiserIdCampaignsGetRaw(requestParameters: AdvertisersAdvertiserIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignListResponse>> {
-        if (requestParameters['advertiserId'] == null) {
+    async advertisersIdCampaignsGetRaw(requestParameters: AdvertisersIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsCampaignListResponse>> {
+        if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
-                'advertiserId',
-                'Required parameter "advertiserId" was null or undefined when calling advertisersAdvertiserIdCampaignsGet().'
+                'id',
+                'Required parameter "id" was null or undefined when calling advertisersIdCampaignsGet().'
             );
         }
 
@@ -97,7 +105,7 @@ export class CampaignsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/advertisers/{advertiser_id}/campaigns`.replace(`{${"advertiser_id"}}`, encodeURIComponent(String(requestParameters['advertiserId']))),
+            path: `/advertisers/{id}/campaigns`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -110,8 +118,8 @@ export class CampaignsApi extends runtime.BaseAPI {
      * Retrieve campaigns for a specific advertiser with pagination
      * List campaigns by advertiser
      */
-    async advertisersAdvertiserIdCampaignsGet(requestParameters: AdvertisersAdvertiserIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignListResponse> {
-        const response = await this.advertisersAdvertiserIdCampaignsGetRaw(requestParameters, initOverrides);
+    async advertisersIdCampaignsGet(requestParameters: AdvertisersIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignListResponse> {
+        const response = await this.advertisersIdCampaignsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -189,6 +197,52 @@ export class CampaignsApi extends runtime.BaseAPI {
      */
     async campaignsIdGet(requestParameters: CampaignsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignResponse> {
         const response = await this.campaignsIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieves a campaign provider mapping by campaign ID and provider type
+     * Get campaign provider mapping
+     */
+    async campaignsIdProviderMappingsProviderTypeGetRaw(requestParameters: CampaignsIdProviderMappingsProviderTypeGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsGetCampaignProviderMappingResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling campaignsIdProviderMappingsProviderTypeGet().'
+            );
+        }
+
+        if (requestParameters['providerType'] == null) {
+            throw new runtime.RequiredError(
+                'providerType',
+                'Required parameter "providerType" was null or undefined when calling campaignsIdProviderMappingsProviderTypeGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/campaigns/{id}/provider-mappings/{providerType}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"providerType"}}`, encodeURIComponent(String(requestParameters['providerType']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsGetCampaignProviderMappingResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieves a campaign provider mapping by campaign ID and provider type
+     * Get campaign provider mapping
+     */
+    async campaignsIdProviderMappingsProviderTypeGet(requestParameters: CampaignsIdProviderMappingsProviderTypeGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsGetCampaignProviderMappingResponse> {
+        const response = await this.campaignsIdProviderMappingsProviderTypeGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
