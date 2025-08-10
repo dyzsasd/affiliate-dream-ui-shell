@@ -88,11 +88,10 @@
   "managePartnerships": "Manage your affiliate partnerships and association requests",
   "noAffiliateAssociations": "No Affiliate Associations",
   "noAffiliateAssociationsMessage": "You don't have any affiliate associations yet.",
-  "visibleAffiliatesFor": "Visible affiliates for organization ID",
-  "createTrackingLinkDescription": "Create a tracking link for: {name}",
-  "selectAffiliateDescription": "Select an affiliate from the table above, then choose a campaign to create a tracking link",
-  "selectAffiliateMessage": "Please select an affiliate from the table above to continue",
-  "generatedTrackingLink": "Generated Tracking Link",
+  "advertiserName": "Advertiser Name",
+  "unknownAdvertiser": "Unknown Advertiser",
+  "unknownAffiliate": "Unknown Affiliate",
+  "viewDetails": "View Details",
   "generating": "Generating...",
   "trackingLinkCopiedToClipboard": "Tracking link copied to clipboard"
 }

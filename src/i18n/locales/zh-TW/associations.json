@@ -64,6 +64,10 @@
   "managePartnerships": "管理您的聯盟夥伴關係和關聯請求",
   "noAffiliateAssociations": "無聯盟夥伴關聯",
   "noAffiliateAssociationsMessage": "您還沒有任何聯盟夥伴關聯。",
+  "advertiserName": "廣告主名稱",
+  "unknownAdvertiser": "未知廣告主",
+  "unknownAffiliate": "未知聯盟夥伴",
+  "viewDetails": "檢視詳情",
   "generating": "產生中...",
   "trackingLinkCopiedToClipboard": "追蹤連結已複製到剪貼簿"
 }
