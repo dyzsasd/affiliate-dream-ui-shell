@@ -53,7 +53,8 @@ const AffiliateDetails: React.FC = () => {
         affiliateOrgId: parseInt(affiliateOrgId!),
       });
 
-      setAffiliates(response || []);
+      // Handle null response from API
+      setAffiliates(Array.isArray(response) ? response : []);
     } catch (error) {
       console.error('Error fetching visible affiliates:', error);
       toast({
