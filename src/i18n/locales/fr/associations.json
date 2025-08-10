@@ -119,5 +119,7 @@
   "endDate": "Date de Fin",
   "generatedTrackingLink": "Lien de Suivi Généré",
   "generating": "Génération...",
-  "trackingLinkCopiedToClipboard": "Lien de suivi copié dans le presse-papiers"
+  "trackingLinkCopiedToClipboard": "Lien de suivi copié dans le presse-papiers",
+  "associationNotFound": "Association non trouvée",
+  "failedToLoadAffiliates": "Échec du chargement des affiliés"
 }

@@ -91,5 +91,7 @@
   "description": "描述",
   "noDescription": "無可用描述",
   "startDate": "開始日期",
-  "endDate": "結束日期"
+  "endDate": "結束日期",
+  "associationNotFound": "未找到關聯",
+  "failedToLoadAffiliates": "載入聯盟夥伴失敗"
 }

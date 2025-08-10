@@ -15,6 +15,7 @@ import { DomainAffiliate } from '@/generated-api/src/models';
 import { OrganizationAssociationsApi, TrackingLinksApi } from '@/generated-api/src/apis';
 import { ModelsTrackingLinkGenerationRequest } from '@/generated-api/src/models/ModelsTrackingLinkGenerationRequest';
 import { campaignService } from '@/services/campaign';
+import { fetchAffiliates } from '@/services/affiliateService';
 import { Campaign } from '@/types/api';
 import { ArrowLeft, Users, Mail, Calendar, AlertCircle, Link, Copy, Loader2, Eye, Globe } from 'lucide-react';
 
@@ -27,6 +28,7 @@ const AssociationDetails: React.FC = () => {
   
   const [affiliates, setAffiliates] = useState<DomainAffiliate[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [association, setAssociation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
   
@@ -51,42 +53,55 @@ const AssociationDetails: React.FC = () => {
 
   useEffect(() => {
     if (organization?.organizationId && affiliateOrgId) {
-      fetchVisibleAffiliates();
-      fetchCampaigns();
+      fetchAssociationData();
     }
   }, [organization, affiliateOrgId]);
 
-  const fetchVisibleAffiliates = async () => {
+  const fetchAssociationData = async () => {
     try {
       setLoading(true);
-      const api = await createApiClient(OrganizationAssociationsApi);
+      setIsLoadingCampaigns(true);
       
-      const response = await api.organizationsAdvertiserOrgIdVisibleAffiliatesGet({
-        advertiserOrgId: organization!.organizationId!,
+      // First, get the association details to know the advertiser organization ID
+      const api = await createApiClient(OrganizationAssociationsApi);
+      const associations = await api.organizationAssociationsGet({
         affiliateOrgId: parseInt(affiliateOrgId!),
+        associationType: 'request',
+        withDetails: true,
       });
 
-      setAffiliates(Array.isArray(response) ? response : []);
-    } catch (error) {
-      console.error('Error fetching visible affiliates:', error);
-      if (error instanceof TypeError && error.message.includes("Cannot read properties of null")) {
-        setAffiliates([]);
+      if (associations && associations.length > 0) {
+        const currentAssociation = associations[0];
+        setAssociation(currentAssociation);
+        
+        // Fetch campaigns from the advertiser organization
+        await fetchCampaigns(currentAssociation.advertiserOrgId);
+        
+        // Fetch affiliates from the affiliate organization  
+        await fetchAffiliatesData();
       } else {
         toast({
           title: t("associations.error"),
-          description: t("associations.failedToLoadDetails"),
+          description: t("associations.associationNotFound"),
           variant: "destructive",
         });
       }
+    } catch (error) {
+      console.error('Error fetching association data:', error);
+      toast({
+        title: t("associations.error"),
+        description: t("associations.failedToLoadDetails"),
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
+      setIsLoadingCampaigns(false);
     }
   };
 
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = async (advertiserOrgId: number) => {
     try {
-      setIsLoadingCampaigns(true);
-      const campaignsData = await campaignService.getCampaigns(organization!.organizationId!);
+      const campaignsData = await campaignService.getCampaigns(advertiserOrgId);
       setCampaigns(campaignsData);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
@@ -95,8 +110,24 @@ const AssociationDetails: React.FC = () => {
         description: t("associations.failedToLoadCampaigns"),
         variant: "destructive",
       });
-    } finally {
-      setIsLoadingCampaigns(false);
+    }
+  };
+
+  const fetchAffiliatesData = async () => {
+    try {
+      const affiliatesData = await fetchAffiliates(parseInt(affiliateOrgId!));
+      setAffiliates(affiliatesData);
+    } catch (error) {
+      console.error('Error fetching affiliates:', error);
+      if (error instanceof TypeError && error.message.includes("Cannot read properties of null")) {
+        setAffiliates([]);
+      } else {
+        toast({
+          title: t("associations.error"),
+          description: t("associations.failedToLoadAffiliates"),
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -240,7 +271,7 @@ const AssociationDetails: React.FC = () => {
               </div>
             </div>
             <CardDescription>
-              {t("associations.manageAssociationFor")}: {affiliateOrgId}
+              {t("associations.manageAssociationFor")}: {association?.affiliateOrganization?.name || affiliateOrgId}
             </CardDescription>
           </CardHeader>
         </Card>

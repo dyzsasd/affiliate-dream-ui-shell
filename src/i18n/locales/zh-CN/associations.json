@@ -119,5 +119,7 @@
   "endDate": "结束日期",
   "generatedTrackingLink": "生成的跟踪链接",
   "generating": "生成中...",
-  "trackingLinkCopiedToClipboard": "跟踪链接已复制到剪贴板"
+  "trackingLinkCopiedToClipboard": "跟踪链接已复制到剪贴板",
+  "associationNotFound": "未找到关联",
+  "failedToLoadAffiliates": "加载联盟伙伴失败"
 }

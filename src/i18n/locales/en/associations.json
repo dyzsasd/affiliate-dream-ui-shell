@@ -115,5 +115,7 @@
   "description": "Description",
   "noDescription": "No description available",
   "startDate": "Start Date",
-  "endDate": "End Date"
+  "endDate": "End Date",
+  "associationNotFound": "Association not found",
+  "failedToLoadAffiliates": "Failed to load affiliates"
 }
