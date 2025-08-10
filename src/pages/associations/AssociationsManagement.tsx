@@ -17,21 +17,21 @@ import { OrganizationAssociationsApi, OrganizationAssociationsGetAssociationType
 
 // Extended type for association with organization details
 interface AssociationWithDetails extends DomainOrganizationAssociation {
-  advertiser_organization?: {
+  advertiser_organization: {
     organization_id: number;
     name: string;
     type: string;
     created_at: string;
     updated_at: string;
   };
-  affiliate_organization?: {
+  affiliate_organization: {
     organization_id: number;
     name: string;
     type: string;
     created_at: string;
     updated_at: string;
   };
-  requested_by_user?: {
+  requested_by_user: {
     id: string;
     role_id: number;
     role_name: string;
@@ -98,7 +98,7 @@ const AssociationsManagement: React.FC = () => {
         withDetails: true,
       });
 
-      setAssociations(response || []);
+      setAssociations((response as AssociationWithDetails[]) || []);
     } catch (error) {
       console.error('Error fetching associations:', error);
       toast({
@@ -360,12 +360,12 @@ const AssociationsManagement: React.FC = () => {
                         <div className="flex items-center space-x-2">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-blue-600">
-                              {(association as any).advertiser_organization?.name?.charAt(0) || 'A'}
+                              {association.advertiser_organization?.name?.charAt(0) || 'A'}
                             </span>
                           </div>
                           <div>
                             <p className="font-medium">
-                              {(association as any).advertiser_organization?.name || t("associations.unknownAdvertiser")}
+                              {association.advertiser_organization?.name || t("associations.unknownAdvertiser")}
                             </p>
                             <p className="text-sm text-muted-foreground">
                               ID: {association.advertiserOrgId}
@@ -377,12 +377,12 @@ const AssociationsManagement: React.FC = () => {
                         <div className="flex items-center space-x-2">
                           <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-green-600">
-                              {(association as any).affiliate_organization?.name?.charAt(0) || 'A'}
+                              {association.affiliate_organization?.name?.charAt(0) || 'A'}
                             </span>
                           </div>
                           <div>
                             <p className="font-medium">
-                              {(association as any).affiliate_organization?.name || t("associations.unknownAffiliate")}
+                              {association.affiliate_organization?.name || t("associations.unknownAffiliate")}
                             </p>
                             <p className="text-sm text-muted-foreground">
                               ID: {association.affiliateOrgId}
