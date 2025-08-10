@@ -12,7 +12,6 @@ import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import { createApiClient } from '@/services/backendApi';
 import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
-// Fixed Select reference error
 
 export default function PublicInvitation() {
   const { token } = useParams();
@@ -35,8 +34,11 @@ export default function PublicInvitation() {
       const organizationsApi = await createApiClient(OrganizationsApi);
       const allOrgs = await organizationsApi.organizationsGet({ page: 1, pageSize: 100 });
       
-      // Filter to only affiliate organizations
-      const affiliateOrgs = allOrgs.filter(org => org.type === 'affiliate');
+      // Filter to only affiliate organizations and exclude mock data
+      const affiliateOrgs = allOrgs.filter(org => 
+        org.type === 'affiliate' && 
+        !org.name?.match(/^affiliate_org_\d+$/)
+      );
       
       // If invitation has allowedAffiliateOrgIds, filter by those
       if (invitation?.allowedAffiliateOrgIds) {
@@ -49,6 +51,13 @@ export default function PublicInvitation() {
     enabled: !!user && !!invitation,
   });
 
+  // Select all organizations by default when they load
+  useEffect(() => {
+    if (affiliateOrganizations.length > 0 && selectedOrgIds.length === 0) {
+      const orgIds = affiliateOrganizations.map(org => org.organizationId!).filter(id => id !== undefined);
+      setSelectedOrgIds(orgIds);
+    }
+  }, [affiliateOrganizations, selectedOrgIds.length]);
 
   const useInvitationMutation = useMutation({
     mutationFn: async ({ affiliateOrgIds }: { affiliateOrgIds: number[] }) => {
