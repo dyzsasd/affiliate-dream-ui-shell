@@ -57,11 +57,17 @@ const AffiliateDetails: React.FC = () => {
       setAffiliates(Array.isArray(response) ? response : []);
     } catch (error) {
       console.error('Error fetching visible affiliates:', error);
-      toast({
-        title: t("associations.error"),
-        description: t("associations.failedToLoadDetails"),
-        variant: "destructive",
-      });
+      // When API returns null, the transformer fails - handle this gracefully
+      if (error instanceof TypeError && error.message.includes("Cannot read properties of null")) {
+        console.log('API returned null, setting empty array');
+        setAffiliates([]);
+      } else {
+        toast({
+          title: t("associations.error"),
+          description: t("associations.failedToLoadDetails"),
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
