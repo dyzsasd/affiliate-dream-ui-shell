@@ -47,6 +47,7 @@ const AffiliateDetails: React.FC = () => {
   // Effect to fetch existing tracking links when both affiliate and campaign are selected
   useEffect(() => {
     if (selectedAffiliateId && selectedCampaignId) {
+      console.log('Fetching existing tracking links for affiliate:', selectedAffiliateId, 'campaign:', selectedCampaignId);
       fetchExistingTrackingLinks();
     } else {
       setGeneratedLink("");
@@ -101,11 +102,20 @@ const AffiliateDetails: React.FC = () => {
   };
 
   const fetchExistingTrackingLinks = async () => {
-    if (!selectedAffiliateId || !selectedCampaignId) return;
+    if (!selectedAffiliateId || !selectedCampaignId) {
+      console.log('Missing affiliate or campaign ID:', { selectedAffiliateId, selectedCampaignId });
+      return;
+    }
     
     try {
+      console.log('Starting to fetch existing tracking links...');
       setIsLoadingExistingLinks(true);
       const trackingApi = await createApiClient(TrackingLinksApi);
+      
+      console.log('Making API call to fetch tracking links:', {
+        campaignId: parseInt(selectedCampaignId),
+        affiliateId: selectedAffiliateId
+      });
       
       const response = await trackingApi.campaignsIdAffiliatesAffiliateIdTrackingLinksGet({
         id: parseInt(selectedCampaignId),
@@ -114,14 +124,18 @@ const AffiliateDetails: React.FC = () => {
         pageSize: 10
       });
 
+      console.log('Existing tracking links response:', response);
+
       // If tracking links exist, use the first one to pre-fill the generated link
       if (response.trackingLinks && response.trackingLinks.length > 0) {
         const firstLink = response.trackingLinks[0];
+        console.log('Found existing tracking link:', firstLink);
         if (firstLink.trackingUrl) {
           setGeneratedLink(firstLink.trackingUrl);
           setLinkName(firstLink.name || "");
         }
       } else {
+        console.log('No existing tracking links found');
         setGeneratedLink("");
       }
     } catch (error) {
