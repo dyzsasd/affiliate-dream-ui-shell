@@ -52,16 +52,15 @@ export interface AffiliatesIdTrackingLinksGetRequest {
     pageSize?: number;
 }
 
-export interface CampaignsIdTrackingLinksGetRequest {
+export interface CampaignsIdAffiliatesAffiliateIdTrackingLinksGetRequest {
     id: number;
+    affiliateId: number;
     page?: number;
     pageSize?: number;
 }
 
-export interface OrganizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGetRequest {
-    organizationId: number;
-    campaignId: number;
-    affiliateId: number;
+export interface CampaignsIdTrackingLinksGetRequest {
+    id: number;
     page?: number;
     pageSize?: number;
 }
@@ -166,6 +165,60 @@ export class TrackingLinksApi extends runtime.BaseAPI {
     }
 
     /**
+     * Retrieve tracking links for a specific campaign and affiliate combination
+     * Get tracking links by campaign and affiliate
+     */
+    async campaignsIdAffiliatesAffiliateIdTrackingLinksGetRaw(requestParameters: CampaignsIdAffiliatesAffiliateIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling campaignsIdAffiliatesAffiliateIdTrackingLinksGet().'
+            );
+        }
+
+        if (requestParameters['affiliateId'] == null) {
+            throw new runtime.RequiredError(
+                'affiliateId',
+                'Required parameter "affiliateId" was null or undefined when calling campaignsIdAffiliatesAffiliateIdTrackingLinksGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/campaigns/{id}/affiliates/{affiliate_id}/tracking-links`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"affiliate_id"}}`, encodeURIComponent(String(requestParameters['affiliateId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve tracking links for a specific campaign and affiliate combination
+     * Get tracking links by campaign and affiliate
+     */
+    async campaignsIdAffiliatesAffiliateIdTrackingLinksGet(requestParameters: CampaignsIdAffiliatesAffiliateIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
+        const response = await this.campaignsIdAffiliatesAffiliateIdTrackingLinksGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Retrieve a list of tracking links for a specific campaign
      * List tracking links by campaign
      */
@@ -209,67 +262,6 @@ export class TrackingLinksApi extends runtime.BaseAPI {
      */
     async campaignsIdTrackingLinksGet(requestParameters: CampaignsIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
         const response = await this.campaignsIdTrackingLinksGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Retrieve tracking links for a specific campaign and affiliate combination
-     * Get tracking links by campaign and affiliate
-     */
-    async organizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGetRaw(requestParameters: OrganizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGet().'
-            );
-        }
-
-        if (requestParameters['campaignId'] == null) {
-            throw new runtime.RequiredError(
-                'campaignId',
-                'Required parameter "campaignId" was null or undefined when calling organizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGet().'
-            );
-        }
-
-        if (requestParameters['affiliateId'] == null) {
-            throw new runtime.RequiredError(
-                'affiliateId',
-                'Required parameter "affiliateId" was null or undefined when calling organizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/campaigns/{campaign_id}/affiliates/{affiliate_id}/tracking-links`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"campaign_id"}}`, encodeURIComponent(String(requestParameters['campaignId']))).replace(`{${"affiliate_id"}}`, encodeURIComponent(String(requestParameters['affiliateId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieve tracking links for a specific campaign and affiliate combination
-     * Get tracking links by campaign and affiliate
-     */
-    async organizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGet(requestParameters: OrganizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
-        const response = await this.organizationsOrganizationIdCampaignsCampaignIdAffiliatesAffiliateIdTrackingLinksGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

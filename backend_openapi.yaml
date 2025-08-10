@@ -5569,6 +5569,56 @@ paths:
       summary: Update a campaign
       tags:
       - campaigns
+  /campaigns/{id}/affiliates/{affiliate_id}/tracking-links:
+    get:
+      description: Retrieve tracking links for a specific campaign and affiliate combination
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Affiliate ID
+        in: path
+        name: affiliate_id
+        required: true
+        type: integer
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10, max: 100)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TrackingLinkListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get tracking links by campaign and affiliate
+      tags:
+      - tracking-links
   /campaigns/{id}/provider-mappings/{providerType}:
     get:
       consumes:
@@ -7046,61 +7096,6 @@ paths:
       summary: List campaigns by organization
       tags:
       - campaigns
-  /organizations/{organization_id}/campaigns/{campaign_id}/affiliates/{affiliate_id}/tracking-links:
-    get:
-      description: Retrieve tracking links for a specific campaign and affiliate combination
-      parameters:
-      - description: Organization ID
-        in: path
-        name: organization_id
-        required: true
-        type: integer
-      - description: Campaign ID
-        in: path
-        name: campaign_id
-        required: true
-        type: integer
-      - description: Affiliate ID
-        in: path
-        name: affiliate_id
-        required: true
-        type: integer
-      - description: 'Page number (default: 1)'
-        in: query
-        name: page
-        type: integer
-      - description: 'Page size (default: 10, max: 100)'
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.TrackingLinkListResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Get tracking links by campaign and affiliate
-      tags:
-      - tracking-links
   /organizations/{organization_id}/tracking-links:
     get:
       description: Retrieve a list of tracking links for a specific organization
