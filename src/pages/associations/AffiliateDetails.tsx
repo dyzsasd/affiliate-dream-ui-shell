@@ -35,6 +35,7 @@ const AffiliateDetails: React.FC = () => {
   const [linkName, setLinkName] = useState<string>("");
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<string>("");
+  const [isLoadingExistingLinks, setIsLoadingExistingLinks] = useState(false);
 
   useEffect(() => {
     if (organization?.organizationId && affiliateOrgId) {
@@ -42,6 +43,15 @@ const AffiliateDetails: React.FC = () => {
       fetchCampaigns();
     }
   }, [organization, affiliateOrgId]);
+
+  // Effect to fetch existing tracking links when both affiliate and campaign are selected
+  useEffect(() => {
+    if (selectedAffiliateId && selectedCampaignId) {
+      fetchExistingTrackingLinks();
+    } else {
+      setGeneratedLink("");
+    }
+  }, [selectedAffiliateId, selectedCampaignId]);
 
   const fetchVisibleAffiliates = async () => {
     try {
@@ -87,6 +97,39 @@ const AffiliateDetails: React.FC = () => {
       });
     } finally {
       setIsLoadingCampaigns(false);
+    }
+  };
+
+  const fetchExistingTrackingLinks = async () => {
+    if (!selectedAffiliateId || !selectedCampaignId) return;
+    
+    try {
+      setIsLoadingExistingLinks(true);
+      const trackingApi = await createApiClient(TrackingLinksApi);
+      
+      const response = await trackingApi.campaignsIdAffiliatesAffiliateIdTrackingLinksGet({
+        id: parseInt(selectedCampaignId),
+        affiliateId: selectedAffiliateId,
+        page: 1,
+        pageSize: 10
+      });
+
+      // If tracking links exist, use the first one to pre-fill the generated link
+      if (response.trackingLinks && response.trackingLinks.length > 0) {
+        const firstLink = response.trackingLinks[0];
+        if (firstLink.trackingUrl) {
+          setGeneratedLink(firstLink.trackingUrl);
+          setLinkName(firstLink.name || "");
+        }
+      } else {
+        setGeneratedLink("");
+      }
+    } catch (error) {
+      console.error('Error fetching existing tracking links:', error);
+      // Don't show error toast for this since it's an automatic background operation
+      setGeneratedLink("");
+    } finally {
+      setIsLoadingExistingLinks(false);
     }
   };
 
@@ -352,39 +395,46 @@ const AffiliateDetails: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="campaign-select">{t("associations.selectCampaign")}</Label>
-                      <Select 
-                        value={selectedCampaignId} 
-                        onValueChange={setSelectedCampaignId}
-                        disabled={isLoadingCampaigns}
-                      >
-                        <SelectTrigger id="campaign-select">
-                          <SelectValue placeholder={
-                            isLoadingCampaigns ? t("associations.loadingCampaigns") : t("associations.chooseCampaign")
-                          } />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {campaigns.map((campaign) => (
-                            <SelectItem key={campaign.id} value={campaign.id}>
-                              {campaign.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="link-name">{t("associations.linkName")}</Label>
-                      <Input
-                        id="link-name"
-                        placeholder={t("associations.enterLinkName")}
-                        value={linkName}
-                        onChange={(e) => setLinkName(e.target.value)}
-                      />
-                    </div>
-                  </div>
+                   {isLoadingExistingLinks && (
+                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                       <Loader2 className="w-4 h-4 animate-spin" />
+                       <span>Checking for existing tracking links...</span>
+                     </div>
+                   )}
+                   
+                   <div className="grid gap-4 md:grid-cols-2">
+                     <div className="space-y-2">
+                       <Label htmlFor="campaign-select">{t("associations.selectCampaign")}</Label>
+                       <Select 
+                         value={selectedCampaignId} 
+                         onValueChange={setSelectedCampaignId}
+                         disabled={isLoadingCampaigns}
+                       >
+                         <SelectTrigger id="campaign-select">
+                           <SelectValue placeholder={
+                             isLoadingCampaigns ? t("associations.loadingCampaigns") : t("associations.chooseCampaign")
+                           } />
+                         </SelectTrigger>
+                         <SelectContent>
+                           {campaigns.map((campaign) => (
+                             <SelectItem key={campaign.id} value={campaign.id}>
+                               {campaign.name}
+                             </SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
+                     </div>
+                     
+                     <div className="space-y-2">
+                       <Label htmlFor="link-name">{t("associations.linkName")}</Label>
+                       <Input
+                         id="link-name"
+                         placeholder={t("associations.enterLinkName")}
+                         value={linkName}
+                         onChange={(e) => setLinkName(e.target.value)}
+                       />
+                     </div>
+                   </div>
                   
                   <Button 
                     onClick={handleGenerateTrackingLink}
