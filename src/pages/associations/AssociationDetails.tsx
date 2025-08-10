@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createApiClient } from '@/services/backendApi';
 import { DomainAffiliate } from '@/generated-api/src/models';
 import { OrganizationAssociationsApi, TrackingLinksApi } from '@/generated-api/src/apis';
-import { ModelsTrackingLinkGenerationRequest } from '@/generated-api/src/models/ModelsTrackingLinkGenerationRequest';
+import { ModelsTrackingLinkUpsertRequest } from '@/generated-api/src/models/ModelsTrackingLinkUpsertRequest';
 import { campaignService } from '@/services/campaign';
 import { fetchAffiliates } from '@/services/affiliateService';
 import { Campaign } from '@/types/api';
@@ -155,7 +155,7 @@ const AssociationDetails: React.FC = () => {
     try {
       const trackingApi = await createApiClient(TrackingLinksApi);
       
-      const request: ModelsTrackingLinkGenerationRequest = {
+      const request: ModelsTrackingLinkUpsertRequest = {
         affiliateId: selectedAffiliateId,
         campaignId: parseInt(selectedCampaignId),
         name: linkName.trim(),
@@ -168,7 +168,7 @@ const AssociationDetails: React.FC = () => {
         sub5: sub5 || undefined,
       };
 
-      const response = await trackingApi.organizationsOrganizationIdTrackingLinksGeneratePost({
+      const response = await trackingApi.organizationsOrganizationIdTrackingLinksUpsertPost({
         organizationId: organization!.organizationId!,
         request: request
       });
