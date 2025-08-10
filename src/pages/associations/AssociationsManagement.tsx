@@ -263,16 +263,6 @@ const AssociationsManagement: React.FC = () => {
             {t("associations.reactivate")}
           </Button>
         )}
-        
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => navigate(`/affiliates/${association.affiliateOrgId}/details`)}
-          className="text-blue-600 hover:text-blue-700"
-        >
-          <Eye className="w-4 h-4 mr-1" />
-          {t("associations.view")}
-        </Button>
       </div>
     );
   };
