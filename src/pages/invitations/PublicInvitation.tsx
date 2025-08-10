@@ -49,13 +49,6 @@ export default function PublicInvitation() {
     enabled: !!user && !!invitation,
   });
 
-  // Select all organizations by default when they load
-  useEffect(() => {
-    if (affiliateOrganizations.length > 0 && selectedOrgIds.length === 0) {
-      const orgIds = affiliateOrganizations.map(org => org.organizationId!).filter(id => id !== undefined);
-      setSelectedOrgIds(orgIds);
-    }
-  }, [affiliateOrganizations, selectedOrgIds.length]);
 
   const useInvitationMutation = useMutation({
     mutationFn: async ({ affiliateOrgIds }: { affiliateOrgIds: number[] }) => {
