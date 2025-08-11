@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createApiClient } from '@/services/backendApi';
 import { DomainAffiliate } from '@/generated-api/src/models';
 import { OrganizationAssociationsApi, TrackingLinksApi } from '@/generated-api/src/apis';
-import { ModelsTrackingLinkUpsertRequest } from '@/generated-api/src/models/ModelsTrackingLinkUpsertRequest';
+import { ModelsTrackingLinkGenerationRequest, ModelsTrackingLinkUpdateRequest } from '@/generated-api/src/models';
 import { campaignService } from '@/services/campaign';
 import { fetchAffiliates } from '@/services/affiliateService';
 import { Campaign } from '@/types/api';
@@ -50,12 +50,24 @@ const AssociationDetails: React.FC = () => {
   const [sub5, setSub5] = useState<string>("");
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<string>("");
+  const [isLoadingExistingLinks, setIsLoadingExistingLinks] = useState(false);
+  const [existingTrackingLink, setExistingTrackingLink] = useState<any>(null);
 
   useEffect(() => {
     if (organization?.organizationId && affiliateOrgId) {
       fetchAssociationData();
     }
   }, [organization, affiliateOrgId]);
+
+  // Effect to fetch existing tracking links when both affiliate and campaign are selected
+  useEffect(() => {
+    if (selectedAffiliateId && selectedCampaignId) {
+      fetchExistingTrackingLinks();
+    } else {
+      setExistingTrackingLink(null);
+      setGeneratedLink("");
+    }
+  }, [selectedAffiliateId, selectedCampaignId]);
 
   const fetchAssociationData = async () => {
     try {
@@ -131,6 +143,56 @@ const AssociationDetails: React.FC = () => {
     }
   };
 
+  const fetchExistingTrackingLinks = async () => {
+    if (!selectedAffiliateId || !selectedCampaignId) {
+      return;
+    }
+    
+    try {
+      setIsLoadingExistingLinks(true);
+      const trackingApi = await createApiClient(TrackingLinksApi);
+      
+      const response = await trackingApi.trackingLinksGet({
+        campaignIds: selectedCampaignId,
+        affiliateIds: selectedAffiliateId.toString(),
+        limit: 10,
+        offset: 0
+      });
+
+      // If tracking links exist, use the first one to pre-fill the form
+      if (response.trackingLinks && response.trackingLinks.length > 0) {
+        const firstLink = response.trackingLinks[0];
+        setExistingTrackingLink(firstLink);
+        if (firstLink.trackingUrl) {
+          setGeneratedLink(firstLink.trackingUrl);
+          setLinkName(firstLink.name || "");
+          setSourceId(firstLink.sourceId || "");
+          setSub1(firstLink.sub1 || "");
+          setSub2(firstLink.sub2 || "");
+          setSub3(firstLink.sub3 || "");
+          setSub4(firstLink.sub4 || "");
+          setSub5(firstLink.sub5 || "");
+        }
+      } else {
+        setExistingTrackingLink(null);
+        setGeneratedLink("");
+        setLinkName("");
+        setSourceId("");
+        setSub1("");
+        setSub2("");
+        setSub3("");
+        setSub4("");
+        setSub5("");
+      }
+    } catch (error) {
+      console.error('Error fetching existing tracking links:', error);
+      setExistingTrackingLink(null);
+      setGeneratedLink("");
+    } finally {
+      setIsLoadingExistingLinks(false);
+    }
+  };
+
   const handleGenerateTrackingLink = async () => {
     if (!selectedCampaignId || !linkName.trim()) {
       toast({
@@ -155,31 +217,59 @@ const AssociationDetails: React.FC = () => {
     try {
       const trackingApi = await createApiClient(TrackingLinksApi);
       
-      const request: ModelsTrackingLinkUpsertRequest = {
-        affiliateId: selectedAffiliateId,
-        campaignId: parseInt(selectedCampaignId),
-        name: linkName.trim(),
-        description: `Tracking link for affiliate ID ${selectedAffiliateId} - Campaign ${selectedCampaignId}`,
-        sourceId: sourceId || undefined,
-        sub1: sub1 || undefined,
-        sub2: sub2 || undefined,
-        sub3: sub3 || undefined,
-        sub4: sub4 || undefined,
-        sub5: sub5 || undefined,
-      };
+      if (existingTrackingLink) {
+        // Update existing tracking link
+        const updateRequest: ModelsTrackingLinkUpdateRequest = {
+          name: linkName.trim(),
+          description: `Tracking link for affiliate ID ${selectedAffiliateId} - Campaign ${selectedCampaignId}`,
+          sourceId: sourceId || undefined,
+          sub1: sub1 || undefined,
+          sub2: sub2 || undefined,
+          sub3: sub3 || undefined,
+          sub4: sub4 || undefined,
+          sub5: sub5 || undefined,
+        };
 
-      const response = await trackingApi.organizationsOrganizationIdTrackingLinksUpsertPost({
-        organizationId: organization!.organizationId!,
-        request: request
-      });
+        const response = await trackingApi.trackingLinksIdPut({
+          id: existingTrackingLink.id,
+          request: updateRequest
+        });
 
-      setGeneratedLink(response.generatedUrl || "");
-      toast({
-        title: t("associations.success"),
-        description: t("associations.trackingLinkGenerated"),
-      });
+        setGeneratedLink(response.trackingUrl || "");
+        setExistingTrackingLink(response);
+        toast({
+          title: t("associations.success"),
+          description: t("associations.trackingLinkUpdated"),
+        });
+      } else {
+        // Create new tracking link
+        const createRequest: ModelsTrackingLinkGenerationRequest = {
+          affiliateId: selectedAffiliateId,
+          campaignId: parseInt(selectedCampaignId),
+          name: linkName.trim(),
+          description: `Tracking link for affiliate ID ${selectedAffiliateId} - Campaign ${selectedCampaignId}`,
+          sourceId: sourceId || undefined,
+          sub1: sub1 || undefined,
+          sub2: sub2 || undefined,
+          sub3: sub3 || undefined,
+          sub4: sub4 || undefined,
+          sub5: sub5 || undefined,
+        };
+
+        const response = await trackingApi.trackingLinksPost({
+          request: createRequest
+        });
+
+        setGeneratedLink(response.generatedUrl || "");
+        // Refetch to get the created tracking link data
+        await fetchExistingTrackingLinks();
+        toast({
+          title: t("associations.success"),
+          description: t("associations.trackingLinkGenerated"),
+        });
+      }
     } catch (error) {
-      console.error('Error generating tracking link:', error);
+      console.error('Error generating/updating tracking link:', error);
       toast({
         title: t("associations.error"),
         description: t("associations.trackingLinkError"),
