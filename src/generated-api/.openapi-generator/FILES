@@ -56,6 +56,8 @@ src/models/DomainBillingDetails.ts
 src/models/DomainBillingFrequency.ts
 src/models/DomainBillingMode.ts
 src/models/DomainBillingSchedule.ts
+src/models/DomainBulkSyncItemResult.ts
+src/models/DomainBulkSyncResult.ts
 src/models/DomainCampaign.ts
 src/models/DomainContactEmailData.ts
 src/models/DomainContactEmailDataValueInner.ts
@@ -83,6 +85,7 @@ src/models/DomainKeywordDataSampleValueInner.ts
 src/models/DomainMetaData.ts
 src/models/DomainOrganization.ts
 src/models/DomainOrganizationAssociation.ts
+src/models/DomainOrganizationAssociationWithDetails.ts
 src/models/DomainOrganizationType.ts
 src/models/DomainOrganizationWithExtraInfo.ts
 src/models/DomainPaymentDetails.ts
@@ -135,16 +138,17 @@ src/models/HandlersUpdateProfileRequest.ts
 src/models/HandlersUpsertProfileRequest.ts
 src/models/ModelsAdvertiserResponse.ts
 src/models/ModelsCampaignListResponse.ts
+src/models/ModelsCampaignProviderMappingResponse.ts
 src/models/ModelsCampaignResponse.ts
 src/models/ModelsCreateAdvertiserProviderMappingRequest.ts
 src/models/ModelsCreateAdvertiserProviderMappingResponse.ts
 src/models/ModelsCreateAdvertiserRequest.ts
 src/models/ModelsCreateCampaignRequest.ts
 src/models/ModelsGetAdvertiserProviderMappingResponse.ts
+src/models/ModelsGetCampaignProviderMappingResponse.ts
 src/models/ModelsTrackingLinkGenerationRequest.ts
 src/models/ModelsTrackingLinkGenerationResponse.ts
 src/models/ModelsTrackingLinkListResponse.ts
-src/models/ModelsTrackingLinkRequest.ts
 src/models/ModelsTrackingLinkResponse.ts
 src/models/ModelsTrackingLinkUpdateRequest.ts
 src/models/ModelsUpdateAdvertiserProviderMappingRequest.ts

@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Configuration } from '@/generated-api/src/runtime';
 
-// Using production API server
+// Using local development API server
 const DEFAULT_API_BASE_URL = 'https://api.affiliate.rolinko.com';
 
 // Define a simple ApiError interface

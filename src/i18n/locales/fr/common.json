@@ -24,5 +24,7 @@
   "errorOccurred": "Une erreur s'est produite",
   "tryAgain": "Réessayer",
   "optional": "optionnel",
-  "remove": "Supprimer"
+  "remove": "Supprimer",
+  "filter": "Filtrer",
+  "required": "Requis"
 }

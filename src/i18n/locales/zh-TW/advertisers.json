@@ -48,5 +48,21 @@
   "updatedLabel": "更新時間",
   "contactInfo": "聯絡資訊",
   "notFound": "廣告主未找到",
-  "backToList": "返回廣告主列表"
+  "backToList": "返回廣告主列表",
+  "accountingContactEmail": "會計聯絡電子郵件",
+  "platformDetails": "平台詳細資訊",
+  "platformName": "平台名稱",
+  "platformUrl": "平台URL",
+  "platformUsername": "平台用戶名",
+  "attributionTracking": "歸因與追蹤",
+  "attributionMethod": "歸因方法",
+  "attributionPriority": "歸因優先級",
+  "emailAttributionMethod": "電子郵件歸因方法",
+  "affiliateIdMacro": "聯盟ID宏",
+  "offerIdMacro": "優惠ID宏",
+  "settings": "設定",
+  "defaultCurrency": "預設貨幣",
+  "reportingTimezone": "報告時區",
+  "internalNotes": "內部備註",
+  "taxId": "稅號"
 }

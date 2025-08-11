@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Building2, Calendar, Users, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
@@ -6,17 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { PublicInvitationService, InvitationService } from '@/services/invitationApi';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
+import { createApiClient } from '@/services/backendApi';
+import { OrganizationsApi } from '@/generated-api/src/apis/OrganizationsApi';
 
 export default function PublicInvitation() {
   const { token } = useParams();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { toast } = useToast();
-  const [selectedOrgId, setSelectedOrgId] = useState<string>('');
+  const [selectedOrgIds, setSelectedOrgIds] = useState<number[]>([]);
 
   const { data: invitation, isLoading, error } = useQuery({
     queryKey: ['public-invitation', token],
@@ -25,12 +27,47 @@ export default function PublicInvitation() {
     retry: false,
   });
 
+  // Fetch available affiliate organizations
+  const { data: affiliateOrganizations = [], isLoading: isLoadingOrganizations } = useQuery({
+    queryKey: ['affiliate-organizations'],
+    queryFn: async () => {
+      const organizationsApi = await createApiClient(OrganizationsApi);
+      const allOrgs = await organizationsApi.organizationsGet({ page: 1, pageSize: 100 });
+      
+      // Filter to only affiliate organizations and exclude mock data
+      const affiliateOrgs = allOrgs.filter(org => 
+        org.type === 'affiliate' && 
+        !org.name?.match(/^affiliate_org_\d+$/)
+      );
+      
+      // If invitation has allowedAffiliateOrgIds, filter by those
+      if (invitation?.allowedAffiliateOrgIds) {
+        const allowedIds = invitation.allowedAffiliateOrgIds.split(',').map(id => parseInt(id.trim()));
+        return affiliateOrgs.filter(org => allowedIds.includes(org.organizationId!));
+      }
+      
+      return affiliateOrgs;
+    },
+    enabled: !!user && !!invitation,
+  });
+
+  // Select all organizations by default when they load
+  useEffect(() => {
+    if (affiliateOrganizations.length > 0 && selectedOrgIds.length === 0) {
+      const orgIds = affiliateOrganizations.map(org => org.organizationId!).filter(id => id !== undefined);
+      setSelectedOrgIds(orgIds);
+    }
+  }, [affiliateOrganizations, selectedOrgIds.length]);
+
   const useInvitationMutation = useMutation({
-    mutationFn: ({ affiliateOrgId }: { affiliateOrgId: number }) => 
-      InvitationService.useInvitation({
+    mutationFn: async ({ affiliateOrgIds }: { affiliateOrgIds: number[] }) => {
+      // Use the first organization ID for now - API needs to be updated to support multiple
+      const affiliateOrgId = affiliateOrgIds[0];
+      return InvitationService.useInvitation({
         invitationToken: token!,
         affiliateOrgId,
-      }),
+      });
+    },
     onSuccess: (response) => {
       if (response.success) {
         toast({
@@ -55,17 +92,25 @@ export default function PublicInvitation() {
     },
   });
 
+  const handleToggleOrganization = (orgId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedOrgIds([...selectedOrgIds, orgId]);
+    } else {
+      setSelectedOrgIds(selectedOrgIds.filter(id => id !== orgId));
+    }
+  };
+
   const handleAcceptInvitation = () => {
-    if (!selectedOrgId) {
+    if (selectedOrgIds.length === 0) {
       toast({
         title: "Error",
-        description: "Please select an affiliate organization",
+        description: "Please select at least one affiliate organization",
         variant: "destructive",
       });
       return;
     }
 
-    useInvitationMutation.mutate({ affiliateOrgId: Number(selectedOrgId) });
+    useInvitationMutation.mutate({ affiliateOrgIds: selectedOrgIds });
   };
 
   const isExpired = invitation?.expiresAt && new Date(invitation.expiresAt) < new Date();
@@ -116,9 +161,7 @@ export default function PublicInvitation() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="max-w-2xl mx-auto space-y-6">
             {/* Invitation Details */}
             <Card>
               <CardHeader>
@@ -157,24 +200,6 @@ export default function PublicInvitation() {
                   </div>
                 )}
 
-                {/* Partnership Benefits */}
-                <div>
-                  <h3 className="font-medium mb-2">Partnership Benefits</h3>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {invitation.defaultAllAffiliatesVisible && (
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        Access to all affiliate network
-                      </li>
-                    )}
-                    {invitation.defaultAllCampaignsVisible && (
-                      <li className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        Access to all available campaigns
-                      </li>
-                    )}
-                  </ul>
-                </div>
               </CardContent>
             </Card>
 
@@ -198,34 +223,48 @@ export default function PublicInvitation() {
                   <CardTitle>Accept Invitation</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {profile?.organization ? (
+                  {isLoadingOrganizations ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">Loading affiliate organizations...</p>
+                    </div>
+                   ) : affiliateOrganizations.length > 0 ? (
                     <>
                       <p className="text-sm text-muted-foreground">
-                        Select the affiliate organization you want to use for this partnership:
+                        Select the affiliate organizations you want to use for this partnership:
                       </p>
-                      <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your affiliate organization" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value={String(profile.organization.id)}>
-                            {profile.organization.name}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="space-y-3 max-h-48 overflow-y-auto">
+                        {affiliateOrganizations.map((org) => (
+                          <div key={org.organizationId} className="flex items-center space-x-3">
+                            <Checkbox
+                              id={`org-${org.organizationId}`}
+                              checked={selectedOrgIds.includes(org.organizationId!)}
+                              onCheckedChange={(checked) => 
+                                handleToggleOrganization(org.organizationId!, checked as boolean)
+                              }
+                            />
+                            <label 
+                              htmlFor={`org-${org.organizationId}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                            >
+                              {org.name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
                       <Button 
                         onClick={handleAcceptInvitation}
-                        disabled={useInvitationMutation.isPending || !selectedOrgId}
+                        disabled={useInvitationMutation.isPending || selectedOrgIds.length === 0}
                         className="w-full"
                       >
-                        {useInvitationMutation.isPending ? 'Processing...' : 'Accept Invitation'}
+                        {useInvitationMutation.isPending ? 'Processing...' : `Accept Invitation (${selectedOrgIds.length} selected)`}
                       </Button>
                     </>
                   ) : (
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        You need to be part of an affiliate organization to accept this invitation.
+                        No affiliate organizations are available for this invitation, or you don't have access to any affiliate organizations.
                       </AlertDescription>
                     </Alert>
                   )}
@@ -246,54 +285,7 @@ export default function PublicInvitation() {
             )}
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Invitation Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Invitation Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Created: {invitation.createdAt ? new Date(invitation.createdAt).toLocaleDateString() : 'Unknown'}</span>
-                </div>
-
-                {invitation.expiresAt && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>Expires: {new Date(invitation.expiresAt).toLocaleDateString()}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2 text-sm">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span>
-                    Usage: {invitation.currentUses || 0}
-                    {invitation.maxUses ? `/${invitation.maxUses}` : '/∞'}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Need Help */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Need Help?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Have questions about this partnership opportunity?
-                </p>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <ExternalLink className="h-4 w-4" />
-                  Contact Support
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
         </div>
-      </div>
     </div>
   );
 }

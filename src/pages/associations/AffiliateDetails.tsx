@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createApiClient } from '@/services/backendApi';
 import { DomainAffiliate } from '@/generated-api/src/models';
 import { OrganizationAssociationsApi, TrackingLinksApi } from '@/generated-api/src/apis';
-import { ModelsTrackingLinkGenerationRequest } from '@/generated-api/src/models/ModelsTrackingLinkGenerationRequest';
+import { ModelsTrackingLinkGenerationRequest, ModelsTrackingLinkUpdateRequest } from '@/generated-api/src/models';
 import { campaignService } from '@/services/campaign';
 import { Campaign } from '@/types/api';
 import { ArrowLeft, Users, Mail, Calendar, AlertCircle, Link, Copy, Loader2 } from 'lucide-react';
@@ -35,6 +35,8 @@ const AffiliateDetails: React.FC = () => {
   const [linkName, setLinkName] = useState<string>("");
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<string>("");
+  const [isLoadingExistingLinks, setIsLoadingExistingLinks] = useState(false);
+  const [existingTrackingLink, setExistingTrackingLink] = useState<any>(null);
 
   useEffect(() => {
     if (organization?.organizationId && affiliateOrgId) {
@@ -42,6 +44,16 @@ const AffiliateDetails: React.FC = () => {
       fetchCampaigns();
     }
   }, [organization, affiliateOrgId]);
+
+  // Effect to fetch existing tracking links when both affiliate and campaign are selected
+  useEffect(() => {
+    if (selectedAffiliateId && selectedCampaignId) {
+      console.log('Fetching existing tracking links for affiliate:', selectedAffiliateId, 'campaign:', selectedCampaignId);
+      fetchExistingTrackingLinks();
+    } else {
+      setGeneratedLink("");
+    }
+  }, [selectedAffiliateId, selectedCampaignId]);
 
   const fetchVisibleAffiliates = async () => {
     try {
@@ -53,14 +65,21 @@ const AffiliateDetails: React.FC = () => {
         affiliateOrgId: parseInt(affiliateOrgId!),
       });
 
-      setAffiliates(response || []);
+      // Handle null response from API
+      setAffiliates(Array.isArray(response) ? response : []);
     } catch (error) {
       console.error('Error fetching visible affiliates:', error);
-      toast({
-        title: t("associations.error"),
-        description: t("associations.failedToLoadDetails"),
-        variant: "destructive",
-      });
+      // When API returns null, the transformer fails - handle this gracefully
+      if (error instanceof TypeError && error.message.includes("Cannot read properties of null")) {
+        console.log('API returned null, setting empty array');
+        setAffiliates([]);
+      } else {
+        toast({
+          title: t("associations.error"),
+          description: t("associations.failedToLoadDetails"),
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -80,6 +99,57 @@ const AffiliateDetails: React.FC = () => {
       });
     } finally {
       setIsLoadingCampaigns(false);
+    }
+  };
+
+  const fetchExistingTrackingLinks = async () => {
+    if (!selectedAffiliateId || !selectedCampaignId) {
+      console.log('Missing affiliate or campaign ID:', { selectedAffiliateId, selectedCampaignId });
+      return;
+    }
+    
+    try {
+      console.log('Starting to fetch existing tracking links...');
+      setIsLoadingExistingLinks(true);
+      const trackingApi = await createApiClient(TrackingLinksApi);
+      
+      console.log('Making API call to fetch tracking links with filters:', {
+        campaignIds: selectedCampaignId,
+        affiliateIds: selectedAffiliateId.toString()
+      });
+      
+      const response = await trackingApi.trackingLinksGet({
+        campaignIds: selectedCampaignId,
+        affiliateIds: selectedAffiliateId.toString(),
+        limit: 10,
+        offset: 0
+      });
+
+      console.log('Existing tracking links response:', response);
+
+      // If tracking links exist, use the first one to pre-fill the form
+      if (response.trackingLinks && response.trackingLinks.length > 0) {
+        const firstLink = response.trackingLinks[0];
+        console.log('Found existing tracking link structure:', firstLink);
+        console.log('Tracking link ID:', firstLink.trackingLinkId);
+        setExistingTrackingLink(firstLink);
+        if (firstLink.trackingUrl) {
+          setGeneratedLink(firstLink.trackingUrl);
+          setLinkName(firstLink.name || "");
+        }
+      } else {
+        console.log('No existing tracking links found');
+        setExistingTrackingLink(null);
+        setGeneratedLink("");
+        setLinkName("");
+      }
+    } catch (error) {
+      console.error('Error fetching existing tracking links:', error);
+      // Don't show error toast for this since it's an automatic background operation
+      setExistingTrackingLink(null);
+      setGeneratedLink("");
+    } finally {
+      setIsLoadingExistingLinks(false);
     }
   };
 
@@ -107,25 +177,56 @@ const AffiliateDetails: React.FC = () => {
     try {
       const trackingApi = await createApiClient(TrackingLinksApi);
       
-      const request: ModelsTrackingLinkGenerationRequest = {
+      if (existingTrackingLink) {
+        // Update existing tracking link
+        console.log('Attempting to update existing tracking link:', existingTrackingLink);
+        console.log('Existing tracking link ID:', existingTrackingLink.trackingLinkId);
+        
+        if (!existingTrackingLink.trackingLinkId) {
+          console.error('No trackingLinkId found in existing tracking link, creating new one instead');
+          // Fall through to create new tracking link
+        } else {
+          const updateRequest: ModelsTrackingLinkUpdateRequest = {
+            name: linkName.trim(),
+            description: `Tracking link for affiliate ID ${selectedAffiliateId} - Campaign ${selectedCampaignId}`,
+          };
+
+          const response = await trackingApi.trackingLinksIdPut({
+            id: existingTrackingLink.trackingLinkId,
+            request: updateRequest
+          });
+
+          setGeneratedLink(response.trackingUrl || "");
+          setExistingTrackingLink(response);
+          toast({
+            title: t("associations.success"),
+            description: t("associations.trackingLinkUpdated"),
+          });
+          return;
+        }
+      }
+      
+      // Create new tracking link (either no existing link or existing link has no ID)
+      const createRequest: ModelsTrackingLinkGenerationRequest = {
         affiliateId: selectedAffiliateId,
         campaignId: parseInt(selectedCampaignId),
         name: linkName.trim(),
         description: `Tracking link for affiliate ID ${selectedAffiliateId} - Campaign ${selectedCampaignId}`,
       };
 
-      const response = await trackingApi.organizationsOrganizationIdTrackingLinksGeneratePost({
-        organizationId: organization!.organizationId!,
-        request: request
+      const response = await trackingApi.trackingLinksPost({
+        request: createRequest
       });
 
       setGeneratedLink(response.generatedUrl || "");
+      // Refetch to get the created tracking link data
+      await fetchExistingTrackingLinks();
       toast({
         title: t("associations.success"),
         description: t("associations.trackingLinkGenerated"),
       });
     } catch (error) {
-      console.error('Error generating tracking link:', error);
+      console.error('Error generating/updating tracking link:', error);
       toast({
         title: t("associations.error"),
         description: t("associations.trackingLinkError"),
@@ -345,39 +446,46 @@ const AffiliateDetails: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="campaign-select">{t("associations.selectCampaign")}</Label>
-                      <Select 
-                        value={selectedCampaignId} 
-                        onValueChange={setSelectedCampaignId}
-                        disabled={isLoadingCampaigns}
-                      >
-                        <SelectTrigger id="campaign-select">
-                          <SelectValue placeholder={
-                            isLoadingCampaigns ? t("associations.loadingCampaigns") : t("associations.chooseCampaign")
-                          } />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {campaigns.map((campaign) => (
-                            <SelectItem key={campaign.id} value={campaign.id}>
-                              {campaign.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="link-name">{t("associations.linkName")}</Label>
-                      <Input
-                        id="link-name"
-                        placeholder={t("associations.enterLinkName")}
-                        value={linkName}
-                        onChange={(e) => setLinkName(e.target.value)}
-                      />
-                    </div>
-                  </div>
+                   {isLoadingExistingLinks && (
+                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                       <Loader2 className="w-4 h-4 animate-spin" />
+                       <span>Checking for existing tracking links...</span>
+                     </div>
+                   )}
+                   
+                   <div className="grid gap-4 md:grid-cols-2">
+                     <div className="space-y-2">
+                       <Label htmlFor="campaign-select">{t("associations.selectCampaign")}</Label>
+                       <Select 
+                         value={selectedCampaignId} 
+                         onValueChange={setSelectedCampaignId}
+                         disabled={isLoadingCampaigns}
+                       >
+                         <SelectTrigger id="campaign-select">
+                           <SelectValue placeholder={
+                             isLoadingCampaigns ? t("associations.loadingCampaigns") : t("associations.chooseCampaign")
+                           } />
+                         </SelectTrigger>
+                         <SelectContent>
+                           {campaigns.map((campaign) => (
+                             <SelectItem key={campaign.id} value={campaign.id}>
+                               {campaign.name}
+                             </SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
+                     </div>
+                     
+                     <div className="space-y-2">
+                       <Label htmlFor="link-name">{t("associations.linkName")}</Label>
+                       <Input
+                         id="link-name"
+                         placeholder={t("associations.enterLinkName")}
+                         value={linkName}
+                         onChange={(e) => setLinkName(e.target.value)}
+                       />
+                     </div>
+                   </div>
                   
                   <Button 
                     onClick={handleGenerateTrackingLink}

@@ -31,7 +31,7 @@ import InvitationManagement, { PublicInvitation } from "@/pages/invitations";
 import OrganizationList from "@/pages/organizations";
 import OrganizationEdit from "@/pages/organization/OrganizationEdit";
 import AssociationsManagement from "@/pages/associations/AssociationsManagement";
-import AffiliateDetails from "@/pages/associations/AffiliateDetails";
+import AssociationDetails from "@/pages/associations/AssociationDetails";
 import UserList from "@/pages/users";
 import CreateAffiliateAccount from "@/pages/affiliate/CreateAffiliateAccount";
 import MarketplacePage from "@/pages/marketplace";
@@ -151,7 +151,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
           <Route path="/organization/edit" element={<OrganizationEdit />} />
           <Route path="/associations" element={<AssociationsManagement />} />
-          <Route path="/affiliates/:affiliateOrgId/details" element={<AffiliateDetails />} />
+          <Route path="/associations/:affiliateOrgId" element={<AssociationDetails />} />
               </Route>
               
               {/* 404 route */}

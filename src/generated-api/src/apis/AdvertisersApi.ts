@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   DomainAdvertiser,
+  DomainBulkSyncResult,
   ModelsAdvertiserResponse,
   ModelsCreateAdvertiserRequest,
   ModelsGetAdvertiserProviderMappingResponse,
@@ -24,6 +25,8 @@ import type {
 import {
     DomainAdvertiserFromJSON,
     DomainAdvertiserToJSON,
+    DomainBulkSyncResultFromJSON,
+    DomainBulkSyncResultToJSON,
     ModelsAdvertiserResponseFromJSON,
     ModelsAdvertiserResponseToJSON,
     ModelsCreateAdvertiserRequestFromJSON,
@@ -407,6 +410,38 @@ export class AdvertisersApi extends runtime.BaseAPI {
      */
     async advertisersPost(requestParameters: AdvertisersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsAdvertiserResponse> {
         const response = await this.advertisersPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates Everflow advertisers for all local advertisers that don\'t have provider mappings
+     * Sync all advertisers to Everflow
+     */
+    async advertisersSyncAllToEverflowPostRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainBulkSyncResult>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/advertisers/sync-all-to-everflow`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DomainBulkSyncResultFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates Everflow advertisers for all local advertisers that don\'t have provider mappings
+     * Sync all advertisers to Everflow
+     */
+    async advertisersSyncAllToEverflowPost(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainBulkSyncResult> {
+        const response = await this.advertisersSyncAllToEverflowPostRaw(initOverrides);
         return await response.value();
     }
 

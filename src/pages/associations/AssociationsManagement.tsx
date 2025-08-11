@@ -14,6 +14,9 @@ import {
   DomainAssociationStatus 
 } from '@/generated-api/src/models';
 import { OrganizationAssociationsApi, OrganizationAssociationsGetAssociationTypeEnum } from '@/generated-api/src/apis';
+
+// Use the generated API type directly
+import { DomainOrganizationAssociationWithDetails } from '@/generated-api/src/models';
 import { Users, Check, X, Pause, Eye, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,7 +37,7 @@ const AssociationsManagement: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [associations, setAssociations] = useState<DomainOrganizationAssociation[]>([]);
+  const [associations, setAssociations] = useState<DomainOrganizationAssociationWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
@@ -200,7 +203,7 @@ const AssociationsManagement: React.FC = () => {
     }
   };
 
-  const getActionButtons = (association: DomainOrganizationAssociation) => {
+  const getActionButtons = (association: DomainOrganizationAssociationWithDetails) => {
     const isLoading = actionLoading === association.associationId?.toString();
     const isAffiliate = organization?.type === 'affiliate';
     const isRequestType = association.associationType === 'request';
@@ -260,16 +263,6 @@ const AssociationsManagement: React.FC = () => {
             {t("associations.reactivate")}
           </Button>
         )}
-        
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => navigate(`/affiliates/${association.affiliateOrgId}/details`)}
-          className="text-blue-600 hover:text-blue-700"
-        >
-          <Eye className="w-4 h-4 mr-1" />
-          {t("associations.view")}
-        </Button>
       </div>
     );
   };
@@ -312,11 +305,10 @@ const AssociationsManagement: React.FC = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("associations.organizationName")}</TableHead>
-                    <TableHead>{t("associations.type")}</TableHead>
+                    <TableHead>{t("associations.advertiser")}</TableHead>
+                    <TableHead>{t("associations.affiliate")}</TableHead>
                     <TableHead>{t("associations.status")}</TableHead>
-                    <TableHead>{t("associations.dateCreated")}</TableHead>
-                    <TableHead>{t("associations.updatedDate")}</TableHead>
+                    <TableHead>{t("associations.createdAt")}</TableHead>
                     <TableHead>{t("associations.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -324,24 +316,56 @@ const AssociationsManagement: React.FC = () => {
                   {associations.map((association) => (
                     <TableRow key={association.associationId}>
                       <TableCell className="font-medium">
-                        {t("associations.organizationId")}: {association.affiliateOrgId || t("associations.unknown")}
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-medium text-blue-600">
+                              {association.advertiserOrganization?.name?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              {association.advertiserOrganization?.name || t("associations.unknownAdvertiser")}
+                            </p>
+                          </div>
+                        </div>
                       </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">
-                          {association.associationType || t("associations.unknown")}
-                        </Badge>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-medium text-green-600">
+                              {association.affiliateOrganization?.name?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              {association.affiliateOrganization?.name || t("associations.unknownAffiliate")}
+                            </p>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(association.status!)}
                       </TableCell>
                       <TableCell>
-                        {association.createdAt ? new Date(association.createdAt).toLocaleDateString() : t("associations.na")}
+                        <div className="flex items-center space-x-2">
+                          <span>
+                            {association.createdAt ? new Date(association.createdAt).toLocaleDateString() : t("associations.na")}
+                          </span>
+                        </div>
                       </TableCell>
                       <TableCell>
-                        {association.updatedAt ? new Date(association.updatedAt).toLocaleDateString() : t("associations.na")}
-                      </TableCell>
-                      <TableCell>
-                        {getActionButtons(association)}
+                        <div className="flex space-x-2">
+                          {getActionButtons(association)}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => navigate(`/associations/${association.affiliateOrgId}`)}
+                            className="text-blue-600 hover:text-blue-700"
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            {t("associations.viewDetails")}
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

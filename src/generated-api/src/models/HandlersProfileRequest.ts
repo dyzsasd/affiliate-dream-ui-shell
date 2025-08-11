@@ -32,6 +32,12 @@ export interface HandlersProfileRequest {
      */
     firstName?: string;
     /**
+     * TODO: Remove this field when access control is restored
+     * @type {string}
+     * @memberof HandlersProfileRequest
+     */
+    id?: string;
+    /**
      * 
      * @type {string}
      * @memberof HandlersProfileRequest
@@ -70,6 +76,7 @@ export function HandlersProfileRequestFromJSONTyped(json: any, ignoreDiscriminat
         
         'email': json['email'] == null ? undefined : json['email'],
         'firstName': json['first_name'] == null ? undefined : json['first_name'],
+        'id': json['id'] == null ? undefined : json['id'],
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
         'organizationId': json['organization_id'] == null ? undefined : json['organization_id'],
         'roleId': json['role_id'] == null ? undefined : json['role_id'],
@@ -89,6 +96,7 @@ export function HandlersProfileRequestToJSONTyped(value?: HandlersProfileRequest
         
         'email': value['email'],
         'first_name': value['firstName'],
+        'id': value['id'],
         'last_name': value['lastName'],
         'organization_id': value['organizationId'],
         'role_id': value['roleId'],

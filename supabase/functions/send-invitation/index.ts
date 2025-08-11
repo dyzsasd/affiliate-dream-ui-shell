@@ -43,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
     const token = btoa(JSON.stringify(tokenData));
     
     // Generate the invitation link
-    const invitationLink = `${req.headers.get('origin') || 'http://localhost:5173'}/signup?invitation=${token}`;
+    const invitationLink = `${req.headers.get('origin') || 'https://api.affiliate.rolinko.com'}/signup?invitation=${token}`;
 
     // Try to create the user in Supabase Auth (without password)
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({

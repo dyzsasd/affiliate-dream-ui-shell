@@ -24,5 +24,7 @@
   "errorOccurred": "An error occurred",
   "tryAgain": "Try Again",
   "optional": "optional",
-  "remove": "Remove"
+  "remove": "Remove",
+  "filter": "Filter",
+  "required": "Required"
 }

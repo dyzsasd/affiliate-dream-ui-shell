@@ -8,13 +8,39 @@ import { handleApiError } from './backendApi';
 interface MockCreateAdvertiserRequest {
   name: string;
   contactEmail?: string;
+  accountingContactEmail?: string;
   status?: string;
+  platformName?: string;
+  platformUrl?: string;
+  platformUsername?: string;
+  attributionMethod?: string;
+  attributionPriority?: string;
+  emailAttributionMethod?: string;
+  affiliateIdMacro?: string;
+  offerIdMacro?: string;
+  defaultCurrencyId?: string;
+  reportingTimezoneId?: number;
+  internalNotes?: string;
+  billingDetails?: any;
 }
 
 interface MockUpdateAdvertiserRequest {
   name?: string;
   contactEmail?: string;
+  accountingContactEmail?: string;
   status?: string;
+  platformName?: string;
+  platformUrl?: string;
+  platformUsername?: string;
+  attributionMethod?: string;
+  attributionPriority?: string;
+  emailAttributionMethod?: string;
+  affiliateIdMacro?: string;
+  offerIdMacro?: string;
+  defaultCurrencyId?: string;
+  reportingTimezoneId?: number;
+  internalNotes?: string;
+  billingDetails?: any;
 }
 
 /**

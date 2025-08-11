@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -21,11 +21,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 
+
 const AdvertiserList: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { organization, profile, isOrganizationLoading, fetchOrganization } = useAuth();
+  
 
   console.log("Auth organization:", organization);
   console.log("Auth profile:", profile);
@@ -122,11 +124,9 @@ const AdvertiserList: React.FC = () => {
 
   return (
     <div className="container py-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
-          <p className="text-muted-foreground">{t('advertisers.description')}</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
+        <p className="text-muted-foreground">{t('advertisers.description')}</p>
       </div>
 
       {advertisers.length === 0 ? (
@@ -189,6 +189,7 @@ const AdvertiserList: React.FC = () => {
           </CardContent>
         </Card>
       )}
+
     </div>
   );
 };

@@ -22,31 +22,44 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
 
   // Prepare billing details for API request
   const prepareBillingDetails = (data: AdvertiserFormData) => {
-    // Structure billing details into an object
-    const billingDetailsObj: BillingDetails = {
-      address: data.billingAddress || undefined,
-      city: data.billingCity || undefined,
-      state: data.billingState || undefined,
-      country: data.billingCountry || undefined,
-      postalCode: data.billingPostalCode || undefined,
+    return {
+      address: {
+        line1: data.billingAddress || '',
+        city: data.billingCity || '',
+        state: data.billingState || '',
+        country: data.billingCountry || '',
+        postalCode: data.billingPostalCode || ''
+      },
+      taxId: data.billingTaxId || ''
     };
-    
-    // Only include billing details if at least one field is populated
-    return Object.values(billingDetailsObj).some(val => !!val) ? billingDetailsObj : undefined;
   };
 
   const createMutation = useMutation({
     mutationFn: async (data: AdvertiserFormData) => {
-      const billingDetailsObj = prepareBillingDetails(data);
-      const transformedData = {
-        name: data.name,
-        contactEmail: data.contactEmail,
-        status: data.status,
-        // Parse the JSON string to an object for the API
-        paymentDetails: billingDetailsObj,
-      };
+      if (!organizationId) {
+        throw new Error('Organization ID is required');
+      }
+
+      const billingDetails = prepareBillingDetails(data);
       
-      return createAdvertiser(organizationId, transformedData);
+      return createAdvertiser(organizationId, {
+        name: data.name,
+        contactEmail: data.contactEmail || undefined,
+        accountingContactEmail: data.accountingContactEmail || undefined,
+        status: data.status,
+        platformName: data.platformName || undefined,
+        platformUrl: data.platformUrl || undefined,
+        platformUsername: data.platformUsername || undefined,
+        attributionMethod: data.attributionMethod || undefined,
+        attributionPriority: data.attributionPriority || undefined,
+        emailAttributionMethod: data.emailAttributionMethod || undefined,
+        affiliateIdMacro: data.affiliateIdMacro || undefined,
+        offerIdMacro: data.offerIdMacro || undefined,
+        defaultCurrencyId: data.defaultCurrencyId || undefined,
+        reportingTimezoneId: data.reportingTimezoneId ? parseInt(data.reportingTimezoneId) : undefined,
+        internalNotes: data.internalNotes || undefined,
+        billingDetails: billingDetails
+      });
     },
     onSuccess: () => {
       toast.success("Advertiser created successfully");
@@ -60,18 +73,30 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
 
   const updateMutation = useMutation({
     mutationFn: async (data: AdvertiserFormData) => {
-      if (!advertiserId) throw new Error('Advertiser ID is required');
+      if (!advertiserId) {
+        throw new Error('Advertiser ID is required for update');
+      }
+
+      const billingDetails = prepareBillingDetails(data);
       
-      const billingDetailsObj = prepareBillingDetails(data);
-      const transformedData = {
+      return updateAdvertiser(Number(advertiserId), {
         name: data.name,
-        contactEmail: data.contactEmail,
+        contactEmail: data.contactEmail || undefined,
+        accountingContactEmail: data.accountingContactEmail || undefined,
         status: data.status,
-        // Parse the JSON string to an object for the API
-        paymentDetails: billingDetailsObj,
-      };
-      
-      return updateAdvertiser(parseInt(advertiserId), transformedData);
+        platformName: data.platformName || undefined,
+        platformUrl: data.platformUrl || undefined,
+        platformUsername: data.platformUsername || undefined,
+        attributionMethod: data.attributionMethod || undefined,
+        attributionPriority: data.attributionPriority || undefined,
+        emailAttributionMethod: data.emailAttributionMethod || undefined,
+        affiliateIdMacro: data.affiliateIdMacro || undefined,
+        offerIdMacro: data.offerIdMacro || undefined,
+        defaultCurrencyId: data.defaultCurrencyId || undefined,
+        reportingTimezoneId: data.reportingTimezoneId ? parseInt(data.reportingTimezoneId) : undefined,
+        internalNotes: data.internalNotes || undefined,
+        billingDetails: billingDetails
+      });
     },
     onSuccess: () => {
       toast.success("Advertiser updated successfully");
@@ -86,11 +111,13 @@ export const useAdvertiserMutations = ({ advertiserId, organizationId }: UseAdve
 
   const submitForm = (data: AdvertiserFormData) => {
     setIsSubmitting(true);
-    if (isEditMode) {
-      updateMutation.mutate(data);
-    } else {
-      createMutation.mutate(data);
-    }
+    const mutationToUse = isEditMode ? updateMutation : createMutation;
+    
+    mutationToUse.mutate(data, {
+      onSettled: () => {
+        setIsSubmitting(false);
+      }
+    });
   };
 
   return {

@@ -35,15 +35,40 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
   const form = useForm<AdvertiserFormData>({
     resolver: zodResolver(advertiserSchema),
     defaultValues: {
+      // Mandatory fields
       name: '',
+      status: 'pending',
+      
+      // Contact information
       contactEmail: '',
-      status: 'active',
+      accountingContactEmail: '',
+      
+      // Platform details
+      platformName: '',
+      platformUrl: '',
+      platformUsername: '',
+      
+      // Attribution settings
+      attributionMethod: '',
+      attributionPriority: '',
+      emailAttributionMethod: '',
+      
+      // Macros
+      affiliateIdMacro: '',
+      offerIdMacro: '',
+      
+      // Settings
+      defaultCurrencyId: '',
+      reportingTimezoneId: '',
+      internalNotes: '',
+      
+      // Billing address
       billingAddress: '',
       billingCity: '',
       billingState: '',
       billingCountry: '',
       billingPostalCode: '',
-      billingDetails: '',
+      billingTaxId: '',
     },
   });
 
@@ -51,16 +76,13 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
   useEffect(() => {
     if (advertiser && isEditMode) {
       let billingDetails: BillingDetails = {};
-      let billingDetailsString = '';
       
       if (advertiser.billingDetails) {
         if (typeof advertiser.billingDetails === 'string') {
           try {
             billingDetails = JSON.parse(advertiser.billingDetails) as BillingDetails;
-            billingDetailsString = advertiser.billingDetails;
           } catch (e) {
             billingDetails = {};
-            billingDetailsString = '';
           }
         } else {
           // If it's already a DomainBillingDetails object, convert it
@@ -72,57 +94,48 @@ export const useAdvertiserForm = ({ advertiserId }: UseAdvertiserFormProps) => {
             country: domainBillingDetails.address?.country || '',
             postalCode: domainBillingDetails.address?.postalCode || ''
           };
-          billingDetailsString = JSON.stringify(domainBillingDetails);
         }
       }
       
       form.reset({
+        // Mandatory fields
         name: advertiser.name || '',
+        status: (advertiser.status as 'active' | 'pending' | 'inactive' | 'rejected') || 'pending',
+        
+        // Contact information
         contactEmail: advertiser.contactEmail || '',
-        status: (advertiser.status as 'active' | 'pending' | 'inactive' | 'rejected') || 'active',
+        accountingContactEmail: advertiser.accountingContactEmail || '',
+        
+        // Platform details
+        platformName: advertiser.platformName || '',
+        platformUrl: advertiser.platformUrl || '',
+        platformUsername: advertiser.platformUsername || '',
+        
+        // Attribution settings
+        attributionMethod: advertiser.attributionMethod || '',
+        attributionPriority: advertiser.attributionPriority || '',
+        emailAttributionMethod: advertiser.emailAttributionMethod || '',
+        
+        // Macros
+        affiliateIdMacro: advertiser.affiliateIdMacro || '',
+        offerIdMacro: advertiser.offerIdMacro || '',
+        
+        // Settings
+        defaultCurrencyId: advertiser.defaultCurrencyId || '',
+        reportingTimezoneId: advertiser.reportingTimezoneId?.toString() || '',
+        internalNotes: advertiser.internalNotes || '',
+        
+        // Billing address
         billingAddress: billingDetails.address || '',
         billingCity: billingDetails.city || '',
         billingState: billingDetails.state || '',
         billingCountry: billingDetails.country || '',
         billingPostalCode: billingDetails.postalCode || '',
-        billingDetails: billingDetailsString,
+        billingTaxId: (advertiser.billingDetails as any)?.taxId || '',
       });
     }
   }, [advertiser, form, isEditMode]);
 
-  const transformFormDataToBackend = (data: AdvertiserFormData) => {
-    return {
-      name: data.name,
-      contactEmail: data.contactEmail,
-      status: data.status,
-      // Map billingDetails to paymentDetails for the affiliate backend
-      paymentDetails: data.billingDetails ? JSON.parse(data.billingDetails) : undefined,
-    };
-  };
-
-  const transformBackendToFormData = (advertiser: DomainAffiliate): AdvertiserFormData => {
-    let billingDetails = '';
-    
-    // Try to get billing info from either billingInfo or paymentDetails
-    if (advertiser.billingInfo) {
-      billingDetails = advertiser.billingInfo;
-    } else if (advertiser.paymentDetails) {
-      billingDetails = advertiser.paymentDetails;
-    }
-
-    return {
-      name: advertiser.name || '',
-      contactEmail: advertiser.contactEmail || '',
-      status: (advertiser.status as 'active' | 'pending' | 'inactive' | 'rejected') || 'pending',
-      billingAddress: '',
-      billingCity: '',
-      billingState: '',
-      billingCountry: '',
-      billingPostalCode: '',
-      // Use the billing details we found
-      billingDetails: billingDetails
-    };
-  };
 
   const onSubmit = (data: AdvertiserFormData) => {
     submitForm(data);
