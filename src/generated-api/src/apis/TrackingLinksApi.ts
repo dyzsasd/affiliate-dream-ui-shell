@@ -19,11 +19,8 @@ import type {
   ModelsTrackingLinkGenerationRequest,
   ModelsTrackingLinkGenerationResponse,
   ModelsTrackingLinkListResponse,
-  ModelsTrackingLinkRequest,
   ModelsTrackingLinkResponse,
   ModelsTrackingLinkUpdateRequest,
-  ModelsTrackingLinkUpsertRequest,
-  ModelsTrackingLinkUpsertResponse,
 } from '../models/index';
 import {
     HandlersErrorResponseFromJSON,
@@ -34,82 +31,39 @@ import {
     ModelsTrackingLinkGenerationResponseToJSON,
     ModelsTrackingLinkListResponseFromJSON,
     ModelsTrackingLinkListResponseToJSON,
-    ModelsTrackingLinkRequestFromJSON,
-    ModelsTrackingLinkRequestToJSON,
     ModelsTrackingLinkResponseFromJSON,
     ModelsTrackingLinkResponseToJSON,
     ModelsTrackingLinkUpdateRequestFromJSON,
     ModelsTrackingLinkUpdateRequestToJSON,
-    ModelsTrackingLinkUpsertRequestFromJSON,
-    ModelsTrackingLinkUpsertRequestToJSON,
-    ModelsTrackingLinkUpsertResponseFromJSON,
-    ModelsTrackingLinkUpsertResponseToJSON,
 } from '../models/index';
 
-export interface AffiliatesIdTrackingLinksGetRequest {
+export interface OrganizationsOrganizationIdTrackingLinksLinkIdQrGetRequest {
+    organizationId: number;
+    linkId: number;
+}
+
+export interface TrackingLinksGetRequest {
+    affiliateIds?: string;
+    campaignIds?: string;
+    limit?: number;
+    offset?: number;
+}
+
+export interface TrackingLinksIdDeleteRequest {
     id: number;
-    page?: number;
-    pageSize?: number;
 }
 
-export interface CampaignsIdAffiliatesAffiliateIdTrackingLinksGetRequest {
+export interface TrackingLinksIdGetRequest {
     id: number;
-    affiliateId: number;
-    page?: number;
-    pageSize?: number;
 }
 
-export interface CampaignsIdTrackingLinksGetRequest {
+export interface TrackingLinksIdPutRequest {
     id: number;
-    page?: number;
-    pageSize?: number;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksGeneratePostRequest {
-    organizationId: number;
-    request: ModelsTrackingLinkGenerationRequest;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksGetRequest {
-    organizationId: number;
-    page?: number;
-    pageSize?: number;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksPostRequest {
-    organizationId: number;
-    request: ModelsTrackingLinkRequest;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdDeleteRequest {
-    organizationId: number;
-    trackingLinkId: number;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdGetRequest {
-    organizationId: number;
-    trackingLinkId: number;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdPutRequest {
-    organizationId: number;
-    trackingLinkId: number;
     request: ModelsTrackingLinkUpdateRequest;
 }
 
-export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdQrGetRequest {
-    organizationId: number;
-    trackingLinkId: number;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRequest {
-    organizationId: number;
-    trackingLinkId: number;
-}
-
-export interface OrganizationsOrganizationIdTrackingLinksUpsertPostRequest {
-    organizationId: number;
-    request: ModelsTrackingLinkUpsertRequest;
+export interface TrackingLinksPostRequest {
+    request: ModelsTrackingLinkGenerationRequest;
 }
 
 /**
@@ -118,314 +72,21 @@ export interface OrganizationsOrganizationIdTrackingLinksUpsertPostRequest {
 export class TrackingLinksApi extends runtime.BaseAPI {
 
     /**
-     * Retrieve a list of tracking links for a specific affiliate
-     * List tracking links by affiliate
+     * Generate a QR code for the specified tracking link
+     * Get QR code for tracking link
      */
-    async affiliatesIdTrackingLinksGetRaw(requestParameters: AffiliatesIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling affiliatesIdTrackingLinksGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/affiliates/{id}/tracking-links`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieve a list of tracking links for a specific affiliate
-     * List tracking links by affiliate
-     */
-    async affiliatesIdTrackingLinksGet(requestParameters: AffiliatesIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
-        const response = await this.affiliatesIdTrackingLinksGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Retrieve tracking links for a specific campaign and affiliate combination
-     * Get tracking links by campaign and affiliate
-     */
-    async campaignsIdAffiliatesAffiliateIdTrackingLinksGetRaw(requestParameters: CampaignsIdAffiliatesAffiliateIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling campaignsIdAffiliatesAffiliateIdTrackingLinksGet().'
-            );
-        }
-
-        if (requestParameters['affiliateId'] == null) {
-            throw new runtime.RequiredError(
-                'affiliateId',
-                'Required parameter "affiliateId" was null or undefined when calling campaignsIdAffiliatesAffiliateIdTrackingLinksGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaigns/{id}/affiliates/{affiliate_id}/tracking-links`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"affiliate_id"}}`, encodeURIComponent(String(requestParameters['affiliateId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieve tracking links for a specific campaign and affiliate combination
-     * Get tracking links by campaign and affiliate
-     */
-    async campaignsIdAffiliatesAffiliateIdTrackingLinksGet(requestParameters: CampaignsIdAffiliatesAffiliateIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
-        const response = await this.campaignsIdAffiliatesAffiliateIdTrackingLinksGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Retrieve a list of tracking links for a specific campaign
-     * List tracking links by campaign
-     */
-    async campaignsIdTrackingLinksGetRaw(requestParameters: CampaignsIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling campaignsIdTrackingLinksGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/campaigns/{id}/tracking-links`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieve a list of tracking links for a specific campaign
-     * List tracking links by campaign
-     */
-    async campaignsIdTrackingLinksGet(requestParameters: CampaignsIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
-        const response = await this.campaignsIdTrackingLinksGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Generate a new tracking link with provider integration for a campaign and affiliate
-     * Generate a new tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksGeneratePostRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksGeneratePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkGenerationResponse>> {
+    async organizationsOrganizationIdTrackingLinksLinkIdQrGetRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksLinkIdQrGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
         if (requestParameters['organizationId'] == null) {
             throw new runtime.RequiredError(
                 'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksGeneratePost().'
+                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksLinkIdQrGet().'
             );
         }
 
-        if (requestParameters['request'] == null) {
+        if (requestParameters['linkId'] == null) {
             throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling organizationsOrganizationIdTrackingLinksGeneratePost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/generate`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ModelsTrackingLinkGenerationRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkGenerationResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Generate a new tracking link with provider integration for a campaign and affiliate
-     * Generate a new tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksGeneratePost(requestParameters: OrganizationsOrganizationIdTrackingLinksGeneratePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkGenerationResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksGeneratePostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Retrieve a list of tracking links for a specific organization
-     * List tracking links by organization
-     */
-    async organizationsOrganizationIdTrackingLinksGetRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieve a list of tracking links for a specific organization
-     * List tracking links by organization
-     */
-    async organizationsOrganizationIdTrackingLinksGet(requestParameters: OrganizationsOrganizationIdTrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Create a new tracking link for a campaign and affiliate
-     * Create a new tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksPostRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkResponse>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksPost().'
-            );
-        }
-
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling organizationsOrganizationIdTrackingLinksPost().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ModelsTrackingLinkRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Create a new tracking link for a campaign and affiliate
-     * Create a new tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksPost(requestParameters: OrganizationsOrganizationIdTrackingLinksPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Delete a tracking link by its ID
-     * Delete a tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdDeleteRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdDelete().'
-            );
-        }
-
-        if (requestParameters['trackingLinkId'] == null) {
-            throw new runtime.RequiredError(
-                'trackingLinkId',
-                'Required parameter "trackingLinkId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdDelete().'
+                'linkId',
+                'Required parameter "linkId" was null or undefined when calling organizationsOrganizationIdTrackingLinksLinkIdQrGet().'
             );
         }
 
@@ -438,154 +99,7 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * Delete a tracking link by its ID
-     * Delete a tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdDelete(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.organizationsOrganizationIdTrackingLinksTrackingLinkIdDeleteRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * Retrieve a tracking link by its ID
-     * Get a tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdGetRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkResponse>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdGet().'
-            );
-        }
-
-        if (requestParameters['trackingLinkId'] == null) {
-            throw new runtime.RequiredError(
-                'trackingLinkId',
-                'Required parameter "trackingLinkId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Retrieve a tracking link by its ID
-     * Get a tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdGet(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksTrackingLinkIdGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Update an existing tracking link
-     * Update a tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdPutRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkResponse>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdPut().'
-            );
-        }
-
-        if (requestParameters['trackingLinkId'] == null) {
-            throw new runtime.RequiredError(
-                'trackingLinkId',
-                'Required parameter "trackingLinkId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdPut().'
-            );
-        }
-
-        if (requestParameters['request'] == null) {
-            throw new runtime.RequiredError(
-                'request',
-                'Required parameter "request" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdPut().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ModelsTrackingLinkUpdateRequestToJSON(requestParameters['request']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkResponseFromJSON(jsonValue));
-    }
-
-    /**
-     * Update an existing tracking link
-     * Update a tracking link
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdPut(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksTrackingLinkIdPutRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Generate and return a QR code image for a tracking link
-     * Get tracking link QR code
-     */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdQrGetRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdQrGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdQrGet().'
-            );
-        }
-
-        if (requestParameters['trackingLinkId'] == null) {
-            throw new runtime.RequiredError(
-                'trackingLinkId',
-                'Required parameter "trackingLinkId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdQrGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}/qr`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
+            path: `/organizations/{organization_id}/tracking-links/{link_id}/qr`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"link_id"}}`, encodeURIComponent(String(requestParameters['linkId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -599,30 +113,71 @@ export class TrackingLinksApi extends runtime.BaseAPI {
     }
 
     /**
-     * Generate and return a QR code image for a tracking link
-     * Get tracking link QR code
+     * Generate a QR code for the specified tracking link
+     * Get QR code for tracking link
      */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdQrGet(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdQrGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
-        const response = await this.organizationsOrganizationIdTrackingLinksTrackingLinkIdQrGetRaw(requestParameters, initOverrides);
+    async organizationsOrganizationIdTrackingLinksLinkIdQrGet(requestParameters: OrganizationsOrganizationIdTrackingLinksLinkIdQrGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+        const response = await this.organizationsOrganizationIdTrackingLinksLinkIdQrGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Regenerate an existing tracking link with provider integration
-     * Regenerate a tracking link
+     * List tracking links with optional filtering by affiliate IDs and campaign IDs
+     * List tracking links
      */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkGenerationResponse>> {
-        if (requestParameters['organizationId'] == null) {
-            throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePost().'
-            );
+    async trackingLinksGetRaw(requestParameters: TrackingLinksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkListResponse>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['affiliateIds'] != null) {
+            queryParameters['affiliate_ids'] = requestParameters['affiliateIds'];
         }
 
-        if (requestParameters['trackingLinkId'] == null) {
+        if (requestParameters['campaignIds'] != null) {
+            queryParameters['campaign_ids'] = requestParameters['campaignIds'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/tracking-links`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkListResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * List tracking links with optional filtering by affiliate IDs and campaign IDs
+     * List tracking links
+     */
+    async trackingLinksGet(requestParameters: TrackingLinksGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkListResponse> {
+        const response = await this.trackingLinksGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Delete a tracking link by its ID
+     * Delete tracking link
+     */
+    async trackingLinksIdDeleteRaw(requestParameters: TrackingLinksIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
-                'trackingLinkId',
-                'Required parameter "trackingLinkId" was null or undefined when calling organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePost().'
+                'id',
+                'Required parameter "id" was null or undefined when calling trackingLinksIdDelete().'
             );
         }
 
@@ -635,40 +190,78 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/{tracking_link_id}/regenerate`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))).replace(`{${"tracking_link_id"}}`, encodeURIComponent(String(requestParameters['trackingLinkId']))),
-            method: 'POST',
+            path: `/tracking-links/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkGenerationResponseFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
-     * Regenerate an existing tracking link with provider integration
-     * Regenerate a tracking link
+     * Delete a tracking link by its ID
+     * Delete tracking link
      */
-    async organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePost(requestParameters: OrganizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkGenerationResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksTrackingLinkIdRegeneratePostRaw(requestParameters, initOverrides);
+    async trackingLinksIdDelete(requestParameters: TrackingLinksIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.trackingLinksIdDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Retrieve a tracking link by its ID
+     * Get tracking link by ID
+     */
+    async trackingLinksIdGetRaw(requestParameters: TrackingLinksIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling trackingLinksIdGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/tracking-links/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve a tracking link by its ID
+     * Get tracking link by ID
+     */
+    async trackingLinksIdGet(requestParameters: TrackingLinksIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkResponse> {
+        const response = await this.trackingLinksIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Create a new tracking link or update an existing one based on campaign_id and affiliate_id
-     * Upsert a tracking link by campaign and affiliate
+     * Update a tracking link and regenerate if key parameters change
+     * Update tracking link
      */
-    async organizationsOrganizationIdTrackingLinksUpsertPostRaw(requestParameters: OrganizationsOrganizationIdTrackingLinksUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkUpsertResponse>> {
-        if (requestParameters['organizationId'] == null) {
+    async trackingLinksIdPutRaw(requestParameters: TrackingLinksIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkResponse>> {
+        if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
-                'organizationId',
-                'Required parameter "organizationId" was null or undefined when calling organizationsOrganizationIdTrackingLinksUpsertPost().'
+                'id',
+                'Required parameter "id" was null or undefined when calling trackingLinksIdPut().'
             );
         }
 
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling organizationsOrganizationIdTrackingLinksUpsertPost().'
+                'Required parameter "request" was null or undefined when calling trackingLinksIdPut().'
             );
         }
 
@@ -683,22 +276,64 @@ export class TrackingLinksApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/organizations/{organization_id}/tracking-links/upsert`.replace(`{${"organization_id"}}`, encodeURIComponent(String(requestParameters['organizationId']))),
-            method: 'POST',
+            path: `/tracking-links/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ModelsTrackingLinkUpsertRequestToJSON(requestParameters['request']),
+            body: ModelsTrackingLinkUpdateRequestToJSON(requestParameters['request']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkUpsertResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkResponseFromJSON(jsonValue));
     }
 
     /**
-     * Create a new tracking link or update an existing one based on campaign_id and affiliate_id
-     * Upsert a tracking link by campaign and affiliate
+     * Update a tracking link and regenerate if key parameters change
+     * Update tracking link
      */
-    async organizationsOrganizationIdTrackingLinksUpsertPost(requestParameters: OrganizationsOrganizationIdTrackingLinksUpsertPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkUpsertResponse> {
-        const response = await this.organizationsOrganizationIdTrackingLinksUpsertPostRaw(requestParameters, initOverrides);
+    async trackingLinksIdPut(requestParameters: TrackingLinksIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkResponse> {
+        const response = await this.trackingLinksIdPutRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Create a new tracking link with uniqueness guarantee for campaign_id + affiliate_id combination
+     * Create a new tracking link
+     */
+    async trackingLinksPostRaw(requestParameters: TrackingLinksPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ModelsTrackingLinkGenerationResponse>> {
+        if (requestParameters['request'] == null) {
+            throw new runtime.RequiredError(
+                'request',
+                'Required parameter "request" was null or undefined when calling trackingLinksPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/tracking-links`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ModelsTrackingLinkGenerationRequestToJSON(requestParameters['request']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ModelsTrackingLinkGenerationResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new tracking link with uniqueness guarantee for campaign_id + affiliate_id combination
+     * Create a new tracking link
+     */
+    async trackingLinksPost(requestParameters: TrackingLinksPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsTrackingLinkGenerationResponse> {
+        const response = await this.trackingLinksPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

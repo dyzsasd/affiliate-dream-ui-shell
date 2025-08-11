@@ -149,11 +149,8 @@ src/models/ModelsGetCampaignProviderMappingResponse.ts
 src/models/ModelsTrackingLinkGenerationRequest.ts
 src/models/ModelsTrackingLinkGenerationResponse.ts
 src/models/ModelsTrackingLinkListResponse.ts
-src/models/ModelsTrackingLinkRequest.ts
 src/models/ModelsTrackingLinkResponse.ts
 src/models/ModelsTrackingLinkUpdateRequest.ts
-src/models/ModelsTrackingLinkUpsertRequest.ts
-src/models/ModelsTrackingLinkUpsertResponse.ts
 src/models/ModelsUpdateAdvertiserProviderMappingRequest.ts
 src/models/ModelsUpdateAdvertiserRequest.ts
 src/models/ModelsUpdateCampaignRequest.ts
