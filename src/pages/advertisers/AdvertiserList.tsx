@@ -124,15 +124,9 @@ const AdvertiserList: React.FC = () => {
 
   return (
     <div className="container py-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
-          <p className="text-muted-foreground">{t('advertisers.description')}</p>
-        </div>
-        <Button onClick={() => navigate('/advertisers/new')}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create Advertiser
-        </Button>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{t('advertisers.title')}</h1>
+        <p className="text-muted-foreground">{t('advertisers.description')}</p>
       </div>
 
       {advertisers.length === 0 ? (
@@ -143,12 +137,6 @@ const AdvertiserList: React.FC = () => {
               {t('advertisers.createYourFirst')}
             </CardDescription>
           </CardHeader>
-          <CardFooter>
-            <Button onClick={() => navigate('/advertisers/new')} className="w-full">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create Your First Advertiser
-            </Button>
-          </CardFooter>
         </Card>
       ) : (
         <Card>
