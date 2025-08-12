@@ -9,12 +9,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
 const ResetPassword: React.FC = () => {
-  const { isLoading } = useAuth();
+  const { isLoading, isAuthenticated, signOut } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Check for error parameters in URL hash
+  // Check for error parameters in URL hash and handle automatic login
   useEffect(() => {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
@@ -22,6 +22,15 @@ const ResetPassword: React.FC = () => {
     const error = params.get('error');
     const errorCode = params.get('error_code');
     const errorDescription = params.get('error_description');
+    const accessToken = params.get('access_token');
+    const type = params.get('type');
+    
+    // If user was automatically logged in via recovery link, sign them out
+    // so they're forced to reset password
+    if (accessToken && type === 'recovery' && isAuthenticated) {
+      signOut();
+      return;
+    }
     
     if (error && errorCode) {
       if (errorCode === 'otp_expired') {
@@ -35,7 +44,7 @@ const ResetPassword: React.FC = () => {
       // Clean the URL
       navigate('/reset-password', { replace: true });
     }
-  }, [navigate, t]);
+  }, [navigate, t, isAuthenticated, signOut]);
 
   if (isLoading) {
     return (
