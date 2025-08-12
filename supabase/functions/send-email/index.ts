@@ -23,7 +23,13 @@ Deno.serve(async (req) => {
   try {
     const payload = await req.text()
     const headers = Object.fromEntries(req.headers)
-    const wh = new Webhook(hookSecret)
+    
+    // Extract the actual secret part if it's in the format "v1,whsec_..."
+    const cleanSecret = hookSecret.startsWith('v1,whsec_') 
+      ? hookSecret.split(',')[1].replace('whsec_', '')
+      : hookSecret
+    
+    const wh = new Webhook(cleanSecret)
 
     const {
       user,
