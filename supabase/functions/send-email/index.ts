@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
         supabase_url: Deno.env.get('SUPABASE_URL') ?? '',
         token,
         token_hash,
-        redirect_to,
+        redirect_to: redirect_to || `${new URL(redirect_to).origin}/reset-password`,
         email_action_type,
       })
     )
