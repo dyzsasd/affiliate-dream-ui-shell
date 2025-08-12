@@ -12,5 +12,9 @@
   "adminOptions": "Options d'administration",
   "adminOptionsDescription": "Outils et paramètres administratifs",
   "adminMessage": "Vous avez des privilèges d'administrateur.",
-  "manageUsers": "Gérer les utilisateurs"
+  "manageUsers": "Gérer les utilisateurs",
+  "securitySettings": "Paramètres de sécurité",
+  "securitySettingsDescription": "Gérer la sécurité de votre compte",
+  "resetPassword": "Réinitialiser le mot de passe",
+  "resetPasswordDescription": "Changer le mot de passe de votre compte"
 }

@@ -12,5 +12,9 @@
   "adminOptions": "管理员选项",
   "adminOptionsDescription": "管理工具和设置",
   "adminMessage": "您拥有管理员权限。",
-  "manageUsers": "管理用户"
+  "manageUsers": "管理用户",
+  "securitySettings": "安全设置",
+  "securitySettingsDescription": "管理您的账户安全",
+  "resetPassword": "重置密码",
+  "resetPasswordDescription": "更改您的账户密码"
 }

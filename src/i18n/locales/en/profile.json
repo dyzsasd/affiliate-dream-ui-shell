@@ -12,5 +12,9 @@
   "adminOptions": "Admin Options",
   "adminOptionsDescription": "Administrative tools and settings",
   "adminMessage": "You have administrative privileges.",
-  "manageUsers": "Manage Users"
+  "manageUsers": "Manage Users",
+  "securitySettings": "Security Settings",
+  "securitySettingsDescription": "Manage your account security",
+  "resetPassword": "Reset Password",
+  "resetPasswordDescription": "Change your account password"
 }
