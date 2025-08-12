@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     )
 
     const { error } = await resend.emails.send({
-      from: 'Lovable <onboarding@resend.dev>',
+      from: 'Lovable <noreply@contact.rolinko.com>',
       to: [user.email],
       subject: 'Reset your password',
       html,
