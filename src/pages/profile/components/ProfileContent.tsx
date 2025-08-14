@@ -16,6 +16,7 @@ import ContactInfoSection from './ContactInfoSection';
 import OrganizationInfoSection from './OrganizationInfoSection';
 import BackendProfileData from './BackendProfileData';
 import AdminSection from './AdminSection';
+import SecuritySection from './SecuritySection';
 import { useProfileForm } from '../hooks/useProfileForm';
 
 interface ProfileContentProps {
@@ -95,6 +96,9 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
           )}
         </CardContent>
       </Card>
+      
+      {/* Security Section */}
+      <SecuritySection />
       
       {/* Admin Section */}
       <AdminSection hasPermission={hasPermission} />
