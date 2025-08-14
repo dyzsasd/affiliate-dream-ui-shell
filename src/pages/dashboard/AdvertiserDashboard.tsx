@@ -1,20 +1,21 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AreaChart, BarChart, RefreshCw } from "lucide-react";
-import { mockPerformanceData } from "@/services/api";
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar, BarChart as RechartsBarChart } from "recharts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RefreshCw, TrendingUp, TrendingDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth";
 import { fetchAdvertisers } from "@/services/advertiserService";
+import { DomainAdvertiser } from "@/generated-api/src/models";
 
 const AdvertiserDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { organization } = useAuth();
+  const [selectedAdvertiser, setSelectedAdvertiser] = useState<string>("");
 
   // Fetch advertisers for the organization
-  const { data: advertisers = [], isLoading: isLoadingAdvertisers, isError } = useQuery({
+  const { data: advertisers = [], isLoading: isLoadingAdvertisers } = useQuery({
     queryKey: ['advertisers', organization?.organizationId],
     queryFn: async () => {
       if (!organization?.organizationId) {
@@ -25,26 +26,37 @@ const AdvertiserDashboard: React.FC = () => {
     enabled: !!organization?.organizationId,
   });
 
-  // Set all data to 0 and format dates for display
-  const formattedData = mockPerformanceData.map(item => ({
-    ...item,
-    clicks: 0,
-    conversions: 0,
-    revenue: 0,
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  }));
+  // Set default advertiser when advertisers are loaded
+  React.useEffect(() => {
+    if (advertisers.length > 0 && !selectedAdvertiser) {
+      setSelectedAdvertiser(advertisers[0].advertiserId?.toString() || "");
+    }
+  }, [advertisers, selectedAdvertiser]);
 
-  const totalClicks = formattedData.reduce((sum, item) => sum + item.clicks, 0);
-  const totalConversions = formattedData.reduce((sum, item) => sum + item.conversions, 0);
-  const totalRevenue = formattedData.reduce((sum, item) => sum + item.revenue, 0);
-  const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks * 100).toFixed(2) : "0";
+  // Mock data for demonstration - in real app, this would be fetched based on selectedAdvertiser
+  const mockTodayData = {
+    clicks: { today: 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
+    cost: { today: 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 },
+    conversions: { today: 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
+    cvr: { today: 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 },
+    events: { today: 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
+    evr: { today: 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 }
+  };
 
-  const stats = [
-    { title: t("dashboard.totalClicks"), value: totalClicks.toLocaleString(), change: "0%" },
-    { title: t("dashboard.conversions"), value: totalConversions.toLocaleString(), change: "0%" },
-    { title: t("dashboard.revenue"), value: `$${totalRevenue.toLocaleString()}`, change: "0%" },
-    { title: t("dashboard.conversionRate"), value: `${conversionRate}%`, change: "0%" },
-  ];
+  const formatPercentage = (value: number) => `${value.toFixed(2)}%`;
+  const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
+
+  const getChangeIcon = (change: number) => {
+    if (change > 0) return <TrendingUp className="h-3 w-3 text-green-500" />;
+    if (change < 0) return <TrendingDown className="h-3 w-3 text-red-500" />;
+    return null;
+  };
+
+  const getChangeColor = (change: number) => {
+    if (change > 0) return "text-green-500";
+    if (change < 0) return "text-red-500";
+    return "text-muted-foreground";
+  };
 
   if (isLoadingAdvertisers) {
     return (
@@ -60,160 +72,294 @@ const AdvertiserDashboard: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("dashboard.advertiserDashboard")}</h1>
-          {advertisers.length > 0 && (
-            <p className="text-muted-foreground">
-              Managing {advertisers.length} advertiser{advertisers.length !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
-        <div className="flex items-center space-x-2">
-          <select className="h-9 rounded-md border border-input px-3 py-1 text-sm bg-background">
-            <option>Last 7 days</option>
-            <option>Last 30 days</option>
-            <option>Last 3 months</option>
-            <option>Last 12 months</option>
-          </select>
+          <p className="text-muted-foreground">Today's Stats</p>
         </div>
       </div>
 
-      {/* Advertisers Overview */}
-      {advertisers.length > 0 && (
+      {/* Advertiser Selector */}
+      <div className="flex items-center space-x-4">
+        <label className="text-sm font-medium">Select Advertiser:</label>
+        <Select value={selectedAdvertiser} onValueChange={setSelectedAdvertiser}>
+          <SelectTrigger className="w-[300px]">
+            <SelectValue placeholder="Select an advertiser" />
+          </SelectTrigger>
+          <SelectContent>
+            {advertisers.map((advertiser) => (
+              <SelectItem 
+                key={advertiser.advertiserId} 
+                value={advertiser.advertiserId?.toString() || ""}
+              >
+                {advertiser.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Today's Stats - 6 metric cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        {/* Clicks */}
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Advertisers Overview</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Clicks</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {advertisers.slice(0, 6).map((advertiser) => (
-                <div key={advertiser.advertiserId} className="p-4 border rounded-lg">
-                  <h3 className="font-medium">{advertiser.name}</h3>
-                  <p className="text-sm text-muted-foreground">{advertiser.contactEmail}</p>
-                  <div className="mt-2">
-                    <span className={`inline-flex px-2 py-1 text-xs rounded-full ${
-                      advertiser.status === 'active' 
-                        ? 'bg-green-100 text-green-800' 
-                        : advertiser.status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {advertiser.status || 'unknown'}
-                    </span>
-                  </div>
-                </div>
-              ))}
+          <CardContent className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">Today</span>
+              <div className="flex items-center space-x-1">
+                {getChangeIcon(mockTodayData.clicks.change)}
+                <span className={`text-xs ${getChangeColor(mockTodayData.clicks.change)}`}>
+                  {mockTodayData.clicks.change}%
+                </span>
+              </div>
+            </div>
+            <div className="text-2xl font-bold">{mockTodayData.clicks.today}</div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Yesterday</span>
+                <span>{mockTodayData.clicks.yesterday}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Month</span>
+                <span>{mockTodayData.clicks.currentMonth}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Last Month</span>
+                <span>{mockTodayData.clicks.lastMonth}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
-      )}
 
-      {/* Stats Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <span className={`text-xs ${stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
-                {stat.change}
+        {/* Cost */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Cost</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">Today</span>
+              <div className="flex items-center space-x-1">
+                {getChangeIcon(mockTodayData.cost.change)}
+                <span className={`text-xs ${getChangeColor(mockTodayData.cost.change)}`}>
+                  {mockTodayData.cost.change}%
+                </span>
+              </div>
+            </div>
+            <div className="text-2xl font-bold">{formatCurrency(mockTodayData.cost.today)}</div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Yesterday</span>
+                <span>{formatCurrency(mockTodayData.cost.yesterday)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Month</span>
+                <span>{formatCurrency(mockTodayData.cost.currentMonth)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Last Month</span>
+                <span>{formatCurrency(mockTodayData.cost.lastMonth)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Conversions */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Conversions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">Today</span>
+              <div className="flex items-center space-x-1">
+                {getChangeIcon(mockTodayData.conversions.change)}
+                <span className={`text-xs ${getChangeColor(mockTodayData.conversions.change)}`}>
+                  {mockTodayData.conversions.change}%
+                </span>
+              </div>
+            </div>
+            <div className="text-2xl font-bold">{mockTodayData.conversions.today}</div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Yesterday</span>
+                <span>{mockTodayData.conversions.yesterday}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Month</span>
+                <span>{mockTodayData.conversions.currentMonth}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Last Month</span>
+                <span>{mockTodayData.conversions.lastMonth}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* CVR */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">CVR</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">Today</span>
+              <div className="flex items-center space-x-1">
+                {getChangeIcon(mockTodayData.cvr.change)}
+                <span className={`text-xs ${getChangeColor(mockTodayData.cvr.change)}`}>
+                  {mockTodayData.cvr.change}%
+                </span>
+              </div>
+            </div>
+            <div className="text-2xl font-bold">{formatPercentage(mockTodayData.cvr.today)}</div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Yesterday</span>
+                <span>{formatPercentage(mockTodayData.cvr.yesterday)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Month</span>
+                <span>{formatPercentage(mockTodayData.cvr.currentMonth)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Last Month</span>
+                <span>{formatPercentage(mockTodayData.cvr.lastMonth)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Events */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Events</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">Today</span>
+              <div className="flex items-center space-x-1">
+                {getChangeIcon(mockTodayData.events.change)}
+                <span className={`text-xs ${getChangeColor(mockTodayData.events.change)}`}>
+                  {mockTodayData.events.change}%
+                </span>
+              </div>
+            </div>
+            <div className="text-2xl font-bold">{mockTodayData.events.today}</div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Yesterday</span>
+                <span>{mockTodayData.events.yesterday}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Month</span>
+                <span>{mockTodayData.events.currentMonth}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Last Month</span>
+                <span>{mockTodayData.events.lastMonth}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* EVR */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">EVR</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">Today</span>
+              <div className="flex items-center space-x-1">
+                {getChangeIcon(mockTodayData.evr.change)}
+                <span className={`text-xs ${getChangeColor(mockTodayData.evr.change)}`}>
+                  {mockTodayData.evr.change}%
+                </span>
+              </div>
+            </div>
+            <div className="text-2xl font-bold">{formatPercentage(mockTodayData.evr.today)}</div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Yesterday</span>
+                <span>{formatPercentage(mockTodayData.evr.yesterday)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Month</span>
+                <span>{formatPercentage(mockTodayData.evr.currentMonth)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Last Month</span>
+                <span>{formatPercentage(mockTodayData.evr.lastMonth)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Offers Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Offers</CardTitle>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="text" 
+                placeholder="Search..."
+                className="h-9 w-64 rounded-md border border-input px-3 py-1 text-sm bg-background"
+              />
+              <button className="h-9 w-9 rounded-md border border-input flex items-center justify-center">
+                <span className="text-lg">⋮</span>
+              </button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">Offer</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">Clicks</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">Uniq. Clicks</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">Inv. Clicks</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">CV</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">Events</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">CVR</th>
+                  <th className="text-left py-2 px-4 font-medium text-muted-foreground">EVR</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colSpan={8} className="text-center py-8 text-muted-foreground italic">
+                    No Record Found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <span className="text-sm text-muted-foreground">0 Total</span>
+            <div className="flex items-center space-x-2">
+              <button className="h-8 w-8 rounded border border-input flex items-center justify-center disabled:opacity-50" disabled>
+                ‹‹
+              </button>
+              <button className="h-8 w-8 rounded border border-input flex items-center justify-center disabled:opacity-50" disabled>
+                ‹
+              </button>
+              <span className="h-8 w-8 rounded bg-primary text-primary-foreground flex items-center justify-center text-sm">
+                1
               </span>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                compared to previous period
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Charts */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader className="flex flex-row items-center">
-            <div className="mr-2 p-2 rounded-md bg-primary/10">
-              <AreaChart className="h-4 w-4 text-primary" />
+              <button className="h-8 w-8 rounded border border-input flex items-center justify-center disabled:opacity-50" disabled>
+                ›
+              </button>
+              <button className="h-8 w-8 rounded border border-input flex items-center justify-center disabled:opacity-50" disabled>
+                ››
+              </button>
             </div>
-            <div>
-              <CardTitle className="text-lg">{t("dashboard.campaignPerformance")}</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Daily clicks and conversions
-              </p>
-            </div>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={formattedData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
-                  <Tooltip />
-                  <Line
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="clicks"
-                    stroke="#6366f1"
-                    name="Clicks"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="conversions"
-                    stroke="#4338ca"
-                    name="Conversions"
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center">
-            <div className="mr-2 p-2 rounded-md bg-primary/10">
-              <BarChart className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-lg">{t("dashboard.revenueChart")}</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Daily revenue generated
-              </p>
-            </div>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <RechartsBarChart
-                  data={formattedData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip 
-                    formatter={(value) => [`$${value}`, 'Revenue']}
-                  />
-                  <Bar
-                    dataKey="revenue"
-                    fill="#4338ca"
-                    radius={[4, 4, 0, 0]}
-                    name="Revenue"
-                  />
-                </RechartsBarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
