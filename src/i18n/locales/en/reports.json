@@ -35,5 +35,13 @@
     "averageOrderValue": "Average Order Value",
     "conversionsByDevice": "Conversions by Device",
     "conversionsByLocation": "Conversions by Location"
+  },
+  "clicks": {
+    "title": "Click Report",
+    "description": "Analyze click data and events"
+  },
+  "daily": {
+    "title": "Daily Report",
+    "description": "Daily performance breakdown"
   }
 }

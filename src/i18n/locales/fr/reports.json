@@ -35,5 +35,13 @@
     "averageOrderValue": "Valeur moyenne de commande",
     "conversionsByDevice": "Conversions par appareil",
     "conversionsByLocation": "Conversions par localisation"
+  },
+  "clicks": {
+    "title": "Rapport de clics",
+    "description": "Analyser les données et événements de clic"
+  },
+  "daily": {
+    "title": "Rapport quotidien",
+    "description": "Répartition des performances quotidiennes"
   }
 }

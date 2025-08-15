@@ -35,5 +35,13 @@
     "averageOrderValue": "平均訂單價值",
     "conversionsByDevice": "按設備轉換",
     "conversionsByLocation": "按位置轉換"
+  },
+  "clicks": {
+    "title": "點擊報告",
+    "description": "分析點擊資料和事件"
+  },
+  "daily": {
+    "title": "每日報告",
+    "description": "每日效能明細"
   }
 }

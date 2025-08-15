@@ -35,5 +35,13 @@
     "averageOrderValue": "平均订单价值",
     "conversionsByDevice": "按设备转化",
     "conversionsByLocation": "按位置转化"
+  },
+  "clicks": {
+    "title": "点击报告",
+    "description": "分析点击数据和事件"
+  },
+  "daily": {
+    "title": "每日报告",
+    "description": "每日表现明细"
   }
 }
