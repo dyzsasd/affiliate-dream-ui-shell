@@ -26,15 +26,19 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Calendar, Filter, RefreshCw, ChevronDown, Search } from "lucide-react";
+import { Calendar, Filter, RefreshCw, ChevronDown, Search, CalendarIcon } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { mockPerformanceData, mockCampaigns } from "@/services/api";
 
 const PerformanceReport: React.FC = () => {
   const { t } = useTranslation();
   const [dateRange, setDateRange] = useState("today");
   const [campaignFilter, setCampaignFilter] = useState("all");
-  const [startDate, setStartDate] = useState("08/15/2025");
-  const [endDate, setEndDate] = useState("08/15/2025");
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
@@ -85,20 +89,54 @@ const PerformanceReport: React.FC = () => {
       {/* Date Range and Filters */}
       <div className="flex flex-wrap gap-4 items-center">
         {/* Date Range Picker */}
-        <div className="flex items-center space-x-2 border rounded-lg p-2 bg-background">
-          <Calendar className="h-4 w-4" />
-          <div className="flex flex-col text-xs">
-            <Input 
-              value={startDate} 
-              onChange={(e) => setStartDate(e.target.value)}
-              className="border-none p-0 h-auto text-xs"
-            />
-            <Input 
-              value={endDate} 
-              onChange={(e) => setEndDate(e.target.value)}
-              className="border-none p-0 h-auto text-xs"
-            />
-          </div>
+        <div className="flex items-center space-x-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-[140px] justify-start text-left font-normal",
+                  !startDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {startDate ? format(startDate, "MM/dd/yyyy") : <span>Start date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={startDate}
+                onSelect={setStartDate}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+          
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-[140px] justify-start text-left font-normal",
+                  !endDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {endDate ? format(endDate, "MM/dd/yyyy") : <span>End date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={endDate}
+                onSelect={setEndDate}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
 
         {/* Add Filter Button */}
