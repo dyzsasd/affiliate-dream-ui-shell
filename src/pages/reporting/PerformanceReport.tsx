@@ -107,31 +107,28 @@ const PerformanceReport: React.FC = () => {
           <span>Add Filter</span>
         </Button>
 
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center space-x-2">
           <Button variant="outline" size="sm">Clear</Button>
+          <Button 
+            onClick={handleRunReport}
+            disabled={isLoading}
+            size="sm"
+          >
+            {isLoading ? (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                Running Report...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Run Report
+              </>
+            )}
+          </Button>
         </div>
       </div>
 
-      {/* Run Report Section */}
-      <div className="bg-slate-800 text-white rounded-lg p-8 text-center">
-        <Button 
-          onClick={handleRunReport}
-          disabled={isLoading}
-          className="bg-white text-slate-800 hover:bg-gray-100"
-        >
-          {isLoading ? (
-            <>
-              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-              Running Report...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Run Report
-            </>
-          )}
-        </Button>
-      </div>
       
       {/* Summary Section */}
       <Collapsible defaultOpen>
