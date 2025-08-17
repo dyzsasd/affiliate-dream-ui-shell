@@ -8,6 +8,7 @@ export * from './AgencyDelegationsApi';
 export * from './AnalyticsApi';
 export * from './BillingApi';
 export * from './CampaignsApi';
+export * from './DashboardApi';
 export * from './FavoritePublisherListsApi';
 export * from './OrganizationAssociationsApi';
 export * from './OrganizationsApi';

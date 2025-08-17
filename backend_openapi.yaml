@@ -1,5 +1,67 @@
 basePath: /api/v1
 definitions:
+  domain.Activity:
+    properties:
+      campaign_id:
+        description: Context-specific fields
+        type: integer
+      campaign_name:
+        type: string
+      client_id:
+        type: integer
+      client_name:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      severity:
+        type: string
+      timestamp:
+        type: string
+      type:
+        $ref: '#/definitions/domain.ActivityType'
+    type: object
+  domain.ActivityResponse:
+    properties:
+      activities:
+        items:
+          $ref: '#/definitions/domain.Activity'
+        type: array
+      has_more:
+        type: boolean
+      total:
+        type: integer
+    type: object
+  domain.ActivityType:
+    enum:
+    - campaign_created
+    - campaign_updated
+    - conversion
+    - click
+    - client_added
+    - campaign_launched
+    - payment
+    - user_registered
+    - system_alert
+    - revenue_milestone
+    - error
+    type: string
+    x-enum-varnames:
+    - ActivityCampaignCreated
+    - ActivityCampaignUpdated
+    - ActivityConversion
+    - ActivityClick
+    - ActivityClientAdded
+    - ActivityCampaignLaunched
+    - ActivityPayment
+    - ActivityUserRegistered
+    - ActivitySystemAlert
+    - ActivityRevenueMilestone
+    - ActivityError
   domain.AddExternalMessageRequest:
     properties:
       content:
@@ -827,6 +889,54 @@ definitions:
       weekly_conversion_cap:
         type: integer
     type: object
+  domain.CampaignDetail:
+    properties:
+      campaign:
+        $ref: '#/definitions/domain.CampaignInfo'
+      daily_stats:
+        items:
+          $ref: '#/definitions/domain.DailyStat'
+        type: array
+      performance:
+        $ref: '#/definitions/domain.CampaignMetrics'
+    type: object
+  domain.CampaignInfo:
+    properties:
+      budget:
+        type: number
+      end_date:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      spent:
+        type: number
+      start_date:
+        type: string
+      status:
+        type: string
+    type: object
+  domain.CampaignMetrics:
+    properties:
+      clicks:
+        type: integer
+      conversions:
+        type: integer
+      cpa:
+        description: Cost per acquisition
+        type: number
+      cpc:
+        description: Cost per click
+        type: number
+      ctr:
+        description: Click-through rate
+        type: number
+      impressions:
+        type: integer
+      revenue:
+        type: number
+    type: object
   domain.ContactEmailData:
     properties:
       count:
@@ -1027,6 +1137,32 @@ definitions:
         type: boolean
     required:
     - payment_method_id
+    type: object
+  domain.DailyStat:
+    properties:
+      clicks:
+        type: integer
+      conversions:
+        type: integer
+      date:
+        type: string
+      impressions:
+        type: integer
+      revenue:
+        type: number
+    type: object
+  domain.DashboardData:
+    properties:
+      last_updated:
+        type: string
+      organization_type:
+        $ref: '#/definitions/domain.OrganizationType'
+      recent_activity:
+        items:
+          $ref: '#/definitions/domain.Activity'
+        type: array
+      summary:
+        description: Type varies by org type
     type: object
   domain.DelegationPermission:
     enum:
@@ -1683,6 +1819,20 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.SystemHealth:
+    properties:
+      active_connections:
+        type: integer
+      error_rate:
+        description: Percentage
+        type: number
+      response_time:
+        description: Average in milliseconds
+        type: number
+      uptime:
+        description: Percentage
+        type: number
+    type: object
   domain.Transaction:
     properties:
       amount:
@@ -2163,6 +2313,19 @@ definitions:
       type:
         description: e.g., "INSERT"
         type: string
+    type: object
+  handlers.TrackActivityRequest:
+    properties:
+      description:
+        type: string
+      metadata:
+        additionalProperties: true
+        type: object
+      type:
+        type: string
+    required:
+    - description
+    - type
     type: object
   handlers.UpdateAffiliateProviderMappingRequest:
     properties:
@@ -5020,6 +5183,257 @@ paths:
       summary: Search organizations for autocompletion
       tags:
       - Analytics
+  /api/v1/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Returns dashboard data based on user's organization type
+      parameters:
+      - default: 30d
+        description: Time period (today, 7d, 30d, 90d, custom)
+        in: query
+        name: period
+        type: string
+      - description: Start date for custom period (YYYY-MM-DD)
+        in: query
+        name: start_date
+        type: string
+      - description: End date for custom period (YYYY-MM-DD)
+        in: query
+        name: end_date
+        type: string
+      - default: UTC
+        description: Timezone identifier
+        in: query
+        name: timezone
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.DashboardData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get dashboard data
+      tags:
+      - dashboard
+  /api/v1/dashboard/activity:
+    get:
+      consumes:
+      - application/json
+      description: Returns paginated recent activity feed
+      parameters:
+      - default: 10
+        description: Number of items per page
+        in: query
+        maximum: 50
+        name: limit
+        type: integer
+      - default: 0
+        description: Number of items to skip
+        in: query
+        name: offset
+        type: integer
+      - collectionFormat: csv
+        description: Filter by activity types
+        in: query
+        items:
+          type: string
+        name: type
+        type: array
+      - description: Filter activities since this timestamp (RFC3339)
+        in: query
+        name: since
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ActivityResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get recent activity
+      tags:
+      - dashboard
+    post:
+      consumes:
+      - application/json
+      description: Creates a new activity record for the user's organization
+      parameters:
+      - description: Activity data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.TrackActivityRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Activity tracked
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Track dashboard activity
+      tags:
+      - dashboard
+  /api/v1/dashboard/cache/invalidate:
+    post:
+      consumes:
+      - application/json
+      description: Invalidates dashboard cache for the user's organization
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cache invalidated
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Invalidate dashboard cache
+      tags:
+      - dashboard
+  /api/v1/dashboard/campaigns/{campaignId}:
+    get:
+      consumes:
+      - application/json
+      description: Returns detailed performance data for a specific campaign
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: campaignId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.CampaignDetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get campaign detail
+      tags:
+      - dashboard
+  /api/v1/dashboard/health:
+    get:
+      description: Returns the health status of the dashboard service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Health status
+          schema:
+            additionalProperties: true
+            type: object
+        "503":
+          description: Service unavailable
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Dashboard health check
+      tags:
+      - dashboard
+  /api/v1/dashboard/system/health:
+    get:
+      consumes:
+      - application/json
+      description: Returns system health metrics (Platform Owner only)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SystemHealth'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get system health metrics
+      tags:
+      - dashboard
   /billing/config:
     put:
       consumes:
