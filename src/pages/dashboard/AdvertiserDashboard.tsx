@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/auth";
 import { fetchAdvertisers } from "@/services/advertiserService";
+import { fetchDashboardData } from "@/services/dashboardService";
 import { DomainAdvertiser } from "@/generated-api/src/models";
 
 const AdvertiserDashboard: React.FC = () => {
@@ -26,6 +27,17 @@ const AdvertiserDashboard: React.FC = () => {
     enabled: !!organization?.organizationId,
   });
 
+  // Fetch dashboard data
+  const { data: dashboardData, isLoading: isLoadingDashboard } = useQuery({
+    queryKey: ['dashboard', organization?.organizationId, selectedAdvertiser],
+    queryFn: async () => {
+      return fetchDashboardData({
+        period: 'today'
+      });
+    },
+    enabled: !!organization?.organizationId && !!selectedAdvertiser,
+  });
+
   // Set default advertiser when advertisers are loaded
   React.useEffect(() => {
     if (advertisers.length > 0 && !selectedAdvertiser) {
@@ -33,12 +45,13 @@ const AdvertiserDashboard: React.FC = () => {
     }
   }, [advertisers, selectedAdvertiser]);
 
-  // Mock data for demonstration - in real app, this would be fetched based on selectedAdvertiser
-  const mockTodayData = {
-    clicks: { today: 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
-    cost: { today: 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 },
-    conversions: { today: 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
-    cvr: { today: 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 },
+  // Extract data from dashboard response or use defaults
+  const summary = dashboardData?.summary as any || {};
+  const todayData = {
+    clicks: { today: summary.totalClicks || 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
+    cost: { today: summary.revenue || 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 },
+    conversions: { today: summary.conversions || 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
+    cvr: { today: summary.conversionRate || 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 },
     events: { today: 0, yesterday: 0, currentMonth: 0, lastMonth: 0, change: 0 },
     evr: { today: 0.00, yesterday: 0.00, currentMonth: 0.00, lastMonth: 0.00, change: 0 }
   };
@@ -58,7 +71,7 @@ const AdvertiserDashboard: React.FC = () => {
     return "text-muted-foreground";
   };
 
-  if (isLoadingAdvertisers) {
+  if (isLoadingAdvertisers || isLoadingDashboard) {
     return (
       <div className="flex justify-center items-center h-64">
         <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -107,25 +120,25 @@ const AdvertiserDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">Today</span>
               <div className="flex items-center space-x-1">
-                {getChangeIcon(mockTodayData.clicks.change)}
-                <span className={`text-xs ${getChangeColor(mockTodayData.clicks.change)}`}>
-                  {mockTodayData.clicks.change}%
+                {getChangeIcon(todayData.clicks.change)}
+                <span className={`text-xs ${getChangeColor(todayData.clicks.change)}`}>
+                  {todayData.clicks.change}%
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold">{mockTodayData.clicks.today}</div>
+            <div className="text-2xl font-bold">{todayData.clicks.today}</div>
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex justify-between">
                 <span>Yesterday</span>
-                <span>{mockTodayData.clicks.yesterday}</span>
+                <span>{todayData.clicks.yesterday}</span>
               </div>
               <div className="flex justify-between">
                 <span>Current Month</span>
-                <span>{mockTodayData.clicks.currentMonth}</span>
+                <span>{todayData.clicks.currentMonth}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Month</span>
-                <span>{mockTodayData.clicks.lastMonth}</span>
+                <span>{todayData.clicks.lastMonth}</span>
               </div>
             </div>
           </CardContent>
@@ -140,25 +153,25 @@ const AdvertiserDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">Today</span>
               <div className="flex items-center space-x-1">
-                {getChangeIcon(mockTodayData.cost.change)}
-                <span className={`text-xs ${getChangeColor(mockTodayData.cost.change)}`}>
-                  {mockTodayData.cost.change}%
+                {getChangeIcon(todayData.cost.change)}
+                <span className={`text-xs ${getChangeColor(todayData.cost.change)}`}>
+                  {todayData.cost.change}%
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold">{formatCurrency(mockTodayData.cost.today)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(todayData.cost.today)}</div>
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex justify-between">
                 <span>Yesterday</span>
-                <span>{formatCurrency(mockTodayData.cost.yesterday)}</span>
+                <span>{formatCurrency(todayData.cost.yesterday)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Current Month</span>
-                <span>{formatCurrency(mockTodayData.cost.currentMonth)}</span>
+                <span>{formatCurrency(todayData.cost.currentMonth)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Month</span>
-                <span>{formatCurrency(mockTodayData.cost.lastMonth)}</span>
+                <span>{formatCurrency(todayData.cost.lastMonth)}</span>
               </div>
             </div>
           </CardContent>
@@ -173,25 +186,25 @@ const AdvertiserDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">Today</span>
               <div className="flex items-center space-x-1">
-                {getChangeIcon(mockTodayData.conversions.change)}
-                <span className={`text-xs ${getChangeColor(mockTodayData.conversions.change)}`}>
-                  {mockTodayData.conversions.change}%
+                {getChangeIcon(todayData.conversions.change)}
+                <span className={`text-xs ${getChangeColor(todayData.conversions.change)}`}>
+                  {todayData.conversions.change}%
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold">{mockTodayData.conversions.today}</div>
+            <div className="text-2xl font-bold">{todayData.conversions.today}</div>
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex justify-between">
                 <span>Yesterday</span>
-                <span>{mockTodayData.conversions.yesterday}</span>
+                <span>{todayData.conversions.yesterday}</span>
               </div>
               <div className="flex justify-between">
                 <span>Current Month</span>
-                <span>{mockTodayData.conversions.currentMonth}</span>
+                <span>{todayData.conversions.currentMonth}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Month</span>
-                <span>{mockTodayData.conversions.lastMonth}</span>
+                <span>{todayData.conversions.lastMonth}</span>
               </div>
             </div>
           </CardContent>
@@ -206,25 +219,25 @@ const AdvertiserDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">Today</span>
               <div className="flex items-center space-x-1">
-                {getChangeIcon(mockTodayData.cvr.change)}
-                <span className={`text-xs ${getChangeColor(mockTodayData.cvr.change)}`}>
-                  {mockTodayData.cvr.change}%
+                {getChangeIcon(todayData.cvr.change)}
+                <span className={`text-xs ${getChangeColor(todayData.cvr.change)}`}>
+                  {todayData.cvr.change}%
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold">{formatPercentage(mockTodayData.cvr.today)}</div>
+            <div className="text-2xl font-bold">{formatPercentage(todayData.cvr.today)}</div>
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex justify-between">
                 <span>Yesterday</span>
-                <span>{formatPercentage(mockTodayData.cvr.yesterday)}</span>
+                <span>{formatPercentage(todayData.cvr.yesterday)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Current Month</span>
-                <span>{formatPercentage(mockTodayData.cvr.currentMonth)}</span>
+                <span>{formatPercentage(todayData.cvr.currentMonth)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Month</span>
-                <span>{formatPercentage(mockTodayData.cvr.lastMonth)}</span>
+                <span>{formatPercentage(todayData.cvr.lastMonth)}</span>
               </div>
             </div>
           </CardContent>
@@ -239,25 +252,25 @@ const AdvertiserDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">Today</span>
               <div className="flex items-center space-x-1">
-                {getChangeIcon(mockTodayData.events.change)}
-                <span className={`text-xs ${getChangeColor(mockTodayData.events.change)}`}>
-                  {mockTodayData.events.change}%
+                {getChangeIcon(todayData.events.change)}
+                <span className={`text-xs ${getChangeColor(todayData.events.change)}`}>
+                  {todayData.events.change}%
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold">{mockTodayData.events.today}</div>
+            <div className="text-2xl font-bold">{todayData.events.today}</div>
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex justify-between">
                 <span>Yesterday</span>
-                <span>{mockTodayData.events.yesterday}</span>
+                <span>{todayData.events.yesterday}</span>
               </div>
               <div className="flex justify-between">
                 <span>Current Month</span>
-                <span>{mockTodayData.events.currentMonth}</span>
+                <span>{todayData.events.currentMonth}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Month</span>
-                <span>{mockTodayData.events.lastMonth}</span>
+                <span>{todayData.events.lastMonth}</span>
               </div>
             </div>
           </CardContent>
@@ -272,25 +285,25 @@ const AdvertiserDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">Today</span>
               <div className="flex items-center space-x-1">
-                {getChangeIcon(mockTodayData.evr.change)}
-                <span className={`text-xs ${getChangeColor(mockTodayData.evr.change)}`}>
-                  {mockTodayData.evr.change}%
+                {getChangeIcon(todayData.evr.change)}
+                <span className={`text-xs ${getChangeColor(todayData.evr.change)}`}>
+                  {todayData.evr.change}%
                 </span>
               </div>
             </div>
-            <div className="text-2xl font-bold">{formatPercentage(mockTodayData.evr.today)}</div>
+            <div className="text-2xl font-bold">{formatPercentage(todayData.evr.today)}</div>
             <div className="space-y-1 text-xs text-muted-foreground">
               <div className="flex justify-between">
                 <span>Yesterday</span>
-                <span>{formatPercentage(mockTodayData.evr.yesterday)}</span>
+                <span>{formatPercentage(todayData.evr.yesterday)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Current Month</span>
-                <span>{formatPercentage(mockTodayData.evr.currentMonth)}</span>
+                <span>{formatPercentage(todayData.evr.currentMonth)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Month</span>
-                <span>{formatPercentage(mockTodayData.evr.lastMonth)}</span>
+                <span>{formatPercentage(todayData.evr.lastMonth)}</span>
               </div>
             </div>
           </CardContent>
