@@ -146,6 +146,10 @@ export class ReportsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/api/v1/reports/clicks`,
             method: 'GET',
@@ -224,6 +228,10 @@ export class ReportsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/api/v1/reports/conversions`,
             method: 'GET',
@@ -298,6 +306,10 @@ export class ReportsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/api/v1/reports/performance/daily`,
             method: 'GET',
@@ -355,6 +367,10 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/api/v1/reports/performance/summary`,
@@ -417,6 +433,10 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
 
         const response = await this.request({
             path: `/api/v1/reports/performance/timeseries`,

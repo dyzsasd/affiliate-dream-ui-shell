@@ -234,6 +234,10 @@ export class DashboardApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // BearerAuth authentication
+        }
+
         const response = await this.request({
             path: `/api/v1/dashboard`,
             method: 'GET',

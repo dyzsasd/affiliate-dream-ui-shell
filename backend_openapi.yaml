@@ -5499,6 +5499,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get dashboard data
       tags:
       - dashboard
@@ -5766,6 +5768,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get clicks report
       tags:
       - reports
@@ -5836,6 +5840,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get conversions report
       tags:
       - reports
@@ -5902,6 +5908,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get daily performance report
       tags:
       - reports
@@ -5949,6 +5957,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get performance summary
       tags:
       - reports
@@ -6000,6 +6010,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get performance time series
       tags:
       - reports
