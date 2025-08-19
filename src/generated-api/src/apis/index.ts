@@ -14,6 +14,7 @@ export * from './OrganizationAssociationsApi';
 export * from './OrganizationsApi';
 export * from './ProfileApi';
 export * from './PublisherMessagingApi';
+export * from './ReportsApi';
 export * from './SystemApi';
 export * from './TrackingLinksApi';
 export * from './WebhooksApi';

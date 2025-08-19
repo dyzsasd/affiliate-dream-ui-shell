@@ -15,6 +15,7 @@
 
 import * as runtime from '../runtime';
 import type {
+  HandlersCampaignsListResponse,
   HandlersErrorResponse,
   ModelsCampaignListResponse,
   ModelsCampaignResponse,
@@ -23,6 +24,8 @@ import type {
   ModelsUpdateCampaignRequest,
 } from '../models/index';
 import {
+    HandlersCampaignsListResponseFromJSON,
+    HandlersCampaignsListResponseToJSON,
     HandlersErrorResponseFromJSON,
     HandlersErrorResponseToJSON,
     ModelsCampaignListResponseFromJSON,
@@ -41,6 +44,12 @@ export interface AdvertisersIdCampaignsGetRequest {
     id: number;
     page?: number;
     pageSize?: number;
+}
+
+export interface ApiV1CampaignsGetRequest {
+    affiliateId?: string;
+    status?: string;
+    search?: string;
 }
 
 export interface CampaignsIdDeleteRequest {
@@ -120,6 +129,46 @@ export class CampaignsApi extends runtime.BaseAPI {
      */
     async advertisersIdCampaignsGet(requestParameters: AdvertisersIdCampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ModelsCampaignListResponse> {
         const response = await this.advertisersIdCampaignsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Returns list of available campaigns for filtering and selection
+     * Get campaigns list
+     */
+    async apiV1CampaignsGetRaw(requestParameters: ApiV1CampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersCampaignsListResponse>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['affiliateId'] != null) {
+            queryParameters['affiliateId'] = requestParameters['affiliateId'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['status'] = requestParameters['status'];
+        }
+
+        if (requestParameters['search'] != null) {
+            queryParameters['search'] = requestParameters['search'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/campaigns`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HandlersCampaignsListResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns list of available campaigns for filtering and selection
+     * Get campaigns list
+     */
+    async apiV1CampaignsGet(requestParameters: ApiV1CampaignsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersCampaignsListResponse> {
+        const response = await this.apiV1CampaignsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
