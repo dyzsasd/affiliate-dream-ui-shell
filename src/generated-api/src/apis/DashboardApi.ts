@@ -37,22 +37,22 @@ import {
     HandlersTrackActivityRequestToJSON,
 } from '../models/index';
 
-export interface ApiV1DashboardActivityGetRequest {
+export interface DashboardActivityGetRequest {
     limit?: number;
     offset?: number;
     type?: Array<string>;
     since?: string;
 }
 
-export interface ApiV1DashboardActivityPostRequest {
+export interface DashboardActivityPostRequest {
     request: HandlersTrackActivityRequest;
 }
 
-export interface ApiV1DashboardCampaignsCampaignIdGetRequest {
+export interface DashboardCampaignsCampaignIdGetRequest {
     campaignId: number;
 }
 
-export interface ApiV1DashboardGetRequest {
+export interface DashboardGetRequest {
     period?: string;
     startDate?: string;
     endDate?: string;
@@ -68,7 +68,7 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns paginated recent activity feed
      * Get recent activity
      */
-    async apiV1DashboardActivityGetRaw(requestParameters: ApiV1DashboardActivityGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainActivityResponse>> {
+    async dashboardActivityGetRaw(requestParameters: DashboardActivityGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainActivityResponse>> {
         const queryParameters: any = {};
 
         if (requestParameters['limit'] != null) {
@@ -90,7 +90,7 @@ export class DashboardApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/dashboard/activity`,
+            path: `/dashboard/activity`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -103,8 +103,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns paginated recent activity feed
      * Get recent activity
      */
-    async apiV1DashboardActivityGet(requestParameters: ApiV1DashboardActivityGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainActivityResponse> {
-        const response = await this.apiV1DashboardActivityGetRaw(requestParameters, initOverrides);
+    async dashboardActivityGet(requestParameters: DashboardActivityGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainActivityResponse> {
+        const response = await this.dashboardActivityGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -112,11 +112,11 @@ export class DashboardApi extends runtime.BaseAPI {
      * Creates a new activity record for the user\'s organization
      * Track dashboard activity
      */
-    async apiV1DashboardActivityPostRaw(requestParameters: ApiV1DashboardActivityPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: string | undefined; }>> {
+    async dashboardActivityPostRaw(requestParameters: DashboardActivityPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: string | undefined; }>> {
         if (requestParameters['request'] == null) {
             throw new runtime.RequiredError(
                 'request',
-                'Required parameter "request" was null or undefined when calling apiV1DashboardActivityPost().'
+                'Required parameter "request" was null or undefined when calling dashboardActivityPost().'
             );
         }
 
@@ -127,7 +127,7 @@ export class DashboardApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v1/dashboard/activity`,
+            path: `/dashboard/activity`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -141,8 +141,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Creates a new activity record for the user\'s organization
      * Track dashboard activity
      */
-    async apiV1DashboardActivityPost(requestParameters: ApiV1DashboardActivityPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: string | undefined; }> {
-        const response = await this.apiV1DashboardActivityPostRaw(requestParameters, initOverrides);
+    async dashboardActivityPost(requestParameters: DashboardActivityPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: string | undefined; }> {
+        const response = await this.dashboardActivityPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -150,13 +150,13 @@ export class DashboardApi extends runtime.BaseAPI {
      * Invalidates dashboard cache for the user\'s organization
      * Invalidate dashboard cache
      */
-    async apiV1DashboardCacheInvalidatePostRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: string | undefined; }>> {
+    async dashboardCacheInvalidatePostRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: string | undefined; }>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/dashboard/cache/invalidate`,
+            path: `/dashboard/cache/invalidate`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -169,8 +169,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Invalidates dashboard cache for the user\'s organization
      * Invalidate dashboard cache
      */
-    async apiV1DashboardCacheInvalidatePost(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: string | undefined; }> {
-        const response = await this.apiV1DashboardCacheInvalidatePostRaw(initOverrides);
+    async dashboardCacheInvalidatePost(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: string | undefined; }> {
+        const response = await this.dashboardCacheInvalidatePostRaw(initOverrides);
         return await response.value();
     }
 
@@ -178,11 +178,11 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns detailed performance data for a specific campaign
      * Get campaign detail
      */
-    async apiV1DashboardCampaignsCampaignIdGetRaw(requestParameters: ApiV1DashboardCampaignsCampaignIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaignDetail>> {
+    async dashboardCampaignsCampaignIdGetRaw(requestParameters: DashboardCampaignsCampaignIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainCampaignDetail>> {
         if (requestParameters['campaignId'] == null) {
             throw new runtime.RequiredError(
                 'campaignId',
-                'Required parameter "campaignId" was null or undefined when calling apiV1DashboardCampaignsCampaignIdGet().'
+                'Required parameter "campaignId" was null or undefined when calling dashboardCampaignsCampaignIdGet().'
             );
         }
 
@@ -191,7 +191,7 @@ export class DashboardApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/dashboard/campaigns/{campaignId}`.replace(`{${"campaignId"}}`, encodeURIComponent(String(requestParameters['campaignId']))),
+            path: `/dashboard/campaigns/{campaignId}`.replace(`{${"campaignId"}}`, encodeURIComponent(String(requestParameters['campaignId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -204,8 +204,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns detailed performance data for a specific campaign
      * Get campaign detail
      */
-    async apiV1DashboardCampaignsCampaignIdGet(requestParameters: ApiV1DashboardCampaignsCampaignIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaignDetail> {
-        const response = await this.apiV1DashboardCampaignsCampaignIdGetRaw(requestParameters, initOverrides);
+    async dashboardCampaignsCampaignIdGet(requestParameters: DashboardCampaignsCampaignIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainCampaignDetail> {
+        const response = await this.dashboardCampaignsCampaignIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -213,7 +213,7 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns dashboard data based on user\'s organization type
      * Get dashboard data
      */
-    async apiV1DashboardGetRaw(requestParameters: ApiV1DashboardGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainDashboardData>> {
+    async dashboardGetRaw(requestParameters: DashboardGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainDashboardData>> {
         const queryParameters: any = {};
 
         if (requestParameters['period'] != null) {
@@ -239,7 +239,7 @@ export class DashboardApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/v1/dashboard`,
+            path: `/dashboard`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -252,8 +252,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns dashboard data based on user\'s organization type
      * Get dashboard data
      */
-    async apiV1DashboardGet(requestParameters: ApiV1DashboardGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainDashboardData> {
-        const response = await this.apiV1DashboardGetRaw(requestParameters, initOverrides);
+    async dashboardGet(requestParameters: DashboardGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainDashboardData> {
+        const response = await this.dashboardGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -261,13 +261,13 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns the health status of the dashboard service
      * Dashboard health check
      */
-    async apiV1DashboardHealthGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any | undefined; }>> {
+    async dashboardHealthGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any | undefined; }>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/dashboard/health`,
+            path: `/dashboard/health`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -280,8 +280,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns the health status of the dashboard service
      * Dashboard health check
      */
-    async apiV1DashboardHealthGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
-        const response = await this.apiV1DashboardHealthGetRaw(initOverrides);
+    async dashboardHealthGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any | undefined; }> {
+        const response = await this.dashboardHealthGetRaw(initOverrides);
         return await response.value();
     }
 
@@ -289,13 +289,13 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns system health metrics (Platform Owner only)
      * Get system health metrics
      */
-    async apiV1DashboardSystemHealthGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainSystemHealth>> {
+    async dashboardSystemHealthGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DomainSystemHealth>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/dashboard/system/health`,
+            path: `/dashboard/system/health`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -308,8 +308,8 @@ export class DashboardApi extends runtime.BaseAPI {
      * Returns system health metrics (Platform Owner only)
      * Get system health metrics
      */
-    async apiV1DashboardSystemHealthGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainSystemHealth> {
-        const response = await this.apiV1DashboardSystemHealthGetRaw(initOverrides);
+    async dashboardSystemHealthGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DomainSystemHealth> {
+        const response = await this.dashboardSystemHealthGetRaw(initOverrides);
         return await response.value();
     }
 

@@ -37,7 +37,7 @@ import {
     HandlersPerformanceTimeSeriesResponseToJSON,
 } from '../models/index';
 
-export interface ApiV1ReportsClicksGetRequest {
+export interface ReportsClicksGetRequest {
     startDate: string;
     endDate: string;
     campaignIds?: string;
@@ -48,7 +48,7 @@ export interface ApiV1ReportsClicksGetRequest {
     sortOrder?: string;
 }
 
-export interface ApiV1ReportsConversionsGetRequest {
+export interface ReportsConversionsGetRequest {
     startDate: string;
     endDate: string;
     campaignIds?: string;
@@ -60,7 +60,7 @@ export interface ApiV1ReportsConversionsGetRequest {
     sortOrder?: string;
 }
 
-export interface ApiV1ReportsPerformanceDailyGetRequest {
+export interface ReportsPerformanceDailyGetRequest {
     startDate: string;
     endDate: string;
     campaignIds?: string;
@@ -71,14 +71,14 @@ export interface ApiV1ReportsPerformanceDailyGetRequest {
     sortOrder?: string;
 }
 
-export interface ApiV1ReportsPerformanceSummaryGetRequest {
+export interface ReportsPerformanceSummaryGetRequest {
     startDate: string;
     endDate: string;
     campaignIds?: string;
     affiliateId?: string;
 }
 
-export interface ApiV1ReportsPerformanceTimeseriesGetRequest {
+export interface ReportsPerformanceTimeseriesGetRequest {
     startDate: string;
     endDate: string;
     campaignIds?: string;
@@ -95,18 +95,18 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns paginated click events with geographic and referrer information
      * Get clicks report
      */
-    async apiV1ReportsClicksGetRaw(requestParameters: ApiV1ReportsClicksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersClicksReportResponse>> {
+    async reportsClicksGetRaw(requestParameters: ReportsClicksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersClicksReportResponse>> {
         if (requestParameters['startDate'] == null) {
             throw new runtime.RequiredError(
                 'startDate',
-                'Required parameter "startDate" was null or undefined when calling apiV1ReportsClicksGet().'
+                'Required parameter "startDate" was null or undefined when calling reportsClicksGet().'
             );
         }
 
         if (requestParameters['endDate'] == null) {
             throw new runtime.RequiredError(
                 'endDate',
-                'Required parameter "endDate" was null or undefined when calling apiV1ReportsClicksGet().'
+                'Required parameter "endDate" was null or undefined when calling reportsClicksGet().'
             );
         }
 
@@ -151,7 +151,7 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/v1/reports/clicks`,
+            path: `/reports/clicks`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -164,8 +164,8 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns paginated click events with geographic and referrer information
      * Get clicks report
      */
-    async apiV1ReportsClicksGet(requestParameters: ApiV1ReportsClicksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersClicksReportResponse> {
-        const response = await this.apiV1ReportsClicksGetRaw(requestParameters, initOverrides);
+    async reportsClicksGet(requestParameters: ReportsClicksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersClicksReportResponse> {
+        const response = await this.reportsClicksGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -173,18 +173,18 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns paginated conversion events with detailed tracking information
      * Get conversions report
      */
-    async apiV1ReportsConversionsGetRaw(requestParameters: ApiV1ReportsConversionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersConversionsReportResponse>> {
+    async reportsConversionsGetRaw(requestParameters: ReportsConversionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersConversionsReportResponse>> {
         if (requestParameters['startDate'] == null) {
             throw new runtime.RequiredError(
                 'startDate',
-                'Required parameter "startDate" was null or undefined when calling apiV1ReportsConversionsGet().'
+                'Required parameter "startDate" was null or undefined when calling reportsConversionsGet().'
             );
         }
 
         if (requestParameters['endDate'] == null) {
             throw new runtime.RequiredError(
                 'endDate',
-                'Required parameter "endDate" was null or undefined when calling apiV1ReportsConversionsGet().'
+                'Required parameter "endDate" was null or undefined when calling reportsConversionsGet().'
             );
         }
 
@@ -233,7 +233,7 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/v1/reports/conversions`,
+            path: `/reports/conversions`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -246,8 +246,8 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns paginated conversion events with detailed tracking information
      * Get conversions report
      */
-    async apiV1ReportsConversionsGet(requestParameters: ApiV1ReportsConversionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersConversionsReportResponse> {
-        const response = await this.apiV1ReportsConversionsGetRaw(requestParameters, initOverrides);
+    async reportsConversionsGet(requestParameters: ReportsConversionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersConversionsReportResponse> {
+        const response = await this.reportsConversionsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -255,18 +255,18 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns paginated daily performance breakdown with campaign details
      * Get daily performance report
      */
-    async apiV1ReportsPerformanceDailyGetRaw(requestParameters: ApiV1ReportsPerformanceDailyGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersDailyPerformanceReportResponse>> {
+    async reportsPerformanceDailyGetRaw(requestParameters: ReportsPerformanceDailyGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersDailyPerformanceReportResponse>> {
         if (requestParameters['startDate'] == null) {
             throw new runtime.RequiredError(
                 'startDate',
-                'Required parameter "startDate" was null or undefined when calling apiV1ReportsPerformanceDailyGet().'
+                'Required parameter "startDate" was null or undefined when calling reportsPerformanceDailyGet().'
             );
         }
 
         if (requestParameters['endDate'] == null) {
             throw new runtime.RequiredError(
                 'endDate',
-                'Required parameter "endDate" was null or undefined when calling apiV1ReportsPerformanceDailyGet().'
+                'Required parameter "endDate" was null or undefined when calling reportsPerformanceDailyGet().'
             );
         }
 
@@ -311,7 +311,7 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/v1/reports/performance/daily`,
+            path: `/reports/performance/daily`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -324,8 +324,8 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns paginated daily performance breakdown with campaign details
      * Get daily performance report
      */
-    async apiV1ReportsPerformanceDailyGet(requestParameters: ApiV1ReportsPerformanceDailyGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersDailyPerformanceReportResponse> {
-        const response = await this.apiV1ReportsPerformanceDailyGetRaw(requestParameters, initOverrides);
+    async reportsPerformanceDailyGet(requestParameters: ReportsPerformanceDailyGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersDailyPerformanceReportResponse> {
+        const response = await this.reportsPerformanceDailyGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -333,18 +333,18 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns aggregated performance metrics for the specified date range and filters
      * Get performance summary
      */
-    async apiV1ReportsPerformanceSummaryGetRaw(requestParameters: ApiV1ReportsPerformanceSummaryGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersPerformanceSummaryResponse>> {
+    async reportsPerformanceSummaryGetRaw(requestParameters: ReportsPerformanceSummaryGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersPerformanceSummaryResponse>> {
         if (requestParameters['startDate'] == null) {
             throw new runtime.RequiredError(
                 'startDate',
-                'Required parameter "startDate" was null or undefined when calling apiV1ReportsPerformanceSummaryGet().'
+                'Required parameter "startDate" was null or undefined when calling reportsPerformanceSummaryGet().'
             );
         }
 
         if (requestParameters['endDate'] == null) {
             throw new runtime.RequiredError(
                 'endDate',
-                'Required parameter "endDate" was null or undefined when calling apiV1ReportsPerformanceSummaryGet().'
+                'Required parameter "endDate" was null or undefined when calling reportsPerformanceSummaryGet().'
             );
         }
 
@@ -373,7 +373,7 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/v1/reports/performance/summary`,
+            path: `/reports/performance/summary`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -386,8 +386,8 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns aggregated performance metrics for the specified date range and filters
      * Get performance summary
      */
-    async apiV1ReportsPerformanceSummaryGet(requestParameters: ApiV1ReportsPerformanceSummaryGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersPerformanceSummaryResponse> {
-        const response = await this.apiV1ReportsPerformanceSummaryGetRaw(requestParameters, initOverrides);
+    async reportsPerformanceSummaryGet(requestParameters: ReportsPerformanceSummaryGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersPerformanceSummaryResponse> {
+        const response = await this.reportsPerformanceSummaryGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -395,18 +395,18 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns time series performance data for charts and graphs
      * Get performance time series
      */
-    async apiV1ReportsPerformanceTimeseriesGetRaw(requestParameters: ApiV1ReportsPerformanceTimeseriesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersPerformanceTimeSeriesResponse>> {
+    async reportsPerformanceTimeseriesGetRaw(requestParameters: ReportsPerformanceTimeseriesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersPerformanceTimeSeriesResponse>> {
         if (requestParameters['startDate'] == null) {
             throw new runtime.RequiredError(
                 'startDate',
-                'Required parameter "startDate" was null or undefined when calling apiV1ReportsPerformanceTimeseriesGet().'
+                'Required parameter "startDate" was null or undefined when calling reportsPerformanceTimeseriesGet().'
             );
         }
 
         if (requestParameters['endDate'] == null) {
             throw new runtime.RequiredError(
                 'endDate',
-                'Required parameter "endDate" was null or undefined when calling apiV1ReportsPerformanceTimeseriesGet().'
+                'Required parameter "endDate" was null or undefined when calling reportsPerformanceTimeseriesGet().'
             );
         }
 
@@ -439,7 +439,7 @@ export class ReportsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/v1/reports/performance/timeseries`,
+            path: `/reports/performance/timeseries`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -452,8 +452,8 @@ export class ReportsApi extends runtime.BaseAPI {
      * Returns time series performance data for charts and graphs
      * Get performance time series
      */
-    async apiV1ReportsPerformanceTimeseriesGet(requestParameters: ApiV1ReportsPerformanceTimeseriesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersPerformanceTimeSeriesResponse> {
-        const response = await this.apiV1ReportsPerformanceTimeseriesGetRaw(requestParameters, initOverrides);
+    async reportsPerformanceTimeseriesGet(requestParameters: ReportsPerformanceTimeseriesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersPerformanceTimeSeriesResponse> {
+        const response = await this.reportsPerformanceTimeseriesGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
