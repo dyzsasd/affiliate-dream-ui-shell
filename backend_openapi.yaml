@@ -5411,47 +5411,6 @@ paths:
       summary: Search organizations for autocompletion
       tags:
       - Analytics
-  /api/v1/campaigns:
-    get:
-      consumes:
-      - application/json
-      description: Returns list of available campaigns for filtering and selection
-      parameters:
-      - description: Affiliate ID filter
-        in: query
-        name: affiliateId
-        type: string
-      - default: active
-        description: Campaign status filter
-        in: query
-        name: status
-        type: string
-      - description: Search term for campaign name
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.CampaignsListResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get campaigns list
-      tags:
-      - campaigns
   /billing/config:
     put:
       consumes:
@@ -5693,6 +5652,46 @@ paths:
       tags:
       - billing
   /campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Returns list of available campaigns for filtering and selection
+      parameters:
+      - description: Affiliate ID filter
+        in: query
+        name: affiliateId
+        type: string
+      - default: active
+        description: Campaign status filter
+        in: query
+        name: status
+        type: string
+      - description: Search term for campaign name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.CampaignsListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get campaigns list
+      tags:
+      - campaigns
     post:
       consumes:
       - application/json

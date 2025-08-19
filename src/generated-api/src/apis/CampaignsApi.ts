@@ -46,7 +46,7 @@ export interface AdvertisersIdCampaignsGetRequest {
     pageSize?: number;
 }
 
-export interface ApiV1CampaignsGetRequest {
+export interface CampaignsGetRequest {
     affiliateId?: string;
     status?: string;
     search?: string;
@@ -136,7 +136,7 @@ export class CampaignsApi extends runtime.BaseAPI {
      * Returns list of available campaigns for filtering and selection
      * Get campaigns list
      */
-    async apiV1CampaignsGetRaw(requestParameters: ApiV1CampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersCampaignsListResponse>> {
+    async campaignsGetRaw(requestParameters: CampaignsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandlersCampaignsListResponse>> {
         const queryParameters: any = {};
 
         if (requestParameters['affiliateId'] != null) {
@@ -154,7 +154,7 @@ export class CampaignsApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/campaigns`,
+            path: `/campaigns`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -167,8 +167,8 @@ export class CampaignsApi extends runtime.BaseAPI {
      * Returns list of available campaigns for filtering and selection
      * Get campaigns list
      */
-    async apiV1CampaignsGet(requestParameters: ApiV1CampaignsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersCampaignsListResponse> {
-        const response = await this.apiV1CampaignsGetRaw(requestParameters, initOverrides);
+    async campaignsGet(requestParameters: CampaignsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandlersCampaignsListResponse> {
+        const response = await this.campaignsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
