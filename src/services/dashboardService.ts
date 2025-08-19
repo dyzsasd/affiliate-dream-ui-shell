@@ -1,4 +1,4 @@
-import { DashboardApi, ApiV1DashboardGetRequest } from '@/generated-api/src/apis/DashboardApi';
+import { DashboardApi, DashboardGetRequest } from '@/generated-api/src/apis/DashboardApi';
 import { DomainDashboardData } from '@/generated-api/src/models/DomainDashboardData';
 import { createApiClient } from '@/services/backendApi';
 
@@ -12,14 +12,14 @@ export interface DashboardParams {
 export const fetchDashboardData = async (params?: DashboardParams): Promise<DomainDashboardData> => {
   try {
     const dashboardApi = await createApiClient(DashboardApi);
-    const requestParams: ApiV1DashboardGetRequest = {
+    const requestParams: DashboardGetRequest = {
       period: params?.period,
       startDate: params?.startDate,
       endDate: params?.endDate,
       timezone: params?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
-    const response = await dashboardApi.apiV1DashboardGet(requestParams);
+    const response = await dashboardApi.dashboardGet(requestParams);
     return response;
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
@@ -30,7 +30,7 @@ export const fetchDashboardData = async (params?: DashboardParams): Promise<Doma
 export const fetchCampaignDetail = async (campaignId: number) => {
   try {
     const dashboardApi = await createApiClient(DashboardApi);
-    const response = await dashboardApi.apiV1DashboardCampaignsCampaignIdGet({ campaignId });
+    const response = await dashboardApi.dashboardCampaignsCampaignIdGet({ campaignId });
     return response;
   } catch (error) {
     console.error('Error fetching campaign detail:', error);
@@ -46,7 +46,7 @@ export const fetchRecentActivity = async (params?: {
 }) => {
   try {
     const dashboardApi = await createApiClient(DashboardApi);
-    const response = await dashboardApi.apiV1DashboardActivityGet(params || {});
+    const response = await dashboardApi.dashboardActivityGet(params || {});
     return response;
   } catch (error) {
     console.error('Error fetching recent activity:', error);
@@ -61,7 +61,7 @@ export const trackActivity = async (activityData: {
 }) => {
   try {
     const dashboardApi = await createApiClient(DashboardApi);
-    const response = await dashboardApi.apiV1DashboardActivityPost({
+    const response = await dashboardApi.dashboardActivityPost({
       request: activityData
     });
     return response;
@@ -74,7 +74,7 @@ export const trackActivity = async (activityData: {
 export const invalidateDashboardCache = async () => {
   try {
     const dashboardApi = await createApiClient(DashboardApi);
-    const response = await dashboardApi.apiV1DashboardCacheInvalidatePost();
+    const response = await dashboardApi.dashboardCacheInvalidatePost();
     return response;
   } catch (error) {
     console.error('Error invalidating dashboard cache:', error);

@@ -253,7 +253,7 @@ const transformDailyReportResponse = (response: HandlersDailyPerformanceReportRe
 export const fetchPerformanceSummary = async (params: PerformanceSummaryRequest): Promise<PerformanceSummaryResponse> => {
   const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
-  const response = await reportsApi.apiV1ReportsPerformanceSummaryGet({
+  const response = await reportsApi.reportsPerformanceSummaryGet({
     startDate: params.startDate,
     endDate: params.endDate,
     campaignIds,
@@ -265,7 +265,7 @@ export const fetchPerformanceSummary = async (params: PerformanceSummaryRequest)
 export const fetchPerformanceTimeSeries = async (params: PerformanceTimeSeriesRequest): Promise<PerformanceTimeSeriesResponse> => {
   const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
-  const response = await reportsApi.apiV1ReportsPerformanceTimeseriesGet({
+  const response = await reportsApi.reportsPerformanceTimeseriesGet({
     startDate: params.startDate,
     endDate: params.endDate,
     campaignIds,
@@ -278,7 +278,7 @@ export const fetchPerformanceTimeSeries = async (params: PerformanceTimeSeriesRe
 export const fetchDailyReport = async (params: DailyReportRequest): Promise<DailyReportResponse> => {
   const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
-  const response = await reportsApi.apiV1ReportsPerformanceDailyGet({
+  const response = await reportsApi.reportsPerformanceDailyGet({
     startDate: params.startDate,
     endDate: params.endDate,
     campaignIds,
@@ -294,7 +294,7 @@ export const fetchDailyReport = async (params: DailyReportRequest): Promise<Dail
 export const fetchConversionsReport = async (params: ConversionsReportRequest): Promise<ConversionsReportResponse> => {
   const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
-  const response = await reportsApi.apiV1ReportsConversionsGet({
+  const response = await reportsApi.reportsConversionsGet({
     startDate: params.startDate,
     endDate: params.endDate,
     campaignIds,
@@ -342,7 +342,7 @@ export const fetchConversionsReport = async (params: ConversionsReportRequest): 
 export const fetchClicksReport = async (params: ClicksReportRequest): Promise<ClicksReportResponse> => {
   const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
-  const response = await reportsApi.apiV1ReportsClicksGet({
+  const response = await reportsApi.reportsClicksGet({
     startDate: params.startDate,
     endDate: params.endDate,
     campaignIds,
