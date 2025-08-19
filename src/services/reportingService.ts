@@ -6,15 +6,7 @@ import {
   HandlersConversionsReportResponse,
   HandlersClicksReportResponse
 } from '@/generated-api/src/models';
-import { Configuration } from '@/generated-api/src/runtime';
-
-// Create API configuration
-const apiConfig = new Configuration({
-  basePath: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
-});
-
-// Create API instance
-const reportsApi = new ReportsApi(apiConfig);
+import { createApiClient } from '@/services/backendApi';
 
 // Legacy interface compatibility - kept for existing code compatibility
 export interface PerformanceSummaryRequest {
@@ -259,6 +251,7 @@ const transformDailyReportResponse = (response: HandlersDailyPerformanceReportRe
 
 // Service functions using generated API
 export const fetchPerformanceSummary = async (params: PerformanceSummaryRequest): Promise<PerformanceSummaryResponse> => {
+  const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
   const response = await reportsApi.apiV1ReportsPerformanceSummaryGet({
     startDate: params.startDate,
@@ -270,6 +263,7 @@ export const fetchPerformanceSummary = async (params: PerformanceSummaryRequest)
 };
 
 export const fetchPerformanceTimeSeries = async (params: PerformanceTimeSeriesRequest): Promise<PerformanceTimeSeriesResponse> => {
+  const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
   const response = await reportsApi.apiV1ReportsPerformanceTimeseriesGet({
     startDate: params.startDate,
@@ -282,6 +276,7 @@ export const fetchPerformanceTimeSeries = async (params: PerformanceTimeSeriesRe
 };
 
 export const fetchDailyReport = async (params: DailyReportRequest): Promise<DailyReportResponse> => {
+  const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
   const response = await reportsApi.apiV1ReportsPerformanceDailyGet({
     startDate: params.startDate,
@@ -297,6 +292,7 @@ export const fetchDailyReport = async (params: DailyReportRequest): Promise<Dail
 };
 
 export const fetchConversionsReport = async (params: ConversionsReportRequest): Promise<ConversionsReportResponse> => {
+  const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
   const response = await reportsApi.apiV1ReportsConversionsGet({
     startDate: params.startDate,
@@ -344,6 +340,7 @@ export const fetchConversionsReport = async (params: ConversionsReportRequest): 
 };
 
 export const fetchClicksReport = async (params: ClicksReportRequest): Promise<ClicksReportResponse> => {
+  const reportsApi = await createApiClient(ReportsApi);
   const campaignIds = params.campaignIds?.join(',');
   const response = await reportsApi.apiV1ReportsClicksGet({
     startDate: params.startDate,

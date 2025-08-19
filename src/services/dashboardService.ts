@@ -1,16 +1,6 @@
 import { DashboardApi, ApiV1DashboardGetRequest } from '@/generated-api/src/apis/DashboardApi';
 import { DomainDashboardData } from '@/generated-api/src/models/DomainDashboardData';
-import { Configuration } from '@/generated-api/src/runtime';
-
-// Configure the API client
-const configuration = new Configuration({
-  basePath: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-const dashboardApi = new DashboardApi(configuration);
+import { createApiClient } from '@/services/backendApi';
 
 export interface DashboardParams {
   period?: 'today' | '7d' | '30d' | '90d' | 'custom';
@@ -21,6 +11,7 @@ export interface DashboardParams {
 
 export const fetchDashboardData = async (params?: DashboardParams): Promise<DomainDashboardData> => {
   try {
+    const dashboardApi = await createApiClient(DashboardApi);
     const requestParams: ApiV1DashboardGetRequest = {
       period: params?.period,
       startDate: params?.startDate,
@@ -38,6 +29,7 @@ export const fetchDashboardData = async (params?: DashboardParams): Promise<Doma
 
 export const fetchCampaignDetail = async (campaignId: number) => {
   try {
+    const dashboardApi = await createApiClient(DashboardApi);
     const response = await dashboardApi.apiV1DashboardCampaignsCampaignIdGet({ campaignId });
     return response;
   } catch (error) {
@@ -53,6 +45,7 @@ export const fetchRecentActivity = async (params?: {
   since?: string;
 }) => {
   try {
+    const dashboardApi = await createApiClient(DashboardApi);
     const response = await dashboardApi.apiV1DashboardActivityGet(params || {});
     return response;
   } catch (error) {
@@ -67,6 +60,7 @@ export const trackActivity = async (activityData: {
   metadata?: Record<string, any>;
 }) => {
   try {
+    const dashboardApi = await createApiClient(DashboardApi);
     const response = await dashboardApi.apiV1DashboardActivityPost({
       request: activityData
     });
@@ -79,6 +73,7 @@ export const trackActivity = async (activityData: {
 
 export const invalidateDashboardCache = async () => {
   try {
+    const dashboardApi = await createApiClient(DashboardApi);
     const response = await dashboardApi.apiV1DashboardCacheInvalidatePost();
     return response;
   } catch (error) {
