@@ -1,20 +1,22 @@
-// Note: Since there's no ReportingApi in the generated API yet, 
-// we'll create a placeholder service that would use the reporting endpoints
-// once they're added to the OpenAPI spec and generated
+import { ReportsApi } from '@/generated-api/src/apis/ReportsApi';
+import { 
+  HandlersPerformanceSummaryResponse,
+  HandlersPerformanceTimeSeriesResponse,
+  HandlersDailyPerformanceReportResponse,
+  HandlersConversionsReportResponse,
+  HandlersClicksReportResponse
+} from '@/generated-api/src/models';
+import { Configuration } from '@/generated-api/src/runtime';
 
-interface ReportingApiConfig {
-  basePath: string;
-  headers: Record<string, string>;
-}
-
-const config: ReportingApiConfig = {
+// Create API configuration
+const apiConfig = new Configuration({
   basePath: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-};
+});
 
-// Performance Summary
+// Create API instance
+const reportsApi = new ReportsApi(apiConfig);
+
+// Legacy interface compatibility - kept for existing code compatibility
 export interface PerformanceSummaryRequest {
   startDate: string;        // ISO date format (YYYY-MM-DD)
   endDate: string;          // ISO date format (YYYY-MM-DD)
@@ -40,18 +42,17 @@ export interface PerformanceSummaryResponse {
   message?: string;
 }
 
-// Time Series Data
 export interface PerformanceTimeSeriesRequest {
-  startDate: string;        // ISO date format (YYYY-MM-DD)
-  endDate: string;          // ISO date format (YYYY-MM-DD)
-  campaignIds?: string[];   // Optional array of campaign IDs to filter
-  affiliateId?: string;     // Optional affiliate ID filter
-  granularity?: "daily" | "hourly" | "weekly" | "monthly"; // Default: "daily"
+  startDate: string;        
+  endDate: string;          
+  campaignIds?: string[];   
+  affiliateId?: string;     
+  granularity?: "daily" | "hourly" | "weekly" | "monthly";
 }
 
 export interface PerformanceTimeSeriesResponse {
   data: {
-    date: string;           // ISO date format (YYYY-MM-DD)
+    date: string;           
     clicks: number;
     impressions: number;
     conversions: number;
@@ -63,22 +64,21 @@ export interface PerformanceTimeSeriesResponse {
   message?: string;
 }
 
-// Daily Report
 export interface DailyReportRequest {
-  startDate: string;        // ISO date format (YYYY-MM-DD)
-  endDate: string;          // ISO date format (YYYY-MM-DD)
-  campaignIds?: string[];   // Optional array of campaign IDs to filter
-  affiliateId?: string;     // Optional affiliate ID filter
-  search?: string;          // Search term for campaign names
-  page?: number;            // Page number (default: 1)
-  limit?: number;           // Items per page (default: 10, max: 100)
+  startDate: string;        
+  endDate: string;          
+  campaignIds?: string[];   
+  affiliateId?: string;     
+  search?: string;          
+  page?: number;            
+  limit?: number;           
   sortBy?: "date" | "clicks" | "conversions" | "revenue";
-  sortOrder?: "asc" | "desc"; // Default: "desc"
+  sortOrder?: "asc" | "desc";
 }
 
 export interface DailyReportResponse {
   data: {
-    date: string;           // ISO date format (YYYY-MM-DD)
+    date: string;           
     campaignId: string;
     campaignName: string;
     clicks: number;
@@ -101,24 +101,23 @@ export interface DailyReportResponse {
   message?: string;
 }
 
-// Conversions Report
 export interface ConversionsReportRequest {
-  startDate: string;        // ISO date format (YYYY-MM-DD)
-  endDate: string;          // ISO date format (YYYY-MM-DD)
-  campaignIds?: string[];   // Optional array of campaign IDs to filter
-  affiliateId?: string;     // Optional affiliate ID filter
-  search?: string;          // Search term for campaign names or transaction IDs
-  page?: number;            // Page number (default: 1)
-  limit?: number;           // Items per page (default: 10, max: 100)
-  status?: "pending" | "approved" | "rejected" | "all"; // Default: "all"
+  startDate: string;        
+  endDate: string;          
+  campaignIds?: string[];   
+  affiliateId?: string;     
+  search?: string;          
+  page?: number;            
+  limit?: number;           
+  status?: "pending" | "approved" | "rejected" | "all";
   sortBy?: "timestamp" | "payout" | "campaign" | "status";
-  sortOrder?: "asc" | "desc"; // Default: "desc"
+  sortOrder?: "asc" | "desc";
 }
 
 export interface ConversionsReportResponse {
   data: {
     id: string;
-    timestamp: string;      // ISO datetime format
+    timestamp: string;      
     transactionId: string;
     campaignId: string;
     campaignName: string;
@@ -147,23 +146,22 @@ export interface ConversionsReportResponse {
   message?: string;
 }
 
-// Clicks Report
 export interface ClicksReportRequest {
-  startDate: string;        // ISO date format (YYYY-MM-DD)
-  endDate: string;          // ISO date format (YYYY-MM-DD)
-  campaignIds?: string[];   // Optional array of campaign IDs to filter
-  affiliateId?: string;     // Optional affiliate ID filter
-  search?: string;          // Search term for campaign names or click IDs
-  page?: number;            // Page number (default: 1)
-  limit?: number;           // Items per page (default: 10, max: 100)
+  startDate: string;        
+  endDate: string;          
+  campaignIds?: string[];   
+  affiliateId?: string;     
+  search?: string;          
+  page?: number;            
+  limit?: number;           
   sortBy?: "timestamp" | "campaign" | "affiliate";
-  sortOrder?: "asc" | "desc"; // Default: "desc"
+  sortOrder?: "asc" | "desc";
 }
 
 export interface ClicksReportResponse {
   data: {
     id: string;
-    timestamp: string;      // ISO datetime format
+    timestamp: string;      
     campaignId: string;
     campaignName: string;
     offerId: string;
@@ -195,52 +193,203 @@ export interface ClicksReportResponse {
   message?: string;
 }
 
-// Helper function to make API requests
-const makeApiRequest = async <T>(endpoint: string, params: Record<string, any> = {}): Promise<T> => {
-  const url = new URL(`${config.basePath}${endpoint}`);
-  
-  // Add query parameters
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      if (Array.isArray(value)) {
-        value.forEach(v => url.searchParams.append(key, v.toString()));
-      } else {
-        url.searchParams.append(key, value.toString());
-      }
-    }
-  });
-
-  const response = await fetch(url.toString(), {
-    method: 'GET',
-    headers: config.headers,
-  });
-
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-  }
-
-  return response.json();
+// Helper functions to transform API responses to legacy format
+const transformSummaryResponse = (response: HandlersPerformanceSummaryResponse): PerformanceSummaryResponse => {
+  return {
+    data: {
+      totalClicks: response.data?.totalClicks || 0,
+      totalConversions: response.data?.totalConversions || 0,
+      totalRevenue: response.data?.totalRevenue || 0,
+      conversionRate: response.data?.conversionRate || 0,
+      averageRevenue: response.data?.averageRevenue || 0,
+      clickThroughRate: response.data?.clickThroughRate || 0,
+      totalImpressions: response.data?.totalImpressions || 0,
+    },
+    dateRange: {
+      startDate: response.dateRange?.startDate || '',
+      endDate: response.dateRange?.endDate || '',
+    },
+    status: response.status === "success" ? "success" : "error",
+    message: undefined,
+  };
 };
 
-// Service functions
+const transformTimeSeriesResponse = (response: HandlersPerformanceTimeSeriesResponse): PerformanceTimeSeriesResponse => {
+  return {
+    data: response.data?.map(item => ({
+      date: item.date || '',
+      clicks: item.clicks || 0,
+      impressions: item.impressions || 0,
+      conversions: item.conversions || 0,
+      revenue: item.revenue || 0,
+      conversionRate: item.conversionRate || 0,
+      clickThroughRate: item.clickThroughRate || 0,
+    })) || [],
+    status: response.status === "success" ? "success" : "error",
+    message: undefined,
+  };
+};
+
+const transformDailyReportResponse = (response: HandlersDailyPerformanceReportResponse): DailyReportResponse => {
+  return {
+    data: response.data?.map(item => ({
+      date: item.date || '',
+      campaignId: item.campaignId || '',
+      campaignName: item.campaignName || '',
+      clicks: item.clicks || 0,
+      impressions: item.impressions || 0,
+      conversions: item.conversions || 0,
+      revenue: item.revenue || 0,
+      conversionRate: item.conversionRate || 0,
+      clickThroughRate: item.clickThroughRate || 0,
+      payouts: item.payouts || 0,
+    })) || [],
+    pagination: {
+      currentPage: response.pagination?.currentPage || 1,
+      totalPages: response.pagination?.totalPages || 1,
+      totalItems: response.pagination?.totalItems || 0,
+      itemsPerPage: response.pagination?.itemsPerPage || 10,
+      hasNextPage: response.pagination?.hasNextPage || false,
+      hasPreviousPage: response.pagination?.hasPreviousPage || false,
+    },
+    status: response.status === "success" ? "success" : "error",
+    message: undefined,
+  };
+};
+
+// Service functions using generated API
 export const fetchPerformanceSummary = async (params: PerformanceSummaryRequest): Promise<PerformanceSummaryResponse> => {
-  return makeApiRequest<PerformanceSummaryResponse>('/api/v1/reports/performance/summary', params);
+  const campaignIds = params.campaignIds?.join(',');
+  const response = await reportsApi.apiV1ReportsPerformanceSummaryGet({
+    startDate: params.startDate,
+    endDate: params.endDate,
+    campaignIds,
+    affiliateId: params.affiliateId,
+  });
+  return transformSummaryResponse(response);
 };
 
 export const fetchPerformanceTimeSeries = async (params: PerformanceTimeSeriesRequest): Promise<PerformanceTimeSeriesResponse> => {
-  return makeApiRequest<PerformanceTimeSeriesResponse>('/api/v1/reports/performance/timeseries', params);
+  const campaignIds = params.campaignIds?.join(',');
+  const response = await reportsApi.apiV1ReportsPerformanceTimeseriesGet({
+    startDate: params.startDate,
+    endDate: params.endDate,
+    campaignIds,
+    affiliateId: params.affiliateId,
+    granularity: params.granularity,
+  });
+  return transformTimeSeriesResponse(response);
 };
 
 export const fetchDailyReport = async (params: DailyReportRequest): Promise<DailyReportResponse> => {
-  return makeApiRequest<DailyReportResponse>('/api/v1/reports/performance/daily', params);
+  const campaignIds = params.campaignIds?.join(',');
+  const response = await reportsApi.apiV1ReportsPerformanceDailyGet({
+    startDate: params.startDate,
+    endDate: params.endDate,
+    campaignIds,
+    affiliateId: params.affiliateId,
+    page: params.page,
+    limit: params.limit,
+    sortBy: params.sortBy,
+    sortOrder: params.sortOrder,
+  });
+  return transformDailyReportResponse(response);
 };
 
 export const fetchConversionsReport = async (params: ConversionsReportRequest): Promise<ConversionsReportResponse> => {
-  return makeApiRequest<ConversionsReportResponse>('/api/v1/reports/conversions', params);
+  const campaignIds = params.campaignIds?.join(',');
+  const response = await reportsApi.apiV1ReportsConversionsGet({
+    startDate: params.startDate,
+    endDate: params.endDate,
+    campaignIds,
+    affiliateId: params.affiliateId,
+    status: params.status,
+    page: params.page,
+    limit: params.limit,
+    sortBy: params.sortBy,
+    sortOrder: params.sortOrder,
+  });
+
+  return {
+    data: response.data?.map(item => ({
+      id: item.id || '',
+      timestamp: item.timestamp || '',
+      transactionId: item.transactionId || '',
+      campaignId: item.campaignId || '',
+      campaignName: item.campaignName || '',
+      offerId: item.offerId || '',
+      offerName: item.offerName || '',
+      status: (item.status as "pending" | "approved" | "rejected") || "pending",
+      payout: item.payout || 0,
+      currency: item.currency || 'USD',
+      affiliateId: item.affiliateId || '',
+      affiliateName: item.affiliateName || '',
+      clickId: item.clickId,
+      conversionValue: item.conversionValue,
+      sub1: item.sub1,
+      sub2: item.sub2,
+      sub3: item.sub3,
+    })) || [],
+    pagination: {
+      currentPage: response.pagination?.currentPage || 1,
+      totalPages: response.pagination?.totalPages || 1,
+      totalItems: response.pagination?.totalItems || 0,
+      itemsPerPage: response.pagination?.itemsPerPage || 10,
+      hasNextPage: response.pagination?.hasNextPage || false,
+      hasPreviousPage: response.pagination?.hasPreviousPage || false,
+    },
+    status: response.status === "success" ? "success" : "error",
+    message: undefined,
+  };
 };
 
 export const fetchClicksReport = async (params: ClicksReportRequest): Promise<ClicksReportResponse> => {
-  return makeApiRequest<ClicksReportResponse>('/api/v1/reports/clicks', params);
+  const campaignIds = params.campaignIds?.join(',');
+  const response = await reportsApi.apiV1ReportsClicksGet({
+    startDate: params.startDate,
+    endDate: params.endDate,
+    campaignIds,
+    affiliateId: params.affiliateId,
+    page: params.page,
+    limit: params.limit,
+    sortBy: params.sortBy,
+    sortOrder: params.sortOrder,
+  });
+
+  return {
+    data: response.data?.map(item => ({
+      id: item.id || '',
+      timestamp: item.timestamp || '',
+      campaignId: item.campaignId || '',
+      campaignName: item.campaignName || '',
+      offerId: item.offerId || '',
+      offerName: item.offerName || '',
+      affiliateId: item.affiliateId || '',
+      affiliateName: item.affiliateName || '',
+      ipAddress: item.ipAddress || '',
+      userAgent: item.userAgent || '',
+      country: item.country || '',
+      region: item.region,
+      city: item.city,
+      referrerUrl: item.referrerUrl,
+      landingPageUrl: item.landingPageUrl || '',
+      sub1: item.sub1,
+      sub2: item.sub2,
+      sub3: item.sub3,
+      converted: item.converted || false,
+      conversionId: item.conversionId,
+    })) || [],
+    pagination: {
+      currentPage: response.pagination?.currentPage || 1,
+      totalPages: response.pagination?.totalPages || 1,
+      totalItems: response.pagination?.totalItems || 0,
+      itemsPerPage: response.pagination?.itemsPerPage || 10,
+      hasNextPage: response.pagination?.hasNextPage || false,
+      hasPreviousPage: response.pagination?.hasPreviousPage || false,
+    },
+    status: response.status === "success" ? "success" : "error",
+    message: undefined,
+  };
 };
 
 // Mock data for development - remove when real API is available
