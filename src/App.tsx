@@ -23,6 +23,7 @@ import ProfilePage from "@/pages/profile";
 import TrackingLinkGenerator from "@/pages/tracking/TrackingLinkGenerator";
 import PerformanceReport from "@/pages/reporting/PerformanceReport";
 import ConversionReport from "@/pages/reporting/ConversionReport";
+import ClickReport from "@/pages/reporting/ClickReport";
 import AdvertiserAnalytics from "@/pages/analytics/AdvertiserAnalytics";
 import AllPartnersPage from "@/pages/analytics/AllPartnersPage";
 import NewPartnersPage from "@/pages/analytics/NewPartnersPage";
@@ -122,7 +123,8 @@ function App() {
                 
                 {/* Reporting routes */}
                 <Route path="/reporting" element={<PerformanceReport />} />
-                <Route path="/reporting/conversions" element={<ConversionReport />} />
+                 <Route path="/reporting/conversions" element={<ConversionReport />} />
+                 <Route path="/reporting/clicks" element={<ClickReport />} />
                 
                 {/* Organization routes */}
                 <Route path="/organizations" element={<OrganizationList />} />

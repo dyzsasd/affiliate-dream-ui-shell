@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -27,23 +26,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle2, XCircle, Clock, Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
-import { fetchConversionsReport, ConversionsReportRequest } from "@/services/reportingService";
+import { Search, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Globe, Smartphone, Monitor } from "lucide-react";
+import { fetchClicksReport, ClicksReportRequest } from "@/services/reportingService";
 import { CampaignsApi } from "@/generated-api/src/apis/CampaignsApi";
 import { AffiliatesApi } from "@/generated-api/src/apis/AffiliatesApi";
 import { createApiClient } from "@/services/backendApi";
 import { useAuth } from "@/contexts/auth";
 
-const ConversionReport: React.FC = () => {
+const ClickReport: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [dateRange, setDateRange] = useState("7days");
-  const [statusFilter, setStatusFilter] = useState<"pending" | "approved" | "rejected" | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [campaignFilter, setCampaignFilter] = useState<string>("all");
   const [affiliateFilter, setAffiliateFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<"timestamp" | "payout" | "campaign" | "status">("timestamp");
+  const [sortBy, setSortBy] = useState<"timestamp" | "campaign" | "affiliate">("timestamp");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const itemsPerPage = 10;
 
@@ -97,30 +95,29 @@ const ConversionReport: React.FC = () => {
     enabled: !!user
   });
 
-  // Fetch conversions report
-  const { data: conversionsResponse, isLoading, error } = useQuery({
-    queryKey: ['conversions-report', dateRange, statusFilter, searchTerm, currentPage, campaignFilter, affiliateFilter, sortBy, sortOrder],
+  // Fetch clicks report
+  const { data: clicksResponse, isLoading, error } = useQuery({
+    queryKey: ['clicks-report', dateRange, searchTerm, currentPage, campaignFilter, affiliateFilter, sortBy, sortOrder],
     queryFn: () => {
       const { startDate, endDate } = getDateRange();
-      const params: ConversionsReportRequest = {
+      const params: ClicksReportRequest = {
         startDate,
         endDate,
         page: currentPage,
         limit: itemsPerPage,
-        status: statusFilter === "all" ? undefined : statusFilter,
         search: searchTerm || undefined,
         campaignIds: campaignFilter === "all" ? undefined : [campaignFilter],
         affiliateId: affiliateFilter === "all" ? undefined : affiliateFilter,
         sortBy,
         sortOrder
       };
-      return fetchConversionsReport(params);
+      return fetchClicksReport(params);
     },
     enabled: !!user
   });
 
-  const conversions = conversionsResponse?.data || [];
-  const pagination = conversionsResponse?.pagination || {
+  const clicks = clicksResponse?.data || [];
+  const pagination = clicksResponse?.pagination || {
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
@@ -129,35 +126,30 @@ const ConversionReport: React.FC = () => {
     hasPreviousPage: false
   };
 
-  // Calculate summary statistics from filtered data
-  const approvedConversions = conversions.filter(c => c.status === "approved");
-  const pendingConversions = conversions.filter(c => c.status === "pending");
-  const rejectedConversions = conversions.filter(c => c.status === "rejected");
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "approved":
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
-      case "rejected":
-        return <XCircle className="h-4 w-4 text-red-500" />;
-      case "pending":
-        return <Clock className="h-4 w-4 text-yellow-500" />;
-      default:
-        return null;
+  const getDeviceIcon = (userAgent: string) => {
+    const ua = userAgent.toLowerCase();
+    if (ua.includes('mobile') || ua.includes('android') || ua.includes('iphone')) {
+      return <Smartphone className="h-4 w-4 text-blue-500" />;
     }
+    if (ua.includes('tablet') || ua.includes('ipad')) {
+      return <Monitor className="h-4 w-4 text-green-500" />;
+    }
+    return <Monitor className="h-4 w-4 text-gray-500" />;
   };
 
-  const totalPayout = approvedConversions.reduce((sum, c) => sum + c.payout, 0);
-  const pendingPayout = pendingConversions.reduce((sum, c) => sum + c.payout, 0);
+  // Calculate summary statistics
+  const totalClicks = pagination.totalItems;
+  const convertedClicks = clicks.filter(c => c.converted).length;
+  const conversionRate = totalClicks > 0 ? (convertedClicks / clicks.length) * 100 : 0;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <h1 className="text-2xl font-bold tracking-tight">{t("reports.conversions.title")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("reports.clicks.title")}</h1>
         
         <div className="flex flex-col sm:flex-row gap-4">
           <Select value={dateRange} onValueChange={setDateRange}>
@@ -170,20 +162,6 @@ const ConversionReport: React.FC = () => {
                 <SelectItem value="30days">{t("reports.performance.last30Days")}</SelectItem>
                 <SelectItem value="90days">{t("reports.performance.last3Months")}</SelectItem>
                 <SelectItem value="year">{t("reports.performance.last12Months")}</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          
-          <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -227,8 +205,8 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4">
             <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Total Conversions</div>
-              <div className="text-2xl font-bold">{pagination.totalItems}</div>
+              <div className="text-sm text-muted-foreground">Total Clicks</div>
+              <div className="text-2xl font-bold">{totalClicks}</div>
             </div>
           </CardContent>
         </Card>
@@ -236,8 +214,8 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex justify-between items-center">
             <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Approved</div>
-              <div className="text-2xl font-bold">{approvedConversions.length}</div>
+              <div className="text-sm text-muted-foreground">Converted Clicks</div>
+              <div className="text-2xl font-bold">{convertedClicks}</div>
             </div>
             <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
               <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -248,11 +226,11 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex justify-between items-center">
             <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Pending</div>
-              <div className="text-2xl font-bold">{pendingConversions.length}</div>
+              <div className="text-sm text-muted-foreground">Conversion Rate</div>
+              <div className="text-2xl font-bold">{conversionRate.toFixed(1)}%</div>
             </div>
-            <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
-              <Clock className="h-5 w-5 text-yellow-600" />
+            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+              <Globe className="h-5 w-5 text-blue-600" />
             </div>
           </CardContent>
         </Card>
@@ -260,88 +238,27 @@ const ConversionReport: React.FC = () => {
         <Card>
           <CardContent className="p-4 flex justify-between items-center">
             <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Rejected</div>
-              <div className="text-2xl font-bold">{rejectedConversions.length}</div>
-            </div>
-            <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
-              <XCircle className="h-5 w-5 text-red-600" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* Earnings Summary */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Earnings Summary</CardTitle>
-            <CardDescription>Approved and pending payouts</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-sm">Approved Payouts</span>
-                <span className="font-semibold text-green-600">${totalPayout.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Pending Payouts</span>
-                <span className="font-semibold text-yellow-600">${pendingPayout.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Total Potential</span>
-                <span className="font-bold">${(totalPayout + pendingPayout).toFixed(2)}</span>
+              <div className="text-sm text-muted-foreground">Unique Countries</div>
+              <div className="text-2xl font-bold">
+                {[...new Set(clicks.map(c => c.country))].length}
               </div>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Conversion Stats</CardTitle>
-            <CardDescription>Approval rates overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div className="space-y-1">
-                  <span className="text-sm">Approval Rate</span>
-                  <div className="font-semibold text-xl">
-                    {conversions.length > 0 
-                      ? `${((approvedConversions.length / conversions.length) * 100).toFixed(1)}%`
-                      : "N/A"}
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-sm">Rejection Rate</span>
-                  <div className="font-semibold text-xl">
-                    {conversions.length > 0
-                      ? `${((rejectedConversions.length / conversions.length) * 100).toFixed(1)}%`
-                      : "N/A"}
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-sm">Pending Rate</span>
-                  <div className="font-semibold text-xl">
-                    {conversions.length > 0
-                      ? `${((pendingConversions.length / conversions.length) * 100).toFixed(1)}%`
-                      : "N/A"}
-                  </div>
-                </div>
-              </div>
+            <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
+              <Globe className="h-5 w-5 text-purple-600" />
             </div>
           </CardContent>
         </Card>
       </div>
       
-      {/* Conversions Table */}
+      {/* Clicks Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Conversion Details</CardTitle>
+          <CardTitle>Click Details</CardTitle>
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by transaction ID..."
+                placeholder="Search by IP address, country, or referrer..."
                 className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -354,9 +271,8 @@ const ConversionReport: React.FC = () => {
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="timestamp">Date</SelectItem>
-                  <SelectItem value="payout">Payout</SelectItem>
                   <SelectItem value="campaign">Campaign</SelectItem>
-                  <SelectItem value="status">Status</SelectItem>
+                  <SelectItem value="affiliate">Affiliate</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -375,50 +291,66 @@ const ConversionReport: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Date & Time</TableHead>
-                  <TableHead>Transaction ID</TableHead>
                   <TableHead>Campaign</TableHead>
                   <TableHead>Affiliate</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Payout</TableHead>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Device</TableHead>
+                  <TableHead>Converted</TableHead>
+                  <TableHead>IP Address</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      Loading conversions...
+                    <TableCell colSpan={7} className="h-24 text-center">
+                      Loading clicks...
                     </TableCell>
                   </TableRow>
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center text-destructive">
-                      Error loading conversions
+                    <TableCell colSpan={7} className="h-24 text-center text-destructive">
+                      Error loading clicks
                     </TableCell>
                   </TableRow>
-                ) : conversions.length === 0 ? (
+                ) : clicks.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      No conversions found
+                    <TableCell colSpan={7} className="h-24 text-center">
+                      No clicks found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  conversions.map((conversion) => (
-                    <TableRow key={conversion.id}>
+                  clicks.map((click) => (
+                    <TableRow key={click.id}>
                       <TableCell className="font-medium">
-                        {formatDate(conversion.timestamp)}
+                        {formatDate(click.timestamp)}
                       </TableCell>
-                      <TableCell className="font-mono text-sm">{conversion.transactionId}</TableCell>
-                      <TableCell>{conversion.campaignName}</TableCell>
-                      <TableCell>{conversion.affiliateName}</TableCell>
+                      <TableCell>{click.campaignName}</TableCell>
+                      <TableCell>{click.affiliateName}</TableCell>
                       <TableCell>
-                        <div className="flex items-center">
-                          {getStatusIcon(conversion.status)}
-                          <span className="ml-1 capitalize">{conversion.status}</span>
+                        <div className="space-y-1">
+                          <div className="font-medium">{click.country}</div>
+                          {(click.region || click.city) && (
+                            <div className="text-sm text-muted-foreground">
+                              {[click.city, click.region].filter(Boolean).join(', ')}
+                            </div>
+                          )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
-                        ${conversion.payout.toFixed(2)} {conversion.currency}
+                      <TableCell>
+                        <div className="flex items-center">
+                          {getDeviceIcon(click.userAgent)}
+                        </div>
                       </TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          {click.converted ? (
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <XCircle className="h-4 w-4 text-gray-400" />
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-mono text-sm">{click.ipAddress}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -463,4 +395,4 @@ const ConversionReport: React.FC = () => {
   );
 };
 
-export default ConversionReport;
+export default ClickReport;
