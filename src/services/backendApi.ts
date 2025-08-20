@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Configuration } from '@/generated-api/src/runtime';
 
 // Using local development API server
-const DEFAULT_API_BASE_URL = 'http://localhost:8080';
+const DEFAULT_API_BASE_URL = 'http://localhost:18080';
 
 // Define a simple ApiError interface
 interface ApiError {
